@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Vitrea Guide</title>
+    <style>
+        :root {
+            --canon-blue: #c41017;
+            --canon-light-blue: #ed1c24;
+            --canon-dark-blue: #003b6f;
+            --canon-gray: #f5f5f5;
+            --canon-dark-gray: #333333;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: var(--canon-dark-gray);
+            line-height: 1.6;
+            background-color: var(--canon-gray);
+        }
+        header {
+            background: linear-gradient(140deg, var(--canon-gray), var(--canon-blue));
+            padding: 20px;
+            color: white;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        .logo {
+            height: 60px;
+            margin-bottom: 10px;
+            transition: transform 0.3s;
+        }
+        .logo:hover {
+            transform: rotate(5deg) scale(1.05);
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.2em;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+        }
+        h2 {
+            color: var(--canon-dark-blue);
+            border-bottom: 2px solid var(--canon-light-blue);
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        .deployment-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 30px 0;
+        }
+        .deployment-card {
+            flex: 1 1 300px;
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        .deployment-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+        }
+        .deployment-card h3 {
+            color: var(--canon-dark-blue);
+            margin-top: 0;
+        }
+        .deployment-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--canon-blue);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s;
+        }
+        .deployment-card:hover::after {
+            transform: scaleX(1);
+        }
+        .hidden-content {
+            display: none;
+            padding: 15px;
+            background-color: rgba(245,245,245,0.8);
+            border-radius: 5px;
+            margin-top: 15px;
+            animation: fadeIn 0.5s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .toggle-btn {
+            background-color: var(--canon-blue);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        .toggle-btn:hover {
+            background-color: var(--canon-dark-blue);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: var(--canon-blue);
+            color: white;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        footer {
+            background-color: var(--canon-dark-blue);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+        }
+        .search-container {
+            margin: 20px 0;
+            position: relative;
+        }
+        #search-input {
+            width: 100%;
+            padding: 12px 20px;
+            border: 2px solid #ddd;
+            border-radius: 25px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        #search-input:focus {
+            border-color: var(--canon-blue);
+            outline: none;
+            box-shadow: 0 0 8px rgba(196,16,23,0.2);
+        }
+        .feature-highlight {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--canon-blue);
+            color: white;
+            padding: 15px;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 100;
+            transition: all 0.3s;
+        }
+        .feature-highlight:hover {
+            transform: scale(1.1);
+            background-color: var(--canon-dark-blue);
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 8px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            animation: modalFadeIn 0.3s;
+        }
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--canon-dark-gray);
+        }
+        .progress-container {
+            width: 100%;
+            background-color: #f1f1f1;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .progress-bar {
+            height: 20px;
+            background-color: var(--canon-blue);
+            border-radius: 5px;
+            width: 0%;
+            transition: width 1s;
+        }
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            border-bottom: 1px dotted var(--canon-dark-blue);
+            cursor: help;
+        }
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: var(--canon-dark-blue);
+            color: white;
+            text-align: center;
+            border-radius: 6px;
+            padding: 10px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+        .hidden {
+            display: none;
+        }
+        .easter-egg {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.3);
+            z-index: 1001;
+            text-align: center;
+            display: none;
+        }
+        .easter-egg img {
+            max-width: 200px;
+            margin-bottom: 15px;
+        }
+        .close-egg {
+            background-color: var(--canon-blue);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="https://global.canon/en/corporate/logo/img/logo_01.png" alt="Canon Medical Logo" class="logo" id="logo">
+        <h1>Vitrea® Advanced Visualization</h1>
+        <p>Interactive Quick Start Guide</p>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <h2>Welcome to the Interactive Vitrea Guide</h2>
+            <p>This interactive guide provides comprehensive information about Vitrea software deployments, installation processes, and supported applications. Explore the different sections below to learn more.</p>
+            
+            <div class="search-container">
+                <input type="text" id="search-input" placeholder="Search the guide...">
+            </div>
+            
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Updates from the Previous Release</h2>
+            <p>Listed below are the guide changes that occurred since the prior software release.</p>
+            <ul>
+                <li>On the Legal page, added the CE mark and added the UKCA mark for the UK Responsible Person</li>
+                <li>In Appendix A: Supported Third Party Applications, revised the version numbers for Mirada XD VitreaApp and Mirada RTx VitreaApp</li>
+            </ul>
+            <button class="toggle-btn" onclick="toggleContent('update-details')">Show More Details</button>
+            <div id="update-details" class="hidden-content">
+                <p>For a complete list of all updates and changes, please refer to the official release notes provided by Canon Medical Systems Corporation.</p>
+                <p>All updates have been thoroughly tested to ensure compatibility with existing systems and workflows.</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Deployment Types</h2>
+            <p>The Vitrea software is available in a variety of deployments to suit different organizational needs.</p>
+            
+            <div class="deployment-options">
+                <div class="deployment-card" onclick="showDeploymentDetails('workstation')">
+                    <h3>Workstation</h3>
+                    <p>Single-user on a workstation</p>
+                    <p class="tooltip">Ideal for? <span class="tooltiptext">Perfect for individual radiologists or small clinics</span></p>
+                </div>
+                <div class="deployment-card" onclick="showDeploymentDetails('extend')">
+                    <h3>Extend</h3>
+                    <p>Multi-user on a single server workstation</p>
+                </div>
+                <div class="deployment-card" onclick="showDeploymentDetails('enterprise')">
+                    <h3>Enterprise</h3>
+                    <p>Multi-server with centralized management</p>
+                </div>
+                <div class="deployment-card" onclick="showDeploymentDetails('enterprise-single')">
+                    <h3>Enterprise Single Server</h3>
+                    <p>Single-server with centralized management</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card hidden" id="workstation-details">
+            <h2>Workstation Deployment Details</h2>
+            <p>The workstation deployment is the simplest deployment. In a typical workstation deployment, all Vitrea software and partner applications are installed on a single node running on a Windows 10 or a Windows 11 (version 22h2 at least) operating system along with IIS and SQL Server.</p>
+            <button class="toggle-btn" onclick="toggleContent('workstation-process')">Show Installation Process</button>
+            <div id="workstation-process" class="hidden-content">
+                <h3>Workstation Deployment Install Process</h3>
+                <p>To set up a fully functional Vitrea workstation deployment, complete the tasks below in order.</p>
+                <table>
+                    <tr>
+                        <th>Task</th>
+                        <th>Guide Used</th>
+                    </tr>
+                    <tr>
+                        <td>Create users and groups in a domain or workgroup.</td>
+                        <td>Vitrea Installation Guide for Workstation Deployment</td>
+                    </tr>
+                    <tr>
+                        <td>Set up the Operating System.</td>
+                        <td>Vitrea Installation Guide for Workstation Deployment</td>
+                    </tr>
+                    <tr>
+                        <td>Set up the database. This is performed automatically as part of the installation.</td>
+                        <td>Vitrea Installation Guide for Workstation Deployment</td>
+                    </tr>
+                    <tr>
+                        <td>Install and configure the Vitrea software.</td>
+                        <td>Vitrea Installation Guide for Workstation Deployment</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="card hidden" id="extend-details">
+            <h2>Extend Deployment Details</h2>
+            <p>In a typical extend deployment, the Vitrea software uses Microsoft Remote Desktop to enable a user to remotely access the system. Unlike the workstation deployment, the extend system is designed to provide multiple concurrent access - one local user (using the host system) and two or three remote users.</p>
+            <button class="toggle-btn" onclick="toggleContent('extend-process')">Show Installation Process</button>
+            <div id="extend-process" class="hidden-content">
+                <h3>Extend Deployment Install Process</h3>
+                <p>To set up a complete and functional Vitrea extend system, complete the tasks below in order.</p>
+                <table>
+                    <tr>
+                        <th>Task</th>
+                        <th>Guide Used</th>
+                    </tr>
+                    <tr>
+                        <td>Set up the Operating System.</td>
+                        <td>Vitrea Installation Guide for Extend Deployment</td>
+                    </tr>
+                    <tr>
+                        <td>Create users and groups in a domain or workgroup.</td>
+                        <td>Vitrea Installation Guide for Extend Deployment</td>
+                    </tr>
+                    <tr>
+                        <td>Set up the database. This is performed automatically as part of the installation.</td>
+                        <td>Vitrea Installation Guide for Extend Deployment</td>
+                    </tr>
+                    <tr>
+                        <td>Install and configure the Vitrea software.</td>
+                        <td>Vitrea Installation Guide for Extend Deployment</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="card hidden" id="enterprise-details">
+            <h2>Enterprise Deployment Details</h2>
+            <p>The enterprise deployment is the most flexible deployment. The Vitrea enterprise deployment allows data services, and applications to potentially reside on different physical servers.</p>
+            <button class="toggle-btn" onclick="toggleContent('enterprise-components')">Show Components</button>
+            <div id="enterprise-components" class="hidden-content">
+                <h3>Enterprise Deployment Components</h3>
+                <h4>Management Server</h4>
+                <p>The Management Server is an Enterprise deployment server component that provides data management and centralized processing and storage.</p>
+                
+                <h4>SQL Server</h4>
+                <p>For Enterprise deployment installations, the minimum Transact-SQL (database) compatibility level required for SQL Server is 120.</p>
+                
+                <h4>Application Server</h4>
+                <p>The Vitrea Application Server is a server component that allows physicians to use servers to access 2D, 3D and 4D advanced visualization and may be centrally deployed for remote use by multiple users.</p>
+            </div>
+            
+            <button class="toggle-btn" onclick="toggleContent('enterprise-process')">Show Installation Process</button>
+            <div id="enterprise-process" class="hidden-content">
+                <h3>Enterprise Deployment Install Process</h3>
+                <p>To set up a complete and functional enterprise deployment, complete the tasks below in order.</p>
+                <table>
+                    <tr>
+                        <th>Task</th>
+                        <th>Guide Used</th>
+                    </tr>
+                    <tr>
+                        <td>Create users and groups in a domain and set Group Policy Objects.</td>
+                        <td>Enterprise Deployment Active Directory Planning Guide</td>
+                    </tr>
+                    <tr>
+                        <td>Complete base hardware configuration on the Management Server and the Application Server(s).</td>
+                        <td>Enterprise Deployment Operating System Setup Guide</td>
+                    </tr>
+                    <tr>
+                        <td>Install and configure SQL Server database on the Management Server or on an external machine.</td>
+                        <td>SQL Server Setup Guide or Remote SQL Server Setup Instructions</td>
+                    </tr>
+                    <tr>
+                        <td>Set up the Operating System on the Management Server, the Application Server(s), and the Multi Modality Viewer Server(s).</td>
+                        <td>Enterprise Deployment Operating System Setup Guide</td>
+                    </tr>
+                    <tr>
+                        <td>License the Management Server.</td>
+                        <td>Management Server Install Guide</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="card hidden" id="enterprise-single-details">
+            <h2>Enterprise Single Server Deployment Details</h2>
+            <p>The Vitrea enterprise single server deployment is software that allows users to remotely access the Vitrea application on a remotely-accessible host server over a standard computer network.</p>
+            <button class="toggle-btn" onclick="toggleContent('enterprise-single-process')">Show Installation Process</button>
+            <div id="enterprise-single-process" class="hidden-content">
+                <h3>Enterprise Single Server Install Process</h3>
+                <p>To set up a fully functional Enterprise Single Server, complete the tasks below in order.</p>
+                <table>
+                    <tr>
+                        <th>Task</th>
+                        <th>Guide Used</th>
+                    </tr>
+                    <tr>
+                        <td>Create users and groups in a domain or workgroup.</td>
+                        <td>Enterprise Single Server Install Guide</td>
+                    </tr>
+                    <tr>
+                        <td>Set up the Operating System.</td>
+                        <td>Enterprise Single Server Install Guide</td>
+                    </tr>
+                    <tr>
+                        <td>Set up the database. This is performed automatically as part of the installation.</td>
+                        <td>Enterprise Single Server Install Guide</td>
+                    </tr>
+                    <tr>
+                        <td>Install and configure the Vitrea software.</td>
+                        <td>Enterprise Single Server Install Guide</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Supported Third Party Applications</h2>
+            <p>This section describes the supported third party applications and CMSC applications, whether the application is supported on a given Canon Medical deployment.</p>
+            
+            <div id="app-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; margin-top: 20px;">
+                <div class="app-card" style="background: white; padding: 15px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                    <h3 style="margin-top: 0; color: var(--canon-dark-blue);">iCAD</h3>
+                    <p>The Veralook Colon CAD feature is available in the Colon Analysis application, when licensed.</p>
+                </div>
+                <div class="app-card" style="background: white; padding: 15px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                    <h3 style="margin-top: 0; color: var(--canon-dark-blue);">INVIA</h3>
+                    <p>www.inviasolutions.com/4dmsupport</p>
+                </div>
+                <div class="app-card" style="background: white; padding: 15px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                    <h3 style="margin-top: 0; color: var(--canon-dark-blue);">Medis</h3>
+                    <p>support@medis.nl</p>
+                </div>
+                <div class="app-card" style="background: white; padding: 15px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                    <h3 style="margin-top: 0; color: var(--canon-dark-blue);">Mevis</h3>
+                    <p>Visia Lung CAD is a separate installer, not installed in Vitrea, and has its own license from Visia.</p>
+                </div>
+            </div>
+            
+            <button class="toggle-btn" onclick="showAllApps()">Show All Applications</button>
+            <div id="all-apps" class="hidden-content">
+                <!-- Additional applications would be listed here -->
+                <p>For complete information about all supported third-party applications, please contact Canon Medical Systems support.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="feature-highlight" onclick="showModal()">?</div>
+
+    <div class="modal" id="help-modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="hideModal()">&times;</span>
+            <h2 style="color: var(--canon-blue);">Interactive Guide Help</h2>
+            <p>Welcome to the interactive Vitrea Quick Start Guide! Here are some tips for using this guide:</p>
+            <ul>
+                <li>Click on the deployment cards to view detailed information about each deployment type</li>
+                <li>Use the "Show More Details" buttons to expand sections with additional information</li>
+                <li>The search bar at the top allows you to quickly find specific content</li>
+                <li>Hover over question marks to see helpful tooltips</li>
+            </ul>
+            <p>For official documentation and support, please visit the Canon Medical Systems website.</p>
+            <button class="toggle-btn" onclick="startTutorial()">Start Interactive Tutorial</button>
+        </div>
+    </div>
+
+    <div class="easter-egg" id="easter-egg">
+        <img src="https://global.canon/en/corporate/logo/img/logo_01.png" alt="Canon Logo">
+        <h3>Congratulations!</h3>
+        <p>You found the hidden Easter egg! 🎉</p>
+        <p>As a reward, here's a fun fact:</p>
+        <p>Canon Medical's Vitrea software is used by radiologists in over 100 countries worldwide.</p>
+        <button class="close-egg" onclick="hideEasterEgg()">Close</button>
+    </div>
+
+    <footer>
+        <p>mi.medical.canon VPMC-17201 F ©2025 Canon Medical Systems Corporation</p>
+    </footer>
+
+    <script>
+        // Toggle content visibility
+        function toggleContent(id) {
+            const content = document.getElementById(id);
+            const btn = event.target;
+            
+            if (content.style.display === 'block') {
+                content.style.display = 'none';
+                btn.textContent = 'Show More Details';
+            } else {
+                content.style.display = 'block';
+                btn.textContent = 'Hide Details';
+            }
+        }
+        
+        // Show deployment details
+        function showDeploymentDetails(type) {
+            // Hide all deployment details first
+            document.getElementById('workstation-details').classList.add('hidden');
+            document.getElementById('extend-details').classList.add('hidden');
+            document.getElementById('enterprise-details').classList.add('hidden');
+            document.getElementById('enterprise-single-details').classList.add('hidden');
+            
+            // Show selected deployment
+            document.getElementById(`${type}-details`).classList.remove('hidden');
+            
+            // Scroll to the details
+            document.getElementById(`${type}-details`).scrollIntoView({ behavior: 'smooth' });
+            
+            // Update progress bar
+            updateProgressBar(25);
+        }
+        
+        // Show all applications
+        function showAllApps() {
+            const allApps = document.getElementById('all-apps');
+            const btn = event.target;
+            
+            if (allApps.style.display === 'block') {
+                allApps.style.display = 'none';
+                btn.textContent = 'Show All Applications';
+            } else {
+                allApps.style.display = 'block';
+                btn.textContent = 'Hide Applications';
+                updateProgressBar(10);
+            }
+        }
+        
+        // Modal functions
+        function showModal() {
+            document.getElementById('help-modal').style.display = 'flex';
+        }
+        
+        function hideModal() {
+            document.getElementById('help-modal').style.display = 'none';
+        }
+        
+        // Easter egg - click logo 5 times
+        let clickCount = 0;
+        document.getElementById('logo').addEventListener('click', function() {
+            clickCount++;
+            if (clickCount === 5) {
+                showEasterEgg();
+                clickCount = 0;
+            }
+        });
+        
+        function showEasterEgg() {
+            document.getElementById('easter-egg').style.display = 'block';
+        }
+        
+        function hideEasterEgg() {
+            document.getElementById('easter-egg').style.display = 'none';
+        }
+        
+        // Progress bar animation
+        function updateProgressBar(percent) {
+            const progressBar = document.getElementById('progress-bar');
+            const currentWidth = parseInt(progressBar.style.width) || 0;
+            const newWidth = Math.min(currentWidth + percent, 100);
+            
+            progressBar.style.width = newWidth + '%';
+            
+            if (newWidth === 100) {
+                progressBar.style.backgroundColor = '#4CAF50'; // Green when complete
+            }
+        }
+        
+        // Search functionality
+        document.getElementById('search-input').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            if (searchTerm.length > 2) {
+                // In a real implementation, this would search through content
+                console.log(`Searching for: ${searchTerm}`);
+            }
+        });
+        
+        // Start tutorial
+        function startTutorial() {
+            hideModal();
+            alert('Interactive tutorial starting! This would guide you through the main features of this guide.');
+        }
+        
+        // Initialize with some progress
+        window.onload = function() {
+            updateProgressBar(5);
+        };
+    </script>
+</body>
+</html>
