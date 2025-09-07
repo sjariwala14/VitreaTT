@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vitrea® Enterprise Upgrade Appendices</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #0066cc;
+        }
+        h1 {
+            color: #0066cc;
+            margin-bottom: 5px;
+        }
+        h2 {
+            color: #0066cc;
+            background-color: #e7f4ff;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        h2::after {
+            content: "+";
+            font-size: 1.5em;
+        }
+        h2.active::after {
+            content: "-";
+        }
+        h3 {
+            color: #0066cc;
+            margin-top: 20px;
+            cursor: pointer;
+            padding: 5px 10px;
+            background-color: #f0f7ff;
+            border-radius: 3px;
+        }
+        .appendix-content {
+            display: none;
+            padding: 15px;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-top: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .note, .caution {
+            padding: 10px;
+            margin: 15px 0;
+            border-left: 4px solid;
+        }
+        .note {
+            background-color: #e7f4ff;
+            border-left-color: #0066cc;
+        }
+        .caution {
+            background-color: #fff3e6;
+            border-left-color: #ff9900;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .search-container {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+        }
+        #searchInput {
+            padding: 8px;
+            width: 300px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        #searchBtn {
+            padding: 8px 15px;
+            background-color: #0066cc;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .highlight {
+            background-color: yellow;
+            font-weight: bold;
+        }
+        .tab-buttons {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        .tab-btn {
+            padding: 10px 20px;
+            background-color: #f2f2f2;
+            border: none;
+            cursor: pointer;
+            margin-right: 5px;
+            border-radius: 5px 5px 0 0;
+        }
+        .tab-btn.active {
+            background-color: #0066cc;
+            color: white;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .procedure-step {
+            margin-bottom: 15px;
+            padding-left: 20px;
+            border-left: 3px solid #0066cc;
+        }
+        .procedure-step-number {
+            font-weight: bold;
+            color: #0066cc;
+        }
+        .copyright {
+            text-align: center;
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 30px;
+        }
+        code {
+            background-color: #f5f5f5;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: Consolas, monospace;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Vitrea® Advanced Visualization</h1>
+        <h2>Enterprise Upgrade Supplemental Information Guide</h2>
+        <p>Appendices A-F Interactive Reference</p>
+    </header>
+
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Search within appendices...">
+        <button id="searchBtn">Search</button>
+        <button id="clearBtn">Clear</button>
+    </div>
+
+    <div class="tab-buttons">
+        <button class="tab-btn active" data-tab="appendix-a">Appendix A</button>
+        <button class="tab-btn" data-tab="appendix-b">Appendix B</button>
+        <button class="tab-btn" data-tab="appendix-c">Appendix C</button>
+        <button class="tab-btn" data-tab="appendix-d">Appendix D</button>
+        <button class="tab-btn" data-tab="appendix-e">Appendix E</button>
+        <button class="tab-btn" data-tab="appendix-f">Appendix F</button>
+    </div>
+
+    <div id="appendix-a" class="tab-content active">
+        <h2 onclick="toggleSection('a-content')">Appendix A: TLS Digital Certificate Request details</h2>
+        <div id="a-content" class="appendix-content">
+            <div class="note">
+                <p><strong>N O T E</strong></p>
+                <p>The content listed below is part of the <strong>Enterprise Deployment Active Directory Planning Guide</strong>.</p>
+            </div>
+            
+            <p>This appendix explains information about digital certificate requirements.</p>
+            
+            <h3 onclick="toggleSection('a-cert-types')">Certificate Types</h3>
+            <div id="a-cert-types" class="appendix-content">
+                <p>A digital certificate is required for your deployment. Based on the numbers of servers in your deployment, you will need at least one of the following certificate types:</p>
+                <ul>
+                    <li><strong>Digital certificate</strong>:
+                        <ul>
+                            <li>For a single server deployment</li>
+                            <li>For each individual server in small Enterprise deployments</li>
+                        </ul>
+                    </li>
+                    <li><strong>SAN certificate</strong>: A certificate with the Fully Qualified Domain Name (FQDN) for all Vitrea servers (and SQL Server if remote) listed in the Subject Alternative Name.</li>
+                    <li><strong>Wild card certificate</strong>: For unlimited hosts or large customer deployments.</li>
+                </ul>
+            </div>
+            
+            <h3 onclick="toggleSection('a-deployment-examples')">Deployment Examples</h3>
+            <div id="a-deployment-examples" class="appendix-content">
+                <ul>
+                    <li><strong>Scenario One</strong>: One Management Server, remote SQL Server, and 10 Application Servers - one wildcard certificate for all servers (if SQL Server 2019+)</li>
+                    <li><strong>Scenario Two</strong>: One Management Server, on-box SQL Server, less than five Application Servers - one SAN certificate for all machines</li>
+                    <li><strong>Scenario Three</strong>: One Management Server, on-box SQL Server, and one Application Server - separate digital certificates for each server</li>
+                    <li><strong>Scenario Four</strong>: One Enterprise Single Server with PACS integration - one digital certificate</li>
+                </ul>
+            </div>
+            
+            <h3 onclick="toggleSection('a-cert-requirements')">Certificate Requirements</h3>
+            <div id="a-cert-requirements" class="appendix-content">
+                <table>
+                    <tr>
+                        <th>Certificate Type</th>
+                        <th>Description</th>
+                    </tr>
+                    <tr>
+                        <td>SQL Communication</td>
+                        <td>Used for encrypting SQL communication between SQL Server and Application Servers</td>
+                    </tr>
+                    <tr>
+                        <td>PACS Integration</td>
+                        <td>Used for PACS-integrated launches on Management Server</td>
+                    </tr>
+                    <tr>
+                        <td>Vitrea Application Communication</td>
+                        <td>Used for IIS/APIs on Vitrea servers</td>
+                    </tr>
+                    <tr>
+                        <td>Remote Desktop/RDWeb</td>
+                        <td>Replaces default Microsoft certificate for Windows Remote Feature</td>
+                    </tr>
+                    <tr>
+                        <td>Mevis LungCAD</td>
+                        <td>Required if installed on separate server</td>
+                    </tr>
+                </table>
+            </div>
+            
+            <h3 onclick="toggleSection('a-ssl-requirements')">SSL/TLS Requirements</h3>
+            <div id="a-ssl-requirements" class="appendix-content">
+                <ul>
+                    <li>Private key must be set for .pfx files</li>
+                    <li>SHA256 or better signature hash algorithm</li>
+                    <li>2048-bit+ RSA key or 256-bit+ ECC key</li>
+                    <li>Must support TLS 1.2</li>
+                    <li>Subject Alternative Name must include Vitrea server(s) unless using wildcard</li>
+                    <li>1-year certificate recommended</li>
+                    <li>Wildcard certificates acceptable (except for SQL Server 2017)</li>
+                    <li>Self-signed certificates not supported</li>
+                </ul>
+            </div>
+            
+            <h3 onclick="toggleSection('a-obtain-cert')">Obtaining SSL/TLS Certificate</h3>
+            <div id="a-obtain-cert" class="appendix-content">
+                <div class="procedure-step">
+                    <span class="procedure-step-number">1.</span> Choose a Certificate Authority (Thawte, VeriSign, or internal CA)
+                </div>
+                <div class="procedure-step">
+                    <span class="procedure-step-number">2.</span> Generate a Server Key with Server Authentication purpose
+                </div>
+                <div class="procedure-step">
+                    <span class="procedure-step-number">3.</span> Generate Certificate Signing Request (CSR) with correct Common Name
+                </div>
+                <div class="procedure-step">
+                    <span class="procedure-step-number">4.</span> Purchase/generate certificate including CA trust chain
+                </div>
+                <div class="procedure-step">
+                    <span class="procedure-step-number">5.</span> Apply for SSL/TLS certificate following vendor instructions
+                </div>
+                <div class="procedure-step">
+                    <span class="procedure-step-number">6.</span> Install certificate in Personal Digital Repository on all servers
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="appendix-b" class="tab-content">
+        <h2 onclick="toggleSection('b-content')">Appendix B: Configure Group Policy Object Settings</h2>
+        <div id="b-content" class="appendix-content">
+            <div class="note">
+                <p><strong>N O T E</strong></p>
+                <p>The content listed below is part of the <strong>Enterprise Deployment Active Directory Planning Guide</strong>.</p>
+            </div>
+            
+            <h3 onclick="toggleSection('b-apply-gpo')">Apply Group Policy Object</h3>
+            <div id="b-apply-gpo" class="appendix-content">
+                <p>Two methods to apply server role-specific VitreaAppGPO Group Policy Object:</p>
+                
+                <h4>Method One: Active Directory Integration</h4>
+                <div class="procedure-step">
+                    <span class="procedure-step-number">1.</span> Navigate to Vitrea_Resources\media content\Utilities\OS Configuration Scripts\GPOs\Application
+                </div>
+                <div class="procedure-step">
+                    <span class="procedure-step-number">2.</span> Import contents of VitreaAppGPO folder
+                </div>
+                <div class="procedure-step">
+                    <span class="procedure-step-number">3.</span> Link GPO to OU governing Vitrea Application Servers
+                </div>
+                <div class="procedure-step">
+                    <span class="procedure-step-number">4.</span> Restart member servers
+                </div>
+                
+                <h4>Method Two: Local Import</h4>
+                <div class="procedure-step">
+                    <span class="procedure-step-number">1.</span> Open PowerShell as administrator
+                </div>
+                <div class="procedure-step">
+                    <span class="procedure-step-number">2.</span> Navigate to Vitrea_Resources\media content\Utilities\OS Configuration Scripts\GPOs
+                </div>
+                <div class="procedure-step">
+                    <span class="procedure-step-number">3.</span> Run <code>.\Vitrea_ImportGPOScript.ps1</code>
+                </div>
+                <div class="procedure-step">
+                    <span class="procedure-step-number">4.</span> Select <code>[L] LocalServerRoleGPO</code>
+                </div>
+                <div class="procedure-step">
+                    <span class="procedure-step-number">5.</span> Select <code>[A] ApplicationLocal</code>
+                </div>
+                <div class="procedure-step">
+                    <span class="procedure-step-number">6.</span> Restart when prompted
+                </div>
+            </div>
+            
+            <h3 onclick="toggleSection('b-user-policies')">User Policies on Application Servers</h3>
+            <div id="b-user-policies" class="appendix-content">
+                <div class="procedure-step">
+                    <span class="procedure-step-number">1.</span> Run <code>gpedit.msc</code>
+                </div>
+                <div class="procedure-step">
+                    <span class="procedure-step-number">2.</span> Navigate to User Configuration > Preferences > Windows Settings > Registry
+                </div>
+                <div class="procedure-step">
+                    <span class="procedure-step-number">3.</span> Create new Registry Item with these values:
+                    <ul>
+                        <li>Hive: <code>HKEY_CURRENT_USER</code></li>
+                        <li>Key Path: <code>Software\Microsoft\Windows\CurrentVersion\InternetSettings\ZoneMap</code></li>
+                        <li>Value name: <code>IEHarden</code></li>
+                        <li>Value type: <code>REG_DWORD</code></li>
+                        <li>Value data: <code>0</code> (Decimal)</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <h3 onclick="toggleSection('b-printing')">Printing on Application Servers</h3>
+            <div id="b-printing" class="appendix-content">
+                <div class="procedure-step">
+                    <span class="procedure-step-number">1.</span> Add Print and Document Services Role
+                </div>
+                <div class="procedure-step">
+                    <span class="procedure-step-number">2.</span> In Print Management, share printer and list in directory
+                </div>
+                <div class="procedure-step">
+                    <span class="procedure-step-number">3.</span> Deploy printer with Group Policy to appropriate OU
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="appendix-c" class="tab-content">
+        <h2 onclick="toggleSection('c-content')">Appendix C: Graphics Card Drivers and Windows Updates</h2>
+        <div id="c-content" class="appendix-content">
+            <div class="note">
+                <p><strong>N O T E</strong></p>
+                <p>The content listed below is part of the <strong>Enterprise Deployment Operating System Setup Guide</strong>.</p>
+            </div>
+            
+            <div class="caution">
+                <p><strong>C A U T I O N</strong></p>
+                <p>Do not mix video card drivers across multiple Application Servers. Use the same driver on all Application Servers.</p>
+            </div>
+            
+            <h3 onclick="toggleSection('c-install-drivers')">Install Video Drivers</h3>
+            <div id="c-install-drivers" class="appendix-content">
+                <div class="procedure-step">
+                    <span class="procedure-step-number">1.</span> Navigate to Vitrea_Resources\Utilities\Video Card Drivers
+                </div>
+                <div class="procedure-step">
+                    <span class="procedure-step-number">2.</span> Select appropriate driver:
+                    <ul>
+                        <li>Windows Server 2016: 475.14 folder</li>
+                        <li>Windows Server 2019/2022: 553.62 folder</li>
+                    </ul>
+                </div>
+                <div class="procedure-step">
+                    <span class="procedure-step-number">3.</span> Double-click driver file
+                </div>
+                <div class="procedure-step">
+                    <span class="procedure-step-number">4.</span> Select Custom (Advanced) installation
+                </div>
+                <div class="procedure-step">
+                    <span class="procedure-step-number">5.</span> Check "Perform a clean installation"
+                </div>
+                <div class="procedure-step">
+                    <span class="procedure-step-number">6.</span> Restart when prompted
+                </div>
+            </div>
+            
+            <h3 onclick="toggleSection('c-vgpu')">vGPU-driven Application Servers</h3>
+            <div id="c-vgpu" class="appendix-content">
+                <div class="note">
+                    <p>vGPU video drivers should use version 11.4 or newer.</p>
+                </div>
+                <p>Download vGPU drivers from: <a href="https://www.nvidia.com/Download/index.aspx?lang=en-us" target="_blank">NVIDIA Download Center</a></p>
+            </div>
+            
+            <h3 onclick="toggleSection('c-windows-updates')">Install Windows Updates</h3>
+            <div id="c-windows-updates" class="appendix-content">
+                <div class="procedure-step">
+                    <span class="procedure-step-number">1.</span> Open Control Panel > System and Security > Windows Update
+                </div>
+                <div class="procedure-step">
+                    <span class="procedure-step-number">2.</span> Check for updates
+                </div>
+                <div class="procedure-step">
+                    <span class="procedure-step-number">3.</span> Install all important updates
+                </div>
+                <div class="procedure-step">
+                    <span class="procedure-step-number">4.</span> Repeat until no updates remain
+                </div>
+                <div class="procedure-step">
+                    <span class="procedure-step-number">5.</span> Repeat on all servers in deployment
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="appendix-d" class="tab-content">
+        <h2 onclick="toggleSection('d-content')">Appendix D: Specific Antivirus exclusions</h2>
+        <div id="d-content" class="appendix-content">
+            <div class="note">
+                <p><strong>N O T E</strong></p>
+                <p>The content listed below is part of the <strong>Enterprise Deployment Upgrade Guide</strong>.</p>
+            </div>
+            
+            <h3 onclick="toggleSection('d-management')">Management Server Processes</h3>
+            <div id="d-management" class="appendix-content">
+                <ul>
+                    <li><code>C:\Program Files\Vital Images\AlgorithmExecutionContainer_Release_x64.exe</code></li>
+                    <li><code>C:\Program Files\Vital Images\Algorithms_Plugins_BoneRemoval_Release_x64.exe</code></li>
+                    <li><code>C:\Program Files\Vital Images\Application\bin\VspAppTomcat.exe</code></li>
+                    <li><code>C:\Program Files\Vital Images\AppShell\AppShell_Release_x64.exe</code></li>
+                    <li><code>C:\Program Files\Vital Images\VIMS\Vims\bin\Vitrea.AvDicom.CStoreSCP.exe</code></li>
+                    <li><code>%appdata%\local\oleamedical</code></li>
+                </ul>
+            </div>
+            
+            <h3 onclick="toggleSection('d-application')">Application Server Processes</h3>
+            <div id="d-application" class="appendix-content">
+                <ul>
+                    <li><code>C:\Program Files\Vital Images\AngioReviewerStacker_vc12_ur64.exe</code></li>
+                    <li><code>C:\Program Files\Vital Images\ColonCAD\ColonCADJIT_Release_x64.exe</code></li>
+                    <li><code>C:\Program Files\Vital Images\CTBoneRemovalJIT\BoneRemovalJIT_Release_x64.exe</code></li>
+                    <li><code>C:\Program Files\Vital Images\OleaSphere\Sphere\native\OleaSphereHost.exe</code></li>
+                    <li><code>C:\Program Files\Vital Images\VitreaClassic\bin_x64\Vitrea_Release_x64.exe</code></li>
+                    <li><code>%appdata%\local\oleamedical</code></li>
+                </ul>
+            </div>
+            
+            <h3 onclick="toggleSection('d-folders')">Folder Exclusions</h3>
+            <div id="d-folders" class="appendix-content">
+                <ul>
+                    <li><code>C:\Inetpub</code></li>
+                    <li><code>C:\ProgramData\Vital Images</code></li>
+                    <li><code>C:\Program files\Vital images</code></li>
+                    <li><code>C:\Program Files\Mirada Medical</code></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="appendix-e" class="tab-content">
+        <h2 onclick="toggleSection('e-content')">Appendix E: Run the System Hardening Script</h2>
+        <div id="e-content" class="appendix-content">
+            <div class="note">
+                <p><strong>N O T E</strong></p>
+                <p>The content listed below is part of the <strong>Enterprise Deployment Upgrade Guide</strong>.</p>
+            </div>
+            
+            <h3 onclick="toggleSection('e-management')">Management Server</h3>
+            <div id="e-management" class="appendix-content">
+                <div class="procedure-step">
+                    <span class="procedure-step-number">1.</span> Navigate to E:\Vitrea_Resources\&lt;media contents&gt;\Utilities\OS Configuration Scripts\Windows Server\Post
+                </div>
+                <div class="procedure-step">
+                    <span class="procedure-step-number">2.</span> Open PowerShell as administrator
+                </div>
+                <div class="procedure-step">
+                    <span class="procedure-step-number">3.</span> Run <code>.\runscript.bat</code>
+                </div>
+                <div class="procedure-step">
+                    <span class="procedure-step-number">4.</span> Select <code>[M] Management</code> script profile
+                </div>
+                <div class="procedure-step">
+                    <span class="procedure-step-number">5.</span> Restart when prompted
+                </div>
+            </div>
+            
+            <h3 onclick="toggleSection('e-application')">Application Server</h3>
+            <div id="e-application" class="appendix-content">
+                <div class="procedure-step">
+                    <span class="procedure-step-number">1.</span> Navigate to E:\Vitrea_Resources\&lt;media contents&gt;\Utilities\OS Configuration Scripts\Windows Server\Post
+                </div>
+                <div class="procedure-step">
+                    <span class="procedure-step-number">2.</span> Open PowerShell as administrator
+                </div>
+                <div class="procedure-step">
+                    <span class="procedure-step-number">3.</span> Run <code>.\runscript.bat</code>
+                </div>
+                <div class="procedure-step">
+                    <span class="procedure-step-number">4.</span> Select <code>[A] Application</code> script profile
+                </div>
+                <div class="procedure-step">
+                    <span class="procedure-step-number">5.</span> Restart when prompted
+                </div>
+            </div>
+            
+            <h3 onclick="toggleSection('e-settings')">Hardening Settings</h3>
+            <div id="e-settings" class="appendix-content">
+                <ul>
+                    <li>Disable SMBv1 protocol</li>
+                    <li>Remove Powershell/2.0 Engine</li>
+                    <li>Disable WDigest Authentication</li>
+                    <li>Enable FIPS Crypto filter</li>
+                    <li>Enable UAC with Admin approval mode</li>
+                    <li>Configure Windows Firewall</li>
+                    <li>Set SMB packet signing requirements</li>
+                    <li>Configure IIS security settings</li>
+                    <li>Disable SQL Browser service</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div id="appendix-f" class="tab-content">
+        <h2 onclick="toggleSection('f-content')">Appendix F: VMware Procedures</h2>
+        <div id="f-content" class="appendix-content">
+            <div class="note">
+                <p><strong>N O T E</strong></p>
+                <p>The content listed below is part of the <strong>Enterprise Deployment Operating System Setup Guide</strong>.</p>
+            </div>
+            
+            <h3 onclick="toggleSection('f-evc')">Verify Enhanced vMotion Compatibility (EVC)</h3>
+            <div id="f-evc" class="appendix-content">
+                <p><strong>For Vitrea 7.15.6 and older:</strong></p>
+                <div class="procedure-step">
+                    <span class="procedure-step-number">1.</span> Navigate to virtual machine in vCenter
+                </div>
+                <div class="procedure-step">
+                    <span class="procedure-step-number">2.</span> On Configure tab, select VMware EVC
+                </div>
+                <div class="procedure-step">
+                    <span class="procedure-step-number">3.</span> Enable EVC with Intel "Sandy Bridge" Generation or higher
+                </div>
+                
+                <p><strong>For Vitrea 7.15.7 and newer:</strong></p>
+                <div class="procedure-step">
+                    <span class="procedure-step-number">1.</span> Navigate to virtual machine in vCenter
+                </div>
+                <div class="procedure-step">
+                    <span class="procedure-step-number">2.</span> On Configure tab, select VMware EVC
+                </div>
+                <div class="procedure-step">
+                    <span class="procedure-step-number">3.</span> Enable EVC with Intel "Haswell" Generation or higher
+                </div>
+            </div>
+            
+            <h3 onclick="toggleSection('f-vcpu')">Configure vCPU Cores</h3>
+            <div id="f-vcpu" class="appendix-content">
+                <div class="note">
+                    <p>When deploying virtual Application Servers, set maximum of 1 or 2 sockets per guest.</p>
+                </div>
+                
+                <p><strong>VMware vSphere 7.x/ESXi:</strong></p>
+                <div class="procedure-step">
+                    <span class="procedure-step-number">1.</span> Edit VM settings
+                </div>
+                <div class="procedure-step">
+                    <span class="procedure-step-number">2.</span> In CPU section, set Cores per Socket (e.g., 1 socket with 8 cores)
+                </div>
+                
+                <p><strong>VMware vSphere 8.x/ESXi:</strong></p>
+                <div class="procedure-step">
+                    <span class="procedure-step-number">1.</span> Edit VM settings
+                </div>
+                <div class="procedure-step">
+                    <span class="procedure-step-number">2.</span> In CPU Topology section, set Cores per Socket
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="copyright">
+        <p>mi.medical.canon | VPMC-17431 B | ©2025 Canon Medical Systems Corporation</p>
+    </div>
+
+    <script>
+        // Toggle section visibility
+        function toggleSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            section.style.display = section.style.display === 'none' ? 'block' : 'none';
+            
+            // Update the header indicator
+            const header = section.previousElementSibling;
+            if (section.style.display === 'none') {
+                header.classList.remove('active');
+            } else {
+                header.classList.add('active');
+            }
+        }
+
+        // Tab switching functionality
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Remove active class from all buttons and content
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                // Add active class to clicked button and corresponding content
+                btn.classList.add('active');
+                const tabId = btn.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+
+        // Search functionality
+        document.getElementById('searchBtn').addEventListener('click', searchDocument);
+        document.getElementById('clearBtn').addEventListener('click', clearSearch);
+
+        function searchDocument() {
+            const searchText = document.getElementById('searchInput').value.trim().toLowerCase();
+            if (!searchText) return;
+            
+            clearSearch();
+            
+            const contentElements = document.querySelectorAll('.appendix-content');
+            let found = false;
+            
+            contentElements.forEach(el => {
+                const text = el.textContent.toLowerCase();
+                if (text.includes(searchText)) {
+                    found = true;
+                    
+                    // Show parent sections
+                    let current = el;
+                    while (current && current.classList.contains('appendix-content')) {
+                        current.style.display = 'block';
+                        if (current.previousElementSibling) {
+                            current.previousElementSibling.classList.add('active');
+                        }
+                        current = current.parentElement.querySelector('.appendix-content');
+                    }
+                    
+                    // Highlight text
+                    const regex = new RegExp(searchText, 'gi');
+                    el.innerHTML = el.innerHTML.replace(regex, match => 
+                        `<span class="highlight">${match}</span>`
+                    );
+                }
+            });
+            
+            if (!found) {
+                alert('No results found for: ' + searchText);
+            }
+        }
+
+        function clearSearch() {
+            document.querySelectorAll('.highlight').forEach(el => {
+                el.outerHTML = el.innerHTML;
+            });
+            document.getElementById('searchInput').value = '';
+        }
+
+        // Initialize with first section expanded
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.appendix-content').forEach(el => {
+                el.style.display = 'none';
+            });
+            
+            // Expand first section of active tab
+            const activeTab = document.querySelector('.tab-content.active');
+            if (activeTab) {
+                const firstSection = activeTab.querySelector('.appendix-content');
+                if (firstSection) {
+                    firstSection.style.display = 'block';
+                    firstSection.previousElementSibling.classList.add('active');
+                }
+            }
+        });
+    </script>
+</body>
+</html>
