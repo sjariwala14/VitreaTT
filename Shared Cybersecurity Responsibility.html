@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canon Medical Cybersecurity Interactive Guide</title>
+    <style>
+        :root {
+            --canon-red: #c41017;
+            --canon-light-red: #ed1c24;
+            --canon-dark-blue: #003b6f;
+            --canon-gray: #f5f5f5;
+            --canon-dark-gray: #333333;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: var(--canon-dark-gray);
+            line-height: 1.6;
+            background-color: #f9f9f9;
+        }
+        header {
+            background: linear-gradient(140deg, var(--canon-gray), var(--canon-red));
+            padding: 20px 40px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="50" height="50" x="0" y="0" fill="none" stroke="%23ffffff20" stroke-width="2"/><rect width="50" height="50" x="50" y="50" fill="none" stroke="%23ffffff20" stroke-width="2"/></svg>');
+            opacity: 0.3;
+        }
+        .logo {
+            height: 60px;
+            margin-right: 20px;
+            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.2));
+            transition: transform 0.3s ease;
+        }
+        .logo:hover {
+            transform: scale(1.05) rotate(-5deg);
+        }
+        .header-content {
+            z-index: 1;
+        }
+        h1 {
+            color: white;
+            margin: 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            font-size: 2.2rem;
+        }
+        .subtitle {
+            color: white;
+            font-weight: 300;
+            margin: 5px 0 0;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        }
+        .card h2 {
+            color: var(--canon-dark-blue);
+            margin-top: 0;
+            border-bottom: 2px solid var(--canon-gray);
+            padding-bottom: 10px;
+        }
+        .card h3 {
+            color: var(--canon-red);
+        }
+        .tab-container {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background: #f1f1f1;
+            border: none;
+            border-radius: 5px 5px 0 0;
+            margin-right: 5px;
+            transition: all 0.3s ease;
+        }
+        .tab:hover {
+            background: #ddd;
+        }
+        .tab.active {
+            background: var(--canon-red);
+            color: white;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .checklist {
+            list-style-type: none;
+            padding: 0;
+        }
+        .checklist li {
+            padding: 10px 0 10px 30px;
+            position: relative;
+            border-bottom: 1px solid #eee;
+        }
+        .checklist li:before {
+            content: "✓";
+            color: var(--canon-red);
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+        .accordion {
+            margin-bottom: 10px;
+        }
+        .accordion-header {
+            background: var(--canon-dark-blue);
+            color: white;
+            padding: 15px;
+            cursor: pointer;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s ease;
+        }
+        .accordion-header:hover {
+            background: var(--canon-red);
+        }
+        .accordion-header:after {
+            content: "+";
+            font-size: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+        .accordion-header.active:after {
+            content: "-";
+        }
+        .accordion-content {
+            padding: 15px;
+            background: white;
+            border: 1px solid #ddd;
+            border-top: none;
+            border-radius: 0 0 5px 5px;
+            display: none;
+        }
+        .security-meter {
+            width: 100%;
+            height: 30px;
+            background: #f1f1f1;
+            border-radius: 15px;
+            margin: 20px 0;
+            overflow: hidden;
+            position: relative;
+        }
+        .security-meter-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--canon-red), var(--canon-dark-blue));
+            width: 0;
+            transition: width 1s ease;
+            border-radius: 15px;
+        }
+        .security-meter-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+        .interactive-diagram {
+            width: 100%;
+            height: 400px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 800 400"><rect x="100" y="150" width="200" height="100" rx="10" fill="%23003b6f" stroke="%23ffffff" stroke-width="2"/><text x="200" y="210" fill="white" font-family="Arial" font-size="16" text-anchor="middle">Customer</text><rect x="500" y="150" width="200" height="100" rx="10" fill="%23c41017" stroke="%23ffffff" stroke-width="2"/><text x="600" y="210" fill="white" font-family="Arial" font-size="16" text-anchor="middle">Canon Medical</text><line x1="300" y1="200" x2="500" y2="200" stroke="%23333" stroke-width="2" stroke-dasharray="5,5"/><circle cx="400" cy="200" r="30" fill="%23f5f5f5" stroke="%23333" stroke-width="2"/><text x="400" y="205" fill="%23333" font-family="Arial" font-size="14" text-anchor="middle">Shared</text></svg>');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            margin: 30px 0;
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        .interactive-diagram:hover {
+            transform: scale(1.02);
+        }
+        .interactive-diagram .hotspot {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            border: 2px solid white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .interactive-diagram .hotspot:hover {
+            background: rgba(255,255,255,0.7);
+            transform: scale(1.2);
+        }
+        .hotspot-tooltip {
+            position: absolute;
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            z-index: 100;
+            display: none;
+            max-width: 200px;
+        }
+        .hotspot-1 { top: 30%; left: 20%; }
+        .hotspot-2 { top: 30%; left: 50%; }
+        .hotspot-3 { top: 30%; left: 80%; }
+        .hotspot-4 { top: 70%; left: 35%; }
+        .hotspot-5 { top: 70%; left: 65%; }
+        .download-btn {
+            background: var(--canon-dark-blue);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+        .download-btn:hover {
+            background: var(--canon-red);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .download-btn i {
+            margin-right: 10px;
+        }
+        footer {
+            background: var(--canon-dark-gray);
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+            margin-top: 50px;
+        }
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        .footer-links a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .footer-links a:hover {
+            color: var(--canon-light-red);
+        }
+        .copyright {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        .glow-effect {
+            animation: glow 2s infinite alternate;
+        }
+        @keyframes glow {
+            from {
+                box-shadow: 0 0 5px rgba(196, 16, 23, 0.5);
+            }
+            to {
+                box-shadow: 0 0 20px rgba(196, 16, 23, 0.8);
+            }
+        }
+        .cyber-animation {
+            width: 100%;
+            height: 200px;
+            background: #000;
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        .cyber-line {
+            position: absolute;
+            height: 1px;
+            background: rgba(0, 255, 0, 0.7);
+            width: 100%;
+            animation: scan 4s linear infinite;
+        }
+        @keyframes scan {
+            0% { top: 0; opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { top: 100%; opacity: 0; }
+        }
+        .cyber-code {
+            position: absolute;
+            color: rgba(0, 255, 0, 0.7);
+            font-family: monospace;
+            font-size: 14px;
+            animation: flicker 0.5s infinite alternate;
+        }
+        @keyframes flicker {
+            0% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+        .hidden-message {
+            background: var(--canon-gray);
+            padding: 20px;
+            border-left: 5px solid var(--canon-red);
+            margin: 20px 0;
+            display: none;
+        }
+        .hidden-message.show {
+            display: block;
+            animation: slideIn 0.5s ease;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        .konami-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--canon-dark-blue);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
+            z-index: 1000;
+            text-align: center;
+            display: none;
+        }
+        .konami-message.show {
+            display: block;
+            animation: bounce 0.5s;
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-30px);}
+            60% {transform: translateY(-15px);}
+        }
+        .konami-message h2 {
+            color: var(--canon-red);
+            margin-top: 0;
+        }
+        .konami-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="https://global.canon/en/corporate/logo/img/logo_01.png" alt="Canon Medical Logo" class="logo">
+        <div class="header-content">
+            <h1>Shared Cybersecurity Responsibility</h1>
+            <p class="subtitle">Interactive Guidelines for Vitrea Advanced Visualization</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="card glow-effect">
+            <h2>Welcome to the Interactive Cybersecurity Guide</h2>
+            <p>This interactive document describes and assigns the operational security information and controls for the Canon Medical Vitrea Advanced Visualization (Vitrea AV) product. Explore the tabs below to learn about shared responsibilities between Canon Medical and customers.</p>
+            
+            <div class="cyber-animation" id="cyberCanvas">
+                <div class="cyber-line" style="top: 30%;"></div>
+                <div class="cyber-line" style="top: 60%; animation-delay: 2s;"></div>
+            </div>
+            
+            <div class="tab-container">
+                <button class="tab active" onclick="openTab(event, 'overview')">Overview</button>
+                <button class="tab" onclick="openTab(event, 'shared-model')">Shared Model</button>
+                <button class="tab" onclick="openTab(event, 'controls')">Security Controls</button>
+                <button class="tab" onclick="openTab(event, 'checklist')">Checklist</button>
+                <button class="tab" onclick="openTab(event, 'resources')">Resources</button>
+            </div>
+            
+            <div id="overview" class="tab-content active">
+                <h3>Cybersecurity Shared Responsibility</h3>
+                <p>Proper security measures, such as security management for the operation of the product and guidelines for connecting the product to the network or peripheral devices, are required to protect against cybersecurity attacks.</p>
+                <p>Attacks come in the form of bad actors and/or malicious software (malware) such as computer viruses or worms. The risks due to cyberattacks include data falsification, leakage of information (including patient data), product malfunction, and infection of other products/devices.</p>
+                
+                <div class="security-meter">
+                    <div class="security-meter-fill" id="securityMeter"></div>
+                    <div class="security-meter-text" id="securityText">Security Level: 0%</div>
+                </div>
+                <button class="download-btn" onclick="increaseSecurity()">
+                    <i>🔒</i> Improve Your Security
+                </button>
+                
+                <div class="hidden-message" id="easterEgg">
+                    <h3>Security Pro Tip!</h3>
+                    <p>Did you know? Canon Medical provides security bulletins for customers at: <a href="https://www.mi.medical.canon/support-and-services/customer-support/security-bulletins/" target="_blank">https://www.mi.medical.canon/support-and-services/customer-support/security-bulletins/</a></p>
+                </div>
+            </div>
+            
+            <div id="shared-model" class="tab-content">
+                <h3>Shared Responsibility Model</h3>
+                <p>Security is a shared responsibility between Canon Medical and the customer. The customer is responsible for the physical infrastructure, including hardware and network, as well as the operating environment of the software.</p>
+                
+                <div class="interactive-diagram" id="sharedDiagram">
+                    <div class="hotspot hotspot-1" onclick="showTooltip(event, 'Customer Responsibilities', 'Physical infrastructure, OS management, user access controls, system updates, security monitoring')"></div>
+                    <div class="hotspot hotspot-2" onclick="showTooltip(event, 'Shared Responsibilities', 'Data protection, system configuration, security best practices')"></div>
+                    <div class="hotspot hotspot-3" onclick="showTooltip(event, 'Canon Medical Responsibilities', 'Software security, TLS encryption, authentication integration, security updates')"></div>
+                    <div class="hotspot hotspot-4" onclick="showTooltip(event, 'Customer Security', 'Firewalls, anti-virus, encryption, disaster recovery')"></div>
+                    <div class="hotspot hotspot-5" onclick="showTooltip(event, 'Canon Security', 'Secure coding, vulnerability management, security testing')"></div>
+                    <div class="hotspot-tooltip" id="diagramTooltip"></div>
+                </div>
+                
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        Customer Responsibilities
+                        <span></span>
+                    </div>
+                    <div class="accordion-content">
+                        <ul>
+                            <li>Physical infrastructure and network</li>
+                            <li>Operating system management</li>
+                            <li>User access controls</li>
+                            <li>System updates and patches</li>
+                            <li>Security monitoring and logging</li>
+                            <li>Storage encryption</li>
+                            <li>Disaster recovery</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        Canon Medical Responsibilities
+                        <span></span>
+                    </div>
+                    <div class="accordion-content">
+                        <ul>
+                            <li>Software security features</li>
+                            <li>TLS encryption for communications</li>
+                            <li>Authentication and authorization integration</li>
+                            <li>Security updates and patches</li>
+                            <li>Vulnerability management</li>
+                            <li>Security testing</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="controls" class="tab-content">
+                <h3>Security Controls</h3>
+                
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        For Customers
+                        <span></span>
+                    </div>
+                    <div class="accordion-content">
+                        <p>The hardware, network and Windows OS provides security controls for the customer to be aware of and maintain:</p>
+                        <ul class="checklist">
+                            <li><strong>Hardware and port restrictions:</strong> Customers are responsible for any physical safeguards needed to meet their policies.</li>
+                            <li><strong>Identity and access management:</strong> Users and their authorization are configured through standard Microsoft controls.</li>
+                            <li><strong>HIPAA and GDPR requirements:</strong> Customers are responsible for limiting access to patient data to authorized individuals.</li>
+                            <li><strong>System updates:</strong> The customer is responsible for ensuring system updates are applied in a timely manner.</li>
+                            <li><strong>Security monitoring and logging:</strong> This is done using the operating system and other system controls.</li>
+                            <li><strong>Threat detection and forensics:</strong> This is handled by the Windows operating system and other windows tools.</li>
+                            <li><strong>Anti-virus and malware:</strong> Vitrea AV integrates with Windows Defender anti-virus and malware tools.</li>
+                            <li><strong>Storage/encryption at rest:</strong> Best practices are to encrypt all storage systems.</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        For Canon Medical
+                        <span></span>
+                    </div>
+                    <div class="accordion-content">
+                        <ul class="checklist">
+                            <li><strong>TLS encryption:</strong> Vitrea AV is configured to use TLS to protect communications channels.</li>
+                            <li><strong>Authentication control:</strong> Product user roles are predefined and incorporate the principle of least privileges.</li>
+                            <li><strong>Security updates:</strong> Customers on a current maintenance contract may be notified when new versions are available.</li>
+                            <li><strong>Security bulletins:</strong> Provided for customers through Canon Medical support channels.</li>
+                            <li><strong>Vulnerability reporting:</strong> Canon Medical should be immediately contacted in the event of a security incident.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="checklist" class="tab-content">
+                <h3>Customer Cybersecurity Checklist</h3>
+                <p>Use this interactive checklist to ensure you've addressed all key security responsibilities:</p>
+                
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        Physical Security
+                        <span></span>
+                    </div>
+                    <div class="accordion-content">
+                        <label class="checklist-item"><input type="checkbox" onchange="updateChecklist()"> Implement hardware and port restrictions</label>
+                        <label class="checklist-item"><input type="checkbox" onchange="updateChecklist()"> Ensure physical access controls to systems</label>
+                    </div>
+                </div>
+                
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        Access Management
+                        <span></span>
+                    </div>
+                    <div class="accordion-content">
+                        <label class="checklist-item"><input type="checkbox" onchange="updateChecklist()"> Configure identity and access management</label>
+                        <label class="checklist-item"><input type="checkbox" onchange="updateChecklist()"> Implement principle of least privilege</label>
+                        <label class="checklist-item"><input type="checkbox" onchange="updateChecklist()"> Configure screen lock and session timeout</label>
+                    </div>
+                </div>
+                
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        System Maintenance
+                        <span></span>
+                    </div>
+                    <div class="accordion-content">
+                        <label class="checklist-item"><input type="checkbox" onchange="updateChecklist()"> Apply system updates regularly</label>
+                        <label class="checklist-item"><input type="checkbox" onchange="updateChecklist()"> Maintain anti-virus and malware protection</label>
+                    </div>
+                </div>
+                
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        Data Protection
+                        <span></span>
+                    </div>
+                    <div class="accordion-content">
+                        <label class="checklist-item"><input type="checkbox" onchange="updateChecklist()"> Implement storage encryption at rest</label>
+                        <label class="checklist-item"><input type="checkbox" onchange="updateChecklist()"> Manage digital certificates for TLS encryption</label>
+                    </div>
+                </div>
+                
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        Monitoring & Recovery
+                        <span></span>
+                    </div>
+                    <div class="accordion-content">
+                        <label class="checklist-item"><input type="checkbox" onchange="updateChecklist()"> Configure security monitoring and logging</label>
+                        <label class="checklist-item"><input type="checkbox" onchange="updateChecklist()"> Establish disaster recovery procedures</label>
+                    </div>
+                </div>
+                
+                <div id="checklistProgress" style="margin-top: 20px; font-weight: bold;"></div>
+            </div>
+            
+            <div id="resources" class="tab-content">
+                <h3>Resources & Documentation</h3>
+                <p>Access these resources for more detailed information about Vitrea AV security:</p>
+                
+                <button class="download-btn" onclick="alert('Downloading Enterprise Deployment Guide...')">
+                    <i>📄</i> Enterprise Deployment Guide
+                </button>
+                
+                <button class="download-btn" onclick="alert('Downloading Operating System Setup Guide...')">
+                    <i>📄</i> OS Setup Guide
+                </button>
+                
+                <button class="download-btn" onclick="alert('Downloading Administration Guide...')">
+                    <i>📄</i> Administration Guide
+                </button>
+                
+                <h4 style="margin-top: 30px;">Additional Resources</h4>
+                <ul class="checklist">
+                    <li><a href="https://www.mi.medical.canon/support-and-services/customer-support/security-bulletins/" target="_blank">Security Bulletins</a></li>
+                    <li><a href="https://www.mi.medical.canon/about-us/contact-us/coordinated-vulnerability-reporting/" target="_blank">Vulnerability Reporting</a></li>
+                    <li><a href="https://www.mi.medical.canon/support-and-education/customer-support/product-lifecycle/" target="_blank">Product Lifecycle Information</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="konami-message" id="konamiMessage">
+        <button class="konami-close" onclick="closeKonami()">×</button>
+        <h2>Secret Unlocked!</h2>
+        <p>You've discovered the Konami code easter egg!</p>
+        <p>As a bonus, here's a secret security tip:</p>
+        <p><strong>Regularly review your system logs and update all software components to their latest secure versions.</strong></p>
+        <p>Thank you for exploring our interactive cybersecurity guide!</p>
+    </div>
+
+    <footer>
+        <div class="footer-links">
+            <a href="https://www.mi.medical.canon" target="_blank">Canon Medical Website</a>
+            <a href="https://www.mi.medical.canon/support-and-services/customer-support/security-bulletins/" target="_blank">Security Bulletins</a>
+            <a href="https://www.mi.medical.canon/about-us/contact-us/" target="_blank">Contact Us</a>
+        </div>
+        <p class="copyright">©2025 Canon Medical Systems Corporation. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Tab functionality
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].className = tabcontent[i].className.replace(" active", "");
+            }
+            
+            tablinks = document.getElementsByClassName("tab");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            
+            document.getElementById(tabName).className += " active";
+            evt.currentTarget.className += " active";
+        }
+        
+        // Accordion functionality
+        function toggleAccordion(element) {
+            element.classList.toggle("active");
+            var content = element.nextElementSibling;
+            if (content.style.display === "block") {
+                content.style.display = "none";
+            } else {
+                content.style.display = "block";
+            }
+        }
+        
+        // Security meter functionality
+        var securityLevel = 0;
+        function increaseSecurity() {
+            if (securityLevel < 100) {
+                securityLevel += 10;
+                document.getElementById("securityMeter").style.width = securityLevel + "%";
+                document.getElementById("securityText").textContent = "Security Level: " + securityLevel + "%";
+                
+                if (securityLevel === 50) {
+                    document.getElementById("easterEgg").classList.add("show");
+                }
+                
+                if (securityLevel === 100) {
+                    alert("Congratulations! You've achieved maximum security level!");
+                }
+            }
+        }
+        
+        // Diagram tooltip functionality
+        function showTooltip(event, title, content) {
+            var tooltip = document.getElementById("diagramTooltip");
+            tooltip.innerHTML = "<strong>" + title + "</strong><p>" + content + "</p>";
+            tooltip.style.display = "block";
+            tooltip.style.left = (event.clientX + 20) + "px";
+            tooltip.style.top = (event.clientY + 20) + "px";
+            
+            // Hide tooltip after 3 seconds
+            setTimeout(function() {
+                tooltip.style.display = "none";
+            }, 3000);
+        }
+        
+        // Checklist functionality
+        function updateChecklist() {
+            var checkboxes = document.querySelectorAll('#checklist input[type="checkbox"]');
+            var checked = 0;
+            
+            checkboxes.forEach(function(checkbox) {
+                if (checkbox.checked) checked++;
+            });
+            
+            var total = checkboxes.length;
+            var percentage = Math.round((checked / total) * 100);
+            
+            document.getElementById("checklistProgress").textContent = 
+                "Progress: " + checked + " of " + total + " completed (" + percentage + "%)";
+        }
+        
+        // Cyber animation
+        function createCyberCode() {
+            var canvas = document.getElementById('cyberCanvas');
+            for (var i = 0; i < 50; i++) {
+                var code = document.createElement('div');
+                code.className = 'cyber-code';
+                code.textContent = generateRandomCode();
+                code.style.left = Math.random() * 90 + '%';
+                code.style.top = Math.random() * 90 + '%';
+                canvas.appendChild(code);
+            }
+        }
+        
+        function generateRandomCode() {
+            var chars = '01';
+            var result = '';
+            for (var i = 0; i < 10; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result;
+        }
+        
+        // Konami code easter egg
+        var konamiCode = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+        var konamiPosition = 0;
+        
+        document.addEventListener('keydown', function(e) {
+            if (e.key === konamiCode[konamiPosition]) {
+                konamiPosition++;
+                if (konamiPosition === konamiCode.length) {
+                    showKonami();
+                    konamiPosition = 0;
+                }
+            } else {
+                konamiPosition = 0;
+            }
+        });
+        
+        function showKonami() {
+            document.getElementById('konamiMessage').classList.add('show');
+        }
+        
+        function closeKonami() {
+            document.getElementById('konamiMessage').classList.remove('show');
+        }
+        
+        // Initialize
+        window.onload = function() {
+            createCyberCode();
+            updateChecklist();
+        };
+    </script>
+</body>
+</html>
