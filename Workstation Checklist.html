@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vitrea Advanced Visualization Workstation Deployment Checklist</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .collapsible {
+            display: none;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            max-height: 0;
+        }
+        .collapsible.active {
+            display: block;
+            max-height: 5000px;
+        }
+        .checkbox:checked + label {
+            text-decoration: line-through;
+            color: #6b7280;
+        }
+        .section-header {
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .section-header:hover {
+            background-color: #005555;
+        }
+        .section-header i {
+            transition: transform 0.3s ease;
+        }
+        .section-header.active i {
+            transform: rotate(180deg);
+        }
+        .progress-bar {
+            height: 6px;
+            background-color: #e5e7eb;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background-color: #0d9488;
+            transition: width 0.5s ease;
+        }
+        .search-highlight {
+            background-color: #fef08a;
+        }
+        .print-only {
+            display: none;
+        }
+        @media print {
+            .no-print {
+                display: none;
+            }
+            .print-only {
+                display: block;
+            }
+            .collapsible {
+                display: block !important;
+                max-height: none !important;
+            }
+            body {
+                background-color: white;
+                font-size: 12px;
+            }
+            .checkbox:checked + label {
+                color: #6b7280;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen p-6">
+    <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-lg p-8 print:p-2 print:shadow-none print:max-w-full">
+        <div class="no-print flex justify-between items-center mb-4">
+            <h1 class="text-3xl font-bold text-center text-teal-800 mb-6 print:text-2xl">Vitrea Advanced Visualization Workstation Deployment Checklist</h1>
+            <div class="flex space-x-2">
+                <button onclick="window.print()" class="bg-gray-200 text-gray-700 px-3 py-1 rounded-lg hover:bg-gray-300 transition flex items-center">
+                    <i class="fas fa-print mr-2"></i> Print
+                </button>
+                <button onclick="exportChecklist()" class="bg-gray-200 text-gray-700 px-3 py-1 rounded-lg hover:bg-gray-300 transition flex items-center">
+                    <i class="fas fa-file-export mr-2"></i> Export
+                </button>
+            </div>
+        </div>
+        
+        <div class="print-only mb-4">
+            <h1 class="text-2xl font-bold text-center text-teal-800">Vitrea Advanced Visualization Workstation Deployment Checklist</h1>
+            <p class="text-center text-sm text-gray-600">Generated on <span id="print-date"></span></p>
+        </div>
+
+        <p class="text-gray-600 mb-8 text-center print:text-sm">This checklist outlines the key steps for installing and configuring Vitrea Advanced Visualization software on a workstation, as detailed in the "Vitrea Install Guide for Workstation Deployment" (VPMC-17216F). Complete each step to ensure a successful deployment.</p>
+
+        <div class="no-print mb-6 bg-teal-50 p-4 rounded-lg">
+            <div class="flex justify-between items-center mb-2">
+                <span class="font-medium text-teal-800">Progress: <span id="progress-text">0</span>%</span>
+                <span id="completed-count">0</span>/<span id="total-count">0</span> items completed
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-bar-fill" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <div class="no-print mb-6">
+            <div class="relative">
+                <input type="text" id="search-input" placeholder="Search checklist items..." 
+                       class="w-full p-3 pl-10 rounded-lg border border-gray-300 focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
+                <i class="fas fa-search absolute left-3 top-3.5 text-gray-400"></i>
+            </div>
+        </div>
+
+        <div class="space-y-4">
+            <!-- Pre-Installation Requirements -->
+            <div class="section border border-gray-200 rounded-lg overflow-hidden">
+                <h2 class="section-header text-xl font-semibold text-white bg-teal-600 p-4" onclick="toggleSection('pre-installation')">
+                    <span>Pre-Installation Requirements</span>
+                    <i class="fas fa-chevron-down text-white"></i>
+                </h2>
+                <div id="pre-installation" class="collapsible">
+                    <div class="p-4">
+                        <ul class="space-y-3">
+                            <li class="flex items-start">
+                                <input type="checkbox" id="pre1" class="checkbox mt-1 h-5 w-5 text-teal-600" onchange="saveCheckboxState('pre1'); updateProgress()">
+                                <label for="pre1" class="ml-2"><strong>Review Safety and Regulatory Information</strong> (Page 5)
+                                    <ul class="ml-6 list-disc text-gray-700">
+                                        <li>Refer to the "About Vitrea Medical Imaging Software" document for safety and regulatory considerations.</li>
+                                        <li>Note: Federal law restricts this device to sale by or on the order of a physician (21 CFR 801.109(b)(1)).</li>
+                                    </ul>
+                                </label>
+                            </li>
+                            <li class="flex items-start">
+                                <input type="checkbox" id="pre2" class="checkbox mt-1 h-5 w-5 text-teal-600" onchange="saveCheckboxState('pre2'); updateProgress()">
+                                <label for="pre2" class="ml-2"><strong>Verify Hardware and Software Requirements</strong> (Pages 104-113)
+                                    <ul class="ml-6 list-disc text-gray-700">
+                                        <li>Ensure CPU supports Advanced Vector Extensions (AVX).</li>
+                                        <li>Confirm supported OS: Windows 10/11 Pro/Enterprise 64-bit (version 22H2).</li>
+                                        <li>Verify minimum hardware: 24GB RAM, NVIDIA Quadro K2000 2GB, 1.0 Gbps network.</li>
+                                        <li>Install Microsoft .NET Framework 4.8 and PowerShell 5.1.</li>
+                                    </ul>
+                                </label>
+                            </li>
+                            <li class="flex items-start">
+                                <input type="checkbox" id="pre3" class="checkbox mt-1 h-5 w-5 text-teal-600" onchange="saveCheckboxState('pre3'); updateProgress()">
+                                <label for="pre3" class="ml-2"><strong>Prepare Installation Media</strong> (Page 10)
+                                    <ul class="ml-6 list-disc text-gray-700">
+                                        <li>Access Vitrea product media in the <strong>Vitrea_Resources</strong> folder.</li>
+                                        <li>Sign in with an administrative account (e.g., <strong>Vitrea-Admin</strong>).</li>
+                                    </ul>
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Configuration -->
+            <div class="section border border-gray-200 rounded-lg overflow-hidden">
+                <h2 class="section-header text-xl font-semibold text-white bg-teal-600 p-4" onclick="toggleSection('system-configuration')">
+                    <span>System Configuration</span>
+                    <i class="fas fa-chevron-down text-white"></i>
+                </h2>
+                <div id="system-configuration" class="collapsible">
+                    <div class="p-4">
+                        <ul class="space-y-3">
+                            <li class="flex items-start">
+                                <input type="checkbox" id="sys1" class="checkbox mt-1 h-5 w-5 text-teal-600" onchange="saveCheckboxState('sys1'); updateProgress()">
+                                <label for="sys1" class="ml-2"><strong>Set System Hostname</strong> (Pages 13-14)
+                                    <ul class="ml-6 list-disc text-gray-700">
+                                        <li>Open <strong>Control Panel</strong> > <strong>System and Security</strong> > <strong>System</strong> > <strong>Change settings</strong> > <strong>Change</strong>.</li>
+                                        <li>Enter hostname (no underscores) and click <strong>OK</strong>.</li>
+                                        <li>Restart the system.</li>
+                                    </ul>
+                                </label>
+                            </li>
+                            <li class="flex items-start">
+                                <input type="checkbox" id="sys2" class="checkbox mt-1 h-5 w-5 text-teal-600" onchange="saveCheckboxState('sys2'); updateProgress()">
+                                <label for="sys2" class="ml-2"><strong>Set Static IP Address and DNS Entry</strong> (Page 15)
+                                    <ul class="ml-6 list-disc text-gray-700">
+                                        <li>Contact IT for a reserved static IP.</li>
+                                        <li>Open <strong>Control Panel</strong> > <strong>Network and Sharing Center</strong> > <strong>Change adapter settings</strong>.</li>
+                                        <li>Right-click connection, select <strong>Properties</strong>, choose <strong>Internet Protocol Version 4 (TCP/IPv4)</strong>.</li>
+                                        <li>Set static IP and DNS server addresses, then click <strong>OK</strong>.</li>
+                                    </ul>
+                                </label>
+                            </li>
+                            <li class="flex items-start">
+                                <input type="checkbox" id="sys3" class="checkbox mt-1 h-5 w-5 text-teal-600" onchange="saveCheckboxState('sys3'); updateProgress()">
+                                <label for="sys3" class="ml-2"><strong>Create System Accounts</strong> (Pages 17-21)
+                                    <ul class="ml-6 list-disc text-gray-700">
+                                        <li>Open <strong>Control Panel</strong> > <strong>Administrative Tools</strong> > <strong>Computer Management</strong> > <strong>Local Users and Groups</strong>.</li>
+                                        <li>Create <strong>Vitrea_Admin</strong> and <strong>Vitrea_User</strong> accounts with strong passwords.</li>
+                                        <li>Add <strong>Vitrea_Admin</strong> to <strong>Administrators</strong> group and <strong>Vitrea_User</strong> to <strong>Remote Desktop Users</strong> group.</li>
+                                    </ul>
+                                </label>
+                            </li>
+                            <li class="flex items-start">
+                                <input type="checkbox" id="sys4" class="checkbox mt-1 h-5 w-5 text-teal-600" onchange="saveCheckboxState('sys4'); updateProgress()">
+                                <label for="sys4" class="ml-2"><strong>Configure Windows Features</strong> (Pages 127-131)
+                                    <ul class="ml-6 list-disc text-gray-700">
+                                        <li>Open <strong>Turn Windows Features On or Off</strong>.</li>
+                                        <li>Enable:
+                                            <ul class="ml-6 list-disc">
+                                                <li><strong>.NET Framework 4.7 Advanced Services</strong> (ASP.NET 4.7, WCF Services: HTTP Activation, TCP Port Sharing).</li>
+                                                <li><strong>Internet Information Services</strong> (IIS Management Console, Scripts, Service, Dynamic Content Compression, IP Security, Request Filtering).</li>
+                                                <li><strong>Media Features</strong>.</li>
+                                                <li><strong>Microsoft Message Queue (MSMQ) Server</strong> (MSMQ Server Core, HTTP Support).</li>
+                                                <li><strong>Print and Document Services</strong> (Internet Printing Client, Windows Fax and Scan).</li>
+                                            </ul>
+                                        </li>
+                                        <li>Click <strong>OK</strong>.</li>
+                                    </ul>
+                                </label>
+                            </li>
+                            <li class="flex items-start">
+                                <input type="checkbox" id="sys5" class="checkbox mt-1 h-5 w-5 text-teal-600" onchange="saveCheckboxState('sys5'); updateProgress()">
+                                <label for="sys5" class="ml-2"><strong>Set Performance Options</strong> (Pages 132-134)
+                                    <ul class="ml-6 list-disc text-gray-700">
+                                        <li>Open <strong>Control Panel</strong> > <strong>System and Security</strong> > <strong>System</strong> > <strong>Advanced system settings</strong> > <strong>Performance</strong> > <strong>Settings</strong>.</li>
+                                        <li>Select <strong>Adjust for best performance of Programs</strong> and click <strong>Apply</strong>.</li>
+                                    </ul>
+                                </label>
+                            </li>
+                            <li class="flex items-start">
+                                <input type="checkbox" id="sys6" class="checkbox mt-1 h-5 w-5 text-teal-600" onchange="saveCheckboxState('sys6'); updateProgress()">
+                                <label for="sys6" class="ml-2"><strong>Configure Page File</strong> (Pages 134-135)
+                                    <ul class="ml-6 list-disc text-gray-700">
+                                        <li>In <strong>Advanced system settings</strong> > <strong>Performance</strong> > <strong>Settings</strong> > <strong>Advanced</strong> > <strong>Virtual Memory</strong>, click <strong>Change</strong>.</li>
+                                        <li>Clear <strong>Automatically manage paging file size for all drives</strong>.</li>
+                                        <li>Select <strong>C: drive</strong>, set custom size (initial: 4096 MB, maximum: 8192 MB), and click <strong>Set</strong>.</li>
+                                        <li>Click <strong>OK</strong> and restart.</li>
+                                    </ul>
+                                </label>
+                            </li>
+                            <li class="flex items-start">
+                                <input type="checkbox" id="sys7" class="checkbox mt-1 h-5 w-5 text-teal-600" onchange="saveCheckboxState('sys7'); updateProgress()">
+                                <label for="sys7" class="ml-2"><strong>Set Power Options</strong> (Page 136)
+                                    <ul class="ml-6 list-disc text-gray-700">
+                                        <li>Open <strong>Control Panel</strong> > <strong>Power Options</strong>.</li>
+                                        <li>Select <strong>High performance</strong>, then <strong>Change plan settings</strong>.</li>
+                                        <li>Set <strong>Turn off the display</strong> and <strong>Put computer to sleep</strong> to <strong>Never</strong>.</li>
+                                    </ul>
+                                </label>
+                            </li>
+                            <li class="flex items-start">
+                                <input type="checkbox" id="sys8" class="checkbox mt-1 h-5 w-5 text-teal-600" onchange="saveCheckboxState('sys8'); updateProgress()">
+                                <label for="sys8" class="ml-2"><strong>Add Language Packs (Optional)</strong> (Page 137)
+                                    <ul class="ml-6 list-disc text-gray-700">
+                                        <li>Open <strong>Settings</strong> > <strong>Time & Language</strong> > <strong>Region & language</strong>.</li>
+                                        <li>Add desired languages and close.</li>
+                                    </ul>
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Installation -->
+            <div class="section border border-gray-200 rounded-lg overflow-hidden">
+                <h2 class="section-header text-xl font-semibold text-white bg-teal-600 p-4" onclick="toggleSection('installation')">
+                    <span>Installation</span>
+                    <i class="fas fa-chevron-down text-white"></i>
+                </h2>
+                <div id="installation" class="collapsible">
+                    <div class="p-4">
+                        <ul class="space-y-3">
+                            <li class="flex items-start">
+                                <input type="checkbox" id="inst1" class="checkbox mt-1 h-5 w-5 text-teal-600" onchange="saveCheckboxState('inst1'); updateProgress()">
+                                <label for="inst1" class="ml-2"><strong>Install Video Drivers</strong> (Pages 29-33, 109-110)
+                                    <ul class="ml-6 list-disc text-gray-700">
+                                        <li>For Windows 10/11, use NVIDIA driver version 555.62 from <strong>Vitrea_Resources/Utilities/Video Card Drivers</strong>.</li>
+                                        <li>Extract to <strong>DisplayDriver/553.62/Win11_Win10-DCH_64/International</strong>.</li>
+                                        <li>Run installer, select <strong>Custom (Advanced)</strong>, and complete installation.</li>
+                                        <li>Restart the system.</li>
+                                    </ul>
+                                </label>
+                            </li>
+                            <li class="flex items-start">
+                                <input type="checkbox" id="inst2" class="checkbox mt-1 h-5 w-5 text-teal-600" onchange="saveCheckboxState('inst2'); updateProgress()">
+                                <label for="inst2" class="ml-2"><strong>Install Microsoft Windows Updates</strong> (Page 34)
+                                    <ul class="ml-6 list-disc text-gray-700">
+                                        <li>Run <strong>Vitrea_Resources/Utilities/Scripts/runscript.bat</strong> as administrator.</li>
+                                        <li>Install monthly updates and restart.</li>
+                                    </ul>
+                                </label>
+                            </li>
+                            <li class="flex items-start">
+                                <input type="checkbox" id="inst3" class="checkbox mt-1 h-5 w-5 text-teal-600" onchange="saveCheckboxState('inst3'); updateProgress()">
+                                <label for="inst3" class="ml-2"><strong>Install Vitrea Software</strong> (Pages 12, 36-37)
+                                    <ul class="ml-6 list-disc text-gray-700">
+                                        <li>Navigate to <strong>Vitrea_Resources</strong>, run installer as administrator.</li>
+                                        <li>If prompted with "There is a pending reboot", restart the system.</li>
+                                        <li>Click <strong>INSTALL</strong> to begin installation and follow prompts.</li>
+                                    </ul>
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Post-Installation Configuration -->
+            <div class="section border border-gray-200 rounded-lg overflow-hidden">
+                <h2 class="section-header text-xl font-semibold text-white bg-teal-600 p-4" onclick="toggleSection('post-installation')">
+                    <span>Post-Installation Configuration</span>
+                    <i class="fas fa-chevron-down text-white"></i>
+                </h2>
+                <div id="post-installation" class="collapsible">
+                    <div class="p-4">
+                        <ul class="space-y-3">
+                            <li class="flex items-start">
+                                <input type="checkbox" id="post1" class="checkbox mt-1 h-5 w-5 text-teal-600" onchange="saveCheckboxState('post1'); updateProgress()">
+                                <label for="post1" class="ml-2"><strong>Generate and Apply License</strong> (Pages 39-42)
+                                    <ul class="ml-6 list-disc text-gray-700">
+                                        <li>Run <strong>Vitrea Generate License Hostinfo</strong> tool.</li>
+                                        <li>Save <strong>hostinfo.xml</strong> to Desktop.</li>
+                                        <li>Send to Canon Medical Support with site details (Site Name, Canon Medical ID, hostname, Vitrea version).</li>
+                                        <li>In <strong>System Configuration</strong> > <strong>License</strong>, click <strong>Add License</strong>, browse to license file, and apply.</li>
+                                        <li>Restart Vitrea software.</li>
+                                    </ul>
+                                </label>
+                            </li>
+                            <li class="flex items-start">
+                                <input type="checkbox" id="post2" class="checkbox mt-1 h-5 w-5 text-teal-600" onchange="saveCheckboxState('post2'); updateProgress()">
+                                <label for="post2" class="ml-2"><strong>Configure SQL Server Permissions</strong> (Pages 45-48)
+                                    <ul class="ml-6 list-disc text-gray-700">
+                                        <li>Ensure <strong>Vitrea Administrators</strong> group exists.</li>
+                                        <li>Open <strong>SQL Server Management Studio</strong>, expand <strong>Security</strong> > <strong>Logins</strong>.</li>
+                                        <li>Add <strong>Vitrea Administrators</strong> group as a login, assign <strong>sysadmin</strong> role, and click <strong>OK</strong>.</li>
+                                    </ul>
+                                </label>
+                            </li>
+                            <li class="flex items-start">
+                                <input type="checkbox" id="post3" class="checkbox mt-1 h-5 w-5 text-teal-600" onchange="saveCheckboxState('post3'); updateProgress()">
+                                <label for="post3" class="ml-2"><strong>Configure TCP Port 3003 (Optional)</strong> (Pages 49-50)
+                                    <ul class="ml-6 list-disc text-gray-700">
+                                        <li>If using Vitrea as Query/Retrieve provider, open <strong>Control Panel</strong> > <strong>Windows Firewall</strong> > <strong>Advanced Settings</strong> > <strong>Inbound Rules</strong>.</li>
+                                        <li>Locate <strong>Open Port 3003</strong>, double-click, and configure for local subnet or specific IP.</li>
+                                    </ul>
+                                </label>
+                            </li>
+                            <li class="flex items-start">
+                                <input type="checkbox" id="post4" class="checkbox mt-1 h-5 w-5 text-teal-600" onchange="saveCheckboxState('post4'); updateProgress()">
+                                <label for="post4" class="ml-2"><strong>Configure DICOM Settings</strong> (Pages 71-75)
+                                    <ul class="ml-6 list-disc text-gray-700">
+                                        <li>Open <strong>Vitrea Administration Tool</strong> as administrator.</li>
+                                        <li>In <strong>Configuration Manager</strong> > <strong>EnterpriseProfile</strong> > <strong>DICOM Receive</strong>:
+                                            <ul class="ml-6 list-disc">
+                                                <li>Verify <strong>AE Title</strong> and set <strong>Port</strong> to 3002.</li>
+                                                <li>Set <strong>Root Directory for Temporary Storage</strong> to <strong>E:\DICOMReceive</strong>.</li>
+                                            </ul>
+                                        </li>
+                                        <li>In <strong>DICOM Query/Retrieve</strong>, set <strong>AE Title</strong> to <strong>QRSCP</strong> and <strong>Port</strong> to 3003.</li>
+                                        <li>Configure <strong>Valid Host List</strong> to allow specific IP addresses for PACS DICOM Archive.</li>
+                                    </ul>
+                                </label>
+                            </li>
+                            <li class="flex items-start">
+                                <input type="checkbox" id="post5" class="checkbox mt-1 h-5 w-5 text-teal-600" onchange="saveCheckboxState('post5'); updateProgress()">
+                                <label for="post5" class="ml-2"><strong>Configure AutoDelete (Optional)</strong> (Pages 76-78)
+                                    <ul class="ml-6 list-disc text-gray-700">
+                                        <li>In <strong>System Configuration</strong> > <strong>AutoDelete</strong>, set retention periods and priorities for study types.</li>
+                                        <li>Restart <strong>AutoDelete</strong> service after changes.</li>
+                                    </ul>
+                                </label>
+                            </li>
+                            <li class="flex items-start">
+                                <input type="checkbox" id="post6" class="checkbox mt-1 h-5 w-5 text-teal-600" onchange="saveCheckboxState('post6'); updateProgress()">
+                                <label for="post6" class="ml-2"><strong>Configure DICOM Modify (Optional)</strong> (Pages 79-81)
+                                    <ul class="ml-6 list-disc text-gray-700">
+                                        <li>In <strong>Vitrea Administration Tool</strong> > <strong>DICOM Modify</strong>, select profile (<strong>FULL_EDIT</strong>, <strong>EVIDENCE_EDIT</strong>, <strong>BASIC_EDIT</strong>).</li>
+                                        <li>Edit or add DICOM tags as needed and save changes.</li>
+                                    </ul>
+                                </label>
+                            </li>
+                            <li class="flex items-start">
+                                <input type="checkbox" id="post7" class="checkbox mt-1 h-5 w-5 text-teal-600" onchange="saveCheckboxState('post7'); updateProgress()">
+                                <label for="post7" class="ml-2"><strong>Configure PowerScribe Integration (Optional)</strong> (Pages 82-83, 138-149)
+                                    <ul class="ml-6 list-disc text-gray-700">
+                                        <li>Create SSL certificate in <strong>IIS Manager</strong> > <strong>Server Certificates</strong>.</li>
+                                        <li>Enable HTTPS binding on port 443 with the certificate.</li>
+                                        <li>In <strong>Vitrea Administration Tool</strong> > <strong>Post Processing</strong>, set <strong>Server BaseUrl</strong> (e.g., <strong>https://PowerScribeServerName/RADPortalServices</strong>), username, and password.</li>
+                                        <li>Add PowerScribe server hostname to <strong>C:\Windows\System32\drivers\etc\hosts</strong>.</li>
+                                    </ul>
+                                </label>
+                            </li>
+                            <li class="flex items-start">
+                                <input type="checkbox" id="post8" class="checkbox mt-1 h-5 w-5 text-teal-600" onchange="saveCheckboxState('post8'); updateProgress()">
+                                <label for="post8" class="ml-2"><strong>Configure Visia CT Lung CAD (Optional)</strong> (Pages 58-65)
+                                    <ul class="ml-6 list-disc text-gray-700">
+                                        <li>Create a 100GB partition for Visia Lung CAD (e.g., <strong>F:</strong> drive).</li>
+                                        <li>Follow <strong>Visia Lung CAD Installation and Configuration Guide</strong>.</li>
+                                        <li>In <strong>System Configuration</strong> > <strong>Archive</strong>, add Visia Lung CAD server (AE Title: <strong>V1sia</strong>, port: default).</li>
+                                        <li>Test C-ECHO and apply settings.</li>
+                                        <li>In <strong>System Settings</strong> > <strong>LungCADProcessor</strong>, set <strong>lungCADServerQueueIPPort</strong> and enable auto-export.</li>
+                                    </ul>
+                                </label>
+                            </li>
+                            <li class="flex items-start">
+                                <input type="checkbox" id="post9" class="checkbox mt-1 h-5 w-5 text-teal-600" onchange="saveCheckboxState('post9'); updateProgress()">
+                                <label for="post9" class="ml-2"><strong>Configure Snapshot Converter (Optional)</strong> (Pages 96-97, 172)
+                                    <ul class="ml-6 list-disc text-gray-700">
+                                        <li>In <strong>System Configuration</strong> > <strong>Scripts</strong>, add <strong>SnapshotConverterLauncher.groovy</strong> from <strong>E:\VSP</strong>.</li>
+                                        <li>Set <strong>Name</strong> to <strong>Snapshot Converter</strong> and <strong>Language</strong> to <strong>groovy</strong>.</li>
+                                        <li>Activate changes.</li>
+                                    </ul>
+                                </label>
+                            </li>
+                            <li class="flex items-start">
+                                <input type="checkbox" id="post10" class="checkbox mt-1 h-5 w-5 text-teal-600" onchange="saveCheckboxState('post10'); updateProgress()">
+                                <label for="post10" class="ml-2"><strong>Configure CT Dental Application (Optional)</strong> (Pages 177-178)
+                                    <ul class="ml-6 list-disc text-gray-700">
+                                        <li>In <strong>System Configuration</strong> > <strong>System Settings</strong> > <strong>CT Dental</strong>, adjust:
+                                            <ul class="ml-6 list-disc">
+                                                <li><strong>panoramaFrameHeightForLifeSize</strong> (default: -1).</li>
+                                                <li><strong>crosscutViewCx</strong> (default: 120).</li>
+                                                <li><strong>frameLayoutForFilming</strong> (default: 4x6).</li>
+                                            </ul>
+                                        </li>
+                                        <li>Set <strong>ToolProfile</strong> to <strong>VG2</strong> (Vitrea mode) or <strong>Toshiba</strong> (Toshiba CT console mode).</li>
+                                    </ul>
+                                </label>
+                            </li>
+                            <li class="flex items-start">
+                                <input type="checkbox" id="post11" class="checkbox mt-1 h-5 w-5 text-teal-600" onchange="saveCheckboxState('post11'); updateProgress()">
+                                <label for="post11" class="ml-2"><strong>Configure DICOM Printer (Optional)</strong> (Pages 83-84, 179-181)
+                                    <ul class="ml-6 list-disc text-gray-700">
+                                        <li>In <strong>System Configuration</strong> > <strong>System Settings</strong> > <strong>Filming</strong>, set <strong>DiComPrinterDPI</strong> to desired value.</li>
+                                        <li>In <strong>Archive</strong>, add DICOM printer (e.g., <strong>AE Title: DICOMPRINTER</strong>, <strong>Port: 104</strong>).</li>
+                                        <li>Test C-ECHO and apply settings.</li>
+                                    </ul>
+                                </label>
+                            </li>
+                            <li class="flex items-start">
+                                <input type="checkbox" id="post12" class="checkbox mt-1 h-5 w-5 text-teal-600" onchange="saveCheckboxState('post12'); updateProgress()">
+                                <label for="post12" class="ml-2"><strong>Configure IP Address Restrictions (Optional)</strong> (Pages 183-186)
+                                    <ul class="ml-6 list-disc text-gray-700">
+                                        <li>In <strong>IIS Manager</strong> > <strong>Default Web Site</strong> > <strong>Vital</strong> > <strong>IP Address and Domain Restrictions</strong>, add allowed IP addresses.</li>
+                                        <li>Set <strong>Access for unspecified clients</strong> to <strong>Deny</strong>.</li>
+                                        <li>Alternatively, use PowerShell script: <strong>ConfigureIIS.ps1 -AddIpAddresses &lt;IP_list&gt;</strong>.</li>
+                                    </ul>
+                                </label>
+                            </li>
+                            <li class="flex items-start">
+                                <input type="checkbox" id="post13" class="checkbox mt-1 h-5 w-5 text-teal-600" onchange="saveCheckboxState('post13'); updateProgress()">
+                                <label for="post13" class="ml-2"><strong>Run System Hardening Script</strong> (Pages 187-189)
+                                    <ul class="ml-6 list-disc text-gray-700">
+                                        <li>Navigate to <strong>E:\Vitrea_Resources\Utilities\Scripts</strong>.</li>
+                                        <li>Run <strong>SystemHardeningScript.ps1</strong> as administrator.</li>
+                                        <li>Enter <strong>E:\VitreaData</strong> as the data folder path.</li>
+                                        <li>Verify settings: Disable Windows Authentication, Remote Assistance, TLS 1.0/1.1; enable TLS 1.2/1.3.</li>
+                                    </ul>
+                                </label>
+                            </li>
+                            <li class="flex items-start">
+                                <input type="checkbox" id="post14" class="checkbox mt-1 h-5 w-5 text-teal-600" onchange="saveCheckboxState('post14'); updateProgress()">
+                                <label for="post14" class="ml-2"><strong>Run System Checker Script</strong> (Page 192)
+                                    <ul class="ml-6 list-disc text-gray-700">
+                                        <li>Navigate to <strong>E:\Vitrea_Resources\Utilities\Scripts\SystemChecker</strong>.</li>
+                                        <li>Run <strong>SystemChecker.ps1</strong> as administrator and review output.</li>
+                                    </ul>
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Troubleshooting -->
+            <div class="section border border-gray-200 rounded-lg overflow-hidden">
+                <h2 class="section-header text-xl font-semibold text-white bg-teal-600 p-4" onclick="toggleSection('troubleshooting')">
+                    <span>Troubleshooting</span>
+                    <i class="fas fa-chevron-down text-white"></i>
+                </h2>
+                <div id="troubleshooting" class="collapsible">
+                    <div class="p-4">
+                        <ul class="space-y-3">
+                            <li class="flex items-start">
+                                <input type="checkbox" id="trouble1" class="checkbox mt-1 h-5 w-5 text-teal-600" onchange="saveCheckboxState('trouble1'); updateProgress()">
+                                <label for="trouble1" class="ml-2"><strong>Host Information Tool Error</strong> (Page 40)
+                                    <ul class="ml-6 list-disc text-gray-700">
+                                        <li>If "Failed to write output file: D:\Vitrea_Resources" error occurs, verify write permissions for <strong>Vitrea-Admin</strong> on the folder.</li>
+                                    </ul>
+                                </label>
+                            </li>
+                            <li class="flex items-start">
+                                <input type="checkbox" id="trouble2" class="checkbox mt-1 h-5 w-5 text-teal-600" onchange="saveCheckboxState('trouble2'); updateProgress()">
+                                <label for="trouble2" class="ml-2"><strong>DICOM Import Issues</strong> (Page 90)
+                                    <ul class="ml-6 list-disc text-gray-700">
+                                        <li>Ensure DICOM files are under 2GB.</li>
+                                        <li>Adjust permissions on <strong>E:\VitreaData</strong> to exclude <strong>Users</strong> group from <strong>Traverse folder / execute file</strong>.</li>
+                                    </ul>
+                                </label>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Additional Notes -->
+            <div class="section border border-gray-200 rounded-lg overflow-hidden">
+                <h2 class="section-header text-xl font-semibold text-white bg-teal-600 p-4" onclick="toggleSection('additional-notes')">
+                    <span>Additional Notes</span>
+                    <i class="fas fa-chevron-down text-white"></i>
+                </h2>
+                <div id="additional-notes" class="collapsible">
+                    <div class="p-4">
+                        <ul class="space-y-2 text-gray-700">
+                            <li>Contact Canon Medical Support at <strong>support@mi.medical.canon</strong> for issues (Page 5).</li>
+                            <li>Refer to <strong>Vitrea Release Notes</strong> for late-breaking information (Page 6).</li>
+                            <li>Document all passwords securely (e.g., <strong>Vitrea_Admin</strong>, <strong>Vitrea_User</strong>).</li>
+                            <li>Ensure network connectivity (1.0 Gbps) or install Microsoft Loopback Adapter if offline (Page 107).</li>
+                            <li>For optional applications (e.g., Cedars Cardiac Suite), follow Appendix G procedures (Pages 165-170).</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-8 text-center no-print">
+            <button onclick="resetCheckboxes()" class="bg-red-500 text-white px-6 py-2 rounded-lg hover:bg-red-600 transition flex items-center mx-auto">
+                <i class="fas fa-undo mr-2"></i> Reset Checklist
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Toggle collapsible sections with animation
+        function toggleSection(id) {
+            const section = document.getElementById(id);
+            const header = section.previousElementSibling;
+            
+            section.classList.toggle('active');
+            header.classList.toggle('active');
+            
+            localStorage.setItem(id, section.classList.contains('active') ? 'open' : 'closed');
+        }
+
+        // Save checkbox state to localStorage
+        function saveCheckboxState(id) {
+            const checkbox = document.getElementById(id);
+            localStorage.setItem(id, checkbox.checked);
+        }
+
+        // Update progress bar and counters
+        function updateProgress() {
+            const checkboxes = document.querySelectorAll('.checkbox');
+            const total = checkboxes.length;
+            let completed = 0;
+            
+            checkboxes.forEach(checkbox => {
+                if (checkbox.checked) completed++;
+            });
+            
+            const percentage = Math.round((completed / total) * 100);
+            
+            document.getElementById('progress-text').textContent = percentage;
+            document.getElementById('completed-count').textContent = completed;
+            document.getElementById('total-count').textContent = total;
+            document.getElementById('progress-bar-fill').style.width = percentage + '%';
+        }
+
+        // Search functionality
+        document.getElementById('search-input').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            if (searchTerm.length < 2) {
+                // Clear highlights if search term is too short
+                document.querySelectorAll('.search-highlight').forEach(el => {
+                    el.classList.remove('search-highlight');
+                });
+                return;
+            }
+            
+            // Search in labels
+            document.querySelectorAll('label').forEach(label => {
+                const text = label.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    // Highlight parent list item
+                    const listItem = label.closest('li');
+                    listItem.classList.add('search-highlight');
+                    
+                    // Expand parent section if collapsed
+                    const section = listItem.closest('.collapsible');
+                    if (section && !section.classList.contains('active')) {
+                        const header = section.previousElementSibling;
+                        section.classList.add('active');
+                        header.classList.add('active');
+                        localStorage.setItem(section.id, 'open');
+                    }
+                } else {
+                    label.closest('li')?.classList.remove('search-highlight');
+                }
+            });
+        });
+
+        // Export checklist data
+        function exportChecklist() {
+            const checklistData = {
+                title: document.title,
+                date: new Date().toISOString(),
+                sections: [],
+                progress: {
+                    completed: parseInt(document.getElementById('completed-count').textContent),
+                    total: parseInt(document.getElementById('total-count').textContent),
+                    percentage: parseInt(document.getElementById('progress-text').textContent)
+                }
+            };
+            
+            // Gather section data
+            document.querySelectorAll('.section').forEach(sectionEl => {
+                const sectionHeader = sectionEl.querySelector('.section-header span').textContent;
+                const section = {
+                    name: sectionHeader,
+                    items: []
+                };
+                
+                sectionEl.querySelectorAll('.checkbox').forEach(checkbox => {
+                    section.items.push({
+                        id: checkbox.id,
+                        label: checkbox.nextElementSibling.textContent.trim(),
+                        checked: checkbox.checked
+                    });
+                });
+                
+                checklistData.sections.push(section);
+            });
+            
+            // Create download link
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(checklistData, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute('href', dataStr);
+            downloadAnchor.setAttribute('download', 'vitrea-checklist-export.json');
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            document.body.removeChild(downloadAnchor);
+        }
+
+        // Reset all checkboxes and clear localStorage
+        function resetCheckboxes() {
+            if (confirm('Are you sure you want to reset all checklist items?')) {
+                const checkboxes = document.querySelectorAll('.checkbox');
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = false;
+                    localStorage.setItem(checkbox.id, 'false');
+                });
+                updateProgress();
+            }
+        }
+
+        // Load checkbox states, section states, and initialize progress on page load
+        window.onload = function() {
+            // Set print date
+            document.getElementById('print-date').textContent = new Date().toLocaleString();
+            
+            // Initialize sections
+            const sections = ['pre-installation', 'system-configuration', 'installation', 'post-installation', 'troubleshooting', 'additional-notes'];
+            sections.forEach(section => {
+                if (localStorage.getItem(section) === 'open') {
+                    document.getElementById(section).classList.add('active');
+                    document.querySelector(`.section-header[onclick="toggleSection('${section}')"]`).classList.add('active');
+                }
+            });
+
+            // Initialize checkboxes
+            const checkboxes = document.querySelectorAll('.checkbox');
+            checkboxes.forEach(checkbox => {
+                const savedState = localStorage.getItem(checkbox.id);
+                if (savedState !== null) {
+                    checkbox.checked = savedState === 'true';
+                } else {
+                    // Initialize if not set
+                    localStorage.setItem(checkbox.id, 'false');
+                }
+            });
+
+            // Initialize progress
+            updateProgress();
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,1361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vitrea Workstation Deployment Flashcards</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+        }
+        .mode-selector {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .mode-selector button {
+            padding: 10px 20px;
+            margin: 0 10px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .mode-selector button:hover {
+            background-color: #2980b9;
+        }
+        .mode-selector button.active {
+            background-color: #2c3e50;
+        }
+        .flashcard {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 20px;
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .question {
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        .answer {
+            display: none;
+            font-size: 16px;
+            color: #34495e;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+            border-left: 4px solid #3498db;
+        }
+        .show-answer {
+            padding: 8px 15px;
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 15px;
+            align-self: flex-start;
+            transition: background-color 0.3s;
+        }
+        .show-answer:hover {
+            background-color: #27ae60;
+        }
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .nav-button {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+        .nav-button:hover {
+            background-color: #2980b9;
+        }
+        .nav-button:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+        .card-counter {
+            text-align: center;
+            margin: 10px 0;
+            color: #7f8c8d;
+        }
+        .multiple-choice {
+            margin-top: 15px;
+        }
+        .choice {
+            margin: 8px 0;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .choice:hover {
+            background-color: #f0f0f0;
+        }
+        .choice.correct {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+        .choice.incorrect {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+        .feedback {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 4px;
+            display: none;
+        }
+        .correct-feedback {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .incorrect-feedback {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .scenario {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            border-left: 4px solid #6c757d;
+            margin-bottom: 15px;
+        }
+        .solution {
+            background-color: #e2e3e5;
+            padding: 15px;
+            border-radius: 4px;
+            border-left: 4px solid #d3d6d8;
+        }
+        .quick-tip {
+            background-color: #fff3cd;
+            padding: 10px;
+            border-radius: 4px;
+            border-left: 4px solid #ffc107;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Vitrea Workstation Deployment Flashcards</h1>
+        
+        <div class="mode-selector">
+            <button id="flashcard-mode" class="active">Flashcards</button>
+            <button id="mcq-mode">Multiple Choice</button>
+            <button id="scenario-mode">Troubleshooting</button>
+            <button id="tips-mode">Quick Tips</button>
+        </div>
+        
+        <div class="card-counter">
+            <span id="current-card">1</span> of <span id="total-cards">...</span>
+        </div>
+        
+        <div id="flashcard-container">
+            <!-- Flashcard content will be inserted here by JavaScript -->
+        </div>
+        
+        <div class="navigation">
+            <button id="prev-button" class="nav-button" disabled>Previous</button>
+            <button id="next-button" class="nav-button">Next</button>
+        </div>
+    </div>
+
+    <script>
+        // Flashcard data
+        const flashcardData = [
+            {
+                question: "What is Canon Medical's recommendation regarding the Windows Firewall during Vitrea software installation?",
+                answer: "Canon Medical recommends you do not disable the Windows Firewall while you install the Vitrea software."
+            },
+            {
+                question: "What type of procedures are mandatory for a fully functional Vitrea system unless otherwise noted?",
+                answer: "The procedures listed in the guide."
+            },
+            {
+                question: "What configuration settings are updated during Vitrea software installation if they were set beforehand?",
+                answer: "TomTec FileCache setting, TempStorageFolder setting, and LogFile setting."
+            },
+            {
+                question: "What is the strongly recommended method for user configuration during Vitrea workstation deployment?",
+                answer: "Integrated Windows Authentication (IWA)."
+            },
+            {
+                question: "What benefit does Integrated Windows Authentication (IWA) provide?",
+                answer: "Single sign-on (SSO) support and uses standard Windows operating credential management."
+            },
+            {
+                question: "When should the Vitrea local user database be used for authentication?",
+                answer: "For cases in which IWA is not possible."
+            },
+            {
+                question: "What character should you not use when setting the system Hostname?",
+                answer: "An underscore (_)."
+            },
+            {
+                question: "What two names should you avoid using as a Hostname?",
+                answer: "Vitrea or VitreaSystemInfo."
+            },
+            {
+                question: "What is the first step to set the system Hostname?",
+                answer: "Select the Start button and select Settings | System and Security | System."
+            },
+            {
+                question: "After entering the desired Hostname, what action is required on the Microsoft Windows screen?",
+                answer: "Click the Restart Now button."
+            },
+            {
+                question: "What is the first step when creating a DNS Entry and setting a static IP address?",
+                answer: "Contact the customer's IT department to acquire a reserved static IP address."
+            },
+            {
+                question: "What is the security caution regarding Windows accounts and Vitrea AV session conflicts?",
+                answer: "Do not have multiple users share the same Windows account."
+            },
+            {
+                question: "What is required for each Vitrea software user regarding Microsoft Windows accounts?",
+                answer: "Each Vitrea software user is required to have a unique Microsoft Windows account which is a member of the Vitrea Users group."
+            },
+            {
+                question: "What two accounts are recommended to be created in a workgroup environment for Vitrea?",
+                answer: "Vitrea-Admin and Vitrea-User."
+            },
+            {
+                question: "What group membership should the 'Vitrea-Admin' account have in a workgroup?",
+                answer: "Administrators."
+            },
+            {
+                question: "What group memberships should the 'Vitrea-User' account have in a workgroup?",
+                answer: "Users, Remote Desktop Users."
+            },
+            {
+                question: "What password settings are recommended for all user accounts?",
+                answer: "Set the password to not be changed on login and to never expire."
+            },
+            {
+                question: "In a domain environment, who creates the Vitrea-Admin and Vitrea-User accounts?",
+                answer: "The domain administrator creates these accounts in Active Directory."
+            },
+            {
+                question: "What groups must be created in Active Directory by an Active Directory administrator for Vitrea?",
+                answer: "Vitrea Administrators and Vitrea Users."
+            },
+            {
+                question: "What is the recommended location for creating a `Vitrea_Resources` folder?",
+                answer: "On the data drive, for example, `E:\\Vitrea_Resources`."
+            },
+            {
+                question: "What should be copied into the `Vitrea_Resources` folder?",
+                answer: "The contents of the product download."
+            },
+            {
+                question: "Why does Canon Medical recommend configuring Windows BitLocker?",
+                answer: "To follow customer site's security best practices."
+            },
+            {
+                question: "What is Canon Medical's responsibility regarding customer encryption keys produced during BitLocker configuration?",
+                answer: "Canon Medical is not responsible for customer encryption key management or any data loss resulting from the loss of encryption keys."
+            },
+            {
+                question: "Where should encryption keys be stored?",
+                answer: "On site in a safe and secure manner, and in a safe location other than the machine being encrypted."
+            },
+            {
+                question: "What role typically completes the procedure for installing video drivers?",
+                answer: "IT Administrator or Network Administrator."
+            },
+            {
+                question: "What action is required before installing any new NVIDIA graphics drivers?",
+                answer: "Uninstall any existing NVIDIA graphics driver(s) and then restart the machine."
+            },
+            {
+                question: "On which machines should the video driver installation procedure be completed?",
+                answer: "Only on machines that use hardware-based visualization."
+            },
+            {
+                question: "Where can supported Windows 10/11 video drivers be found?",
+                answer: "`Vitrea_Resources\\Utilities\\Video Card Drivers\\553.62`."
+            },
+            {
+                question: "What is Canon Medical's recommendation regarding Microsoft Windows monthly updates?",
+                answer: "Canon Medical recommends you install Microsoft Windows monthly updates."
+            },
+            {
+                question: "What is a possible reason for Vitrea software installation failure related to the prep script?",
+                answer: "A customer site has enabled a Group Policy that prevents the prep script from running successfully."
+            },
+            {
+                question: "If the Vitrea software installation fails due to a prep script issue, what is one of the first troubleshooting steps?",
+                answer: "Manually run the Prep Script."
+            },
+            {
+                question: "Before installing the Vitrea software, what is a key prerequisite regarding disk partitions?",
+                answer: "Ensure the largest disk partition is configured as the E: drive (the data drive)."
+            },
+            {
+                question: "What should you do if Command prompt screens display during the Vitrea installation process?",
+                answer: "Do not close them; they will close automatically."
+            },
+            {
+                question: "What is the recommended user type to sign in as before installing the Vitrea software?",
+                answer: "An Administrator."
+            },
+            {
+                question: "What is the default Canon Medical data install location?",
+                answer: "The drive with the most free space."
+            },
+            {
+                question: "What profile should be selected from the dropdown menu during Vitrea software installation for a workstation?",
+                answer: "Vitrea Workstation."
+            },
+            {
+                question: "What is recommended if a \"There is a pending reboot\" message displays during installation?",
+                answer: "Click the Exit button and reboot the system."
+            },
+            {
+                question: "How long does it typically take to install the prerequisites and components of the Vitrea software?",
+                answer: "About 20-30 minutes."
+            },
+            {
+                question: "After a system reboot following Vitrea installation, how long should you wait before using Vitrea?",
+                answer: "Wait five minutes after you sign into the system."
+            },
+            {
+                question: "What two configurations should be completed before running the Host Information Tool for license creation?",
+                answer: "Network settings (including IP Address or DNS) and Windows activation."
+            },
+            {
+                question: "What happens if you change the IP Address, DNS settings, or reinstall the Operating System after acquiring a license?",
+                answer: "You must run the Host Information Tool again and acquire a new license from Canon Medical Customer Support."
+            },
+            {
+                question: "How long does Canon Medical Customer Support typically take to send a license file?",
+                answer: "24-48 hours."
+            },
+            {
+                question: "What message displays on the Applications Home screen if the system is not licensed?",
+                answer: "\"Your system is not licensed; Please contact your administrator.\"."
+            },
+            {
+                question: "What service must exist before configuring SQL Server Permissions for Vitrea?",
+                answer: "The Vitrea Administrators group."
+            },
+            {
+                question: "Under what circumstances should you perform the procedure to configure TCP Port 3003?",
+                answer: "Only if you plan to use Vitrea as a Query/Retrieve provider in your deployment."
+            },
+            {
+                question: "What is the default port value for DICOM Query/Retrieve (QRSCP)?",
+                answer: "3003."
+            },
+            {
+                question: "What does it mean if the \"Allow Unknown Hosts to Query\" check box is selected in DICOM Query/Retrieve settings?",
+                answer: "The Vitrea workstation is set to be DICOM promiscuous."
+            },
+            {
+                question: "What happens if you do not set the AutoDelete to less than 20GB of free space?",
+                answer: "The system could enter a state where it will no longer ingest data and studies will be rejected."
+            },
+            {
+                question: "What happens to the expiration date of a study in the Vitrea system cache if a user accesses it?",
+                answer: "The expiration date is updated."
+            },
+            {
+                question: "What is the default Root Directory for Temporary Storage in DICOM Receive settings?",
+                answer: "E:\\DICOMReceive."
+            },
+            {
+                question: "What is the default Low Watermark value for DICOM Receive storage?",
+                answer: "15GB."
+            },
+            {
+                question: "What is the default High Watermark value for DICOM Receive storage?",
+                answer: "20GB."
+            },
+            {
+                question: "What is the recommended network connection speed for Vitrea?",
+                answer: "1 Gbps."
+            },
+            {
+                question: "What is the general requirement for NVIDIA GPUs and drivers for Global Illumination Rendering (GIR)?",
+                answer: "CUDA10-minimum capability."
+            },
+            {
+                question: "What is the end-of-life date for Windows 10 support from Microsoft?",
+                answer: "October 14, 2025."
+            },
+            {
+                question: "What versions of Microsoft Windows Operating Systems are supported by Vitrea?",
+                answer: "Microsoft® Windows® 10 Professional or Enterprise 64-bit Edition, and Microsoft Windows 11 (version 22h2 at least) Professional or Enterprise 64-bit Edition."
+            },
+            {
+                question: "What Microsoft software is required for Vitrea besides the operating system?",
+                answer: "Microsoft .NET Framework 4.8 and PowerShell 5.1."
+            },
+            {
+                question: "Who is responsible for providing the antivirus/anti-malware solution for the system?",
+                answer: "The customer."
+            },
+            {
+                question: "What happens when the time zone changes due to Daylight Saving Time?",
+                answer: "You need to reboot the system to ensure the services take into account the hour change in the logging."
+            },
+            {
+                question: "Where is the license file (hostinfo.xml) automatically saved after running Vitrea Generate License HostInfo?",
+                answer: "To the Desktop."
+            },
+            {
+                question: "If the \"Turn on BitLocker\" menu item does not display after installation, what action is recommended?",
+                answer: "Reboot the system to fully register the BitLocker feature."
+            }
+        ];
+
+        // Multiple Choice Questions
+        const mcqData = [
+            {
+                question: "Which of the following procedures are generally mandatory for installing a fully functional Vitrea system?",
+                choices: [
+                    "Optional administrative procedures",
+                    "Troubleshooting procedures",
+                    "All procedures listed unless otherwise noted",
+                    "Only network configuration procedures"
+                ],
+                correct: 2,
+                explanation: "The guide states that all procedures listed are mandatory unless otherwise noted."
+            },
+            {
+                question: "What existing settings will be updated when installing the Vitrea software?",
+                choices: [
+                    "Only the LogFile setting",
+                    "TomTec FileCache, TempStorageFolder, and LogFile settings",
+                    "Only the Windows Firewall settings",
+                    "User authentication settings"
+                ],
+                correct: 1,
+                explanation: "The installation updates TomTec FileCache, TempStorageFolder, and LogFile settings if they were set beforehand."
+            },
+            {
+                question: "Integrated Windows Authentication (IWA) is strongly recommended for Vitrea workstation deployment primarily because it provides:",
+                choices: [
+                    "Faster installation times",
+                    "Single Sign-On (SSO) support",
+                    "Enhanced graphics performance",
+                    "Compatibility with all operating systems"
+                ],
+                correct: 1,
+                explanation: "IWA is recommended because it provides Single Sign-On (SSO) support and uses standard Windows credential management."
+            },
+            {
+                question: "When configuring a system Hostname for Vitrea, which of the following is explicitly forbidden?",
+                choices: [
+                    "Using numbers in the name",
+                    "Using special characters like a hyphen (-)",
+                    "Including an underscore (_)",
+                    "Making the Hostname too long"
+                ],
+                correct: 2,
+                explanation: "Underscores are explicitly forbidden in Hostnames, along with using the names 'Vitrea' or 'VitreaSystemInfo'."
+            },
+            {
+                question: "After changing the system Hostname, what must be done to apply the changes?",
+                choices: [
+                    "Reinstall the Vitrea software",
+                    "Reboot the system",
+                    "Disable Windows Firewall",
+                    "Contact Canon Medical Support"
+                ],
+                correct: 1,
+                explanation: "After changing the Hostname, you must click 'Restart Now' to apply the changes."
+            },
+            {
+                question: "To obtain a reserved static IP address for the Vitrea workstation, who should be contacted first?",
+                choices: [
+                    "Canon Medical Customer Support",
+                    "The customer's IT department",
+                    "Microsoft Support",
+                    "The Vitrea application administrator"
+                ],
+                correct: 1,
+                explanation: "The first step is to contact the customer's IT department to acquire a reserved static IP address."
+            },
+            {
+                question: "According to Canon Medical, to avoid Vitrea AV session conflicts, users should:",
+                choices: [
+                    "Use IWA exclusively",
+                    "Share Windows accounts only if necessary",
+                    "Not have multiple users share the same Windows account",
+                    "Use Vitrea local user database for all users"
+                ],
+                correct: 2,
+                explanation: "To avoid session conflicts, users should not share the same Windows account; each should have a unique account."
+            },
+            {
+                question: "In a workgroup environment, the Vitrea-User account is required to be a member of which two groups?",
+                choices: [
+                    "Administrators and Power Users",
+                    "Guests and Remote Desktop Users",
+                    "Users and Remote Desktop Users",
+                    "Administrators and Users"
+                ],
+                correct: 2,
+                explanation: "In a workgroup, the Vitrea-User account should be a member of the Users and Remote Desktop Users groups."
+            },
+            {
+                question: "Which of the following password settings is recommended for Vitrea user accounts?",
+                choices: [
+                    "User must change password at next logon",
+                    "Password expires after 30 days",
+                    "User cannot change password and password never expires",
+                    "Password must contain special characters only"
+                ],
+                correct: 2,
+                explanation: "Passwords should be set to not change on login and to never expire for all user accounts."
+            },
+            {
+                question: "In a domain environment, the Vitrea-Admin account should have what local group membership on the Vitrea Workstation?",
+                choices: [
+                    "Users",
+                    "Remote Desktop Users",
+                    "Local Administrators",
+                    "Domain Guests"
+                ],
+                correct: 2,
+                explanation: "In a domain environment, the Vitrea-Admin account should be a member of the local Administrators group on the Vitrea Workstation."
+            },
+            {
+                question: "Where is the `Vitrea_Resources` folder recommended to be created?",
+                choices: [
+                    "On the C: drive in Program Files",
+                    "On the data drive (e.g., E:)",
+                    "On a network share",
+                    "In the Windows temp directory"
+                ],
+                correct: 1,
+                explanation: "The `Vitrea_Resources` folder should be created on the data drive (e.g., E:\\Vitrea_Resources)."
+            },
+            {
+                question: "What is the primary reason Canon Medical recommends enabling Windows BitLocker?",
+                choices: [
+                    "To increase system performance",
+                    "To comply with customer site's security best practices",
+                    "To facilitate easier software updates",
+                    "To enable remote access"
+                ],
+                correct: 1,
+                explanation: "BitLocker is recommended to comply with customer site's security best practices."
+            },
+            {
+                question: "During BitLocker configuration, where are the encryption recovery keys *not* recommended to be saved?",
+                choices: [
+                    "On a USB drive",
+                    "Printed out and stored securely",
+                    "On the drive being encrypted",
+                    "On a separate network location"
+                ],
+                correct: 2,
+                explanation: "Encryption keys should not be stored on the drive being encrypted; they should be stored securely elsewhere."
+            },
+            {
+                question: "What must be uninstalled before installing new NVIDIA graphics drivers for Vitrea?",
+                choices: [
+                    "All existing applications",
+                    "Only Vitrea software",
+                    "Any existing NVIDIA graphics driver(s)",
+                    "Windows operating system updates"
+                ],
+                correct: 2,
+                explanation: "Existing NVIDIA graphics drivers must be uninstalled before installing new ones."
+            },
+            {
+                question: "To determine the NVIDIA Driver Type (DCH or Standard) on a Dell Powerstation or Workstation with Windows 10/11, you should:",
+                choices: [
+                    "Check Device Manager",
+                    "Right-click the Desktop and select NVIDIA Control Panel, then System Information",
+                    "Run a Windows system diagnostic",
+                    "Check the Vitrea installation logs"
+                ],
+                correct: 1,
+                explanation: "You can check the driver type in the NVIDIA Control Panel under System Information."
+            },
+            {
+                question: "Where are the supported NVIDIA drivers for Windows 10/11 located within the Vitrea installation media?",
+                choices: [
+                    "In the `Utilities\\Drivers` folder",
+                    "In the `Vitrea_Resources\\Utilities\\Video Card Drivers\\553.62` folder",
+                    "On the Canon Medical website",
+                    "Through Windows Update"
+                ],
+                correct: 1,
+                explanation: "Supported drivers are in `Vitrea_Resources\\Utilities\\Video Card Drivers\\553.62`."
+            },
+            {
+                question: "If the Vitrea software installation fails because a Group Policy prevented the prep script from running, what is a direct solution?",
+                choices: [
+                    "Reinstall Windows",
+                    "Manually run the Prep Script as administrator",
+                    "Disable antivirus software",
+                    "Change the system Hostname"
+                ],
+                correct: 1,
+                explanation: "When Group Policy blocks the prep script, you should manually run it as administrator."
+            },
+            {
+                question: "Before starting the Vitrea software installation, which drive should be configured as the E: (data drive) and be the largest partition?",
+                choices: [
+                    "The C: drive",
+                    "The smallest available partition",
+                    "Any network drive",
+                    "The largest disk partition"
+                ],
+                correct: 3,
+                explanation: "The largest disk partition should be configured as the E: drive before installation."
+            },
+            {
+                question: "What should you avoid doing with Command Prompt screens that appear during Vitrea installation?",
+                choices: [
+                    "Interacting with them",
+                    "Closing them manually",
+                    "Minimizing them",
+                    "Taking screenshots of them"
+                ],
+                correct: 1,
+                explanation: "Command Prompt screens should not be closed manually; they will close automatically."
+            },
+            {
+                question: "If a \"There is a pending reboot\" message appears during Vitrea installation, what is the recommended action?",
+                choices: [
+                    "Continue installation without rebooting",
+                    "Click \"Exit\" and reboot the system",
+                    "Ignore the message and proceed",
+                    "Force shutdown the system"
+                ],
+                correct: 1,
+                explanation: "You should exit the installation and reboot when this message appears."
+            },
+            {
+                question: "After running the Host Information Tool, where is the license file (hostinfo.xml) automatically saved?",
+                choices: [
+                    "In the Vitrea installation directory",
+                    "To the Desktop",
+                    "In the Temp folder",
+                    "To a network share"
+                ],
+                correct: 1,
+                explanation: "The hostinfo.xml file is automatically saved to the Desktop."
+            },
+            {
+                question: "What information is required when emailing `license@mi.medical.canon` to acquire a license file?",
+                choices: [
+                    "System ID, Site Name, Canon Medical ID, hostname of license server, and Vitrea software version",
+                    "User credentials and installation date",
+                    "Hardware specifications only",
+                    "Customer's full name and address"
+                ],
+                correct: 0,
+                explanation: "All the listed identification information is required when requesting a license."
+            },
+            {
+                question: "Before configuring SQL Server Permissions for Vitrea, what group must already exist?",
+                choices: [
+                    "The Windows Users group",
+                    "The Remote Desktop Users group",
+                    "The Vitrea Administrators group",
+                    "The Domain Admins group"
+                ],
+                correct: 2,
+                explanation: "The Vitrea Administrators group must exist before configuring SQL Server permissions."
+            },
+            {
+                question: "For Vitrea to function as a Query/Retrieve provider, which TCP port might need configuration in the firewall?",
+                choices: [
+                    "80",
+                    "443",
+                    "3003",
+                    "1433"
+                ],
+                correct: 2,
+                explanation: "Port 3003 is used for DICOM Query/Retrieve services."
+            },
+            {
+                question: "The \"Allow Unknown Hosts to Query\" checkbox in DICOM Query/Retrieve settings, if selected, means the Vitrea workstation is set to be:",
+                choices: [
+                    "Highly secure",
+                    "DICOM promiscuous",
+                    "Only accessible to known hosts",
+                    "Offline"
+                ],
+                correct: 1,
+                explanation: "This setting makes the workstation DICOM promiscuous, allowing queries from unknown hosts."
+            },
+            {
+                question: "What is the minimum free space recommended for AutoDelete configuration to prevent data ingestion issues?",
+                choices: [
+                    "5GB",
+                    "10GB",
+                    "20GB",
+                    "50GB"
+                ],
+                correct: 2,
+                explanation: "AutoDelete should not be set to less than 20GB to prevent data ingestion issues."
+            },
+            {
+                question: "When using rule-based marking for AutoDelete, if a study contains multiple modalities, how is its expiration date determined?",
+                choices: [
+                    "It follows the modality with the shortest retention period.",
+                    "It follows the modality with the longest retention period.",
+                    "It is determined by the system administrator manually.",
+                    "It is set to a fixed default value."
+                ],
+                correct: 1,
+                explanation: "Multi-modality studies follow the modality with the longest retention period."
+            },
+            {
+                question: "What is the default Root Directory for Temporary Storage in DICOM Receive settings?",
+                choices: [
+                    "`C:\\Temp`",
+                    "`E:\\DICOMReceive`",
+                    "`D:\\Vitrea_Resources`",
+                    "`C:\\ProgramData\\Vitrea`"
+                ],
+                correct: 1,
+                explanation: "The default directory is E:\\DICOMReceive."
+            },
+            {
+                question: "What are the default Low and High Watermark values for DICOM Receive storage, respectively?",
+                choices: [
+                    "10GB, 15GB",
+                    "15GB, 20GB",
+                    "20GB, 25GB",
+                    "5GB, 10GB"
+                ],
+                correct: 1,
+                explanation: "The defaults are 15GB (Low) and 20GB (High) Watermark values."
+            },
+            {
+                question: "When modifying the Post Processing tab in the Vitrea Administration Tool, what is a caution to consider regarding active users?",
+                choices: [
+                    "Users will experience slower performance.",
+                    "The tool restarts services, which can cause users to lose active sessions.",
+                    "Users need to re-authenticate after the changes.",
+                    "No impact on active users."
+                ],
+                correct: 1,
+                explanation: "Modifying this tab restarts services, which can disrupt active user sessions."
+            },
+            {
+                question: "What type of graphics card is required for Vitrea software?",
+                choices: [
+                    "Any basic onboard graphics card",
+                    "A high-performance Microsoft Windows® compatible graphics card with advanced OpenGL support",
+                    "Only integrated Intel graphics",
+                    "A graphics card with at least 1GB of memory"
+                ],
+                correct: 1,
+                explanation: "Vitrea requires a high-performance graphics card with advanced OpenGL support."
+            },
+            {
+                question: "Which of the following NVIDIA Quadro graphics cards is *not* listed as currently supported?",
+                choices: [
+                    "K2200",
+                    "P2000",
+                    "RTX 4000",
+                    "GTX 1080"
+                ],
+                correct: 3,
+                explanation: "The GTX 1080 is not listed as a supported card."
+            },
+            {
+                question: "What is the Canon Medical recommended NVIDIA driver version for Windows 10/11?",
+                choices: [
+                    "472.12",
+                    "512.96",
+                    "553.62",
+                    "457.09"
+                ],
+                correct: 2,
+                explanation: "Version 553.62 is the recommended driver."
+            },
+            {
+                question: "What is the recommendation for multiple monitor configurations for Vitrea?",
+                choices: [
+                    "Monitors can have different resolutions and DPI settings.",
+                    "Only single monitor configurations are supported.",
+                    "All connected monitors must be configured with the same resolution, DPI, and orientation.",
+                    "Maximum of two monitors, regardless of settings."
+                ],
+                correct: 2,
+                explanation: "All monitors should have matching resolution, DPI, and orientation."
+            },
+            {
+                question: "Which of the following Windows 10/11 scaling and DPI combinations is *not* supported at 1920 x 1080 Landscape resolution?",
+                choices: [
+                    "100%/96 DPI",
+                    "125%/120 DPI",
+                    "150%/144 DPI",
+                    "175%/168 DPI"
+                ],
+                correct: 3,
+                explanation: "175%/168 DPI is not supported at this resolution."
+            },
+            {
+                question: "Which language pack installation is required for patient names with Chinese, Japanese, or Korean characters to display correctly in the Study Directory?",
+                choices: [
+                    "Only Chinese",
+                    "Only Japanese",
+                    "Only Korean",
+                    "All relevant language packs"
+                ],
+                correct: 3,
+                explanation: "All relevant language packs should be installed for proper character display."
+            },
+            {
+                question: "What is the recommended network connection speed for Vitrea?",
+                choices: [
+                    "100 Mbps",
+                    "500 Mbps",
+                    "1 Gbps",
+                    "10 Gbps"
+                ],
+                correct: 2,
+                explanation: "1 Gbps is the recommended network speed."
+            },
+            {
+                question: "If a Vitrea system does not have a network connection available, what Microsoft component must be installed?",
+                choices: [
+                    "Microsoft SQL Server",
+                    "Microsoft Loopback Adapter",
+                    "Microsoft Exchange Server",
+                    "Microsoft .NET Framework"
+                ],
+                correct: 1,
+                explanation: "The Microsoft Loopback Adapter is required for systems without network connections."
+            },
+            {
+                question: "Global Illumination Rendering (GIR) is *not* available for which of the following views?",
+                choices: [
+                    "Modified presets",
+                    "Volume Rendering",
+                    "Flythrough, MIP, or MinIP views",
+                    "All protocols/presets"
+                ],
+                correct: 2,
+                explanation: "GIR is not available for Flythrough, MIP, or MinIP views."
+            },
+            {
+                question: "What is the minimum Video RAM requirement for Global Illumination Rendering (GIR) with 512 matrices?",
+                choices: [
+                    "2GB",
+                    "4GB",
+                    "8GB",
+                    "12GB"
+                ],
+                correct: 1,
+                explanation: "4GB of Video RAM is the minimum requirement for GIR with 512 matrices."
+            },
+            {
+                question: "Which of the following operating systems is *not* listed as directly supported by Vitrea?",
+                choices: [
+                    "Microsoft Windows® 10 Professional 64-bit Edition",
+                    "Microsoft Windows® 10 Enterprise 64-bit Edition",
+                    "Microsoft Windows 7 Professional 64-bit Edition",
+                    "Microsoft Windows 11 Professional 64-bit Edition (version 22h2+)"
+                ],
+                correct: 2,
+                explanation: "Windows 7 is not listed as a supported operating system."
+            },
+            {
+                question: "What is Canon Medical's stance on providing antivirus/anti-malware software?",
+                choices: [
+                    "Canon Medical provides a recommended solution.",
+                    "Canon Medical provides the software as part of the Vitrea package.",
+                    "Canon Medical does not provide antivirus/anti-malware software; it's the customer's responsibility.",
+                    "Antivirus software is not necessary for Vitrea systems."
+                ],
+                correct: 2,
+                explanation: "Antivirus/anti-malware is the customer's responsibility."
+            },
+            {
+                question: "Which file extension is *not* listed as an antivirus exclusion for Storage File Extension Exclusions?",
+                choices: [
+                    "`.dcm`",
+                    "`.pdf`",
+                    "`.gpb`",
+                    "`.xml`"
+                ],
+                correct: 1,
+                explanation: "PDF files are not listed as requiring antivirus exclusions."
+            },
+            {
+                question: "What is the default display language for Vitrea installs in the United States of America and Europe?",
+                choices: [
+                    "Japanese",
+                    "German",
+                    "English",
+                    "French"
+                ],
+                correct: 2,
+                explanation: "English is the default display language for these regions."
+            },
+            {
+                question: "What is the main purpose of the `ConfigureIIS.ps1` script that runs automatically during Vitrea software installation?",
+                choices: [
+                    "To install new Windows features",
+                    "To restrict access to IIS \"Vital\" folder and prevent unauthorized access",
+                    "To perform system hardening",
+                    "To update device drivers"
+                ],
+                correct: 1,
+                explanation: "This script restricts access to the IIS \"Vital\" folder."
+            },
+            {
+                question: "What is the purpose of the `SkipSysPrep` registry key when created in `HKLM/Software/Vital Images/Installer`?",
+                choices: [
+                    "To enable system hardening",
+                    "To allow manual running of the Prep Script",
+                    "To skip the SysPrep process during a failed installation recovery",
+                    "To log installation errors"
+                ],
+                correct: 2,
+                explanation: "This key allows skipping SysPrep during recovery from a failed installation."
+            },
+            {
+                question: "To which folder should the `plugin`, `plugin.xml.hmac`, and `newEmbeddedWindow.pkg` files be moved back after configuring Mirada XD Administration, if they were moved out temporarily?",
+                choices: [
+                    "`C:\\Program Files\\Mirada Medical\\Mirada XD\\Temp`",
+                    "`C:\\Program Files\\Mirada Medical\\Mirada XD\\bin`",
+                    "`D:\\Vitrea_Resources`",
+                    "Any location outside the current one"
+                ],
+                correct: 1,
+                explanation: "These files should be moved back to the Mirada XD bin directory."
+            },
+            {
+                question: "When configuring Visia CT Lung CAD, what is the default Port value for the CT Lung CAD Server?",
+                choices: [
+                    "80",
+                    "443",
+                    "11121",
+                    "8433"
+                ],
+                correct: 2,
+                explanation: "The default port for CT Lung CAD Server is 11121."
+            },
+            {
+                question: "If Auto Processing is off by default for LungCADProcessor, what value should be entered in the `requestCAD` row to enable it?",
+                choices: [
+                    "`false`",
+                    "`0`",
+                    "`true`",
+                    "`off`"
+                ],
+                correct: 2,
+                explanation: "Setting `requestCAD` to \"true\" enables Auto Processing."
+            },
+            {
+                question: "What is the default userSessionTimeout for Vitrea sessions, which controls timeout due to no keyboard or mouse activity?",
+                choices: [
+                    "60 seconds",
+                    "300 seconds (5 minutes)",
+                    "14400 seconds (4 hours)",
+                    "86400 seconds (24 hours)"
+                ],
+                correct: 2,
+                explanation: "The default timeout is 14400 seconds (4 hours)."
+            }
+        ];
+
+        // Troubleshooting Scenarios
+        const scenarioData = [
+            {
+                scenario: "You are attempting to install the Vitrea software, but it fails, and the installation log indicates an issue with the prep script not executing successfully. You suspect a Group Policy is preventing its execution.",
+                solution: "Manually run the Prep Script. Navigate to `E:\\Vitrea_Resources\\\\Utilities\\OS Configuration Scripts\\Windows Workstation\\Prep`. Open PowerShell as administrator, `cd` to this folder (adding quotation marks to the path), and then type `.\\runscript.bat` and press Enter. If a security warning displays, type `R` and press Enter. Create the `SkipSysPrep` registry key. Open `regedit`, browse to `HKLM/Software/Vital Images/Installer`. Create a new string registry key named `SkipSysPrep` and set its value to `1`. Reboot the Vitrea workstation. After successful Vitrea installation, remove the `SkipSysPrep` registry key from `HKLM/Software/Vital Images/Installer`."
+            },
+            {
+                scenario: "You are trying to generate a license file using the Vitrea Generate License HostInfo tool, but you receive a \"Failed to write output file: D:\\Vitrea_ Resources\" error.",
+                solution: "Open a command prompt as an administrator. Change the directory to `E:\\Vitrea_resources\\Vitrea-7.x\\Utilities\\License Hostinfo Tool\\Bin\\`. Run `licenseTool.exe --hostinfo-file c:\\temp\\hostfile.xml`. The `hostfile.xml` file will then be created and can be used for generating the license."
+            },
+            {
+                scenario: "After installing Vitrea, the \"Turn on BitLocker\" menu item does not display when you right-click the (C:) drive.",
+                solution: "Reboot the system to fully register the BitLocker feature."
+            },
+            {
+                scenario: "You need to install NVIDIA graphics drivers on a Vitrea system, but you're unsure of the correct process to ensure compatibility and avoid issues.",
+                solution: "First, uninstall any existing NVIDIA graphics driver(s). Restart the machine. Navigate to the Vitrea_Resources\\Utilities\\Video Card Drivers\\553.62 folder location. Double-click the desired driver file and follow the prompts. During installation, select the \"Custom (Advanced)\" radio button and ensure you select the \"Perform a clean installation\" checkbox. After installation, click \"Restart Now\" to reboot the machine."
+            },
+            {
+                scenario: "During the Vitrea software installation process, a message appears stating, \"There is a pending reboot. Please reboot the system now otherwise installation may not succeed.\"",
+                solution: "Click the \"Exit\" button on the installation screen. Reboot the system as recommended."
+            },
+            {
+                scenario: "You have acquired a new Vitrea license file, but when you navigate to the Applications Home screen, it still displays \"Your system is not licensed.\"",
+                solution: "From the Applications Home screen, select Licensing. Click \"Make Changes,\" type \"Add License\" as the reason, and click OK. Click \"Add license,\" browse to the saved license file, and click \"Apply\". Click \"Activate Changes,\" then close the Licensing and Applications Home tabs. Restart the Vitrea workstation and log into the Vitrea software. Restart the Vitrea software again after the license has been applied."
+            },
+            {
+                scenario: "You are trying to configure a DICOM device as an archive, but the C-ECHO test fails, indicating a communication issue.",
+                solution: "Check network settings (IP Address, DNS) and ensure Windows is activated before running the Host Information Tool, as these can affect licensing. Ensure the IP address of the DICOM device is correctly entered in the Host field and the Port and AE Title are accurate. If the issue persists, consider configuring Windows Firewall to allow ICMP exceptions for ports 3002 and 3003, as some DICOM devices require this."
+            },
+            {
+                scenario: "You have changed the IP Address or DNS settings of the Vitrea system after acquiring a license, and now the system is prompting for a new license.",
+                solution: "You must run the Host Information Tool again and acquire a new license from Canon Medical Customer Support."
+            },
+            {
+                scenario: "You are trying to add the Vitrea-Admin user to the local Administrators Group, but the user account is not appearing or being recognized correctly.",
+                solution: "Ensure the Vitrea-Admin account has been created via Computer Management > Local Users and Groups > Users > New User. Ensure the username is entered correctly in the \"Enter the object names to select\" field."
+            },
+            {
+                scenario: "The Vitrea system is rejecting new studies, and you suspect it's related to disk space and auto-deletion settings.",
+                solution: "Ensure AutoDelete is not set to less than 20GB of free space. If the system has less than 20GB, it could stop ingesting data. Verify the `Minimum Disk Limit (MB)` and `Maximum Disk Limit (MB)` settings in the Disk-Based Marking Options are configured appropriately (e.g., 10-15% of total disk capacity). Restart the Autodelete service after making any changes to its configuration. Check the `DICOMReceive` directory size. Ensure it has enough disk space to accept the maximum amount of data being sent to prevent it from running out of space and stopping reception."
+            },
+            {
+                scenario: "You are attempting to configure the Post Processing tab in the Vitrea Administration Tool, but there are active users on the system.",
+                solution: "Ensure you have no active users on the system before modifying the Post Processing tab. Saving changes restarts the VIMS Post Processing Service and IIS, which can cause users to lose an active session."
+            },
+            {
+                scenario: "You are unable to perform a C-Echo when configuring a Storage Archive, and you suspect firewall issues with ICMP.",
+                solution: "Enable Windows Firewall: Allow ICMP exceptions via `gpedit.msc` by navigating to `Computer Configuration | Administrative Templates | Network | Network Connections | Windows Firewall | Standard Profile` and selecting \"Enabled\". Define inbound port exceptions for ports `3002:TCP:*:enabled:VitreaReceive` and `3003:TCP:*:enabled:VitreaQR` by enabling `Windows Firewall: Define inbound port exceptions`. Close all windows and reboot the system."
+            },
+            {
+                scenario: "You need to send DICOM data to the Vitrea workstation for testing, but a DICOM modality is unavailable.",
+                solution: "Use the VIDropBox tool. Launch it from `Start | Programs | Vital Images | VIDropBox`. Browse to the patient data directory in the left pane and drag the data to the right window. Update the VIMS Host field to the Vitrea workstation's IP Address. Modify the AE Title and Port fields to match the destination. Click \"Push\"."
+            },
+            {
+                scenario: "Vitrea Media Manager is failing to import DICOM files.",
+                solution: "Verify the DICOM files are not 2GB or larger on a per-file basis, as Vitrea Media Manager cannot import such files."
+            },
+            {
+                scenario: "You are installing Vitrea, and the `ConfigureIIS.ps1` script (which sets IP Address and Domain Restriction) needs to be run manually, perhaps after an IIS reinstallation.",
+                solution: "Navigate to the `ConfigureIIS` folder in the script location (e.g., `E:\\Vitrea_Resources\\\\Utilities\\Scripts\\ConfigureIIS`). Open PowerShell as Administrator. `cd` to the folder path. Type `.\\ConfigureIIS.ps1` and press Enter. If a security warning displays, type `R` and press Enter."
+            },
+            {
+                scenario: "You accidentally installed VSTP2 Spectral Analysis applications without purchasing them and need to revert to VSTP1 Spectral Analysis applications.",
+                solution: "Sign into the system as an administrator. Open Command Prompt as Administrator. Navigate to the Vitrea installation folder, then into the Bundle folder. Type `CMSCWSClinicalApp.msi` and follow the prompts for \"Repair\". Click \"Yes\" to restart your system when prompted."
+            },
+            {
+                scenario: "Multiple intensive tasks (e.g., ColonCAD and LungCAD) are triggered for a given study, causing the Study List status icon to fluctuate between in-progress and completed/failed states.",
+                solution: "This is expected behavior as one algorithm finishes and another starts. To resolve potential issues or ensure algorithms run, manually request Colon CAD or Lung CAD via the StudyList context menu or launch an appropriate application like CT Colon Analysis."
+            },
+            {
+                scenario: "The time zone on the Vitrea system has changed due to Daylight Saving Time, and you want to ensure logging reflects the correct time.",
+                solution: "Reboot the system to ensure services account for the hour change in logging."
+            },
+            {
+                scenario: "You want to configure Windows DPI settings for optimal display with Vitrea applications, but you're unsure of the correct procedure or recommended settings.",
+                solution: "In the Taskbar Search field, enter \"dpi\" and select \"Change the size of text, apps, and other items\". In the Scale and layout section, adjust the scaling of fonts and icons based on the supported monitor resolutions (e.g., \"Smaller - 100%\" setting for GIR). Sign out after changing the setting for the new DPI scaling factor to take effect."
+            },
+            {
+                scenario: "The CSMC Cardiac Suite License Server's floating license has shut down.",
+                solution: "Ensure the License Server has constant internet access (Call Home) to `http://vm.csaim.com/`. Set up rules in your proxy server if one is used, to allow connections to this URL or whitelist it. A new version of the CSMC Cardiac Suite Floating License Server 2017 software and a new license might be required."
+            },
+            {
+                scenario: "You are configuring a CSMC application and need to point it to the License Server.",
+                solution: "Navigate to `C:\\Program Files\\CSMC Cardiac Suite\\bin` directory and double-click `csconfig.exe`. In the Host field, enter the hostname of the License Server. In the Port field, enter `6433`. Click OK and restart the Vitrea system if necessary."
+            },
+            {
+                scenario: "You need to confirm the DNS entry for a PowerScribe system you are integrating with Vitrea.",
+                solution: "Ask the site IT for the hostname of the PowerScribe system. On the Vitrea system, open a Command prompt and enter `ping -a [hostname]`. Navigate to `C:\\Windows\\System32\\drivers\\etc\\` and add the PowerScribe Server hostname to the `hosts` file, or have site IT add it to their DNS servers. Save the `hosts` file."
+            },
+            {
+                scenario: "You want to increase the default size limit for individual DICOM instances and non-DICOM evidence that can be stored to the results/evidence storage, as INVIA or Olea might produce larger files.",
+                solution: "Sign in as Administrator and navigate to System Configuration > System Settings > FMSGeneral. Click \"Make Changes\". Double-click the Value column for `dicomArtifactSizeLimit` (for DICOM instances) or `nonDICOMArtifactSizeLimit` (for non-DICOM evidence). Enter the desired value (in bytes) that exceeds the size of your largest finding (default is 629145600 bytes or 600MB). Click \"Activate Changes\"."
+            },
+            {
+                scenario: "The VitreaSystemChecker.ps1 script, which confirms system hardening status, did not run automatically after Vitrea installation.",
+                solution: "This occurs if you opted out of running the system hardening script during installation. To run it manually, navigate to `E:\\Vitrea_Resources\\contents>\\Utilities\\Scripts\\SystemChecker`, open the `ReadMe` file, and follow the script execution instructions."
+            },
+            {
+                scenario: "You need to set the page file size for the E:\\ drive to a specific value, as it is currently set to \"System managed size\" on the C:\\ drive and needs modification.",
+                solution: "Go to Control Panel > System and Security > System > Advanced System Settings. Under Performance, click \"Settings,\" then select the \"Advanced\" tab. Click \"Change\" in the Virtual memory area. Clear \"Automatically manage paging file size for all drives\". Select the E:\\ drive, choose \"Custom size,\" and enter 16384 MB for both \"Initial size (MB)\" and \"Maximum size (MB)\". Click \"Set\" and OK, then reboot the system."
+            }
+        ];
+
+        // Quick Tips
+        const quickTips = [
+            "Do not disable the Windows Firewall during Vitrea software installation.",
+            "Always refer to the Vitrea Administration and Troubleshooting Guide for optional procedures.",
+            "Integrated Windows Authentication (IWA) is strongly recommended for single sign-on (SSO).",
+            "Avoid using underscores (_) or the names \"Vitrea\" or \"VitreaSystemInfo\" in system Hostnames.",
+            "Always acquire a reserved static IP address from the customer's IT department.",
+            "Ensure each Vitrea software user has a unique Microsoft Windows account.",
+            "For user accounts, set passwords to not change on login and never expire.",
+            "Store BitLocker encryption keys securely off-machine and not on the drive being encrypted.",
+            "Uninstall existing NVIDIA graphics drivers before installing new ones and restart the machine.",
+            "Always perform a clean installation when updating NVIDIA drivers.",
+            "Canon Medical recommends installing Microsoft Windows monthly updates.",
+            "Ensure the largest disk partition is configured as the E: data drive before Vitrea installation.",
+            "Do not close Command prompt screens during installation; they close automatically.",
+            "Always sign in as an Administrator to install Vitrea software.",
+            "Reboot the system if a \"pending reboot\" message appears during installation.",
+            "After installation and reboot, wait five minutes before using Vitrea.",
+            "Configure network settings and activate Windows before running the Host Information Tool for licensing.",
+            "Plan for license acquisition: Canon Medical Customer Support typically takes 24-48 hours to send a license file.",
+            "Configure TCP Port 3003 only if Vitrea will be a Query/Retrieve provider.",
+            "Do not set AutoDelete to less than 20GB of free space to prevent data ingestion issues.",
+            "Ensure the DICOMReceive directory has enough disk space to accept the maximum incoming data.",
+            "Do not modify the Post Processing tab when active users are on the system to avoid session loss.",
+            "Ensure all connected monitors have the same resolution, DPI, and orientation settings.",
+            "Only English Operating Systems are officially supported for Vitrea.",
+            "The customer is responsible for providing and configuring antivirus/anti-malware solutions.",
+            "Configure NTP across all clients and servers for IHE Consistent Time Integration Profile compliance.",
+            "Reboot the system when the time zone changes (e.g., Daylight Saving Time) for accurate logging.",
+            "When using VIDropBox, remember the 256 character path limit; map drives for remote sources.",
+            "Vitrea Media Manager cannot import DICOM files 2GB or larger per file.",
+            "For optimal performance, Canon Medical recommends allocating 250GB for the C:\\ partition.",
+            "The `ConfigureIIS.ps1` script helps restrict IIS access to listed IP addresses, enhancing security.",
+            "Run the system hardening script to enable recommended Windows 10/11 security settings."
+        ];
+
+        // DOM elements
+        const flashcardContainer = document.getElementById('flashcard-container');
+        const prevButton = document.getElementById('prev-button');
+        const nextButton = document.getElementById('next-button');
+        const currentCardDisplay = document.getElementById('current-card');
+        const totalCardsDisplay = document.getElementById('total-cards');
+        const flashcardModeBtn = document.getElementById('flashcard-mode');
+        const mcqModeBtn = document.getElementById('mcq-mode');
+        const scenarioModeBtn = document.getElementById('scenario-mode');
+        const tipsModeBtn = document.getElementById('tips-mode');
+
+        // State variables
+        let currentMode = 'flashcard';
+        let currentIndex = 0;
+        let currentData = flashcardData;
+
+        // Initialize the app
+        function init() {
+            updateTotalCardsDisplay();
+            renderCard();
+            setupEventListeners();
+        }
+
+        // Set up event listeners
+        function setupEventListeners() {
+            prevButton.addEventListener('click', showPreviousCard);
+            nextButton.addEventListener('click', showNextCard);
+            
+            flashcardModeBtn.addEventListener('click', () => switchMode('flashcard'));
+            mcqModeBtn.addEventListener('click', () => switchMode('mcq'));
+            scenarioModeBtn.addEventListener('click', () => switchMode('scenario'));
+            tipsModeBtn.addEventListener('click', () => switchMode('tips'));
+        }
+
+        // Switch between different modes
+        function switchMode(mode) {
+            currentMode = mode;
+            currentIndex = 0;
+            
+            // Update active button
+            flashcardModeBtn.classList.remove('active');
+            mcqModeBtn.classList.remove('active');
+            scenarioModeBtn.classList.remove('active');
+            tipsModeBtn.classList.remove('active');
+            
+            document.getElementById(`${mode}-mode`).classList.add('active');
+            
+            // Set current data based on mode
+            switch(mode) {
+                case 'flashcard':
+                    currentData = flashcardData;
+                    break;
+                case 'mcq':
+                    currentData = mcqData;
+                    break;
+                case 'scenario':
+                    currentData = scenarioData;
+                    break;
+                case 'tips':
+                    currentData = quickTips;
+                    break;
+            }
+            
+            updateTotalCardsDisplay();
+            renderCard();
+            updateNavigationButtons();
+        }
+
+        // Update the total cards display
+        function updateTotalCardsDisplay() {
+            totalCardsDisplay.textContent = currentData.length;
+        }
+
+        // Render the current card based on mode
+        function renderCard() {
+            currentCardDisplay.textContent = currentIndex + 1;
+            
+            if (currentData.length === 0) {
+                flashcardContainer.innerHTML = '<div class="flashcard"><div class="question">No cards available in this mode.</div></div>';
+                return;
+            }
+            
+            let cardHTML = '';
+            
+            switch(currentMode) {
+                case 'flashcard':
+                    const flashcard = currentData[currentIndex];
+                    cardHTML = `
+                        <div class="flashcard">
+                            <div class="question">${flashcard.question}</div>
+                            <div class="answer" id="answer">${flashcard.answer}</div>
+                            <button class="show-answer" id="show-answer">Show Answer</button>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'mcq':
+                    const mcq = currentData[currentIndex];
+                    cardHTML = `
+                        <div class="flashcard">
+                            <div class="question">${mcq.question}</div>
+                            <div class="multiple-choice" id="choices-container">
+                                ${mcq.choices.map((choice, index) => `
+                                    <div class="choice" data-index="${index}">${choice}</div>
+                                `).join('')}
+                            </div>
+                            <div class="feedback correct-feedback" id="correct-feedback" style="display: none;">
+                                Correct! ${mcq.explanation}
+                            </div>
+                            <div class="feedback incorrect-feedback" id="incorrect-feedback" style="display: none;">
+                                Incorrect. The correct answer is: ${mcq.choices[mcq.correct]}. ${mcq.explanation}
+                            </div>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'scenario':
+                    const scenario = currentData[currentIndex];
+                    cardHTML = `
+                        <div class="flashcard">
+                            <div class="scenario">${scenario.scenario}</div>
+                            <div class="solution" id="solution" style="display: none;">${scenario.solution}</div>
+                            <button class="show-answer" id="show-answer">Show Solution</button>
+                        </div>
+                    `;
+                    break;
+                    
+                case 'tips':
+                    const tip = currentData[currentIndex];
+                    cardHTML = `
+                        <div class="flashcard">
+                            <div class="quick-tip">${tip}</div>
+                        </div>
+                    `;
+                    break;
+            }
+            
+            flashcardContainer.innerHTML = cardHTML;
+            
+            // Set up event listeners for the newly created elements
+            if (currentMode === 'flashcard' || currentMode === 'scenario') {
+                const showAnswerBtn = document.getElementById('show-answer');
+                const answerElement = currentMode === 'flashcard' ? 
+                    document.getElementById('answer') : document.getElementById('solution');
+                
+                showAnswerBtn.addEventListener('click', () => {
+                    if (answerElement.style.display === 'none') {
+                        answerElement.style.display = 'block';
+                        showAnswerBtn.textContent = 'Hide Answer';
+                    } else {
+                        answerElement.style.display = 'none';
+                        showAnswerBtn.textContent = currentMode === 'flashcard' ? 'Show Answer' : 'Show Solution';
+                    }
+                });
+            }
+            
+            if (currentMode === 'mcq') {
+                const choices = document.querySelectorAll('.choice');
+                choices.forEach(choice => {
+                    choice.addEventListener('click', () => {
+                        const selectedIndex = parseInt(choice.dataset.index);
+                        const mcq = currentData[currentIndex];
+                        const isCorrect = selectedIndex === mcq.correct;
+                        
+                        // Show feedback
+                        const correctFeedback = document.getElementById('correct-feedback');
+                        const incorrectFeedback = document.getElementById('incorrect-feedback');
+                        
+                        if (isCorrect) {
+                            correctFeedback.style.display = 'block';
+                            incorrectFeedback.style.display = 'none';
+                            choice.classList.add('correct');
+                        } else {
+                            correctFeedback.style.display = 'none';
+                            incorrectFeedback.style.display = 'block';
+                            choice.classList.add('incorrect');
+                            // Highlight the correct answer
+                            choices[mcq.correct].classList.add('correct');
+                        }
+                        
+                        // Disable all choices after selection
+                        choices.forEach(c => {
+                            c.style.pointerEvents = 'none';
+                        });
+                    });
+                });
+            }
+        }
+
+        // Show the next card
+        function showNextCard() {
+            if (currentIndex < currentData.length - 1) {
+                currentIndex++;
+                renderCard();
+                updateNavigationButtons();
+            }
+        }
+
+        // Show the previous card
+        function showPreviousCard() {
+            if (currentIndex > 0) {
+                currentIndex--;
+                renderCard();
+                updateNavigationButtons();
+            }
+        }
+
+        // Update the state of navigation buttons
+        function updateNavigationButtons() {
+            prevButton.disabled = currentIndex === 0;
+            nextButton.disabled = currentIndex === currentData.length - 1;
+        }
+
+        // Initialize the application
+        init();
+    </script>
+</body>
+</html>
