@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vitrea® Bench Tests Tool | Canon Medical</title>
+    <style>
+        :root {
+            --canon-red: #c41017;
+            --canon-light-red: #ed1c24;
+            --canon-dark-blue: #003b6f;
+            --canon-gray: #f5f5f5;
+            --canon-dark-gray: #333333;
+            --canon-yellow: #ffc72c;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: var(--canon-dark-gray);
+            line-height: 1.6;
+            background-color: #f9f9f9;
+        }
+        header {
+            background: linear-gradient(140deg, var(--canon-dark-blue), var(--canon-red));
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        header::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="none" stroke="white" stroke-width="0.5" stroke-dasharray="5,5"/></svg>');
+            opacity: 0.1;
+            pointer-events: none;
+        }
+        .logo {
+            height: 50px;
+            transition: transform 0.3s ease;
+        }
+        .logo:hover {
+            transform: scale(1.05);
+        }
+        .header-text {
+            text-align: right;
+        }
+        .header-text h1 {
+            margin: 0;
+            font-size: 1.8rem;
+            font-weight: 300;
+        }
+        .header-text p {
+            margin: 0.2rem 0 0;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        nav {
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+        }
+        nav li {
+            position: relative;
+        }
+        nav a {
+            display: block;
+            padding: 1rem 1.5rem;
+            color: var(--canon-dark-gray);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        nav a:hover {
+            color: var(--canon-red);
+            background-color: var(--canon-gray);
+        }
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 0;
+            height: 3px;
+            background-color: var(--canon-red);
+            transition: all 0.3s ease;
+        }
+        nav a:hover::after {
+            width: 100%;
+            left: 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://global.canon/en/technology/medical/img/main_visual.jpg');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 5rem 2rem;
+            text-align: center;
+            border-radius: 8px;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            position: relative;
+            z-index: 1;
+        }
+        .btn {
+            display: inline-block;
+            padding: 0.8rem 1.8rem;
+            background-color: var(--canon-red);
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        .btn:hover {
+            background-color: var(--canon-light-red);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
+            z-index: -1;
+        }
+        .btn:hover::before {
+            left: 100%;
+        }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        .feature-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .feature-card h3 {
+            color: var(--canon-dark-blue);
+            margin-top: 0;
+        }
+        .feature-card .icon {
+            font-size: 2.5rem;
+            color: var(--canon-red);
+            margin-bottom: 1rem;
+        }
+        .feature-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--canon-red);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+        .feature-card:hover::after {
+            transform: scaleX(1);
+        }
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+        .section-title h2 {
+            display: inline-block;
+            font-size: 2rem;
+            color: var(--canon-dark-blue);
+            margin-bottom: 1rem;
+        }
+        .section-title h2::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 3px;
+            background-color: var(--canon-red);
+            margin: 0.5rem auto 0;
+        }
+        .bench-test-section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 3rem;
+        }
+        .tab-container {
+            margin-top: 2rem;
+        }
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 1rem;
+        }
+        .tab {
+            padding: 0.8rem 1.5rem;
+            cursor: pointer;
+            border: 1px solid transparent;
+            border-bottom: none;
+            background-color: transparent;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            position: relative;
+        }
+        .tab.active {
+            color: var(--canon-red);
+            border-color: #ddd;
+            border-bottom-color: white;
+            background-color: white;
+            border-radius: 4px 4px 0 0;
+        }
+        .tab:not(.active):hover {
+            background-color: var(--canon-gray);
+        }
+        .tab-content {
+            display: none;
+            padding: 1.5rem;
+            background-color: white;
+            border-radius: 0 0 4px 4px;
+            animation: fadeIn 0.5s ease;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+        .results-table th, .results-table td {
+            padding: 0.8rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+        .results-table th {
+            background-color: var(--canon-gray);
+            color: var(--canon-dark-blue);
+        }
+        .results-table tr:hover {
+            background-color: var(--canon-gray);
+        }
+        .status-ok {
+            color: #28a745;
+            font-weight: 500;
+        }
+        .status-not-ok {
+            color: var(--canon-red);
+            font-weight: 500;
+        }
+        .system-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .info-card {
+            background-color: var(--canon-gray);
+            padding: 1.2rem;
+            border-radius: 6px;
+            border-left: 4px solid var(--canon-red);
+        }
+        .info-card h4 {
+            margin-top: 0;
+            color: var(--canon-dark-blue);
+        }
+        .progress-container {
+            margin-top: 1rem;
+        }
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.3rem;
+        }
+        .progress-bar {
+            height: 8px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background-color: var(--canon-red);
+            width: 0;
+            transition: width 1s ease;
+        }
+        .chart-container {
+            height: 300px;
+            margin: 2rem 0;
+            position: relative;
+        }
+        .contact-form {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        .form-control {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: inherit;
+            transition: border-color 0.3s ease;
+        }
+        .form-control:focus {
+            border-color: var(--canon-red);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(196, 16, 23, 0.1);
+        }
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+        footer {
+            background-color: var(--canon-dark-blue);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            text-align: left;
+        }
+        .footer-column h3 {
+            color: white;
+            margin-top: 0;
+            font-size: 1.2rem;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background-color: var(--canon-red);
+        }
+        .footer-column ul {
+            list-style: none;
+            padding: 0;
+            margin: 1rem 0 0;
+        }
+        .footer-column li {
+            margin-bottom: 0.5rem;
+        }
+        .footer-column a {
+            color: rgba(255,255,255,0.8);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .footer-column a:hover {
+            color: white;
+        }
+        .copyright {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        .floating-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            background-color: var(--canon-red);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 99;
+        }
+        .floating-btn:hover {
+            transform: scale(1.1);
+            background-color: var(--canon-light-red);
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .modal.active {
+            display: flex;
+            opacity: 1;
+        }
+        .modal-content {
+            background-color: white;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            transform: translateY(-20px);
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+        .modal.active .modal-content {
+            transform: translateY(0);
+        }
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-header h3 {
+            margin: 0;
+            color: var(--canon-dark-blue);
+        }
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #999;
+            transition: color 0.3s ease;
+        }
+        .close-btn:hover {
+            color: var(--canon-red);
+        }
+        .modal-body {
+            padding: 1.5rem;
+        }
+        .hidden {
+            display: none;
+        }
+        .animation-pulse {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .confetti {
+            position: fixed;
+            width: 10px;
+            height: 10px;
+            background-color: var(--canon-red);
+            opacity: 0;
+            z-index: 999;
+            animation: confetti-fall 3s linear forwards;
+        }
+        @keyframes confetti-fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        .surprise-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+        .surprise-container.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        .surprise-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            text-align: center;
+            max-width: 500px;
+            position: relative;
+            transform: scale(0.8);
+            transition: transform 0.5s ease;
+        }
+        .surprise-container.active .surprise-content {
+            transform: scale(1);
+        }
+        .surprise-content h2 {
+            color: var(--canon-red);
+            margin-top: 0;
+        }
+        .close-surprise {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: #999;
+        }
+        .close-surprise:hover {
+            color: var(--canon-red);
+        }
+        @media (max-width: 768px) {
+            nav ul {
+                flex-direction: column;
+            }
+            nav li {
+                text-align: center;
+            }
+            .hero h2 {
+                font-size: 2rem;
+            }
+            .hero p {
+                font-size: 1rem;
+            }
+            .features {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="https://global.canon/en/corporate/logo/img/logo_01.png" alt="Canon Medical Logo" class="logo">
+        <div class="header-text">
+            <h1>Vitrea® Advanced Visualization</h1>
+            <p>Installing and Using the Bench Tests Tool Guide</p>
+        </div>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="#overview">Overview</a></li>
+            <li><a href="#installation">Installation</a></li>
+            <li><a href="#usage">Usage</a></li>
+            <li><a href="#results">Results</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <section id="overview" class="hero">
+            <h2>Bench Tests Tool for Vitrea®</h2>
+            <p>Hardware platform's capability benchmarking for problem diagnosis at customer sites. Collects data regarding CPU, Memory Bandwidth, GPU, and disk I/O performance.</p>
+            <button id="runDemoBtn" class="btn animation-pulse">Run Demo Test</button>
+        </section>
+
+        <section>
+            <div class="section-title">
+                <h2>Key Features</h2>
+                <p>Discover what makes our Bench Tests Tool essential for your diagnostic workflow</p>
+            </div>
+            <div class="features">
+                <div class="feature-card">
+                    <div class="icon">⚡</div>
+                    <h3>Comprehensive Testing</h3>
+                    <p>Evaluate CPU, GPU, memory bandwidth, and disk I/O performance with a single tool.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon">📊</div>
+                    <h3>Detailed Reports</h3>
+                    <p>Get clear, actionable results with visualizations and performance metrics.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="icon">🔍</div>
+                    <h3>System Verification</h3>
+                    <p>Confirm security and best practice configurations with System Checker.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="installation" class="bench-test-section">
+            <div class="section-title">
+                <h2>Installation Guide</h2>
+                <p>Follow these steps to install the Bench Tests Tool</p>
+            </div>
+            <div class="tab-container">
+                <div class="tabs">
+                    <button class="tab active" data-tab="with-vitrea">With Vitrea Software</button>
+                    <button class="tab" data-tab="without-vitrea">Without Vitrea Software</button>
+                </div>
+                <div id="with-vitrea" class="tab-content active">
+                    <ol>
+                        <li>Install the Vitrea software as described in the applicable installation guide.</li>
+                        <li>Navigate to the <code>Vitrea_Resources\Vitrea installer Bundle</code> folder location.</li>
+                        <li>Run the <code>BenchTest.msi</code> file.</li>
+                        <li>After installation, access the tool from within Vitrea software.</li>
+                    </ol>
+                </div>
+                <div id="without-vitrea" class="tab-content">
+                    <ol>
+                        <li>Sign in as an administrator.</li>
+                        <li>Create a <code>Vitrea_Resources</code> folder on the data drive.</li>
+                        <li>Copy the Vitrea software bundle into the <code>Vitrea_Resources</code> folder.</li>
+                        <li>Navigate to the <code>Vitrea_Resources\Vitrea Installer Bundle</code> folder location.</li>
+                        <li>Run the <code>BenchTest.msi</code> file.</li>
+                        <li>Install the VC2022 redistributable package.</li>
+                        <li>Run the <code>VitreaSystemInfoProvisionServices.msi</code> file.</li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+        <section id="usage" class="bench-test-section">
+            <div class="section-title">
+                <h2>Usage Instructions</h2>
+                <p>How to run and interpret the Bench Tests Tool</p>
+            </div>
+            <div class="tab-container">
+                <div class="tabs">
+                    <button class="tab active" data-tab="usage-vitrea">Within Vitrea</button>
+                    <button class="tab" data-tab="usage-standalone">Standalone</button>
+                </div>
+                <div id="usage-vitrea" class="tab-content active">
+                    <ol>
+                        <li>Double-click the Start Vitrea icon on the desktop.</li>
+                        <li>From within Vitrea, select the double-gear icon in the upper right corner.</li>
+                        <li>Select the <strong>Run Bench Tests</strong> option.</li>
+                        <li>Click <strong>OK</strong> to confirm when prompted.</li>
+                        <li>Wait for the tests to complete (may take several minutes).</li>
+                        <li>View results in the System Health section under Computer Information.</li>
+                    </ol>
+                </div>
+                <div id="usage-standalone" class="tab-content">
+                    <ol>
+                        <li>Navigate to <code>C:\Program Files\Vital Images\benchtest\benchtesttool\benchtesttool.exe</code>.</li>
+                        <li>Run the executable and wait for completion.</li>
+                        <li>View results via the System Checker tool.</li>
+                        <li>Open the <code>SysChkrReport_{machinename,date,time}.html</code> file in any browser.</li>
+                    </ol>
+                </div>
+            </div>
+            <div class="chart-container" id="performanceChart">
+                <canvas id="chartCanvas"></canvas>
+            </div>
+        </section>
+
+        <section id="results" class="bench-test-section">
+            <div class="section-title">
+                <h2>Test Results Interpretation</h2>
+                <p>Understanding your system's performance metrics</p>
+            </div>
+            <div class="system-info">
+                <div class="info-card">
+                    <h4>CPU Performance</h4>
+                    <p>Intel(R) Xeon(R) W-2145 CPU @ 3.70GHz</p>
+                    <div class="progress-container">
+                        <div class="progress-label">
+                            <span>Utilization</span>
+                            <span id="cpuPercent">24.6%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="cpuProgress"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <h4>GPU Performance</h4>
+                    <p>NVIDIA Quadro P2200 (5120MB, 1280 cores)</p>
+                    <div class="progress-container">
+                        <div class="progress-label">
+                            <span>Utilization</span>
+                            <span id="gpuPercent">28.0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="gpuProgress"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <h4>Memory</h4>
+                    <p>32GB DDR4</p>
+                    <div class="progress-container">
+                        <div class="progress-label">
+                            <span>Usage</span>
+                            <span id="memPercent">60%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="memProgress"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <table class="results-table">
+                <thead>
+                    <tr>
+                        <th>Test</th>
+                        <th>Average</th>
+                        <th>Maximum</th>
+                        <th>Minimum</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>CPU Benchmark</td>
+                        <td>24.6</td>
+                        <td>48.0</td>
+                        <td>1.2</td>
+                        <td class="status-ok">OK</td>
+                    </tr>
+                    <tr>
+                        <td>GPU Benchmark</td>
+                        <td>28.0</td>
+                        <td>44.8</td>
+                        <td>1.7</td>
+                        <td class="status-ok">OK</td>
+                    </tr>
+                    <tr>
+                        <td>Disk I/O (Sequential)</td>
+                        <td>98.10 MB/s</td>
+                        <td>100.00 MB/s</td>
+                        <td>96.00 MB/s</td>
+                        <td class="status-ok">OK</td>
+                    </tr>
+                    <tr>
+                        <td>Disk I/O (Random)</td>
+                        <td>45.30 MB/s</td>
+                        <td>52.10 MB/s</td>
+                        <td>38.50 MB/s</td>
+                        <td class="status-not-ok">Below Expected</td>
+                    </tr>
+                </tbody>
+            </table>
+            <button id="viewFullReportBtn" class="btn">View Full Report</button>
+        </section>
+
+        <section id="contact" class="contact-form">
+            <div class="section-title">
+                <h2>Contact Support</h2>
+                <p>Need help? Our technical support team is ready to assist you</p>
+            </div>
+            <form id="supportForm">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="subject">Subject</label>
+                    <input type="text" id="subject" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea id="message" class="form-control" required></textarea>
+                </div>
+                <button type="submit" class="btn">Send Message</button>
+            </form>
+        </section>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#">Documentation</a></li>
+                    <li><a href="#">Release Notes</a></li>
+                    <li><a href="#">System Requirements</a></li>
+                    <li><a href="#">Download Updates</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Support</h3>
+                <ul>
+                    <li><a href="#">Knowledge Base</a></li>
+                    <li><a href="#">Troubleshooting</a></li>
+                    <li><a href="#">Contact Support</a></li>
+                    <li><a href="#">Training</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Contact</h3>
+                <ul>
+                    <li>U.S.: 1.800.208.3005</li>
+                    <li>International: Contact your distributor</li>
+                    <li>Email: support@mi.medical.canon</li>
+                    <li>Website: mi.medical.canon</li>
+                </ul>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>Copyright © 1997 - 2025 Canon Medical Systems Corporation. All rights reserved.</p>
+            <p>VPMC-17302 C Installing and Using the Bench Tests Tool Guide</p>
+        </div>
+    </footer>
+
+    <div class="floating-btn" id="surpriseBtn">🎁</div>
+
+    <div class="modal" id="reportModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Full Bench Test Report</h3>
+                <button class="close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <h4>System Information</h4>
+                <p><strong>Host:</strong> W11-HGPU2 (7.15.7.493)</p>
+                <p><strong>OS Version:</strong> Windows Server 2017</p>
+                <p><strong>BIOS Version:</strong> 1.0.0</p>
+                
+                <h4>Hardware Details</h4>
+                <p><strong>CPU:</strong> Intel(R) Xeon(R) W-2145 CPU @ 3.70GHz (8 cores, 16 threads)</p>
+                <p><strong>GPU:</strong> NVIDIA Quadro P2200 (5120MB, 1280 cores)</p>
+                <p><strong>Memory:</strong> 32GB DDR4</p>
+                <p><strong>Storage:</strong> 500GB SSD (256GB free)</p>
+                
+                <h4>Detailed Bench Test Results</h4>
+                <table class="results-table">
+                    <thead>
+                        <tr>
+                            <th>Metric</th>
+                            <th>Value</th>
+                            <th>Benchmark</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>CPU Single Thread</td>
+                            <td>3656 MHz</td>
+                            <td>≥ 3000 MHz</td>
+                            <td class="status-ok">OK</td>
+                        </tr>
+                        <tr>
+                            <td>CPU Multi Thread</td>
+                            <td>3656 MHz</td>
+                            <td>≥ 2800 MHz</td>
+                            <td class="status-ok">OK</td>
+                        </tr>
+                        <tr>
+                            <td>GPU Memory Bandwidth</td>
+                            <td>100.00 MB/s</td>
+                            <td>≥ 90.00 MB/s</td>
+                            <td class="status-ok">OK</td>
+                        </tr>
+                        <tr>
+                            <td>Disk Sequential Read</td>
+                            <td>98.10 MB/s</td>
+                            <td>≥ 95.00 MB/s</td>
+                            <td class="status-ok">OK</td>
+                        </tr>
+                        <tr>
+                            <td>Disk Random Read</td>
+                            <td>45.30 MB/s</td>
+                            <td>≥ 50.00 MB/s</td>
+                            <td class="status-not-ok">Below Expected</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h4>Recommendations</h4>
+                <ul>
+                    <li>Disk random read performance is below expected levels. Consider upgrading to a higher performance SSD.</li>
+                    <li>All other components meet or exceed recommended performance benchmarks.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="surprise-container" id="surpriseContainer">
+        <div class="surprise-content">
+            <button class="close-surprise">&times;</button>
+            <h2>Surprise! 🎉</h2>
+            <p>Thank you for exploring the Bench Tests Tool guide!</p>
+            <p>Here's a special gift for you - a virtual high-five from our team 👋</p>
+            <p>We hope this tool helps you optimize your system's performance for the best medical imaging experience.</p>
+            <button id="confettiBtn" class="btn">Celebrate!</button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Tab functionality
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                const tabId = tab.getAttribute('data-tab');
+                const container = tab.closest('.tab-container');
+                
+                // Update active tab
+                container.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                // Update active content
+                container.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+
+        // Modal functionality
+        const modal = document.getElementById('reportModal');
+        const viewReportBtn = document.getElementById('viewFullReportBtn');
+        const closeBtn = document.querySelector('.close-btn');
+
+        viewReportBtn.addEventListener('click', () => {
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+
+        closeBtn.addEventListener('click', () => {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        });
+
+        window.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        });
+
+        // Progress bars animation
+        function animateProgressBars() {
+            const cpuProgress = document.getElementById('cpuProgress');
+            const gpuProgress = document.getElementById('gpuProgress');
+            const memProgress = document.getElementById('memProgress');
+            
+            cpuProgress.style.width = '24.6%';
+            gpuProgress.style.width = '28%';
+            memProgress.style.width = '60%';
+        }
+
+        // Run demo test button
+        const runDemoBtn = document.getElementById('runDemoBtn');
+        runDemoBtn.addEventListener('click', () => {
+            runDemoBtn.textContent = 'Running Tests...';
+            runDemoBtn.disabled = true;
+            
+            // Simulate test running
+            setTimeout(() => {
+                // Update progress bars with random values for demo
+                const cpuPercent = Math.floor(Math.random() * 30) + 20;
+                const gpuPercent = Math.floor(Math.random() * 30) + 20;
+                const memPercent = Math.floor(Math.random() * 30) + 50;
+                
+                document.getElementById('cpuPercent').textContent = cpuPercent + '%';
+                document.getElementById('gpuPercent').textContent = gpuPercent + '%';
+                document.getElementById('memPercent').textContent = memPercent + '%';
+                
+                document.getElementById('cpuProgress').style.width = cpuPercent + '%';
+                document.getElementById('gpuProgress').style.width = gpuPercent + '%';
+                document.getElementById('memProgress').style.width = memPercent + '%';
+                
+                // Update table with random values
+                document.querySelectorAll('.results-table tbody tr td:not(:last-child)').forEach(cell => {
+                    if (cell.textContent.includes('MB/s')) {
+                        const baseValue = parseFloat(cell.textContent);
+                        const newValue = (baseValue * (0.9 + Math.random() * 0.2)).toFixed(2) + ' MB/s';
+                        cell.textContent = newValue;
+                    } else if (!isNaN(parseFloat(cell.textContent))) {
+                        const baseValue = parseFloat(cell.textContent);
+                        const newValue = (baseValue * (0.9 + Math.random() * 0.2)).toFixed(1);
+                        cell.textContent = newValue;
+                    }
+                });
+                
+                // Randomly change one status to "Not OK" for demo purposes
+                const statusCells = document.querySelectorAll('.results-table .status-ok');
+                if (statusCells.length > 0 && Math.random() > 0.5) {
+                    const randomIndex = Math.floor(Math.random() * statusCells.length);
+                    statusCells[randomIndex].classList.remove('status-ok');
+                    statusCells[randomIndex].classList.add('status-not-ok');
+                    statusCells[randomIndex].textContent = 'Below Expected';
+                }
+                
+                runDemoBtn.textContent = 'Tests Completed!';
+                setTimeout(() => {
+                    runDemoBtn.textContent = 'Run Demo Test';
+                    runDemoBtn.disabled = false;
+                }, 2000);
+            }, 3000);
+        });
+
+        // Chart initialization
+        function initChart() {
+            const ctx = document.getElementById('chartCanvas').getContext('2d');
+            const chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['CPU', 'GPU', 'Memory', 'Disk Seq', 'Disk Rnd'],
+                    datasets: [{
+                        label: 'Performance Score',
+                        data: [24.6, 28.0, 60, 98.1, 45.3],
+                        backgroundColor: [
+                            'rgba(196, 16, 23, 0.7)',
+                            'rgba(196, 16, 23, 0.7)',
+                            'rgba(196, 16, 23, 0.7)',
+                            'rgba(196, 16, 23, 0.7)',
+                            'rgba(196, 16, 23, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgba(196, 16, 23, 1)',
+                            'rgba(196, 16, 23, 1)',
+                            'rgba(196, 16, 23, 1)',
+                            'rgba(196, 16, 23, 1)',
+                            'rgba(196, 16, 23, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            title: {
+                                display: true,
+                                text: 'Performance Score'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.parsed.y + (context.dataIndex < 3 ? '%' : ' MB/s');
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Surprise button functionality
+        const surpriseBtn = document.getElementById('surpriseBtn');
+        const surpriseContainer = document.getElementById('surpriseContainer');
+        const closeSurprise = document.querySelector('.close-surprise');
+        const confettiBtn = document.getElementById('confettiBtn');
+
+        surpriseBtn.addEventListener('click', () => {
+            surpriseContainer.classList.add('active');
+        });
+
+        closeSurprise.addEventListener('click', () => {
+            surpriseContainer.classList.remove('active');
+        });
+
+        confettiBtn.addEventListener('click', () => {
+            createConfetti();
+        });
+
+        function createConfetti() {
+            const colors = ['#c41017', '#003b6f', '#ffc72c', '#ffffff'];
+            
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.width = Math.random() * 10 + 5 + 'px';
+                confetti.style.height = Math.random() * 10 + 5 + 'px';
+                confetti.style.animationDuration = Math.random() * 3 + 2 + 's';
+                document.body.appendChild(confetti);
+                
+                // Remove confetti after animation
+                setTimeout(() => {
+                    confetti.remove();
+                }, 5000);
+            }
+        }
+
+        // Form submission
+        document.getElementById('supportForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Thank you for your message! Our support team will contact you soon.');
+            e.target.reset();
+        });
+
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            animateProgressBars();
+            initChart();
+        });
+    </script>
+</body>
+</html>
