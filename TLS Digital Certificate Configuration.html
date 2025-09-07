@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canon Medical - Interactive TLS Certificate Guide</title>
+    <style>
+        :root {
+            --canon-red: #c41017;
+            --canon-light-red: #ed1c24;
+            --canon-blue: #003b6f;
+            --canon-gray: #f5f5f5;
+            --canon-dark-gray: #333333;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: var(--canon-dark-gray);
+            line-height: 1.6;
+            background-color: #f9f9f9;
+        }
+        header {
+            background: linear-gradient(140deg, var(--canon-blue), var(--canon-red));
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .logo {
+            height: 60px;
+            margin-bottom: 1rem;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+        }
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: 300;
+        }
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-top: 0.5rem;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            transition: transform 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .card h2 {
+            color: var(--canon-blue);
+            margin-top: 0;
+            border-bottom: 2px solid var(--canon-gray);
+            padding-bottom: 0.5rem;
+        }
+        .scenario-selector {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        .scenario-btn {
+            background: var(--canon-gray);
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .scenario-btn:hover {
+            background: var(--canon-light-red);
+            color: white;
+        }
+        .scenario-btn.active {
+            background: var(--canon-red);
+            color: white;
+        }
+        .scenario-content {
+            display: none;
+        }
+        .scenario-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .certificate-visual {
+            background: linear-gradient(135deg, var(--canon-gray), white);
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+        .certificate-visual::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(90deg, var(--canon-red), var(--canon-blue));
+        }
+        .cert-field {
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px dashed #eee;
+        }
+        .cert-field label {
+            display: block;
+            font-weight: 600;
+            color: var(--canon-blue);
+            margin-bottom: 0.3rem;
+        }
+        .cert-field .value {
+            font-family: monospace;
+            background: #f0f0f0;
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            display: inline-block;
+        }
+        .interactive-diagram {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            text-align: center;
+            position: relative;
+        }
+        .server-node {
+            display: inline-block;
+            width: 120px;
+            margin: 0 1.5rem;
+            text-align: center;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .server-node:hover {
+            transform: scale(1.05);
+        }
+        .server-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--canon-gray);
+            border-radius: 50%;
+            margin: 0 auto 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--canon-blue);
+            border: 3px solid var(--canon-blue);
+        }
+        .server-node:hover .server-icon {
+            background: var(--canon-light-red);
+            color: white;
+            border-color: var(--canon-red);
+        }
+        .connection-line {
+            position: absolute;
+            top: 40px;
+            left: 100px;
+            width: calc(100% - 200px);
+            height: 2px;
+            background: #ddd;
+            z-index: 1;
+        }
+        .connection-line::after {
+            content: "";
+            position: absolute;
+            top: -3px;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(90deg, var(--canon-red), var(--canon-blue));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.5s ease;
+        }
+        .server-node.active ~ .connection-line::after {
+            transform: scaleX(1);
+        }
+        .server-details {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-top: 1rem;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        .server-details.active {
+            display: block;
+        }
+        .checklist {
+            list-style-type: none;
+            padding: 0;
+        }
+        .checklist li {
+            padding: 0.5rem 0;
+            position: relative;
+            padding-left: 2rem;
+        }
+        .checklist li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--canon-red);
+            font-weight: bold;
+        }
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            border-bottom: 1px dotted var(--canon-blue);
+            cursor: help;
+        }
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: var(--canon-blue);
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 0.5rem;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+        footer {
+            background: var(--canon-dark-gray);
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 2rem;
+        }
+        .download-btn {
+            background: var(--canon-red);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .download-btn:hover {
+            background: var(--canon-light-red);
+            transform: translateY(-2px);
+        }
+        .highlight {
+            background-color: rgba(196, 16, 23, 0.1);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            border-left: 3px solid var(--canon-red);
+        }
+        @media (max-width: 768px) {
+            .scenario-selector {
+                flex-direction: column;
+            }
+            .server-node {
+                margin: 1rem 0;
+                width: 100%;
+            }
+            .connection-line {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <img src="https://global.canon/en/corporate/logo/img/logo_01.png" alt="Canon Medical Logo" class="logo">
+            <h1>TLS Digital Certificate Configuration</h1>
+            <p class="subtitle">Enterprise Deployment Guide - Interactive Reference</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <h2>Certificate Requirements</h2>
+            <p>Based on your deployment scenario, select the appropriate certificate type below. This interactive guide will show you the specific requirements for each scenario.</p>
+            
+            <div class="scenario-selector">
+                <button class="scenario-btn active" data-scenario="single">Single Server</button>
+                <button class="scenario-btn" data-scenario="san">SAN Certificate</button>
+                <button class="scenario-btn" data-scenario="wildcard">Wildcard Certificate</button>
+                <button class="scenario-btn" data-scenario="sql">SQL Server 2017</button>
+            </div>
+            
+            <div id="single" class="scenario-content active">
+                <h3>Single Server Deployment</h3>
+                <p>For a single server deployment with on-box SQL Server, you need one digital certificate with these properties:</p>
+                
+                <div class="certificate-visual">
+                    <div class="cert-field">
+                        <label>Certificate Type</label>
+                        <span class="value">Digital Certificate</span>
+                    </div>
+                    <div class="cert-field">
+                        <label>Common Name (CN)</label>
+                        <span class="value">server1.yourdomain.com</span>
+                    </div>
+                    <div class="cert-field">
+                        <label>Subject Alternative Name</label>
+                        <span class="value">Not required</span>
+                    </div>
+                    <div class="cert-field">
+                        <label>Key Spec</label>
+                        <span class="value">AT_KEYEXCHANGE (if SQL 2017)</span>
+                    </div>
+                </div>
+                
+                <div class="checklist">
+                    <h4>Configuration Checklist:</h4>
+                    <ul>
+                        <li>Certificate must be SHA256 or better</li>
+                        <li>2048-bit RSA key or 256-bit ECC key minimum</li>
+                        <li>Supports TLS 1.2</li>
+                        <li>Valid for 1 year</li>
+                        <li>Issued by internal CA or trusted third party</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div id="san" class="scenario-content">
+                <h3>SAN Certificate Deployment</h3>
+                <p>For small enterprise deployments (less than 5 servers), a SAN certificate can be used with these properties:</p>
+                
+                <div class="certificate-visual">
+                    <div class="cert-field">
+                        <label>Certificate Type</label>
+                        <span class="value">SAN Certificate</span>
+                    </div>
+                    <div class="cert-field">
+                        <label>Common Name (CN)</label>
+                        <span class="value">mgmt.yourdomain.com</span>
+                    </div>
+                    <div class="cert-field">
+                        <label>Subject Alternative Names</label>
+                        <span class="value">mgmt.yourdomain.com<br>app1.yourdomain.com<br>app2.yourdomain.com<br>sql.yourdomain.com</span>
+                    </div>
+                    <div class="cert-field">
+                        <label>Key Spec</label>
+                        <span class="value">AT_KEYEXCHANGE for SQL 2017</span>
+                    </div>
+                </div>
+                
+                <div class="interactive-diagram">
+                    <h4>Certificate Coverage Map</h4>
+                    <div class="server-node active" data-server="mgmt">
+                        <div class="server-icon">M</div>
+                        <div>Management</div>
+                    </div>
+                    <div class="connection-line"></div>
+                    <div class="server-node" data-server="app1">
+                        <div class="server-icon">A1</div>
+                        <div>App Server 1</div>
+                    </div>
+                    <div class="connection-line"></div>
+                    <div class="server-node" data-server="app2">
+                        <div class="server-icon">A2</div>
+                        <div>App Server 2</div>
+                    </div>
+                    <div class="connection-line"></div>
+                    <div class="server-node" data-server="sql">
+                        <div class="server-icon">SQL</div>
+                        <div>SQL Server</div>
+                    </div>
+                    
+                    <div id="mgmt-details" class="server-details active">
+                        <h5>Management Server Requirements</h5>
+                        <p>CN must match FQDN: <span class="highlight">mgmt.yourdomain.com</span></p>
+                        <p>Used for: IIS/APIs, PACS integration, Remote Desktop services</p>
+                    </div>
+                    <div id="app1-details" class="server-details">
+                        <h5>Application Server 1 Requirements</h5>
+                        <p>Must be in SAN: <span class="highlight">app1.yourdomain.com</span></p>
+                        <p>Used for: Vitrea application communication</p>
+                    </div>
+                    <div id="app2-details" class="server-details">
+                        <h5>Application Server 2 Requirements</h5>
+                        <p>Must be in SAN: <span class="highlight">app2.yourdomain.com</span></p>
+                        <p>Used for: Vitrea application communication</p>
+                    </div>
+                    <div id="sql-details" class="server-details">
+                        <h5>SQL Server Requirements</h5>
+                        <p>CN must match FQDN: <span class="highlight">sql.yourdomain.com</span></p>
+                        <p>For SQL 2017: Requires <span class="highlight">AT_KEYEXCHANGE</span> property</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="wildcard" class="scenario-content">
+                <h3>Wildcard Certificate Deployment</h3>
+                <p>For large deployments or unlimited hosts, a wildcard certificate can simplify management:</p>
+                
+                <div class="certificate-visual">
+                    <div class="cert-field">
+                        <label>Certificate Type</label>
+                        <span class="value">Wildcard Certificate</span>
+                    </div>
+                    <div class="cert-field">
+                        <label>Common Name (CN)</label>
+                        <span class="value">*.yourdomain.com</span>
+                    </div>
+                    <div class="cert-field">
+                        <label>Subject Alternative Name</label>
+                        <span class="value">Not applicable</span>
+                    </div>
+                    <div class="cert-field">
+                        <label>Key Spec</label>
+                        <span class="value">Cannot be used for SQL 2017</span>
+                    </div>
+                </div>
+                
+                <div class="highlight">
+                    <p><strong>Note:</strong> Wildcard certificates currently cannot be used for SQL Server 2017. For SQL 2019 or higher, the same wildcard certificate can be used for SQL.</p>
+                </div>
+                
+                <div class="checklist">
+                    <h4>Deployment Examples:</h4>
+                    <ul>
+                        <li><strong>Scenario One:</strong> 1 Management Server, remote SQL Server, and 10 Application Servers - one wildcard certificate</li>
+                        <li><strong>Scenario Two:</strong> Large deployment with 20+ servers - wildcard simplifies certificate management</li>
+                        <li><strong>Scenario Three:</strong> Multi-domain environment - requires separate wildcards or SAN certificates</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div id="sql" class="scenario-content">
+                <h3>SQL Server 2017 Specific Requirements</h3>
+                <p>SQL Server 2017 has special certificate requirements that differ from other scenarios:</p>
+                
+                <div class="certificate-visual">
+                    <div class="cert-field">
+                        <label>Certificate Type</label>
+                        <span class="value">Digital Certificate with AT_KEYEXCHANGE</span>
+                    </div>
+                    <div class="cert-field">
+                        <label>Common Name (CN)</label>
+                        <span class="value">sql.yourdomain.com</span>
+                    </div>
+                    <div class="cert-field">
+                        <label>Key Spec</label>
+                        <span class="value">Must have AT_KEYEXCHANGE property</span>
+                    </div>
+                    <div class="cert-field">
+                        <label>Creation Method</label>
+                        <span class="value">certutil –importpfx certfile.pfx AT_KEYEXCHANGE</span>
+                    </div>
+                </div>
+                
+                <div class="highlight">
+                    <p><strong>Important:</strong> If you have issues adding the AT_KEYEXCHANGE property, you must set the template compatibility to Windows 2003 when creating the CA certificate.</p>
+                </div>
+                
+                <h4>PowerShell Command Example:</h4>
+                <div style="background: #f0f0f0; padding: 1rem; border-radius: 4px; font-family: monospace;">
+                    New-SelfSignedCertificate -CertStoreLocation Cert:\LocalMachine\My `<br>
+                    -Subject "CN=sql.yourdomain.com" `<br>
+                    -KeyAlgorithm RSA -KeyLength 2048 `<br>
+                    -KeySpec KeyExchange `<br>
+                    -KeyUsage DigitalSignature, KeyEncipherment `<br>
+                    -Type SSLServerAuthentication
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h2>Certificate Generation Process</h2>
+            <p>Follow these steps to generate and install your TLS certificate:</p>
+            
+            <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                <div style="flex: 1; text-align: center;">
+                    <div style="background: var(--canon-blue); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.5rem;">1</div>
+                    <div>Choose CA</div>
+                </div>
+                <div style="flex: 1; text-align: center;">
+                    <div style="background: var(--canon-blue); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.5rem;">2</div>
+                    <div>Generate Key</div>
+                </div>
+                <div style="flex: 1; text-align: center;">
+                    <div style="background: var(--canon-blue); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.5rem;">3</div>
+                    <div>Create CSR</div>
+                </div>
+                <div style="flex: 1; text-align: center;">
+                    <div style="background: var(--canon-blue); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.5rem;">4</div>
+                    <div>Purchase/Generate</div>
+                </div>
+                <div style="flex: 1; text-align: center;">
+                    <div style="background: var(--canon-blue); color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.5rem;">5</div>
+                    <div>Install</div>
+                </div>
+            </div>
+            
+            <div class="highlight">
+                <p><strong>Remember:</strong> The certificate's Subject Alternative Name(s) must include all Vitrea server FQDNs unless using a wildcard certificate.</p>
+            </div>
+            
+            <button class="download-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+                    <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+                </svg>
+                Download Certificate Checklist
+            </button>
+        </div>
+        
+        <div class="card">
+            <h2>IIS Certificate Binding</h2>
+            <p>After upgrading Vitrea, you may need to re-establish IIS certificates and SSL bindings:</p>
+            
+            <div class="tooltip">
+                <span style="text-decoration: underline;">Why is this needed?</span>
+                <span class="tooltiptext">Upgrading Vitrea can cause IIS certificates and SSL bindings to be removed during the upgrade process.</span>
+            </div>
+            
+            <div style="margin-top: 1rem;">
+                <h4>Steps to verify IIS bindings:</h4>
+                <ol>
+                    <li>Open Server Manager</li>
+                    <li>Navigate to Roles → Web Server → IIS Manager</li>
+                    <li>Select your server name</li>
+                    <li>Expand Sites and select Default Web Site</li>
+                    <li>In Actions pane, select Bindings</li>
+                    <li>Verify HTTPS binding exists with correct certificate</li>
+                </ol>
+            </div>
+            
+            <div class="highlight">
+                <p><strong>Pro Tip:</strong> Save a copy of your digital certificate to a safe location before upgrading, then remove it after completing the upgrade.</p>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <img src="https://global.canon/en/corporate/logo/img/logo_01.png" alt="Canon Medical Logo" style="height: 40px; filter: brightness(0) invert(1);">
+            <p>©2025 Canon Medical Systems Corporation</p>
+            <p style="opacity: 0.8; font-size: 0.9rem;">VPMC-17431 B</p>
+        </div>
+    </footer>
+
+    <script>
+        // Scenario selector functionality
+        const scenarioBtns = document.querySelectorAll('.scenario-btn');
+        const scenarioContents = document.querySelectorAll('.scenario-content');
+        
+        scenarioBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Remove active class from all buttons and contents
+                scenarioBtns.forEach(b => b.classList.remove('active'));
+                scenarioContents.forEach(c => c.classList.remove('active'));
+                
+                // Add active class to clicked button
+                btn.classList.add('active');
+                
+                // Show corresponding content
+                const scenarioId = btn.getAttribute('data-scenario');
+                document.getElementById(scenarioId).classList.add('active');
+            });
+        });
+        
+        // Server node interaction
+        const serverNodes = document.querySelectorAll('.server-node');
+        const serverDetails = document.querySelectorAll('.server-details');
+        
+        serverNodes.forEach(node => {
+            node.addEventListener('click', () => {
+                // Remove active class from all nodes and details
+                serverNodes.forEach(n => n.classList.remove('active'));
+                serverDetails.forEach(d => d.classList.remove('active'));
+                
+                // Add active class to clicked node
+                node.classList.add('active');
+                
+                // Show corresponding details
+                const serverId = node.getAttribute('data-server');
+                document.getElementById(`${serverId}-details`).classList.add('active');
+                
+                // Highlight connection lines
+                let prevSibling = node.previousElementSibling;
+                while (prevSibling) {
+                    if (prevSibling.classList.contains('server-node')) {
+                        prevSibling.classList.add('active');
+                    } else if (prevSibling.classList.contains('connection-line')) {
+                        prevSibling.classList.add('active');
+                    }
+                    prevSibling = prevSibling.previousElementSibling;
+                }
+            });
+        });
+        
+        // Surprise animation on load
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                document.querySelector('header').style.background = 'linear-gradient(140deg, var(--canon-blue), var(--canon-red))';
+                
+                // Animate certificate visual
+                const certVisual = document.querySelector('.certificate-visual');
+                if (certVisual) {
+                    certVisual.style.transform = 'scale(1.02)';
+                    certVisual.style.boxShadow = '0 8px 20px rgba(0,0,0,0.15)';
+                    setTimeout(() => {
+                        certVisual.style.transform = 'scale(1)';
+                        certVisual.style.boxShadow = '0 4px 12px rgba(0,0,0,0.1)';
+                    }, 300);
+                }
+            }, 500);
+        });
+    </script>
+</body>
+</html>

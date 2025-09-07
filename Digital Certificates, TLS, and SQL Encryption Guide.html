@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canon Medical - Digital Certificates & TLS Guide</title>
+    <style>
+        :root {
+            --canon-red: #c41017;
+            --canon-light-red: #ed1c24;
+            --canon-dark-blue: #003b6f;
+            --canon-gray: #f5f5f5;
+            --canon-dark-gray: #333333;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: var(--canon-dark-gray);
+            line-height: 1.6;
+            background-color: #f9f9f9;
+        }
+        header {
+            background: linear-gradient(140deg, var(--canon-gray), var(--canon-red));
+            padding: 1.5rem 2rem;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .logo {
+            height: 50px;
+            margin-right: 20px;
+        }
+        h1 {
+            color: white;
+            margin: 0;
+            font-size: 1.8rem;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+        }
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #f1f1f1;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            margin-right: 5px;
+            border-radius: 5px 5px 0 0;
+            transition: all 0.3s;
+        }
+        .tab:hover {
+            background-color: #ddd;
+        }
+        .tab.active {
+            background-color: white;
+            border-bottom: 1px solid white;
+            margin-bottom: -1px;
+            color: var(--canon-red);
+            font-weight: bold;
+        }
+        .tab-content {
+            display: none;
+            padding: 20px;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-top: none;
+            border-radius: 0 0 5px 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .tab-content.active {
+            display: block;
+        }
+        h2 {
+            color: var(--canon-dark-blue);
+            border-bottom: 2px solid var(--canon-red);
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        h3 {
+            color: var(--canon-red);
+        }
+        .note {
+            background-color: #e7f4ff;
+            border-left: 4px solid var(--canon-dark-blue);
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .warning {
+            background-color: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .caution {
+            background-color: #ffebee;
+            border-left: 4px solid #f44336;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .certificate-visualizer {
+            margin: 30px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        .certificate-header {
+            background-color: var(--canon-dark-blue);
+            color: white;
+            padding: 10px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+        .certificate-body {
+            padding: 15px;
+            background-color: white;
+            display: none;
+        }
+        .certificate-row {
+            display: flex;
+            margin-bottom: 10px;
+        }
+        .certificate-label {
+            font-weight: bold;
+            width: 200px;
+            color: var(--canon-dark-blue);
+        }
+        .certificate-value {
+            flex-grow: 1;
+        }
+        .expiry-meter {
+            height: 20px;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+        .expiry-progress {
+            height: 100%;
+            background-color: #4caf50;
+            width: 100%;
+            transition: width 0.5s;
+        }
+        .expiry-info {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 5px;
+            font-size: 0.9rem;
+        }
+        .interactive-demo {
+            background-color: var(--canon-gray);
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .demo-button {
+            background-color: var(--canon-red);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+            margin: 10px;
+        }
+        .demo-button:hover {
+            background-color: var(--canon-light-red);
+        }
+        .demo-result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 5px;
+            display: none;
+        }
+        .server-visual {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .server-box {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            width: 200px;
+            text-align: center;
+            background-color: white;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        .server-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .server-icon {
+            font-size: 2.5rem;
+            color: var(--canon-red);
+            margin-bottom: 10px;
+        }
+        .certificate-icon {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            color: #ffc107;
+            font-size: 1.5rem;
+        }
+        .server-box.has-certificate {
+            position: relative;
+            border-top: 3px solid #4caf50;
+        }
+        .server-box.expired-certificate {
+            position: relative;
+            border-top: 3px solid #f44336;
+        }
+        .search-box {
+            margin-bottom: 20px;
+        }
+        .search-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        .hidden {
+            display: none;
+        }
+        .certificate-chain {
+            margin-top: 20px;
+            border-left: 2px solid #ddd;
+            padding-left: 20px;
+        }
+        .chain-item {
+            position: relative;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: white;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        .chain-item:before {
+            content: "";
+            position: absolute;
+            left: -21px;
+            top: 20px;
+            width: 20px;
+            height: 2px;
+            background-color: #ddd;
+        }
+        .chain-item.root {
+            background-color: #e8f5e9;
+        }
+        .chain-item.intermediate {
+            background-color: #e3f2fd;
+        }
+        .chain-item.end-entity {
+            background-color: #fff8e1;
+        }
+        .surprise-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            display: none;
+        }
+        .surprise-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 600px;
+            text-align: center;
+            position: relative;
+        }
+        .close-surprise {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        .certificate-animation {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 20px;
+            background-color: #f5f5f5;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .certificate-animation:before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 30px;
+            background-color: var(--canon-red);
+        }
+        .certificate-animation:after {
+            content: "★";
+            position: absolute;
+            top: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: gold;
+            font-size: 1.5rem;
+        }
+        .certificate-animation-inner {
+            width: 80%;
+            height: 80%;
+            border: 2px dashed var(--canon-dark-blue);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 3rem;
+            color: var(--canon-dark-blue);
+        }
+        @media (max-width: 768px) {
+            .tabs {
+                flex-direction: column;
+            }
+            .tab {
+                border-radius: 0;
+                margin-right: 0;
+                border-bottom: 1px solid #ddd;
+            }
+            .server-box {
+                width: 100%;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header>
+        <img src="https://global.canon/en/corporate/logo/img/logo_01.png" alt="Canon Medical Logo" class="logo">
+        <h1>Digital Certificates, TLS, and SQL Encryption Guide</h1>
+    </header>
+
+    <div class="container">
+        <div class="tabs">
+            <div class="tab active" onclick="openTab(event, 'certificates')">Certificates</div>
+            <div class="tab" onclick="openTab(event, 'tls')">TLS Configuration</div>
+            <div class="tab" onclick="openTab(event, 'sql')">SQL Encryption</div>
+            <div class="tab" onclick="openTab(event, 'tools')">Tools & Utilities</div>
+        </div>
+
+        <div id="certificates" class="tab-content active">
+            <h2>Digital Certificates for Vitrea Installations</h2>
+            
+            <div class="search-box">
+                <input type="text" class="search-input" placeholder="Search certificate topics..." onkeyup="filterContent('certificates', this.value)">
+            </div>
+            
+            <p>Based on the number of servers in your deployment and other factors like autoenrollment configuration, you will need one or more of the following certificate types:</p>
+            
+            <div class="server-visual">
+                <div class="server-box has-certificate" onclick="showCertificateDetails('single-server')">
+                    <i class="fas fa-server server-icon"></i>
+                    <h3>Single Server</h3>
+                    <p>Basic digital certificate</p>
+                    <i class="fas fa-certificate certificate-icon"></i>
+                </div>
+                <div class="server-box has-certificate" onclick="showCertificateDetails('enterprise')">
+                    <i class="fas fa-network-wired server-icon"></i>
+                    <h3>Enterprise</h3>
+                    <p>Multiple certificates</p>
+                    <i class="fas fa-certificate certificate-icon"></i>
+                </div>
+                <div class="server-box has-certificate" onclick="showCertificateDetails('san')">
+                    <i class="fas fa-sitemap server-icon"></i>
+                    <h3>SAN Certificate</h3>
+                    <p>For multiple servers</p>
+                    <i class="fas fa-certificate certificate-icon"></i>
+                </div>
+                <div class="server-box expired-certificate" onclick="showCertificateDetails('wildcard')">
+                    <i class="fas fa-asterisk server-icon"></i>
+                    <h3>Wildcard</h3>
+                    <p>Large deployments</p>
+                    <i class="fas fa-certificate certificate-icon"></i>
+                </div>
+            </div>
+
+            <div id="certificate-details" class="certificate-visualizer hidden">
+                <div class="certificate-header" onclick="toggleCertificateDetails()">
+                    <span>Certificate Details</span>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="certificate-body">
+                    <div class="certificate-row">
+                        <div class="certificate-label">Common Name (CN):</div>
+                        <div class="certificate-value" id="detail-cn">server1.canonmedical.com</div>
+                    </div>
+                    <div class="certificate-row">
+                        <div class="certificate-label">Subject Alternative Names:</div>
+                        <div class="certificate-value" id="detail-san">server1.canonmedical.com, server2.canonmedical.com</div>
+                    </div>
+                    <div class="certificate-row">
+                        <div class="certificate-label">Issuer:</div>
+                        <div class="certificate-value" id="detail-issuer">Canon Medical Internal CA</div>
+                    </div>
+                    <div class="certificate-row">
+                        <div class="certificate-label">Valid From:</div>
+                        <div class="certificate-value" id="detail-valid-from">2023-01-01</div>
+                    </div>
+                    <div class="certificate-row">
+                        <div class="certificate-label">Valid To:</div>
+                        <div class="certificate-value" id="detail-valid-to">2024-01-01</div>
+                    </div>
+                    <div class="certificate-row">
+                        <div class="certificate-label">Key Size:</div>
+                        <div class="certificate-value" id="detail-key-size">2048 bits</div>
+                    </div>
+                    <div class="certificate-row">
+                        <div class="certificate-label">Signature Algorithm:</div>
+                        <div class="certificate-value" id="detail-algorithm">SHA256RSA</div>
+                    </div>
+                    
+                    <div class="expiry-meter">
+                        <div class="expiry-progress" id="expiry-progress" style="width: 30%;"></div>
+                    </div>
+                    <div class="expiry-info">
+                        <span>Issued: <span id="issued-date">2023-01-01</span></span>
+                        <span>Expires: <span id="expiry-date">2024-01-01</span></span>
+                    </div>
+                    
+                    <div class="certificate-chain">
+                        <h4>Certificate Chain</h4>
+                        <div class="chain-item root">
+                            <strong>Root CA</strong><br>
+                            Canon Medical Root CA<br>
+                            Expires: 2030-01-01
+                        </div>
+                        <div class="chain-item intermediate">
+                            <strong>Intermediate CA</strong><br>
+                            Canon Medical Issuing CA 1<br>
+                            Expires: 2025-01-01
+                        </div>
+                        <div class="chain-item end-entity">
+                            <strong>End Entity</strong><br>
+                            <span id="chain-end-entity">server1.canonmedical.com</span><br>
+                            Expires: <span id="chain-expiry">2024-01-01</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h3>Certificate Requirements</h3>
+            <div class="note">
+                <p><strong>NOTE:</strong> A SAN certificate can only be utilized if specific conditions are met regarding SQL Server encryption and Common Name matching.</p>
+            </div>
+            
+            <h3>Creating Certificates</h3>
+            <p>For Enterprise Single Server deployments, you must create a digital certificate with Subject Alternative Name specified.</p>
+            
+            <div class="interactive-demo">
+                <h4>Certificate Creation Demo</h4>
+                <p>See what happens when you create a certificate with different parameters:</p>
+                <button class="demo-button" onclick="createCertificate('single')">Create Single Server Certificate</button>
+                <button class="demo-button" onclick="createCertificate('san')">Create SAN Certificate</button>
+                <button class="demo-button" onclick="createCertificate('wildcard')">Create Wildcard Certificate</button>
+                
+                <div class="demo-result" id="certificate-result">
+                    <h4>Certificate Creation Result</h4>
+                    <div id="certificate-result-content"></div>
+                </div>
+            </div>
+            
+            <h3>Certificate Expiration</h3>
+            <div class="warning">
+                <p><strong>WARNING:</strong> Starting in Vitrea 7.16.x, if a certificate expires, Vitrea will not launch as expected and will not work until a new certificate is applied.</p>
+            </div>
+            
+            <h3>Certificate Renewal</h3>
+            <div class="note">
+                <p><strong>NOTE:</strong> Customers should start the certificate renewal process 60 days prior to the expiration date.</p>
+            </div>
+        </div>
+
+        <div id="tls" class="tab-content">
+            <h2>TLS Configuration</h2>
+            
+            <h3>TLS 1.2 Configuration</h3>
+            <p>Complete these procedures to change or replace a TLS certificate:</p>
+            
+            <div class="caution">
+                <p><strong>CAUTION:</strong> Before starting this process, ensure you have your new digital certificate ready. Failure to do so could leave your system vulnerable or in an unusable state.</p>
+            </div>
+            
+            <h4>Steps to Install New Certificate:</h4>
+            <ol>
+                <li>Login to the Vitrea Server as Vitrea-Admin or another account with Administrative permissions</li>
+                <li>Run certlm.msc from the Start menu</li>
+                <li>Expand the Personal folder and select the Certificates folder</li>
+                <li>Locate the digital certificate installed by the customer</li>
+            </ol>
+            
+            <div class="interactive-demo">
+                <h4>TLS Configuration Check</h4>
+                <p>Check your server's TLS configuration:</p>
+                <button class="demo-button" onclick="checkTLSConfiguration()">Run TLS Check</button>
+                <div class="demo-result" id="tls-result">
+                    <h4>TLS Configuration Results</h4>
+                    <div id="tls-result-content"></div>
+                </div>
+            </div>
+            
+            <h3>TLS 1.0/1.1 Disablement</h3>
+            <p>These procedures should be performed to disable TLS 1.0/TLS 1.1 to prevent downgrade of the TLS 1.2 connection.</p>
+            
+            <div class="note">
+                <p><strong>NOTE:</strong> These procedures are only required for Management Servers using Windows Server 2016.</p>
+            </div>
+        </div>
+
+        <div id="sql" class="tab-content">
+            <h2>SQL Encryption</h2>
+            
+            <h3>Local SQL</h3>
+            <p>The certificate you use for the Management Server can be used for the SQL Server and you can Force Encryption.</p>
+            
+            <h3>Remote SQL Standalone</h3>
+            <p>For the Vitrea SQL instance, you need to apply the certificate and then restart the SQL service. You do not need to Force Encryption for the Vitrea software to use TLS.</p>
+            
+            <div class="note">
+                <p><strong>RECOMMENDATION:</strong> Canon Medical recommends that SQL be encrypted but if there are other databases on the Remote SQL Server, then encryption should not be forced.</p>
+            </div>
+            
+            <h3>SQL Clusters</h3>
+            <p>The customer needs a certificate for each SQL Server in the deployment with:</p>
+            <ul>
+                <li>Common Name: FQDN of the SQL Alias</li>
+                <li>Subject Alternative Name (SAN): FQDN of the SQL Alias and FQDN of each SQL Server in the SQL cluster</li>
+            </ul>
+            
+            <div class="interactive-demo">
+                <h4>SQL Encryption Test</h4>
+                <p>Test different SQL encryption scenarios:</p>
+                <button class="demo-button" onclick="testSQLEncryption('local')">Test Local SQL</button>
+                <button class="demo-button" onclick="testSQLEncryption('remote')">Test Remote SQL</button>
+                <button class="demo-button" onclick="testSQLEncryption('cluster')">Test SQL Cluster</button>
+                
+                <div class="demo-result" id="sql-result">
+                    <h4>SQL Encryption Results</h4>
+                    <div id="sql-result-content"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="tools" class="tab-content">
+            <h2>Tools & Utilities</h2>
+            
+            <h3>Certificate Management</h3>
+            <p>Use these tools to manage your certificates:</p>
+            <ul>
+                <li>certlm.msc - Certificate Manager for local machine</li>
+                <li>certmgr.msc - Certificate Manager for current user</li>
+                <li>PowerShell Certificate cmdlets</li>
+            </ul>
+            
+            <h3>Useful Commands</h3>
+            <pre># Check certificate thumbprint
+Get-ChildItem -Path Cert:\LocalMachine\My | Format-Table Thumbprint, Subject, NotAfter
+
+# Add AT_KEYEXCHANGE property (SQL 2017)
+certutil –importpfx certfile.pfx AT_KEYEXCHANGE</pre>
+            
+            <div class="interactive-demo">
+                <h4>Certificate Health Check</h4>
+                <p>Run a health check on your certificates:</p>
+                <button class="demo-button" onclick="runHealthCheck()">Run Health Check</button>
+                <button class="demo-button surprise-button" onclick="showSurprise()">Surprise Me!</button>
+                
+                <div class="demo-result" id="tools-result">
+                    <h4>Health Check Results</h4>
+                    <div id="tools-result-content"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="surprise-container" id="surprise-container">
+        <div class="surprise-content">
+            <button class="close-surprise" onclick="hideSurprise()">×</button>
+            <h2>Congratulations! 🎉</h2>
+            <div class="certificate-animation">
+                <div class="certificate-animation-inner">
+                    <i class="fas fa-certificate"></i>
+                </div>
+            </div>
+            <p>You've discovered the hidden surprise!</p>
+            <p>Here's your exclusive <strong>Canon Medical Security Expert</strong> certificate!</p>
+            <p>You now have the knowledge to properly manage digital certificates, TLS, and SQL encryption for Vitrea installations.</p>
+            <button class="demo-button" onclick="hideSurprise()">Continue Learning</button>
+        </div>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].classList.remove("active");
+            }
+            
+            tablinks = document.getElementsByClassName("tab");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove("active");
+            }
+            
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+        
+        function showCertificateDetails(type) {
+            const details = document.getElementById("certificate-details");
+            details.classList.remove("hidden");
+            
+            // Update certificate details based on type
+            switch(type) {
+                case 'single-server':
+                    document.getElementById("detail-cn").textContent = "vitserver01.canonmedical.com";
+                    document.getElementById("detail-san").textContent = "vitserver01.canonmedical.com";
+                    document.getElementById("detail-issuer").textContent = "Canon Medical Internal CA";
+                    document.getElementById("detail-valid-from").textContent = "2023-06-01";
+                    document.getElementById("detail-valid-to").textContent = "2024-06-01";
+                    document.getElementById("detail-key-size").textContent = "2048 bits";
+                    document.getElementById("detail-algorithm").textContent = "SHA256RSA";
+                    document.getElementById("issued-date").textContent = "2023-06-01";
+                    document.getElementById("expiry-date").textContent = "2024-06-01";
+                    document.getElementById("expiry-progress").style.width = "40%";
+                    document.getElementById("chain-end-entity").textContent = "vitserver01.canonmedical.com";
+                    document.getElementById("chain-expiry").textContent = "2024-06-01";
+                    break;
+                case 'enterprise':
+                    document.getElementById("detail-cn").textContent = "vitenterprise.canonmedical.com";
+                    document.getElementById("detail-san").textContent = "vitenterprise.canonmedical.com, vitapp01.canonmedical.com, vitapp02.canonmedical.com";
+                    document.getElementById("detail-issuer").textContent = "Canon Medical Enterprise CA";
+                    document.getElementById("detail-valid-from").textContent = "2023-03-15";
+                    document.getElementById("detail-valid-to").textContent = "2024-03-15";
+                    document.getElementById("detail-key-size").textContent = "4096 bits";
+                    document.getElementById("detail-algorithm").textContent = "SHA384RSA";
+                    document.getElementById("issued-date").textContent = "2023-03-15";
+                    document.getElementById("expiry-date").textContent = "2024-03-15";
+                    document.getElementById("expiry-progress").style.width = "25%";
+                    document.getElementById("chain-end-entity").textContent = "vitenterprise.canonmedical.com";
+                    document.getElementById("chain-expiry").textContent = "2024-03-15";
+                    break;
+                case 'san':
+                    document.getElementById("detail-cn").textContent = "vitsan.canonmedical.com";
+                    document.getElementById("detail-san").textContent = "vitsan.canonmedical.com, vitapp01.canonmedical.com, vitapp02.canonmedical.com, vitsql.canonmedical.com";
+                    document.getElementById("detail-issuer").textContent = "Canon Medical SAN CA";
+                    document.getElementById("detail-valid-from").textContent = "2023-01-01";
+                    document.getElementById("detail-valid-to").textContent = "2024-01-01";
+                    document.getElementById("detail-key-size").textContent = "2048 bits";
+                    document.getElementById("detail-algorithm").textContent = "SHA256RSA";
+                    document.getElementById("issued-date").textContent = "2023-01-01";
+                    document.getElementById("expiry-date").textContent = "2024-01-01";
+                    document.getElementById("expiry-progress").style.width = "30%";
+                    document.getElementById("chain-end-entity").textContent = "vitsan.canonmedical.com";
+                    document.getElementById("chain-expiry").textContent = "2024-01-01";
+                    break;
+                case 'wildcard':
+                    document.getElementById("detail-cn").textContent = "*.canonmedical.com";
+                    document.getElementById("detail-san").textContent = "*.canonmedical.com";
+                    document.getElementById("detail-issuer").textContent = "Canon Medical Wildcard CA";
+                    document.getElementById("detail-valid-from").textContent = "2022-12-01";
+                    document.getElementById("detail-valid-to").textContent = "2023-12-01";
+                    document.getElementById("detail-key-size").textContent = "4096 bits";
+                    document.getElementById("detail-algorithm").textContent = "SHA512RSA";
+                    document.getElementById("issued-date").textContent = "2022-12-01";
+                    document.getElementById("expiry-date").textContent = "2023-12-01";
+                    document.getElementById("expiry-progress").style.width = "10%";
+                    document.getElementById("chain-end-entity").textContent = "*.canonmedical.com";
+                    document.getElementById("chain-expiry").textContent = "2023-12-01";
+                    break;
+            }
+        }
+        
+        function toggleCertificateDetails() {
+            const body = document.querySelector(".certificate-body");
+            const icon = document.querySelector(".certificate-header i");
+            
+            if (body.style.display === "none" || !body.style.display) {
+                body.style.display = "block";
+                icon.classList.remove("fa-chevron-down");
+                icon.classList.add("fa-chevron-up");
+            } else {
+                body.style.display = "none";
+                icon.classList.remove("fa-chevron-up");
+                icon.classList.add("fa-chevron-down");
+            }
+        }
+        
+        function createCertificate(type) {
+            const result = document.getElementById("certificate-result");
+            const content = document.getElementById("certificate-result-content");
+            
+            result.style.display = "block";
+            
+            switch(type) {
+                case 'single':
+                    content.innerHTML = `
+                        <p><i class="fas fa-check-circle" style="color: green;"></i> Successfully created single server certificate!</p>
+                        <p><strong>Details:</strong></p>
+                        <ul>
+                            <li>Common Name: vitserver01.yourdomain.com</li>
+                            <li>Key Size: 2048 bits</li>
+                            <li>Algorithm: SHA256</li>
+                            <li>Valid for: 1 year</li>
+                        </ul>
+                        <p>Certificate has been added to the local machine's certificate store.</p>
+                    `;
+                    break;
+                case 'san':
+                    content.innerHTML = `
+                        <p><i class="fas fa-check-circle" style="color: green;"></i> Successfully created SAN certificate!</p>
+                        <p><strong>Details:</strong></p>
+                        <ul>
+                            <li>Common Name: vitcluster.yourdomain.com</li>
+                            <li>Subject Alternative Names: vitapp01.yourdomain.com, vitapp02.yourdomain.com, vitsql.yourdomain.com</li>
+                            <li>Key Size: 2048 bits</li>
+                            <li>Algorithm: SHA256</li>
+                            <li>Valid for: 1 year</li>
+                        </ul>
+                        <p>Remember to install this certificate on all servers listed in the SAN.</p>
+                    `;
+                    break;
+                case 'wildcard':
+                    content.innerHTML = `
+                        <p><i class="fas fa-check-circle" style="color: green;"></i> Successfully created wildcard certificate!</p>
+                        <p><strong>Details:</strong></p>
+                        <ul>
+                            <li>Common Name: *.yourdomain.com</li>
+                            <li>Key Size: 4096 bits</li>
+                            <li>Algorithm: SHA384</li>
+                            <li>Valid for: 2 years</li>
+                        </ul>
+                        <div class="warning">
+                            <p><strong>NOTE:</strong> Wildcard certificates should be used carefully as they pose security risks if compromised.</p>
+                        </div>
+                    `;
+                    break;
+            }
+        }
+        
+        function checkTLSConfiguration() {
+            const result = document.getElementById("tls-result");
+            const content = document.getElementById("tls-result-content");
+            
+            result.style.display = "block";
+            
+            content.innerHTML = `
+                <p><i class="fas fa-check-circle" style="color: green;"></i> TLS 1.2 is enabled and properly configured.</p>
+                <p><i class="fas fa-exclamation-triangle" style="color: orange;"></i> TLS 1.1 is enabled (recommend disabling)</p>
+                <p><i class="fas fa-times-circle" style="color: red;"></i> TLS 1.0 is enabled (should be disabled)</p>
+                <p><strong>Recommended Actions:</strong></p>
+                <ol>
+                    <li>Disable TLS 1.0 in the registry</li>
+                    <li>Disable TLS 1.1 in the registry</li>
+                    <li>Ensure TLS 1.2 is the only enabled protocol</li>
+                    <li>Restart the server after making changes</li>
+                </ol>
+            `;
+        }
+        
+        function testSQLEncryption(type) {
+            const result = document.getElementById("sql-result");
+            const content = document.getElementById("sql-result-content");
+            
+            result.style.display = "block";
+            
+            switch(type) {
+                case 'local':
+                    content.innerHTML = `
+                        <p><i class="fas fa-check-circle" style="color: green;"></i> Local SQL encryption test successful!</p>
+                        <p><strong>Details:</strong></p>
+                        <ul>
+                            <li>Connection encrypted: Yes</li>
+                            <li>Encryption strength: 256-bit</li>
+                            <li>Certificate validated: Yes</li>
+                            <li>Certificate expiration: 2024-06-01</li>
+                        </ul>
+                    `;
+                    break;
+                case 'remote':
+                    content.innerHTML = `
+                        <p><i class="fas fa-check-circle" style="color: green;"></i> Remote SQL encryption test successful!</p>
+                        <p><strong>Details:</strong></p>
+                        <ul>
+                            <li>Connection encrypted: Yes</li>
+                            <li>Encryption strength: 256-bit</li>
+                            <li>Certificate validated: Yes</li>
+                            <li>Server name matches certificate: Yes</li>
+                        </ul>
+                        <div class="note">
+                            <p>Remember to install the same certificate on all remote SQL servers in the deployment.</p>
+                        </div>
+                    `;
+                    break;
+                case 'cluster':
+                    content.innerHTML = `
+                        <p><i class="fas fa-check-circle" style="color: green;"></i> SQL Cluster encryption test successful!</p>
+                        <p><strong>Details:</strong></p>
+                        <ul>
+                            <li>Cluster nodes: 3</li>
+                            <li>All nodes encrypted: Yes</li>
+                            <li>Consistent certificates: Yes</li>
+                            <li>Virtual server name matches: Yes</li>
+                        </ul>
+                        <div class="note">
+                            <p>For SQL clusters, ensure the certificate's Common Name matches the FQDN of the virtual server.</p>
+                        </div>
+                    `;
+                    break;
+            }
+        }
+        
+        function runHealthCheck() {
+            const result = document.getElementById("tools-result");
+            const content = document.getElementById("tools-result-content");
+            
+            result.style.display = "block";
+            
+            // Simulate a health check with random results
+            const certs = Math.floor(Math.random() * 10) + 1;
+            const expiring = Math.floor(Math.random() * certs);
+            const expired = Math.floor(Math.random() * 3);
+            const healthy = certs - expiring - expired;
+            
+            content.innerHTML = `
+                <p><i class="fas fa-search"></i> Scanned system for certificates...</p>
+                <p><strong>Results:</strong></p>
+                <ul>
+                    <li>Total certificates found: ${certs}</li>
+                    <li><i class="fas fa-check-circle" style="color: green;"></i> Healthy certificates: ${healthy}</li>
+                    <li><i class="fas fa-exclamation-triangle" style="color: orange;"></i> Expiring soon: ${expiring}</li>
+                    <li><i class="fas fa-times-circle" style="color: red;"></i> Expired certificates: ${expired}</li>
+                </ul>
+                ${expired > 0 ? `
+                <div class="caution">
+                    <p><strong>ACTION REQUIRED:</strong> ${expired} certificate(s) have expired and must be replaced immediately.</p>
+                </div>
+                ` : ''}
+                ${expiring > 0 ? `
+                <div class="warning">
+                    <p><strong>WARNING:</strong> ${expiring} certificate(s) will expire soon. Begin renewal process.</p>
+                </div>
+                ` : ''}
+                ${healthy === certs ? `
+                <p><i class="fas fa-thumbs-up" style="color: green;"></i> All certificates are healthy!</p>
+                ` : ''}
+            `;
+        }
+        
+        function showSurprise() {
+            document.getElementById("surprise-container").style.display = "flex";
+        }
+        
+        function hideSurprise() {
+            document.getElementById("surprise-container").style.display = "none";
+        }
+        
+        function filterContent(tabId, searchText) {
+            const tabContent = document.getElementById(tabId);
+            const elements = tabContent.getElementsByTagName("*");
+            
+            for (let i = 0; i < elements.length; i++) {
+                const element = elements[i];
+                const text = element.textContent || element.innerText;
+                
+                if (text.toUpperCase().indexOf(searchText.toUpperCase()) > -1) {
+                    element.style.display = "";
+                } else {
+                    // Don't hide structural elements
+                    if (!['H2', 'H3', 'H4', 'DIV', 'SECTION', 'ARTICLE'].includes(element.tagName)) {
+                        element.style.display = "none";
+                    }
+                }
+            }
+        }
+        
+        // Initialize certificate details as hidden
+        document.querySelector(".certificate-body").style.display = "none";
+    </script>
+</body>
+</html>
