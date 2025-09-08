@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vitrea® Enterprise Deployment Study Guide</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1, h2, h3 {
+            color: #0066cc;
+        }
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #f1f1f1;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            margin-right: 5px;
+            border-radius: 5px 5px 0 0;
+        }
+        .tab.active {
+            background-color: #0066cc;
+            color: white;
+        }
+        .content-section {
+            display: none;
+            padding: 20px;
+            background-color: white;
+            border-radius: 0 0 5px 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .content-section.active {
+            display: block;
+        }
+        .flashcard {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .flashcard:hover {
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .flashcard .question {
+            font-weight: bold;
+            color: #0066cc;
+            margin-bottom: 10px;
+        }
+        .flashcard .answer {
+            display: none;
+            padding-top: 10px;
+            border-top: 1px dashed #ddd;
+        }
+        .flashcard.show-answer .answer {
+            display: block;
+        }
+        .quiz-question {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .quiz-options {
+            margin: 10px 0;
+        }
+        .quiz-option {
+            margin: 5px 0;
+            padding: 8px;
+            background-color: #f9f9f9;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .quiz-option:hover {
+            background-color: #f0f0f0;
+        }
+        .quiz-option.selected {
+            background-color: #e1f0fa;
+            border-left: 3px solid #0066cc;
+        }
+        .quiz-option.correct {
+            background-color: #e6ffe6;
+            border-left: 3px solid #4CAF50;
+        }
+        .quiz-option.incorrect {
+            background-color: #ffebee;
+            border-left: 3px solid #f44336;
+        }
+        .quiz-feedback {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 3px;
+            display: none;
+        }
+        .quiz-feedback.correct {
+            background-color: #e6ffe6;
+            color: #4CAF50;
+            display: block;
+        }
+        .quiz-feedback.incorrect {
+            background-color: #ffebee;
+            color: #f44336;
+            display: block;
+        }
+        .troubleshooting-scenario {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .scenario-section {
+            margin-bottom: 15px;
+        }
+        .scenario-section h4 {
+            color: #0066cc;
+            margin-bottom: 5px;
+        }
+        .scenario-section.collapsed .content {
+            display: none;
+        }
+        .scenario-toggle {
+            color: #0066cc;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .scenario-toggle:hover {
+            text-decoration: underline;
+        }
+        .quick-tips {
+            background-color: #e1f0fa;
+            border-left: 4px solid #0066cc;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        .quick-tips h3 {
+            margin-top: 0;
+        }
+        .quick-tips ul {
+            padding-left: 20px;
+        }
+        .quick-tips li {
+            margin-bottom: 8px;
+        }
+        .command-box {
+            background-color: #f0f0f0;
+            border-left: 4px solid #0066cc;
+            padding: 10px;
+            font-family: monospace;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+        .checklist {
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 5px;
+        }
+        .checklist-item {
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+        }
+        .checklist-item:before {
+            content: "☐";
+            position: absolute;
+            left: 5px;
+        }
+        .checklist-item.checked:before {
+            content: "✓";
+            color: #4CAF50;
+        }
+        .search-container {
+            margin-bottom: 20px;
+        }
+        #search-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .highlight {
+            background-color: yellow;
+        }
+    </style>
+</head>
+<body>
+    <h1>Vitrea® Enterprise Deployment Study Guide</h1>
+    
+    <div class="search-container">
+        <input type="text" id="search-input" placeholder="Search the guide...">
+    </div>
+    
+    <div class="tab-container">
+        <div class="tab active" data-tab="flashcards">Flashcards</div>
+        <div class="tab" data-tab="quiz">Quiz</div>
+        <div class="tab" data-tab="troubleshooting">Troubleshooting</div>
+        <div class="tab" data-tab="quick-tips">Quick Tips</div>
+        <div class="tab" data-tab="checklist">Deployment Checklist</div>
+    </div>
+    
+    <div class="content-section active" id="flashcards">
+        <h2>Active Directory Flashcards</h2>
+        
+        <div class="flashcard">
+            <div class="question">Why does Vitrea require an Active Directory domain for enterprise deployment?</div>
+            <div class="answer">Vitrea uses Microsoft Remote Desktop Services (RDS) for enterprise-level access to advanced visualization via Application Servers. A domain enables Single Sign-On (SSO), eliminating additional client configurations and reducing the software footprint on remote clients.</div>
+        </div>
+        
+        <div class="flashcard">
+            <div class="question">What are the key Active Directory requirements for Vitrea deployment?</div>
+            <div class="answer">
+                1. Group policies must be applied (e.g., via Organizational Units).<br>
+                2. At least one service account is required to run Vitrea services.<br>
+                3. Three security groups are recommended:<br>
+                &nbsp;&nbsp;- <strong>Vitrea Users</strong>: Non-admin users.<br>
+                &nbsp;&nbsp;- <strong>Vitrea Administrators</strong>: Software admins (separate from hardware admins).<br>
+                &nbsp;&nbsp;- <strong>Vitrea Services</strong>: Service accounts (e.g., `Vitrea-Service`).
+            </div>
+        </div>
+        
+        <div class="flashcard">
+            <div class="question">What are the two service account types supported for Vitrea, and which is recommended?</div>
+            <div class="answer">
+                1. <strong>Group Managed Service Account (gMSA)</strong>: Automates password/SPN management. <em>Recommended</em> for reduced overhead and improved security.<br>
+                2. <strong>Domain Derived Service Account</strong>: Follows domain policies; password must be set to never expire.
+            </div>
+        </div>
+        
+        <div class="flashcard">
+            <div class="question">What are the roles of the following accounts?</div>
+            <div class="answer">
+                - <strong>Vitrea-Service$ (gMSA) / Vitrea-Service</strong>:<br>
+                &nbsp;&nbsp;- Runs Vitrea services; requires local admin rights and access to "Debug Programs."<br>
+                - <strong>Vitrea-SQL</strong>:<br>
+                &nbsp;&nbsp;- SQL Server service account (needs SMB share access if backups are stored there).<br>
+                - <strong>Vitrea-Admin</strong>:<br>
+                &nbsp;&nbsp;- Installs/administers Vitrea; local admin on all servers.<br>
+                - <strong>Vitrea-User</strong>:<br>
+                &nbsp;&nbsp;- Non-admin account for testing/troubleshooting.
+            </div>
+        </div>
+        
+        <div class="flashcard">
+            <div class="question">What OUs should be created for Vitrea deployment?</div>
+            <div class="answer">
+                1. <strong>Management Server</strong>: For Management Server group policies.<br>
+                2. <strong>Application Servers</strong>: For Application Server group policies.<br>
+                3. <strong>Vitrea Users and Groups</strong> (optional): For application-specific users/groups.
+            </div>
+        </div>
+        
+        <div class="flashcard">
+            <div class="question">What is required for cross-domain authentication?</div>
+            <div class="answer">A <strong>one-way trust</strong> must be established between domains, set to "Forest" level (not "External"). This ensures users from other domains can access Vitrea via SSO.</div>
+        </div>
+        
+        <div class="flashcard">
+            <div class="question">What are the certificate requirements for Vitrea?</div>
+            <div class="answer">
+                - <strong>Types</strong>:<br>
+                &nbsp;&nbsp;- <strong>SAN Certificate</strong>: Lists all server FQDNs in Subject Alternative Name (SAN).<br>
+                &nbsp;&nbsp;- <strong>Wildcard Certificate</strong>: For large deployments (not supported for SQL Server 2017).<br>
+                - <strong>Requirements</strong>:<br>
+                &nbsp;&nbsp;- SHA256+ encryption, TLS 1.2, 2048-bit+ RSA key.<br>
+                &nbsp;&nbsp;- 1-year validity; self-signed certs are <strong>not</strong> supported.
+            </div>
+        </div>
+        
+        <div class="flashcard">
+            <div class="question">What network configurations are needed?</div>
+            <div class="answer">
+                1. <strong>Static/Reserved IPs</strong>: For all servers.<br>
+                2. <strong>DNS Entries</strong>: Forward and reverse DNS for each server.<br>
+                3. <strong>Printers</strong>: Configured as TCP/IP printers with registry edits for RDS compatibility.
+            </div>
+        </div>
+        
+        <div class="flashcard">
+            <div class="question">What critical GPOs are required for Application Servers?</div>
+            <div class="answer">
+                - <strong>User Rights Assignments</strong>:<br>
+                &nbsp;&nbsp;- "Log on as Batch" (Vitrea-Service, IIS_IUSRS).<br>
+                &nbsp;&nbsp;- "Log on as a Service" (Vitrea-Service, SQL account).<br>
+                &nbsp;&nbsp;- "Debug Programs" (Vitrea-Service or Administrators group).<br>
+                - <strong>Loopback Processing</strong>: Enabled (Merge mode) for local profiles.<br>
+                - <strong>RDS Settings</strong>:<br>
+                &nbsp;&nbsp;- Single session per user.<br>
+                &nbsp;&nbsp;- High graphics quality for RemoteFX.
+            </div>
+        </div>
+        
+        <div class="flashcard">
+            <div class="question">How to configure Thin Clients for SSO?</div>
+            <div class="answer">
+                1. <strong>Trusted Zones</strong>: Add `*.yourdomain.com` to Local Intranet sites.<br>
+                2. <strong>Credential Delegation</strong>: Enable "Allow Delegating Default Credentials" for the domain.<br>
+                3. <strong>Drive Redirection</strong>: Disable via GPO for security (optional).
+            </div>
+        </div>
+    </div>
+    
+    <div class="content-section" id="quiz">
+        <h2>Multiple Choice Quiz</h2>
+        
+        <div class="quiz-question">
+            <div class="question">1. Why does Vitrea require an Active Directory domain for enterprise deployment?</div>
+            <div class="quiz-options">
+                <div class="quiz-option" data-correct="false">A) To enable local user accounts</div>
+                <div class="quiz-option" data-correct="true">B) To support Microsoft Remote Desktop Services (RDS) and Single Sign-On (SSO)</div>
+                <div class="quiz-option" data-correct="false">C) To bypass SQL Server licensing</div>
+                <div class="quiz-option" data-correct="false">D) To disable group policies</div>
+            </div>
+            <div class="quiz-feedback">
+                <strong>Explanation:</strong> Vitrea uses RDS for remote access, and a domain enables SSO, eliminating per-client configurations.
+            </div>
+        </div>
+        
+        <div class="quiz-question">
+            <div class="question">2. Which service account type is recommended for Vitrea to reduce administrative overhead?</div>
+            <div class="quiz-options">
+                <div class="quiz-option" data-correct="false">A) Local Service Account</div>
+                <div class="quiz-option" data-correct="true">B) Group Managed Service Account (gMSA)</div>
+                <div class="quiz-option" data-correct="false">C) Domain Admin Account</div>
+                <div class="quiz-option" data-correct="false">D) SQL SA Account</div>
+            </div>
+            <div class="quiz-feedback">
+                <strong>Explanation:</strong> gMSA automates password/SPN management and improves security.
+            </div>
+        </div>
+        
+        <div class="quiz-question">
+            <div class="question">3. What is the minimum domain functional level required for Vitrea?</div>
+            <div class="quiz-options">
+                <div class="quiz-option" data-correct="false">A) Windows Server 2008</div>
+                <div class="quiz-option" data-correct="true">B) Windows Server 2012</div>
+                <div class="quiz-option" data-correct="false">C) Windows Server 2016</div>
+                <div class="quiz-option" data-correct="false">D) Windows Server 2022</div>
+            </div>
+            <div class="quiz-feedback">
+                <strong>Explanation:</strong> Windows Server 2012 or higher is needed to support gMSA and modern authentication.
+            </div>
+        </div>
+        
+        <div class="quiz-question">
+            <div class="question">4. Which SQL Server version requires the `AT_KEYEXCHANGE` certificate property?</div>
+            <div class="quiz-options">
+                <div class="quiz-option" data-correct="false">A) SQL Server 2019</div>
+                <div class="quiz-option" data-correct="true">B) SQL Server 2017</div>
+                <div class="quiz-option" data-correct="false">C) SQL Server 2022</div>
+                <div class="quiz-option" data-correct="false">D) SQL Server 2016</div>
+            </div>
+            <div class="quiz-feedback">
+                <strong>Explanation:</strong> SQL 2017 requires `AT_KEYEXCHANGE` for encryption; 2019+ does not.
+            </div>
+        </div>
+        
+        <div class="quiz-question">
+            <div class="question">5. Which security group should include non-admin Vitrea users?</div>
+            <div class="quiz-options">
+                <div class="quiz-option" data-correct="false">A) Vitrea Administrators</div>
+                <div class="quiz-option" data-correct="false">B) Vitrea Services</div>
+                <div class="quiz-option" data-correct="true">C) Vitrea Users</div>
+                <div class="quiz-option" data-correct="false">D) Domain Admins</div>
+            </div>
+            <div class="quiz-feedback">
+                <strong>Explanation:</strong> "Vitrea Users" is for standard users without administrative privileges.
+            </div>
+        </div>
+        
+        <div class="quiz-question">
+            <div class="question">6. What must be configured to allow cross-domain authentication for Vitrea?</div>
+            <div class="quiz-options">
+                <div class="quiz-option" data-correct="false">A) Two-way external trust</div>
+                <div class="quiz-option" data-correct="true">B) One-way forest trust</div>
+                <div class="quiz-option" data-correct="false">C) Workgroup membership</div>
+                <div class="quiz-option" data-correct="false">D) Local user accounts</div>
+            </div>
+            <div class="quiz-feedback">
+                <strong>Explanation:</strong> A one-way forest trust ensures users from other domains can access Vitrea via SSO.
+            </div>
+        </div>
+        
+        <div class="quiz-question">
+            <div class="question">7. Which certificate type can cover multiple domains (e.g., example.com and example.net)?</div>
+            <div class="quiz-options">
+                <div class="quiz-option" data-correct="false">A) Wildcard Certificate</div>
+                <div class="quiz-option" data-correct="true">B) SAN Certificate</div>
+                <div class="quiz-option" data-correct="false">C) Self-Signed Certificate</div>
+                <div class="quiz-option" data-correct="false">D) Code Signing Certificate</div>
+            </div>
+            <div class="quiz-feedback">
+                <strong>Explanation:</strong> SAN (Subject Alternative Name) certificates list multiple domains in the SAN field.
+            </div>
+        </div>
+        
+        <div class="quiz-question">
+            <div class="question">8. Why is the "Debug Programs" user right required for the Vitrea-Service account?</div>
+            <div class="quiz-options">
+                <div class="quiz-option" data-correct="false">A) To enable remote desktop access</div>
+                <div class="quiz-option" data-correct="true">B) To troubleshoot application crashes</div>
+                <div class="quiz-option" data-correct="false">C) To install SQL Server</div>
+                <div class="quiz-option" data-correct="false">D) To configure firewalls</div>
+            </div>
+            <div class="quiz-feedback">
+                <strong>Explanation:</strong> Debugging rights are needed for crash analysis and troubleshooting.
+            </div>
+        </div>
+        
+        <div class="quiz-question">
+            <div class="question">9. Which GPO setting ensures consistent user environments on RDS hosts?</div>
+            <div class="quiz-options">
+                <div class="quiz-option" data-correct="true">A) Loopback Processing (Merge)</div>
+                <div class="quiz-option" data-correct="false">B) Password Complexity</div>
+                <div class="quiz-option" data-correct="false">C) Screen Saver Timeout</div>
+                <div class="quiz-option" data-correct="false">D) Windows Update Settings</div>
+            </div>
+            <div class="quiz-feedback">
+                <strong>Explanation:</strong> Loopback processing merges user and computer policies for RDS consistency.
+            </div>
+        </div>
+        
+        <div class="quiz-question">
+            <div class="question">10. What registry key disables IE security prompts for intranet sites?</div>
+            <div class="quiz-options">
+                <div class="quiz-option" data-correct="false">A) `HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows`</div>
+                <div class="quiz-option" data-correct="true">B) `HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Internet Settings\ZoneMap`</div>
+                <div class="quiz-option" data-correct="false">C) `HKEY_USERS\.DEFAULT\Control Panel`</div>
+                <div class="quiz-option" data-correct="false">D) `HKEY_CLASSES_ROOT\*`</div>
+            </div>
+            <div class="quiz-feedback">
+                <strong>Explanation:</strong> The `IEHarden` DWORD value in this key disables prompts.
+            </div>
+        </div>
+    </div>
+    
+    <div class="content-section" id="troubleshooting">
+        <h2>Troubleshooting Scenarios</h2>
+        
+        <div class="troubleshooting-scenario">
+            <div class="scenario-section">
+                <h4>Scenario 1: Single Sign-On (SSO) Failure</h4>
+                <div class="content">
+                    <p><strong>Symptoms:</strong></p>
+                    <ul>
+                        <li>Users are prompted for credentials despite being on the domain.</li>
+                        <li>Event ID 4771 (Kerberos pre-authentication failed) in Event Viewer.</li>
+                    </ul>
+                    
+                    <p><strong>Root Causes:</strong></p>
+                    <ul>
+                        <li>Incorrect SPN (Service Principal Name) for Vitrea-Service account.</li>
+                        <li>Time skew (>5 minutes) between domain controllers and Vitrea servers.</li>
+                        <li>Broken trust relationship between domains.</li>
+                    </ul>
+                    
+                    <p><strong>Diagnostic Steps:</strong></p>
+                    <ol>
+                        <li>Run <code>setspn -L Vitrea-Service$</code> to verify SPNs.</li>
+                        <li>Check time sync: <code>w32tm /query /status</code>.</li>
+                        <li>Test trust: <code>nltest /domain_trusts</code>.</li>
+                    </ol>
+                    
+                    <p><strong>Resolution:</strong></p>
+                    <ul>
+                        <li>Register SPN: <code>setspn -A HTTP/&lt;FQDN&gt; Vitrea-Service$</code>.</li>
+                        <li>Sync time: <code>w32tm /resync</code>.</li>
+                        <li>Re-establish trust via Active Directory Domains and Trusts.</li>
+                    </ul>
+                </div>
+                <div class="scenario-toggle">Show/Hide Details</div>
+            </div>
+        </div>
+        
+        <div class="troubleshooting-scenario">
+            <div class="scenario-section">
+                <h4>Scenario 2: RDS Session Host Crashes</h4>
+                <div class="content">
+                    <p><strong>Symptoms:</strong></p>
+                    <ul>
+                        <li>Users disconnected randomly.</li>
+                        <li>Event ID 1000 (Application Error) for <code>rdpclip.exe</code>.</li>
+                    </ul>
+                    
+                    <p><strong>Root Causes:</strong></p>
+                    <ul>
+                        <li>GPU driver conflicts.</li>
+                        <li>Insufficient RDS CALs.</li>
+                        <li>Memory leaks in RemoteFX.</li>
+                    </ul>
+                    
+                    <p><strong>Diagnostic Steps:</strong></p>
+                    <ol>
+                        <li>Check GPU driver version: <code>dxdiag</code>.</li>
+                        <li>Verify CALs: <code>Get-RDLicenseConfiguration</code>.</li>
+                        <li>Monitor memory: <code>perfmon</code> → Track <code>Memory\Available MBytes</code>.</li>
+                    </ol>
+                    
+                    <p><strong>Resolution:</strong></p>
+                    <ul>
+                        <li>Update GPU drivers.</li>
+                        <li>Install additional RDS CALs.</li>
+                        <li>Disable RemoteFX if unused.</li>
+                    </ul>
+                </div>
+                <div class="scenario-toggle">Show/Hide Details</div>
+            </div>
+        </div>
+        
+        <div class="troubleshooting-scenario">
+            <div class="scenario-section">
+                <h4>Scenario 3: SQL Connection Encryption Errors</h4>
+                <div class="content">
+                    <p><strong>Symptoms:</strong></p>
+                    <ul>
+                        <li>"Certificate not found" errors in SQL logs.</li>
+                        <li>Event ID 26014 (SSL negotiation failed).</li>
+                    </ul>
+                    
+                    <p><strong>Root Causes:</strong></p>
+                    <ul>
+                        <li>Missing <code>AT_KEYEXCHANGE</code> flag (SQL 2017).</li>
+                        <li>Certificate expired or revoked.</li>
+                        <li>SQL Service account lacks permissions.</li>
+                    </ul>
+                    
+                    <p><strong>Diagnostic Steps:</strong></p>
+                    <ol>
+                        <li>Verify cert properties: <code>certutil -v -store MY</code>.</li>
+                        <li>Check expiration: <code>Get-ChildItem Cert:\LocalMachine\My</code>.</li>
+                        <li>Test service account access: <code>icacls &lt;cert&gt;.pfx</code>.</li>
+                    </ol>
+                    
+                    <p><strong>Resolution:</strong></p>
+                    <ul>
+                        <li>Add <code>AT_KEYEXCHANGE</code>: <code>certutil -importpfx cert.pfx AT_KEYEXCHANGE</code>.</li>
+                        <li>Renew/replace certificate.</li>
+                        <li>Grant SQL Service account <code>Read</code> permissions to the cert.</li>
+                    </ul>
+                </div>
+                <div class="scenario-toggle">Show/Hide Details</div>
+            </div>
+        </div>
+        
+        <div class="troubleshooting-scenario">
+            <div class="scenario-section">
+                <h4>Scenario 4: Printer Redirection Not Working</h4>
+                <div class="content">
+                    <p><strong>Symptoms:</strong></p>
+                    <ul>
+                        <li>Printers missing in RDS sessions.</li>
+                        <li>Event ID 616 (Print spooler error).</li>
+                    </ul>
+                    
+                    <p><strong>Root Causes:</strong></p>
+                    <ul>
+                        <li>Registry keys not copied to <code>HKEY_USERS\.DEFAULT</code>.</li>
+                        <li>GPO deployment failure.</li>
+                        <li>Print spooler service stopped.</li>
+                    </ul>
+                    
+                    <p><strong>Diagnostic Steps:</strong></p>
+                    <ol>
+                        <li>Check registry: <code>reg query HKEY_USERS\.DEFAULT\Printers</code>.</li>
+                        <li>Verify GPO: <code>gpresult /h gpo.html</code>.</li>
+                        <li>Test spooler: <code>Get-Service Spooler</code>.</li>
+                    </ol>
+                    
+                    <p><strong>Resolution:</strong></p>
+                    <ul>
+                        <li>Manually merge printer registry keys.</li>
+                        <li>Redeploy printers via GPO.</li>
+                        <li>Restart spooler: <code>Restart-Service Spooler</code>.</li>
+                    </ul>
+                </div>
+                <div class="scenario-toggle">Show/Hide Details</div>
+            </div>
+        </div>
+        
+        <div class="troubleshooting-scenario">
+            <div class="scenario-section">
+                <h4>Scenario 5: Certificate Revocation Check Timeouts</h4>
+                <div class="content">
+                    <p><strong>Symptoms:</strong></p>
+                    <ul>
+                        <li>Slow logins or application launches.</li>
+                        <li>Event ID 50 (CRL retrieval failed).</li>
+                    </ul>
+                    
+                    <p><strong>Root Causes:</strong></p>
+                    <ul>
+                        <li>Firewall blocking CRL URLs.</li>
+                        <li>Offline CA with no cached CRL.</li>
+                    </ul>
+                    
+                    <p><strong>Diagnostic Steps:</strong></p>
+                    <ol>
+                        <li>Test CRL access: <code>certutil -urlfetch -verify &lt;cert&gt;.cer</code>.</li>
+                        <li>Check firewall logs for <code>ocsp.digicert.com</code> blocks.</li>
+                    </ol>
+                    
+                    <p><strong>Resolution:</strong></p>
+                    <ul>
+                        <li>Disable CRL checks:
+                            <div class="command-box">
+                                certutil -setreg chain\ChainCacheResyncFiletime @now<br>
+                                certutil -setreg chain\DisableChainVerification 1
+                            </div>
+                        </li>
+                        <li>Allow CRL URLs in firewall.</li>
+                    </ul>
+                </div>
+                <div class="scenario-toggle">Show/Hide Details</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="content-section" id="quick-tips">
+        <h2>Quick Tips & Summary</h2>
+        
+        <div class="quick-tips">
+            <h3>1. Domain & Active Directory</h3>
+            <ul>
+                <li><strong>Requirement</strong>: Windows Server 2012+ domain functional level.</li>
+                <li><strong>Key Groups</strong>:
+                    <ul>
+                        <li><strong>Vitrea Users</strong> (non-admin access).</li>
+                        <li><strong>Vitrea Administrators</strong> (software admins).</li>
+                        <li><strong>Vitrea Services</strong> (service accounts).</li>
+                    </ul>
+                </li>
+                <li><strong>Service Accounts</strong>:
+                    <ul>
+                        <li>Use <strong>gMSA (Vitrea-Service$)</strong> for auto password management.</li>
+                        <li>For SQL 2017, ensure certificates have <strong>AT_KEYEXCHANGE</strong>.</li>
+                    </ul>
+                </li>
+            </ul>
+            
+            <h3>2. Certificates</h3>
+            <ul>
+                <li><strong>Types</strong>:
+                    <ul>
+                        <li><strong>SAN Certificates</strong>: For multi-server FQDNs (e.g., <code>server1.domain.com</code>, <code>server2.domain.com</code>).</li>
+                        <li><strong>Wildcard Certificates</strong>: For large deployments (except SQL 2017).</li>
+                    </ul>
+                </li>
+                <li><strong>Requirements</strong>:
+                    <ul>
+                        <li><strong>SHA256+ encryption</strong>, <strong>TLS 1.2+</strong>, <strong>2048-bit+ RSA key</strong>.</li>
+                        <li><strong>No self-signed certs</strong>—use internal CA or third-party (DigiCert, Thawte).</li>
+                    </ul>
+                </li>
+            </ul>
+            
+            <div class="command-box">
+                # Fix SQL 2017 cert error:<br>
+                certutil -importpfx cert.pfx AT_KEYEXCHANGE
+            </div>
+            
+            <h3>3. Group Policy (GPO)</h3>
+            <ul>
+                <li><strong>Critical Settings</strong>:
+                    <ul>
+                        <li><strong>Loopback Processing</strong>: <strong>Merge</strong> mode for RDS consistency.</li>
+                        <li><strong>User Rights</strong>:
+                            <ul>
+                                <li>"Log on as a service" → <code>Vitrea-Service</code>, <code>IIS_IUSRS</code>.</li>
+                                <li>"Debug Programs" → <code>Vitrea-Service</code> (for troubleshooting).</li>
+                            </ul>
+                        </li>
+                        <li><strong>RDS Policies</strong>:
+                            <ul>
+                                <li>Single session per user.</li>
+                                <li>High RemoteFX image quality.</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            
+            <div class="command-box">
+                gpresult /h gpo.html  # Export GPO results
+            </div>
+            
+            <h3>4. Troubleshooting Common Issues</h3>
+            <table border="1" cellpadding="5" cellspacing="0" style="width:100%; border-collapse: collapse;">
+                <tr>
+                    <th>Issue</th>
+                    <th>Quick Fix</th>
+                </tr>
+                <tr>
+                    <td><strong>SSO Fails</strong></td>
+                    <td>Verify SPNs (<code>setspn -L Vitrea-Service$</code>), check time sync.</td>
+                </tr>
+                <tr>
+                    <td><strong>RDS Crashes</strong></td>
+                    <td>Update GPU drivers, check RDS CALs.</td>
+                </tr>
+                <tr>
+                    <td><strong>SQL Encryption Errors</strong></td>
+                    <td>Ensure cert has <code>AT_KEYEXCHANGE</code> (SQL 2017).</td>
+                </tr>
+                <tr>
+                    <td><strong>Printers Missing in RDS</strong></td>
+                    <td>Merge registry keys to <code>HKEY_USERS\.DEFAULT</code>.</td>
+                </tr>
+                <tr>
+                    <td><strong>CRL Check Timeouts</strong></td>
+                    <td>Disable CRL checks in offline environments.</td>
+                </tr>
+            </table>
+            
+            <h3>5. Network & Security</h3>
+            <ul>
+                <li><strong>DNS</strong>: Ensure forward/reverse entries exist for all servers.</li>
+                <li><strong>Firewall</strong>: Allow ports:
+                    <ul>
+                        <li><strong>RDP (3389)</strong>, <strong>SQL (1433)</strong>, <strong>HTTP/HTTPS (80/443)</strong>.</li>
+                    </ul>
+                </li>
+                <li><strong>SMB Shares</strong>: Grant <code>Vitrea-SQL</code> <strong>Read/Write</strong> if storing backups.</li>
+            </ul>
+            
+            <h3>One-Liner Summary</h3>
+            <p><strong>"Domain + gMSA + SAN Cert + Loopback GPO + RDS Policies = Smooth Vitrea Deployment!"</strong></p>
+            <p>🚀 <strong>Pro Tip</strong>: Always test in a non-production environment first!</p>
+        </div>
+    </div>
+    
+    <div class="content-section" id="checklist">
+        <h2>Deployment Checklist</h2>
+        
+        <div class="checklist">
+            <h3>1. Domain Preparation</h3>
+            <div class="checklist-item">Verify domain functional level is Windows Server 2012 or higher</div>
+            <div class="checklist-item">Create Organizational Units (OUs) for Management Servers, Application Servers, and Service Accounts</div>
+            <div class="checklist-item">Create required security groups (Vitrea Users, Vitrea Administrators, Vitrea Services)</div>
+            <div class="checklist-item">Set up service accounts (gMSA recommended for Vitrea-Service)</div>
+            <div class="checklist-item">Configure one-way forest trust if cross-domain authentication is needed</div>
+            
+            <h3>2. Certificate Setup</h3>
+            <div class="checklist-item">Request SAN or wildcard certificates from CA (not self-signed)</div>
+            <div class="checklist-item">For SQL 2017, ensure certificates have AT_KEYEXCHANGE property</div>
+            <div class="checklist-item">Install certificates on all servers with proper permissions</div>
+            <div class="checklist-item">Configure SQL Server to use certificate for encryption</div>
+            
+            <h3>3. Group Policy Configuration</h3>
+            <div class="checklist-item">Configure loopback processing in Merge mode for RDS hosts</div>
+            <div class="checklist-item">Set user rights assignments (Log on as a service, Debug Programs)</div>
+            <div class="checklist-item">Configure RDS policies (single session per user, high RemoteFX quality)</div>
+            <div class="checklist-item">Deploy printer configurations via GPO</div>
+            <div class="checklist-item">Configure IE security zones for SSO</div>
+            
+            <h3>4. Network Configuration</h3>
+            <div class="checklist-item">Assign static/reserved IPs to all servers</div>
+            <div class="checklist-item">Create forward and reverse DNS entries</div>
+            <div class="checklist-item">Configure firewall rules for RDP, SQL, and HTTP/HTTPS</div>
+            <div class="checklist-item">Set up SMB shares with proper permissions if used for SQL backups</div>
+            
+            <h3>5. Validation Testing</h3>
+            <div class="checklist-item">Test SSO functionality with domain accounts</div>
+            <div class="checklist-item">Verify RDS sessions launch correctly</div>
+            <div class="checklist-item">Test SQL connectivity and encryption</div>
+            <div class="checklist-item">Validate printer redirection in RDS sessions</div>
+            <div class="checklist-item">Review Event Viewer logs for errors</div>
+        </div>
+    </div>
+    
+    <script>
+        // Tab switching functionality
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Remove active class from all tabs and content sections
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.content-section').forEach(c => c.classList.remove('active'));
+                
+                // Add active class to clicked tab and corresponding content section
+                tab.classList.add('active');
+                const tabId = tab.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+        
+        // Flashcard functionality
+        document.querySelectorAll('.flashcard').forEach(card => {
+            card.addEventListener('click', () => {
+                card.classList.toggle('show-answer');
+            });
+        });
+        
+        // Quiz functionality
+        document.querySelectorAll('.quiz-option').forEach(option => {
+            option.addEventListener('click', () => {
+                const questionDiv = option.closest('.quiz-question');
+                const feedbackDiv = questionDiv.querySelector('.quiz-feedback');
+                
+                // Remove all selected classes from options in this question
+                questionDiv.querySelectorAll('.quiz-option').forEach(opt => {
+                    opt.classList.remove('selected', 'correct', 'incorrect');
+                });
+                
+                // Add selected class to clicked option
+                option.classList.add('selected');
+                
+                // Check if correct
+                if (option.getAttribute('data-correct') === 'true') {
+                    option.classList.add('correct');
+                    feedbackDiv.classList.add('correct');
+                    feedbackDiv.textContent = 'Correct! ' + feedbackDiv.textContent;
+                } else {
+                    option.classList.add('incorrect');
+                    feedbackDiv.classList.add('incorrect');
+                    feedbackDiv.textContent = 'Incorrect. ' + feedbackDiv.textContent;
+                    
+                    // Highlight correct answer
+                    questionDiv.querySelector('.quiz-option[data-correct="true"]').classList.add('correct');
+                }
+            });
+        });
+        
+        // Troubleshooting scenario toggle
+        document.querySelectorAll('.scenario-toggle').forEach(toggle => {
+            toggle.addEventListener('click', () => {
+                const section = toggle.closest('.scenario-section');
+                section.classList.toggle('collapsed');
+                
+                if (section.classList.contains('collapsed')) {
+                    toggle.textContent = 'Show Details';
+                } else {
+                    toggle.textContent = 'Hide Details';
+                }
+            });
+            
+            // Collapse all by default
+            toggle.closest('.scenario-section').classList.add('collapsed');
+            toggle.textContent = 'Show Details';
+        });
+        
+        // Checklist item toggle
+        document.querySelectorAll('.checklist-item').forEach(item => {
+            item.addEventListener('click', () => {
+                item.classList.toggle('checked');
+            });
+        });
+        
+        // Search functionality
+        document.getElementById('search-input').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            if (searchTerm.length < 3) {
+                // Remove highlights if search term is too short
+                document.querySelectorAll('.highlight').forEach(el => {
+                    el.classList.remove('highlight');
+                });
+                return;
+            }
+            
+            // Search through all content sections
+            document.querySelectorAll('.content-section').forEach(section => {
+                const text = section.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    section.style.display = 'block';
+                    
+                    // Highlight matching text (simple approach)
+                    const html = section.innerHTML;
+                    const regex = new RegExp(searchTerm, 'gi');
+                    section.innerHTML = html.replace(regex, match => 
+                        `<span class="highlight">${match}</span>`
+                    );
+                } else {
+                    section.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
