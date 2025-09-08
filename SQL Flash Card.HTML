@@ -1,0 +1,1754 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Server Setup Guide Study Tool</title>
+    <style>
+        :root {
+            --primary-color: #0066cc;
+            --secondary-color: #003366;
+            --accent-color: #ff9900;
+            --light-color: #f5f5f5;
+            --dark-color: #333;
+            --success-color: #28a745;
+            --danger-color: #dc3545;
+            --warning-color: #ffc107;
+            --info-color: #17a2b8;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            border-radius: 5px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .tab-btn {
+            padding: 12px 24px;
+            margin: 0 5px;
+            background-color: var(--light-color);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .tab-btn:hover {
+            background-color: #e0e0e0;
+        }
+        
+        .tab-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+            background-color: white;
+            padding: 30px;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .summary-section h2, .flashcards-section h2, .mcq-section h2, .troubleshooting-section h2, .tips-section h2 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--light-color);
+        }
+        
+        /* Flashcards Styles */
+        .flashcard-container {
+            perspective: 1000px;
+            margin-bottom: 20px;
+        }
+        
+        .flashcard {
+            width: 100%;
+            height: 200px;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+            cursor: pointer;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .flashcard.flipped {
+            transform: rotateY(180deg);
+        }
+        
+        .flashcard-front, .flashcard-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            text-align: center;
+            border-radius: 10px;
+        }
+        
+        .flashcard-front {
+            background-color: var(--primary-color);
+            color: white;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        
+        .flashcard-back {
+            background-color: var(--accent-color);
+            color: var(--dark-color);
+            transform: rotateY(180deg);
+            font-size: 1.1rem;
+        }
+        
+        .flashcard-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        .flashcard-nav-btn {
+            padding: 10px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .flashcard-nav-btn:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .flashcard-nav-btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        
+        .flashcard-counter {
+            text-align: center;
+            margin-top: 10px;
+            font-weight: bold;
+            color: var(--dark-color);
+        }
+        
+        /* MCQ Styles */
+        .mcq-question {
+            background-color: var(--light-color);
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .mcq-options {
+            margin-top: 15px;
+        }
+        
+        .mcq-option {
+            display: block;
+            margin: 10px 0;
+            padding: 10px 15px;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .mcq-option:hover {
+            background-color: #f0f0f0;
+        }
+        
+        .mcq-option.selected {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+        
+        .mcq-option.correct {
+            background-color: var(--success-color);
+            color: white;
+            border-color: var(--success-color);
+        }
+        
+        .mcq-option.incorrect {
+            background-color: var(--danger-color);
+            color: white;
+            border-color: var(--danger-color);
+        }
+        
+        .mcq-feedback {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        .mcq-feedback.correct {
+            background-color: rgba(40, 167, 69, 0.1);
+            color: var(--success-color);
+            border-left: 4px solid var(--success-color);
+            display: block;
+        }
+        
+        .mcq-feedback.incorrect {
+            background-color: rgba(220, 53, 69, 0.1);
+            color: var(--danger-color);
+            border-left: 4px solid var(--danger-color);
+            display: block;
+        }
+        
+        .mcq-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        .mcq-nav-btn {
+            padding: 10px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .mcq-nav-btn:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .mcq-nav-btn:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        
+        .mcq-counter {
+            text-align: center;
+            margin-top: 10px;
+            font-weight: bold;
+            color: var(--dark-color);
+        }
+        
+        .mcq-score {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        /* Troubleshooting Styles */
+        .scenario {
+            background-color: white;
+            border-left: 4px solid var(--primary-color);
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 0 5px 5px 0;
+        }
+        
+        .scenario h3 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        
+        .problem-area {
+            font-weight: bold;
+            margin: 10px 0;
+            color: var(--secondary-color);
+        }
+        
+        .solution {
+            background-color: rgba(0, 102, 204, 0.1);
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        
+        .solution h4 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        
+        /* Quick Tips Styles */
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .tip-card {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-top: 4px solid var(--accent-color);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .tip-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .tip-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .tab-btn {
+                margin: 5px 0;
+                width: 100%;
+            }
+            
+            .tips-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Progress Bar */
+        .progress-container {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background-color: var(--primary-color);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        /* Search Functionality */
+        .search-container {
+            margin-bottom: 20px;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 12px 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        
+        .search-input:focus {
+            border-color: var(--primary-color);
+        }
+        
+        /* Highlight for search results */
+        .highlight {
+            background-color: yellow;
+            font-weight: bold;
+        }
+        
+        /* Dark mode toggle */
+        .dark-mode-toggle {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--primary-color);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            border: none;
+            font-size: 1.2rem;
+        }
+        
+        /* Dark mode styles */
+        body.dark-mode {
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+        
+        body.dark-mode .tab-content {
+            background-color: #1e1e1e;
+            color: #e0e0e0;
+        }
+        
+        body.dark-mode .flashcard-front {
+            background-color: var(--secondary-color);
+        }
+        
+        body.dark-mode .mcq-question {
+            background-color: #2d2d2d;
+        }
+        
+        body.dark-mode .mcq-option {
+            background-color: #2d2d2d;
+            border-color: #444;
+            color: #e0e0e0;
+        }
+        
+        body.dark-mode .scenario {
+            background-color: #2d2d2d;
+        }
+        
+        body.dark-mode .tip-card {
+            background-color: #2d2d2d;
+            color: #e0e0e0;
+        }
+        
+        body.dark-mode .search-input {
+            background-color: #2d2d2d;
+            color: #e0e0e0;
+            border-color: #444;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>SQL Server Setup Guide Study Tool</h1>
+            <p class="subtitle">Master the VPMC-17204E SQL Server Setup Guide with interactive learning</p>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="summary">Summary</button>
+            <button class="tab-btn" data-tab="flashcards">Flashcards</button>
+            <button class="tab-btn" data-tab="mcq">MCQ Quiz</button>
+            <button class="tab-btn" data-tab="troubleshooting">Troubleshooting</button>
+            <button class="tab-btn" data-tab="tips">Quick Tips</button>
+        </div>
+        
+        <div class="search-container">
+            <input type="text" class="search-input" placeholder="Search across all content...">
+        </div>
+        
+        <div class="tab-content active" id="summary">
+            <div class="summary-section">
+                <h2>Guide Summary</h2>
+                <p>The "VPMC-17204E SQL Server Setup Guide" provides comprehensive instructions for setting up and upgrading SQL Server Standard Edition for Vitrea® Advanced Visualization software versions 7.16.2.SU01 and later.</p>
+                
+                <h3>Key Sections:</h3>
+                <ul>
+                    <li><strong>Prerequisites for Installation:</strong> Complete Active Directory and Operating System setup guides, have access to specific SQL Server installation media (SQL Server 2016 SP2, 2017, or 2019 CU5+).</li>
+                    <li><strong>IT Roles:</strong> Defines responsibilities for Database Administrator, Domain Administrator, IT Administrator, Network Administrator, and VMware Administrator.</li>
+                    <li><strong>Installation Procedures:</strong> Detailed steps for installing a new SQL Server instance, including prerequisites like .NET Framework 4.5+ and SQL Server Management Studio (SSMS).</li>
+                    <li><strong>Configuration:</strong> Only Named Instances (e.g., VITREASQLSTD) are supported for local installations. Configuring SQL Server services (SQL Server Agent to Manual, Database Engine and Browser to Automatic).</li>
+                    <li><strong>Network Protocols:</strong> Disable Shared Memory and Named Pipes, set specific TCP port (e.g., 2222) for IPAll.</li>
+                    <li><strong>Security:</strong> Enabling TLS/SSL encryption, managing certificate permissions, registering SPNs for Kerberos.</li>
+                    <li><strong>Performance:</strong> Limit SQL Server memory to 4GB, disable CEIP service, optionally change TempDB location.</li>
+                    <li><strong>Permissions:</strong> Modify sysadmin permissions to enforce "least privilege" by assigning specific db_ roles.</li>
+                    <li><strong>Upgrade Procedures:</strong> Steps for upgrading from SQL Server 2014 Standard Edition to newer versions (2016 SP2, 2017, or 2019 CU5+).</li>
+                </ul>
+                
+                <h3>Important Notes:</h3>
+                <ul>
+                    <li>Microsoft ends support for SQL Server 2014 on July 9th, 2024.</li>
+                    <li>This guide is exclusively for Enterprise deployments (workstation/extend deployments install SQL Server automatically).</li>
+                    <li>After SQL Server setup/upgrade, proceed with Management Server Installation Guide.</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="tab-content" id="flashcards">
+            <div class="flashcards-section">
+                <h2>Flashcards (50 Total)</h2>
+                <div class="progress-container">
+                    <div class="progress-bar" id="flashcard-progress"></div>
+                </div>
+                <div class="flashcard-container">
+                    <div class="flashcard" id="flashcard">
+                        <div class="flashcard-front" id="flashcard-front">
+                            <!-- Question will be inserted here -->
+                        </div>
+                        <div class="flashcard-back" id="flashcard-back">
+                            <!-- Answer will be inserted here -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flashcard-counter" id="flashcard-counter"></div>
+                
+                <div class="flashcard-nav">
+                    <button class="flashcard-nav-btn" id="prev-flashcard">Previous</button>
+                    <button class="flashcard-nav-btn" id="flip-flashcard">Flip Card</button>
+                    <button class="flashcard-nav-btn" id="next-flashcard">Next</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-content" id="mcq">
+            <div class="mcq-section">
+                <h2>Multiple Choice Questions (50 Total)</h2>
+                <div class="progress-container">
+                    <div class="progress-bar" id="mcq-progress"></div>
+                </div>
+                
+                <div class="mcq-score" id="mcq-score"></div>
+                
+                <div class="mcq-question" id="mcq-question">
+                    <!-- Question will be inserted here -->
+                </div>
+                
+                <div class="mcq-options" id="mcq-options">
+                    <!-- Options will be inserted here -->
+                </div>
+                
+                <div class="mcq-feedback" id="mcq-feedback"></div>
+                
+                <div class="mcq-counter" id="mcq-counter"></div>
+                
+                <div class="mcq-nav">
+                    <button class="mcq-nav-btn" id="prev-mcq">Previous</button>
+                    <button class="mcq-nav-btn" id="check-mcq">Check Answer</button>
+                    <button class="mcq-nav-btn" id="next-mcq">Next</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-content" id="troubleshooting">
+            <div class="troubleshooting-section">
+                <h2>Troubleshooting Scenarios (25 Total)</h2>
+                <div class="progress-container">
+                    <div class="progress-bar" id="troubleshooting-progress"></div>
+                </div>
+                
+                <div id="troubleshooting-content">
+                    <!-- Scenarios will be inserted here -->
+                </div>
+                
+                <div class="troubleshooting-nav">
+                    <button class="mcq-nav-btn" id="prev-troubleshooting">Previous</button>
+                    <button class="mcq-nav-btn" id="next-troubleshooting">Next</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tab-content" id="tips">
+            <div class="tips-section">
+                <h2>Quick Tips</h2>
+                <div class="tips-grid" id="tips-grid">
+                    <!-- Tips will be inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <button class="dark-mode-toggle" id="dark-mode-toggle">🌙</button>
+    
+    <script>
+        // Data from the input file
+        const data = {
+            flashcards: [
+                { question: "What is the publication date of the VPMC-17204 E SQL Server Setup Guide?", answer: "2025-04." },
+                { question: "What software versions is the VPMC-17204 E SQL Server Setup Guide valid for?", answer: "Vitrea® Advanced Visualization and 7.16.2.SU01 and later software versions." },
+                { question: "Who holds the copyright for the Vitrea® Advanced Visualization SQL Server Setup Guide?", answer: "Canon Medical Systems Corporation." },
+                { question: "What is Vitrea?", answer: "A registered trademark in the United States, possibly protected in other countries." },
+                { question: "What restrictions apply if the software or documentation is delivered to the U.S. Department of Defense (DoD)?", answer: "It is delivered with Restricted Rights as set forth in subparagraph (c)(l)(ii) of the Rights in Technical Data and Computer Software clause at DFARS 252.227-7013." },
+                { question: "What is Canon Medical's liability regarding software defects or documentation use?", answer: "Canon Medical shall have no liability of any kind for any direct, indirect, special, incidental or consequential damages." },
+                { question: "What type of warranty does Canon Medical make for its software?", answer: "Canon Medical makes no warranty, express or implied, including but not limited to, any warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE." },
+                { question: "What is the confidentiality status of the software and its information?", answer: "Proprietary, confidential and trade secret to Canon Medical, not to be copied, reproduced, or disclosed to unauthorized personnel." },
+                { question: "What actions are users prohibited from doing with the software and its information regarding Canon Medical's confidential data?", answer: "Users shall not attempt to discern Canon Medical's confidential and trade secret information, reverse compile, disassemble, or otherwise reverse engineer the software." },
+                { question: "How should any serious incident related to the device be reported?", answer: "To Canon Medical at 1.800.208.3005 and the competent authority of the Member State where the user/patient is established." },
+                { question: "Where is the manufacturer of Vitrea Advanced Visualization located?", answer: "Canon Medical Informatics, Inc.; 5850 Opus Parkway, Suite 300; Minnetonka, MN, USA; 55343." },
+                { question: "What federal law restricts the sale of this device?", answer: "Federal law restricts this device to sale by or on the order of a physician, as directed by 21 CFR 801.109(b)(1)." },
+                { question: "Where can the Vitrea Unique Device Identifier (UDI) be located?", answer: "On the Help Central page." },
+                { question: "What information does the UDI contain?", answer: "Software version information and manufacture date." },
+                { question: "How do you display the Global Options menu in the Vitrea application?", answer: "Click at the top of the window." },
+                { question: "What are the contact methods for customer technical support in the U.S.?", answer: "Call 1.800.208.3005 or send an email to support@mi.medical.canon." },
+                { question: "For what type of deployment is this SQL Server Setup Guide used?", answer: "For an Enterprise deployment only." },
+                { question: "What type of Vitrea deployments automatically install SQL Server 2014/2016?", answer: "Vitrea workstation deployment or a Vitrea extend deployment." },
+                { question: "What must be installed before installing the Management Server software for new Enterprise deployment installations?", answer: "A version of SQL Server Standard Edition." },
+                { question: "If installing a remote instance of SQL Server, which document should be consulted?", answer: "The Remote SQL Server Setup Instructions document." },
+                { question: "Why is installing SQL Server Management Studio (SSMS) recommended on the Management Server even if not required for deployment?", answer: "For troubleshooting the database after an Enterprise deployment." },
+                { question: "What are the three prerequisite guides that must be completed before using this guide to install a local instance of SQL Server?", answer: "Enterprise Deployment Active Directory Planning Guide, Enterprise Deployment Operating System Setup Guide, and configuring Vitrea Enterprise servers per the Operating System Setup Guide." },
+                { question: "Which SQL Server versions and cumulative updates are supported for installation?", answer: "SQL Server 2016 SP2, SQL Server 2017, or SQL Server 2019 CU5+." },
+                { question: "Which IT role is responsible for setting up and managing databases and security?", answer: "Database Administrator." },
+                { question: "Which IT role adds computers to the domain and manages Active Directory users and groups?", answer: "Domain Administrator (also known as Active Directory Administrator)." },
+                { question: "What is the generic IT role that deploys projects and administers local workstations/servers?", answer: "IT Administrator." },
+                { question: "Which IT role manages the network connections and troubleshoots network pathing issues?", answer: "Network Administrator." },
+                { question: "Which IT role manages the VMware infrastructure and creates guest instances?", answer: "VMware Administrator." },
+                { question: "Who performs all procedures in the 'Install a new version of SQL Server' topic?", answer: "The Database Administrator." },
+                { question: "What are the supported SQL Management Studio (SSMS) software versions?", answer: "SQL Server 2016 SP2 Standard Edition, SQL Server 2017 Standard Edition, SQL Server 2019 Standard Edition with Cumulative Update 5 or newer." },
+                { question: "What .NET Framework version is required for SQL Server 2016 SP2/2017/2019 CU5+?", answer: ".NET Framework 4.5 or higher." },
+                { question: "What type of SQL Server instances are supported for local SQL Server installations?", answer: "Only Named Instances." },
+                { question: "What is the recommended Named Instance name for SQL Server?", answer: "VITREASQLSTD." },
+                { question: "What privileges must the account used for SQL Server installation have?", answer: "SYSADMIN privileges to the SQL database." },
+                { question: "What are the Account Name and Password fields for the SQL Server Agent Service?", answer: "username as [domain]\\vitrea-sql and the corresponding password." },
+                { question: "What is the required Startup Type for the SQL Server Agent Service?", answer: "Manual." },
+                { question: "What is the required Startup Type for the SQL Server Database Engine Service?", answer: "Automatic." },
+                { question: "What is the required Startup Type for the SQL Server Browser Service?", answer: "Automatic." },
+                { question: "What is the required collation for the Database Engine?", answer: "SQL_Latin1_General_CP1_Cl_AS." },
+                { question: "What authentication mode must be selected during SQL Server installation?", answer: "Mixed Mode (SQL server authentication and Windows authentication)." },
+                { question: "What account should be added on the Select Users, Computers, Service Accounts, or Groups screen during installation?", answer: "The Vitrea-Admin account." },
+                { question: "What network protocol for VITREASQLSTD should be disabled in SQL Server Configuration Manager?", answer: "Shared Memory." },
+                { question: "What network protocol for VITREASQLSTD should be verified as disabled in SQL Server Configuration Manager?", answer: "Named Pipes." },
+                { question: "What is the recommended TCP Port value for the IPAll section?", answer: "2222 (or customer-defined port value)." },
+                { question: "How can you verify an SPN is registered after SQL Server installation?", answer: "Run queries like `setspn -q MSSQLSvc/CODVWLAPPVIT01.hca.corpad.net:2222` or `setspn -q MSSQLSvc/CODVWLAPPVIT01.hca.corpad.net:VIMSSQLEXPRESS`." },
+                { question: "What is the maximum recommended memory size for a SQL Server instance (in MB)?", answer: "4GB (4096 MB)." },
+                { question: "What is the purpose of the SQL Server CEIP service?", answer: "It tracks the use of SQL for the Customer Experience Improvement Program." },
+                { question: "Which SQL Server versions are affected by the procedure to disable the SQL Server CEIP Service?", answer: "SQL Server 2016 and newer versions." },
+                { question: "What are the next installation steps after installing SQL Server Standard?", answer: "Continue with the Management Server Installation Guide, then Application Server Installation Guide, and optionally Vitrea Thin Client Installation Guide." },
+                { question: "What is the end-of-life date for Microsoft SQL Server 2014 support?", answer: "July 9th, 2024." }
+            ],
+            mcqs: [
+                {
+                    question: "The VPMC-17204 E SQL Server Setup Guide is primarily valid for which Vitrea Advanced Visualization software version?",
+                    options: [
+                        "7.15",
+                        "7.16.2.SU01 and later",
+                        "7.14.x",
+                        "Any Vitrea version"
+                    ],
+                    answer: 1,
+                    explanation: "The guide specifies it's valid for Vitrea® Advanced Visualization and 7.16.2.SU01 and later software versions."
+                },
+                {
+                    question: "According to the 'Limits of Liability and Disclaimer of Warranty,' Canon Medical:",
+                    options: [
+                        "Guarantees fitness for a particular purpose.",
+                        "Provides an express warranty for all software.",
+                        "Makes no warranty, express or implied.",
+                        "Is liable for all consequential damages."
+                    ],
+                    answer: 2,
+                    explanation: "The documentation clearly states that Canon Medical makes no warranty, express or implied, including but not limited to, any warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE."
+                },
+                {
+                    question: "What is explicitly stated about the reproduction of the 'VPMC-17204 E SQL Server Setup Guide'?",
+                    options: [
+                        "It can be reproduced with proper citation.",
+                        "It can be stored in a retrieval system without permission.",
+                        "It can be photocopied for internal use.",
+                        "No part may be reproduced or transmitted without written permission from Canon Medical."
+                    ],
+                    answer: 3,
+                    explanation: "The documentation states that no part may be reproduced or transmitted without written permission from Canon Medical, as it contains proprietary, confidential information."
+                },
+                {
+                    question: "If this software or documentation is delivered to any U.S. Government unit or agency other than DoD, it is subject to restrictions as set forth in:",
+                    options: [
+                        "DFARS 252.227-7013",
+                        "FAR 52.227-19 (b)(3)",
+                        "18-52.227-86(d) of the NASA FAR Supplement",
+                        "21 CFR 801.109(b)(1)"
+                    ],
+                    answer: 1,
+                    explanation: "For non-DoD U.S. Government units, the restrictions are set forth in FAR 52.227-19 (b)(3)."
+                },
+                {
+                    question: "Which of the following is considered 'proprietary, confidential and trade secret' to Canon Medical?",
+                    options: [
+                        "Only the ideas and concepts within the software.",
+                        "Only the know-how.",
+                        "The software and the information in this software including, but not limited to, the ideas, concepts and know-how.",
+                        "Only the information explicitly labeled 'trade secret.'"
+                    ],
+                    answer: 2,
+                    explanation: "The documentation states that the software and all information within it, including ideas, concepts and know-how, are considered proprietary, confidential and trade secret."
+                },
+                {
+                    question: "Who is the authorized sponsor in Australia for Vitrea, acting on behalf of Canon Medical Informatics, Inc.?",
+                    options: [
+                        "MDSS GmbH",
+                        "Canon Medical System do Brasil",
+                        "Canon Medical Systems ANZ Pty Limited",
+                        "Canon Medical Systems Canada LTD"
+                    ],
+                    answer: 2,
+                    explanation: "Canon Medical Systems ANZ Pty Limited is listed as the authorized sponsor in Australia."
+                },
+                {
+                    question: "What is the ANVISA registration number for Canon Medical System do Brasil?",
+                    options: [
+                        "466648",
+                        "10295030000",
+                        "10295030090",
+                        "N.A."
+                    ],
+                    answer: 2,
+                    explanation: "The ANVISA registration number for Canon Medical System do Brasil is 10295030090."
+                },
+                {
+                    question: "Where is the UK Responsible Person for Canon Medical Systems located?",
+                    options: [
+                        "Hannover, Germany",
+                        "Amstelveen, The Netherlands",
+                        "Kyiv, Ukraine",
+                        "Crawley, United Kingdom"
+                    ],
+                    answer: 3,
+                    explanation: "The UK Responsible Person is located in Crawley, United Kingdom."
+                },
+                {
+                    question: "What is the phone number to report a serious incident to Canon Medical?",
+                    options: [
+                        "866.433.4624",
+                        "1.800.208.3005",
+                        "+1 866.433.4624",
+                        "No phone number is listed for this purpose."
+                    ],
+                    answer: 1,
+                    explanation: "The documentation lists 1.800.208.3005 as the number to report serious incidents."
+                },
+                {
+                    question: "Before using the Vitrea product, which document should be referred to for general safety and regulatory considerations?",
+                    options: [
+                        "SQL Server Setup Guide",
+                        "Release Notes",
+                        "About Vitrea Medical Imaging Software Document",
+                        "Enterprise Deployment Operating System Setup Guide"
+                    ],
+                    answer: 2,
+                    explanation: "The 'About Vitrea Medical Imaging Software Document' should be referred to for general safety and regulatory considerations."
+                },
+                {
+                    question: "Where can the UDI (Unique Device Identifier) be found within the Vitrea software?",
+                    options: [
+                        "Under the 'About' section in the main menu.",
+                        "On the 'Release Notes' page.",
+                        "On the 'Help Central' page under the 'Version Info' section.",
+                        "In the installation directory."
+                    ],
+                    answer: 2,
+                    explanation: "The UDI can be located on the Help Central page under the Version Info section."
+                },
+                {
+                    question: "What does Canon Medical state is at the heart of everything they do, in line with their 'Made for Life' philosophy?",
+                    options: [
+                        "Technology innovation",
+                        "Business growth",
+                        "Patients",
+                        "Medical professionals"
+                    ],
+                    answer: 2,
+                    explanation: "Canon Medical states that patients are at the heart of everything they do."
+                },
+                {
+                    question: "For new Enterprise deployment installations, what must be installed before the Management Server software?",
+                    options: [
+                        "Active Directory",
+                        "Operating System",
+                        "SQL Server Standard Edition",
+                        "Vitrea Thin Client"
+                    ],
+                    answer: 2,
+                    explanation: "A version of SQL Server Standard Edition must be installed before the Management Server software."
+                },
+                {
+                    question: "If you are installing a Vitrea workstation deployment, SQL Server 2014/2016 is:",
+                    options: [
+                        "Required to be installed manually.",
+                        "Automatically installed.",
+                        "Not required.",
+                        "An optional component."
+                    ],
+                    answer: 1,
+                    explanation: "For workstation or extend deployments, SQL Server 2014/2016 is automatically installed."
+                },
+                {
+                    question: "Which of the following is NOT listed as a prerequisite guide to be completed before installing a local instance of SQL Server on a Management Server?",
+                    options: [
+                        "Enterprise Deployment Active Directory Planning Guide",
+                        "Enterprise Deployment Operating System Setup Guide",
+                        "Configuring Vitrea Enterprise servers per the Operating System Setup Guide",
+                        "Vitrea Thin Client Installation Guide"
+                    ],
+                    answer: 3,
+                    explanation: "The Vitrea Thin Client Installation Guide is not listed as a prerequisite for SQL Server installation."
+                },
+                {
+                    question: "What is the responsibility of a Database Administrator according to the guide?",
+                    options: [
+                        "Providing static IP addresses.",
+                        "Managing the VMware infrastructure.",
+                        "Setting up and managing the site's Databases and Database security.",
+                        "Deploying projects and installing applications locally."
+                    ],
+                    answer: 2,
+                    explanation: "The Database Administrator is responsible for setting up and managing the site's Databases and Database security."
+                },
+                {
+                    question: "Which IT role might provide Static IP addresses and Hostnames for devices?",
+                    options: [
+                        "IT Administrator",
+                        "Domain Administrator",
+                        "Network Administrator",
+                        "VMware Administrator"
+                    ],
+                    answer: 1,
+                    explanation: "The Domain Administrator (also known as Active Directory Administrator) adds computers to the domain and might provide static IP addresses and hostnames."
+                },
+                {
+                    question: "What .NET Framework version is specifically required for SQL Server 2019 with Cumulative Update 5 or newer?",
+                    options: [
+                        ".NET Framework 4.0",
+                        ".NET Framework 4.5 or higher",
+                        ".NET Framework 5.0",
+                        "No specific .NET Framework is mentioned."
+                    ],
+                    answer: 1,
+                    explanation: ".NET Framework 4.5 or higher is required for SQL Server 2016 SP2, 2017, and 2019 CU5+."
+                },
+                {
+                    question: "When installing a local SQL Server, which instance type is supported?",
+                    options: [
+                        "Default Instance",
+                        "Named Instances only",
+                        "Both Default and Named Instances",
+                        "Clustered Instances"
+                    ],
+                    answer: 1,
+                    explanation: "Only Named Instances are supported for local SQL Server installations."
+                },
+                {
+                    question: "What is the recommended Named Instance name for local SQL Server installations?",
+                    options: [
+                        "SQLSERVERSTD",
+                        "DEFAULTINSTANCE",
+                        "VITREASQLSTD",
+                        "SQLINSTANCE"
+                    ],
+                    answer: 2,
+                    explanation: "VITREASQLSTD is the recommended Named Instance name."
+                },
+                {
+                    question: "What is the recommended Startup Type for the SQL Server Agent Service during installation?",
+                    options: [
+                        "Automatic",
+                        "Disabled",
+                        "Manual",
+                        "On Demand"
+                    ],
+                    answer: 2,
+                    explanation: "The SQL Server Agent Service should be set to Manual startup."
+                },
+                {
+                    question: "What is the recommended Startup Type for the SQL Server Database Engine Service during installation?",
+                    options: [
+                        "Manual",
+                        "Disabled",
+                        "On Demand",
+                        "Automatic"
+                    ],
+                    answer: 3,
+                    explanation: "The SQL Server Database Engine Service should be set to Automatic startup."
+                },
+                {
+                    question: "Which collation is verified for the Database Engine during SQL Server installation?",
+                    options: [
+                        "Latin1_General_CI_AS",
+                        "SQL_Latin1_General_CP1_CI_AS",
+                        "SQL_Latin1_General_CS_AS",
+                        "SQL_Arabic_CI_AS"
+                    ],
+                    answer: 1,
+                    explanation: "SQL_Latin1_General_CP1_CI_AS is the required collation."
+                },
+                {
+                    question: "What authentication mode must be chosen for SQL Server installation?",
+                    options: [
+                        "Windows authentication mode",
+                        "SQL Server authentication mode",
+                        "Mixed Mode (SQL server authentication and Windows authentication)",
+                        "Integrated Security mode"
+                    ],
+                    answer: 2,
+                    explanation: "Mixed Mode (SQL server authentication and Windows authentication) must be selected."
+                },
+                {
+                    question: "What specific account should be added on the Select Users, Computers, Service Accounts, or Groups screen during SQL Server installation?",
+                    options: [
+                        "Domain Administrator account",
+                        "Local Administrator account",
+                        "Vitrea-Admin account",
+                        "SQL Server service account"
+                    ],
+                    answer: 2,
+                    explanation: "The Vitrea-Admin account should be added during installation."
+                },
+                {
+                    question: "In SQL Server Configuration Manager for a Named Instance, which protocol should be disabled?",
+                    options: [
+                        "TCP/IP",
+                        "Named Pipes",
+                        "Shared Memory",
+                        "VIA"
+                    ],
+                    answer: 2,
+                    explanation: "Shared Memory should be disabled for the Named Instance."
+                },
+                {
+                    question: "What is the recommended TCP Port value to set in the IPAll section?",
+                    options: [
+                        "1433",
+                        "1434",
+                        "2222",
+                        "Any available port"
+                    ],
+                    answer: 2,
+                    explanation: "2222 is the recommended TCP Port value (or a customer-defined value)."
+                },
+                {
+                    question: "To enable SSL/TLS for VIDicom Database connections, what setting must be set to 'Yes' on the Flags tab in Protocols Properties?",
+                    options: [
+                        "Enable TLS",
+                        "Use Encryption",
+                        "Force Encryption",
+                        "Secure Connection"
+                    ],
+                    answer: 2,
+                    explanation: "'Force Encryption' must be set to 'Yes' to enable SSL/TLS."
+                },
+                {
+                    question: "What tool is used to manage private keys for a certificate to grant full permissions to the SQL Server service account?",
+                    options: [
+                        "SQL Server Management Studio",
+                        "MMC console with Certificate Snap-in",
+                        "Computer Management",
+                        "Active Directory Users and Computers"
+                    ],
+                    answer: 1,
+                    explanation: "The MMC console with Certificate Snap-in is used to manage private keys."
+                },
+                {
+                    question: "Which Microsoft article provides information on configuring SQL Server Database Engine for encrypting connections?",
+                    options: [
+                        "https://learn.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms",
+                        "https://docs.microsoft.com/en-us/sql/ssms/support-policy",
+                        "https://learn.microsoft.com/en-us/sql/database-engine/configure-windows/configure-sql-server-encryption",
+                        "https://learn.microsoft.com/en-us/sql/database-engine/configure-windows/register-a-service-principal-name"
+                    ],
+                    answer: 2,
+                    explanation: "The correct article is about configuring SQL Server encryption."
+                },
+                {
+                    question: "To limit SQL Server memory size, where do you set the 'Maximum server memory (in MB)'?",
+                    options: [
+                        "On the General tab of Server Properties.",
+                        "In SQL Server Configuration Manager.",
+                        "On the Memory tab of Server Properties in SQL Server Management Studio.",
+                        "Directly in the SQL Server instance properties."
+                    ],
+                    answer: 2,
+                    explanation: "The setting is found on the Memory tab of Server Properties in SSMS."
+                },
+                {
+                    question: "The procedure to disable the SQL Server CEIP Service is applicable for which SQL Server versions?",
+                    options: [
+                        "SQL Server 2014 only",
+                        "SQL Server 2012 and newer",
+                        "SQL Server 2016 and newer versions",
+                        "All SQL Server versions"
+                    ],
+                    answer: 2,
+                    explanation: "The procedure applies to SQL Server 2016 and newer versions."
+                },
+                {
+                    question: "What is the command used to disable the SQL Server CEIP service via the Services screen?",
+                    options: [
+                        "Stop the service.",
+                        "Set Startup type to Automatic (Delayed Start).",
+                        "Set Startup type to Disabled.",
+                        "Delete the service."
+                    ],
+                    answer: 2,
+                    explanation: "The Startup type should be set to Disabled."
+                },
+                {
+                    question: "Which of the following is an optional procedure to improve SQL performance?",
+                    options: [
+                        "Registering a Service Principal Name.",
+                        "Limiting SQL Server Memory Size.",
+                        "Changing TempDB Location.",
+                        "Installing SQL Server Management Studio."
+                    ],
+                    answer: 2,
+                    explanation: "Changing TempDB Location is an optional procedure for performance improvement."
+                },
+                {
+                    question: "When modifying sysadmin permissions, which database role membership should be selected for VIDicom?",
+                    options: [
+                        "db_securityadmin",
+                        "db_denydatawriter",
+                        "db_owner",
+                        "sysadmin (kept selected)"
+                    ],
+                    answer: 2,
+                    explanation: "db_owner is one of the key roles that should be selected for VIDicom."
+                },
+                {
+                    question: "After installing SQL Server Standard, what is the immediate next installation guide to follow?",
+                    options: [
+                        "Application Server Installation Guide",
+                        "Vitrea Thin Client Installation Guide",
+                        "Management Server Installation Guide",
+                        "Enterprise Deployment Upgrade Guide"
+                    ],
+                    answer: 2,
+                    explanation: "The Management Server Installation Guide should be followed next."
+                },
+                {
+                    question: "The upgrade path supported in this guide is from SQL Server 2014 Standard Edition to:",
+                    options: [
+                        "SQL Server 2012 SP2.",
+                        "SQL Server 2016 SP1, 2017, or 2019 CU1+.",
+                        "SQL Server 2016 SP2, SQL Server 2017, or SQL Server 2019 with Cumulative Update 5 or newer.",
+                        "Any newer SQL Server version."
+                    ],
+                    answer: 2,
+                    explanation: "The supported upgrade path is to SQL Server 2016 SP2, 2017, or 2019 CU5+."
+                },
+                {
+                    question: "When upgrading SQL Server 2014 Standard, which option should be selected on the SQL Server Setup screen?",
+                    options: [
+                        "New SQL Server stand-alone installation",
+                        "Add features to an existing installation",
+                        "Upgrade from a previous version of SQL Server",
+                        "Repair a SQL Server installation"
+                    ],
+                    answer: 2,
+                    explanation: "'Upgrade from a previous version of SQL Server' should be selected."
+                },
+                {
+                    question: "What is the recommended action for customers using SQL Server 2014, given its end of support date?",
+                    options: [
+                        "Continue using it as is.",
+                        "Install a new Vitrea version on a separate SQL Server.",
+                        "Plan to upgrade to a newer version of SQL Server.",
+                        "Downgrade to an older Vitrea version."
+                    ],
+                    answer: 2,
+                    explanation: "Canon Medical recommends upgrading to a newer version of SQL Server."
+                },
+                {
+                    question: "What action should be taken after completing the SQL Server component upgrade?",
+                    options: [
+                        "Run a database backup.",
+                        "Configure network settings.",
+                        "Reboot the Management Server.",
+                        "Install SQL Server Management Studio."
+                    ],
+                    answer: 2,
+                    explanation: "The Management Server should be rebooted after the upgrade."
+                },
+                {
+                    question: "When installing SQL Server Standard Edition on a system that is on a domain, what account should you be signed in with to avoid SQL permission issues?",
+                    options: [
+                        "The Local Administrator.",
+                        "The Domain Administrator.",
+                        "The Vitrea-Admin account.",
+                        "Any account with sysadmin privileges."
+                    ],
+                    answer: 2,
+                    explanation: "The Vitrea-Admin account should be used for installation on domain-joined systems."
+                },
+                {
+                    question: "What happens if a reserved keyword is used in a SQL Server instance name?",
+                    options: [
+                        "The instance name is automatically corrected.",
+                        "It triggers a warning but allows installation.",
+                        "A Setup error will occur.",
+                        "The instance will function with limitations."
+                    ],
+                    answer: 2,
+                    explanation: "Using a reserved keyword will cause a Setup error."
+                },
+                {
+                    question: "Which characters are explicitly NOT allowed in SQL Server instance names?",
+                    options: [
+                        "Letters from other languages.",
+                        "Decimal numbers.",
+                        "Backslash (\\), comma (,), colon (:), semi-colon (;), single quote ('), ampersand (&), hyphen (-), and at sign (@).",
+                        "Dollar sign ($), or an underscore (_)."
+                    ],
+                    answer: 2,
+                    explanation: "The listed special characters are not allowed in instance names."
+                },
+                {
+                    question: "If you receive an error during SQL Server installation at the instance configuration step, and the server has been added to the domain, what is a likely cause?",
+                    options: [
+                        "Incorrect product key.",
+                        "Insufficient disk space.",
+                        "Installing while signed in as the Local Administrator instead of Vitrea-admin.",
+                        "Network connectivity issues."
+                    ],
+                    answer: 2,
+                    explanation: "Installation should be done while signed in as the Vitrea-Admin account."
+                },
+                {
+                    question: "After configuring SQL Server Configuration Manager for a Named Instance, what action is taken for SQL Server (VITREASQLSTD) to apply changes?",
+                    options: [
+                        "Stop the service.",
+                        "Restart the service.",
+                        "Check for updates.",
+                        "Disable the service."
+                    ],
+                    answer: 1,
+                    explanation: "The SQL Server service should be restarted to apply changes."
+                },
+                {
+                    question: "What is the purpose of running `setspn -q` queries after SQL Server installation?",
+                    options: [
+                        "To register a new SPN.",
+                        "To delete an existing SPN.",
+                        "To verify if an SPN is registered.",
+                        "To troubleshoot network connectivity."
+                    ],
+                    answer: 2,
+                    explanation: "`setspn -q` is used to verify SPN registration."
+                },
+                {
+                    question: "What happens if an SPN (Service Principal Name) is not registered?",
+                    options: [
+                        "SQL Server will not start.",
+                        "The Management Server will not connect.",
+                        "A specific error screen may display when launching an Application Server.",
+                        "Database performance will be degraded."
+                    ],
+                    answer: 2,
+                    explanation: "An error screen may appear when launching an Application Server if SPN is not registered."
+                },
+                {
+                    question: "When granting full permissions to the SQL Server service account for a certificate's private keys, what option is selected after right-clicking the certificate?",
+                    options: [
+                        "Export Certificate",
+                        "Install Certificate",
+                        "All Tasks | Manage Private Keys",
+                        "Properties"
+                    ],
+                    answer: 2,
+                    explanation: "'All Tasks | Manage Private Keys' is the correct option."
+                },
+                {
+                    question: "What value should be entered in the `msDS-SupportedEncryptionTypes` attribute to enable RC4, AES128, and AES256 encryptions for service accounts?",
+                    options: [
+                        "16",
+                        "28",
+                        "24",
+                        "32"
+                    ],
+                    answer: 1,
+                    explanation: "The value 28 enables RC4, AES128, and AES256 encryptions."
+                },
+                {
+                    question: "What is the alternative value to enable only AES128 and AES256 encryptions for service accounts?",
+                    options: [
+                        "16",
+                        "28",
+                        "24",
+                        "32"
+                    ],
+                    answer: 2,
+                    explanation: "The value 24 enables only AES128 and AES256 encryptions."
+                }
+            ],
+            troubleshooting: [
+                {
+                    scenario: "During SQL Server installation, you encounter a Setup error indicating an issue with the instance name, despite following other naming conventions.",
+                    problemArea: "Instance Naming Limitations.",
+                    solution: "You may have used a reserved keyword (e.g., 'Default') or an unsupported Unicode character in the instance name. Review the instance name limitations carefully."
+                },
+                {
+                    scenario: "You have completed the SQL Server installation for an Enterprise deployment, but when trying to connect to the database, you experience issues related to authentication or network connectivity. You suspect a protocol issue.",
+                    problemArea: "SQL Server Network Configuration.",
+                    solution: "Verify that Shared Memory is disabled and Named Pipes is disabled in SQL Server Network Configuration for the VITREASQLSTD instance. Also, ensure the TCP Port for IPAll is set correctly (e.g., 2222)."
+                },
+                {
+                    scenario: "After SQL Server installation, the application server is unable to connect to the SQL database, and you suspect an issue with Kerberos authentication.",
+                    problemArea: "Service Principal Name (SPN) Registration.",
+                    solution: "A Service Principal Name (SPN) may not be correctly registered with Active Directory. Run `setspn -q` queries to verify SPN registration. If not registered, a domain administrator must run `setspn -S` commands to register it."
+                },
+                {
+                    scenario: "You are installing SQL Server Standard Edition on a system that is already on a domain, and you are encountering unexpected SQL permission issues later in the installation process.",
+                    problemArea: "Account used for installation.",
+                    solution: "You may be logged in as the Local Administrator instead of the Vitrea-Admin account. Sign out and sign back in as the Vitrea-Admin account to complete the installation."
+                },
+                {
+                    scenario: "You notice high memory consumption by SQL Server, impacting overall system performance on your Enterprise deployment.",
+                    problemArea: "SQL Server Memory Allocation.",
+                    solution: "The SQL Server memory size may not be limited. Open SQL Server Management Studio, go to Server Properties, select Memory, and set the Maximum server memory (in MB) field value to a maximum of 4GB (4096 MB) for the instance."
+                },
+                {
+                    scenario: "You want to implement secure connections (SSL/TLS) for your VIDicom Database, but the connections are not encrypting as expected.",
+                    problemArea: "Database Encryption Settings.",
+                    solution: "Ensure that Force Encryption is set to Yes on the Flags tab in the Protocols Properties for your database (e.g., VITREASQLSTD) in SQL Server Configuration Manager. Also, verify a valid SSL certificate is selected on the Certificate tab."
+                },
+                {
+                    scenario: "After installing an SSL certificate for secure database connections, the SQL Server service account does not have the necessary permissions to access the certificate's private keys, causing connection failures.",
+                    problemArea: "Certificate Private Key Permissions.",
+                    solution: "You need to grant full permissions to the SQL Server service account on the certificate's private keys. This is done through the MMC console using the Certificate Snap-in, by right-clicking the certificate and selecting 'All Tasks | Manage Private Keys'."
+                },
+                {
+                    scenario: "The system's application log is frequently displaying 'Error 1032' messages related to service accounts.",
+                    problemArea: "Read/Write Permissions for Service Accounts.",
+                    solution: "Ensure that read/write permissions are applied to the service accounts used with SQL Server for the directory `C:\\Windows\\System32\\LogFiles\\Sum`."
+                },
+                {
+                    scenario: "You need to optimize SQL performance by moving the TempDB location, but you're unsure how to verify the change was successful.",
+                    problemArea: "TempDB Location Verification.",
+                    solution: "After executing the ALTER DATABASE queries, run the query `SELECT name AS [LogicalName] ,physical_name AS [Location] ,state_desc AS [Status] FROM sys.master_files WHERE database_id = DB_ID(N'tempdb');` in SSMS to verify the new physical location."
+                },
+                {
+                    scenario: "You are seeing messages about Customer Experience Improvement Program (CEIP) activity from SQL Server, and your organization's policy requires disabling all such data collection.",
+                    problemArea: "SQL Server CEIP Service.",
+                    solution: "The SQL Server CEIP service needs to be disabled. From the Services window (`services.msc`), right-click 'SQL Server CEIP service,' select Properties, and set the Startup type to Disabled. Also, in 'SQL Server 20xx Error and Reporting,' clear the 'Send Windows Error and SQL Error Reports' and 'Send feature usage reports' checkboxes."
+                },
+                {
+                    scenario: "After a clean installation, the SQL Server Agent Service is not starting automatically, requiring manual intervention.",
+                    problemArea: "SQL Server Agent Service Startup Type.",
+                    solution: "The Startup Type for the SQL Server Agent Service should be set to Manual, not Automatic, during installation. This is expected behavior; ensure it is set correctly."
+                },
+                {
+                    scenario: "When attempting to launch an Application Server, an error message related to 'Cannot generate SSPI Context' appears.",
+                    problemArea: "SSPI Context Error / Encryption Types.",
+                    solution: "This error can occur if GSMA accounts and service accounts do not have Advanced Encryption Standard (AES) as the default encryption method. Manually update the `msDS-SupportedEncryptionTypes` attribute for the relevant service accounts in Active Directory Users and Computers, setting the value to 28 (for RC4, AES128, AES256) or 24 (for AES128, AES256 only)."
+                },
+                {
+                    scenario: "You have upgraded SQL Server 2014, and now you are looking for the next steps in the overall deployment process.",
+                    problemArea: "Next Upgrade Procedure Steps.",
+                    solution: "After the SQL Server upgrade, you must consult the Enterprise Deployment Upgrade Guide. Specifically, complete the 'Pre-Upgrade Analysis,' 'Prepare for Upgrade,' and 'Upgrade Enterprise deployment' topics."
+                },
+                {
+                    scenario: "The SQL Server Management Studio (SSMS) is not installed on the Management Server after SQL Server installation, but you need it for troubleshooting.",
+                    problemArea: "SSMS Installation.",
+                    solution: "Although not strictly required for deployment, SSMS is highly recommended for troubleshooting. You can download the current version of SSMS from the provided Microsoft link and install it separately."
+                },
+                {
+                    scenario: "You're preparing for a SQL Server installation for Vitrea and need to know which specific prerequisites guides must be completed beforehand.",
+                    problemArea: "Installation Prerequisites.",
+                    solution: "You must have completed the procedures within the Enterprise Deployment Active Directory Planning Guide, the Enterprise Deployment Operating System Setup Guide, and configured the Vitrea Enterprise servers as directed in the Operating System Setup Guide."
+                },
+                {
+                    scenario: "Your security team requires 'least privilege' for database access accounts, and you need to ensure the `sysadmin` permission is removed for specific users while retaining necessary database roles.",
+                    problemArea: "Modifying Sysadmin Permissions.",
+                    solution: "In SSMS, for the user you want to modify, clear the `sysadmin` check box under Server Roles. Then, under User Mapping, select `VIDicom` and ensure `db_backupoperator`, `db_datareader`, `db_datawriter`, `db_ddladmin`, `db_owner`, and `public` checkboxes are selected in 'Database role membership for:'."
+                },
+                {
+                    scenario: "You've attempted to install SQL Server for a Vitrea workstation deployment, but it is prompting for a separate SQL Server installation, which you believe should be automatic.",
+                    problemArea: "Deployment Type vs. SQL Server Installation.",
+                    solution: "This guide is only for Enterprise deployments. For Vitrea workstation or Vitrea extend deployments, SQL Server 2014/2016 is automatically installed, and you should refer to their respective Installation Guides instead."
+                },
+                {
+                    scenario: "During the SQL Server installation, the system prompts for a product key. You are unsure where to enter it.",
+                    problemArea: "Product Key Entry.",
+                    solution: "On the 'Installation' screen, select the 'Enter the product key' radio button and then type the product key into the field."
+                },
+                {
+                    scenario: "You are trying to install SQL Server 2019 but are encountering compatibility issues or warnings regarding Cumulative Updates.",
+                    problemArea: "SQL Server 2019 Version Requirements.",
+                    solution: "For SQL Server 2019, you must be using Cumulative Update 5 or newer. Ensure your installation media or update plan includes this specific CU level."
+                },
+                {
+                    scenario: "You've finished installing SQL Server, but the SQL Server Browser service is not running, and you're unable to connect to the named instance via its name.",
+                    problemArea: "SQL Server Browser Service State.",
+                    solution: "Ensure the SQL Server Browser service is in a Running state in SQL Server Configuration Manager. Its Startup Type should be set to Automatic."
+                },
+                {
+                    scenario: "You are attempting to configure secure database connections (SSL/TLS) for the VIDicom Database but are unsure about the certificate requirements.",
+                    problemArea: "SSL Certificate Requirements.",
+                    solution: "Review the Microsoft article on 'Certificate requirements for SQL Server' (`https://learn.microsoft.com/en-us/sql/database-engine/configure-windows/certificate-requirements?view=sql-server-ver16`) to ensure your SSL certificate meets all necessary criteria."
+                },
+                {
+                    scenario: "You need to configure SQL Server 2016 for Vitrea, but you're not sure which .NET Framework version is necessary.",
+                    problemArea: ".NET Framework Requirements.",
+                    solution: "For SQL Server 2016 SP2, .NET Framework 4.5 or higher is required."
+                },
+                {
+                    scenario: "You are attempting to install a new version of SQL Server but want a detailed, step-by-step guide beyond the streamlined description.",
+                    problemArea: "Level of Detail in Installation Instructions.",
+                    solution: "Refer to Appendix A: Install a new version of SQL Server for a step-by-step description of the installation procedures."
+                },
+                {
+                    scenario: "You are preparing to upgrade SQL Server 2014 Standard, and the guide mentions hostname limitations.",
+                    problemArea: "Hostname Limitations for SQL Server.",
+                    solution: "When using Host Names, do not use an underscore (`_`)."
+                },
+                {
+                    scenario: "Your SQL Server instance unexpectedly stops or fails to start after modifying the sysadmin permissions for a user.",
+                    problemArea: "Critical System Accounts and Permissions.",
+                    solution: "While modifying permissions to enforce 'least privilege,' ensure that you did not accidentally remove or disable critical permissions for accounts that SQL Server services rely on for operation. Double-check that all required `db_` roles (like `db_owner`) and other necessary permissions are correctly assigned after clearing the `sysadmin` role."
+                }
+            ],
+            quickTips: [
+                "Deployment Type Specificity: This guide is exclusively for Enterprise deployments. For workstation or extend deployments, SQL Server is automatically installed.",
+                "Local SQL Server Instances: For local SQL Server installations, only Named Instances are supported (e.g., VITREASQLSTD). Default instances require the Remote SQL Server Instructions document.",
+                "Account for Installation: Always sign in with the Vitrea-Admin account when installing SQL Server Standard Edition on a domain-joined system to avoid permission issues.",
+                "Service Account for SQL: The SQL Server Agent Service should be set to Manual Startup, while the SQL Server Database Engine Service and SQL Server Browser Service should be Automatic.",
+                "Collation Setting: Ensure the Database Engine collation is set to SQL_Latin1_General_CP1_Cl_AS.",
+                "Authentication Mode: Always select Mixed Mode (SQL server authentication and Windows authentication) during installation.",
+                "SQL Server SA Password: Document the strong unique password for the SQL Server system administrator (sa) account; it cannot be recovered if lost.",
+                "Network Protocol Configuration: In SQL Server Configuration Manager, disable Shared Memory, verify Named Pipes is disabled, and set the TCP Port to 2222 (or a customer-defined value) for IPAll.",
+                "Secure Connections (SSL/TLS): If enabling secure connections, ensure 'Force Encryption' is set to Yes and that the SQL Server service account has full permissions to the certificate's private keys.",
+                "Memory Limit: Limit the SQL Server instance's Maximum server memory to 4GB (4096 MB) to prevent excessive resource consumption. This can be done on an active production system.",
+                "Disable CEIP: For SQL Server 2016 and newer, disable the SQL Server CEIP service and clear related error and feature usage reporting checkboxes.",
+                "TempDB Optimization (Optional): Consider changing the TempDB location for improved SQL performance.",
+                "Least Privilege: Modify sysadmin permissions by clearing the sysadmin checkbox and ensuring necessary db_ roles (like db_owner, db_datareader, db_datawriter) are assigned to specific database access accounts like VIDicom.",
+                "SPN Registration: Verify or register Service Principal Names (SPNs) with Active Directory to avoid 'Cannot generate SSPI Context' errors, especially for Kerberos connections.",
+                "Upgrade Planning: Microsoft SQL Server 2014 support ends July 9th, 2024; Canon Medical recommends upgrading for future compatibility, support, and security.",
+                "Post-Installation/Upgrade Steps: Always follow the Management Server Installation Guide (after installation) or the Enterprise Deployment Upgrade Guide (after upgrade) as the next steps."
+            ]
+        };
+
+        // DOM Elements
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+        const searchInput = document.querySelector('.search-input');
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+
+        // Flashcard elements
+        const flashcard = document.getElementById('flashcard');
+        const flashcardFront = document.getElementById('flashcard-front');
+        const flashcardBack = document.getElementById('flashcard-back');
+        const prevFlashcardBtn = document.getElementById('prev-flashcard');
+        const nextFlashcardBtn = document.getElementById('next-flashcard');
+        const flipFlashcardBtn = document.getElementById('flip-flashcard');
+        const flashcardCounter = document.getElementById('flashcard-counter');
+        const flashcardProgress = document.getElementById('flashcard-progress');
+
+        // MCQ elements
+        const mcqQuestion = document.getElementById('mcq-question');
+        const mcqOptions = document.getElementById('mcq-options');
+        const mcqFeedback = document.getElementById('mcq-feedback');
+        const prevMcqBtn = document.getElementById('prev-mcq');
+        const nextMcqBtn = document.getElementById('next-mcq');
+        const checkMcqBtn = document.getElementById('check-mcq');
+        const mcqCounter = document.getElementById('mcq-counter');
+        const mcqProgress = document.getElementById('mcq-progress');
+        const mcqScore = document.getElementById('mcq-score');
+
+        // Troubleshooting elements
+        const troubleshootingContent = document.getElementById('troubleshooting-content');
+        const prevTroubleshootingBtn = document.getElementById('prev-troubleshooting');
+        const nextTroubleshootingBtn = document.getElementById('next-troubleshooting');
+        const troubleshootingProgress = document.getElementById('troubleshooting-progress');
+
+        // Quick Tips elements
+        const tipsGrid = document.getElementById('tips-grid');
+
+        // Current indices
+        let currentFlashcardIndex = 0;
+        let currentMcqIndex = 0;
+        let currentTroubleshootingIndex = 0;
+        let score = 0;
+        let answeredQuestions = 0;
+
+        // Initialize the application
+        function init() {
+            setupTabs();
+            setupFlashcards();
+            setupMCQs();
+            setupTroubleshooting();
+            setupQuickTips();
+            setupSearch();
+            setupDarkMode();
+        }
+
+        // Tab functionality
+        function setupTabs() {
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const tabId = btn.getAttribute('data-tab');
+                    
+                    // Update active tab button
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    
+                    // Update active tab content
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+        }
+
+        // Flashcard functionality
+        function setupFlashcards() {
+            updateFlashcard();
+            
+            // Event listeners
+            prevFlashcardBtn.addEventListener('click', () => {
+                if (currentFlashcardIndex > 0) {
+                    currentFlashcardIndex--;
+                    updateFlashcard();
+                }
+            });
+            
+            nextFlashcardBtn.addEventListener('click', () => {
+                if (currentFlashcardIndex < data.flashcards.length - 1) {
+                    currentFlashcardIndex++;
+                    updateFlashcard();
+                }
+            });
+            
+            flipFlashcardBtn.addEventListener('click', () => {
+                flashcard.classList.toggle('flipped');
+            });
+            
+            // Keyboard navigation
+            document.addEventListener('keydown', (e) => {
+                if (!document.getElementById('flashcards').classList.contains('active')) return;
+                
+                if (e.key === 'ArrowLeft') {
+                    prevFlashcardBtn.click();
+                } else if (e.key === 'ArrowRight') {
+                    nextFlashcardBtn.click();
+                } else if (e.key === ' ' || e.key === 'Enter') {
+                    flipFlashcardBtn.click();
+                }
+            });
+        }
+
+        function updateFlashcard() {
+            const card = data.flashcards[currentFlashcardIndex];
+            flashcardFront.textContent = card.question;
+            flashcardBack.textContent = card.answer;
+            
+            // Reset card to front when changing
+            if (flashcard.classList.contains('flipped')) {
+                flashcard.classList.remove('flipped');
+            }
+            
+            // Update counter
+            flashcardCounter.textContent = `Card ${currentFlashcardIndex + 1} of ${data.flashcards.length}`;
+            
+            // Update progress bar
+            const progress = ((currentFlashcardIndex + 1) / data.flashcards.length) * 100;
+            flashcardProgress.style.width = `${progress}%`;
+            
+            // Update button states
+            prevFlashcardBtn.disabled = currentFlashcardIndex === 0;
+            nextFlashcardBtn.disabled = currentFlashcardIndex === data.flashcards.length - 1;
+        }
+
+        // MCQ functionality
+        function setupMCQs() {
+            updateMCQ();
+            
+            // Event listeners
+            prevMcqBtn.addEventListener('click', () => {
+                if (currentMcqIndex > 0) {
+                    currentMcqIndex--;
+                    updateMCQ();
+                }
+            });
+            
+            nextMcqBtn.addEventListener('click', () => {
+                if (currentMcqIndex < data.mcqs.length - 1) {
+                    currentMcqIndex++;
+                    updateMCQ();
+                }
+            });
+            
+            checkMcqBtn.addEventListener('click', checkAnswer);
+            
+            // Keyboard navigation
+            document.addEventListener('keydown', (e) => {
+                if (!document.getElementById('mcq').classList.contains('active')) return;
+                
+                if (e.key === 'ArrowLeft') {
+                    prevMcqBtn.click();
+                } else if (e.key === 'ArrowRight') {
+                    nextMcqBtn.click();
+                } else if (e.key === 'Enter') {
+                    checkMcqBtn.click();
+                }
+            });
+        }
+
+        function updateMCQ() {
+            const question = data.mcqs[currentMcqIndex];
+            mcqQuestion.textContent = question.question;
+            
+            // Clear previous options and feedback
+            mcqOptions.innerHTML = '';
+            mcqFeedback.textContent = '';
+            mcqFeedback.className = 'mcq-feedback';
+            
+            // Add new options
+            question.options.forEach((option, index) => {
+                const optionElement = document.createElement('div');
+                optionElement.className = 'mcq-option';
+                optionElement.textContent = option;
+                optionElement.dataset.index = index;
+                optionElement.addEventListener('click', () => selectOption(optionElement));
+                mcqOptions.appendChild(optionElement);
+            });
+            
+            // Update counter
+            mcqCounter.textContent = `Question ${currentMcqIndex + 1} of ${data.mcqs.length}`;
+            
+            // Update progress bar
+            const progress = ((currentMcqIndex + 1) / data.mcqs.length) * 100;
+            mcqProgress.style.width = `${progress}%`;
+            
+            // Update button states
+            prevMcqBtn.disabled = currentMcqIndex === 0;
+            nextMcqBtn.disabled = currentMcqIndex === data.mcqs.length - 1;
+            
+            // Update score display
+            updateScore();
+        }
+
+        function selectOption(optionElement) {
+            // Remove selected class from all options
+            document.querySelectorAll('.mcq-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
+            // Add selected class to clicked option
+            optionElement.classList.add('selected');
+        }
+
+        function checkAnswer() {
+            const selectedOption = document.querySelector('.mcq-option.selected');
+            if (!selectedOption) return;
+            
+            const question = data.mcqs[currentMcqIndex];
+            const selectedIndex = parseInt(selectedOption.dataset.index);
+            const isCorrect = selectedIndex === question.answer;
+            
+            // Update score if this is the first time answering this question
+            if (!question.answered) {
+                if (isCorrect) {
+                    score++;
+                }
+                answeredQuestions++;
+                question.answered = true;
+                question.userAnswer = selectedIndex;
+                updateScore();
+            }
+            
+            // Show feedback
+            mcqFeedback.textContent = question.explanation;
+            mcqFeedback.classList.add(isCorrect ? 'correct' : 'incorrect');
+            
+            // Highlight correct and incorrect answers
+            document.querySelectorAll('.mcq-option').forEach((opt, index) => {
+                if (index === question.answer) {
+                    opt.classList.add('correct');
+                } else if (index === selectedIndex && !isCorrect) {
+                    opt.classList.add('incorrect');
+                }
+            });
+            
+            // Disable further selection for this question
+            document.querySelectorAll('.mcq-option').forEach(opt => {
+                opt.style.pointerEvents = 'none';
+            });
+        }
+
+        function updateScore() {
+            mcqScore.textContent = `Score: ${score} / ${answeredQuestions}`;
+        }
+
+        // Troubleshooting functionality
+        function setupTroubleshooting() {
+            updateTroubleshooting();
+            
+            // Event listeners
+            prevTroubleshootingBtn.addEventListener('click', () => {
+                if (currentTroubleshootingIndex > 0) {
+                    currentTroubleshootingIndex--;
+                    updateTroubleshooting();
+                }
+            });
+            
+            nextTroubleshootingBtn.addEventListener('click', () => {
+                if (currentTroubleshootingIndex < data.troubleshooting.length - 1) {
+                    currentTroubleshootingIndex++;
+                    updateTroubleshooting();
+                }
+            });
+            
+            // Keyboard navigation
+            document.addEventListener('keydown', (e) => {
+                if (!document.getElementById('troubleshooting').classList.contains('active')) return;
+                
+                if (e.key === 'ArrowLeft') {
+                    prevTroubleshootingBtn.click();
+                } else if (e.key === 'ArrowRight') {
+                    nextTroubleshootingBtn.click();
+                }
+            });
+        }
+
+        function updateTroubleshooting() {
+            const scenario = data.troubleshooting[currentTroubleshootingIndex];
+            
+            troubleshootingContent.innerHTML = `
+                <div class="scenario">
+                    <h3>Scenario</h3>
+                    <p>${scenario.scenario}</p>
+                    
+                    <div class="problem-area">
+                        <strong>Problem Area:</strong> ${scenario.problemArea}
+                    </div>
+                    
+                    <div class="solution">
+                        <h4>Possible Cause/Solution</h4>
+                        <p>${scenario.solution}</p>
+                    </div>
+                </div>
+            `;
+            
+            // Update progress bar
+            const progress = ((currentTroubleshootingIndex + 1) / data.troubleshooting.length) * 100;
+            troubleshootingProgress.style.width = `${progress}%`;
+            
+            // Update button states
+            prevTroubleshootingBtn.disabled = currentTroubleshootingIndex === 0;
+            nextTroubleshootingBtn.disabled = currentTroubleshootingIndex === data.troubleshooting.length - 1;
+        }
+
+        // Quick Tips functionality
+        function setupQuickTips() {
+            data.quickTips.forEach(tip => {
+                const tipText = tip.split(':');
+                const title = tipText[0];
+                const content = tipText.slice(1).join(':').trim();
+                
+                const tipCard = document.createElement('div');
+                tipCard.className = 'tip-card';
+                tipCard.innerHTML = `
+                    <h3>${title}</h3>
+                    <p>${content}</p>
+                `;
+                tipsGrid.appendChild(tipCard);
+            });
+        }
+
+        // Search functionality
+        function setupSearch() {
+            searchInput.addEventListener('input', () => {
+                const searchTerm = searchInput.value.trim().toLowerCase();
+                if (searchTerm.length < 3) {
+                    removeHighlights();
+                    return;
+                }
+                
+                // Search in all tab contents
+                tabContents.forEach(content => {
+                    highlightText(content, searchTerm);
+                });
+            });
+        }
+
+        function highlightText(element, searchTerm) {
+            if (element.children.length > 0) {
+                Array.from(element.children).forEach(child => {
+                    highlightText(child, searchTerm);
+                });
+                return;
+            }
+            
+            if (element.nodeType === Node.TEXT_NODE) {
+                const text = element.nodeValue;
+                const regex = new RegExp(searchTerm, 'gi');
+                const newText = text.replace(regex, match => `<span class="highlight">${match}</span>`);
+                
+                if (newText !== text) {
+                    const newElement = document.createElement('span');
+                    newElement.innerHTML = newText;
+                    element.parentNode.replaceChild(newElement, element);
+                }
+            }
+        }
+
+        function removeHighlights() {
+            document.querySelectorAll('.highlight').forEach(highlight => {
+                const parent = highlight.parentNode;
+                parent.replaceWith(highlight.textContent);
+                parent.normalize();
+            });
+        }
+
+        // Dark mode functionality
+        function setupDarkMode() {
+            darkModeToggle.addEventListener('click', () => {
+                document.body.classList.toggle('dark-mode');
+                
+                // Change icon
+                if (document.body.classList.contains('dark-mode')) {
+                    darkModeToggle.textContent = '☀️';
+                } else {
+                    darkModeToggle.textContent = '🌙';
+                }
+            });
+        }
+
+        // Initialize the app
+        init();
+    </script>
+</body>
+</html>
