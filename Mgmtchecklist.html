@@ -1,0 +1,1444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vitrea Management Server Installation Checklist</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        :root {
+            --primary: #3498db;
+            --secondary: #2c3e50;
+            --danger: #e74c3c;
+            --success: #2ecc71;
+            --light: #ecf0f1;
+            --dark: #333;
+            --gray: #95a5a6;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: var(--dark);
+            background-color: #f9f9f9;
+        }
+        h1, h2, h3 {
+            color: var(--secondary);
+        }
+        h1 {
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        h2 {
+            background-color: var(--light);
+            padding: 10px;
+            border-left: 4px solid var(--primary);
+            margin-top: 30px;
+            border-radius: 0 4px 4px 0;
+        }
+        h3 {
+            margin-top: 20px;
+            color: var(--secondary);
+        }
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 20px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-size: 14px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        button.secondary {
+            background-color: var(--secondary);
+        }
+        button.danger {
+            background-color: var(--danger);
+        }
+        button.success {
+            background-color: var(--success);
+        }
+        .progress-container {
+            width: 100%;
+            background-color: var(--light);
+            border-radius: 5px;
+            margin: 20px 0;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .progress-bar {
+            height: 30px;
+            background-color: var(--primary);
+            border-radius: 5px;
+            width: 0%;
+            transition: width 0.5s;
+            text-align: center;
+            color: white;
+            line-height: 30px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .checklist-section {
+            margin-bottom: 30px;
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .checklist-item {
+            margin-bottom: 10px;
+            padding-left: 35px;
+            position: relative;
+        }
+        .checklist-item input[type="checkbox"] {
+            position: absolute;
+            left: 0;
+            top: 3px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        .checklist-item label {
+            cursor: pointer;
+            display: inline-block;
+            width: calc(100% - 30px);
+        }
+        .checklist-item .sub-items {
+            margin-left: 25px;
+            margin-top: 8px;
+            border-left: 2px solid var(--light);
+            padding-left: 15px;
+        }
+        .page-ref {
+            color: var(--gray);
+            font-size: 0.8em;
+            margin-left: 5px;
+            font-style: italic;
+        }
+        .completed {
+            text-decoration: line-through;
+            color: var(--gray);
+        }
+        .notes {
+            background-color: #f8f9fa;
+            border-left: 4px solid var(--danger);
+            padding: 15px;
+            margin: 25px 0;
+            font-size: 0.9em;
+            border-radius: 0 4px 4px 0;
+        }
+        .search-container {
+            margin: 20px 0;
+        }
+        #searchInput {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .export-import {
+            margin-top: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: white;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        .troubleshooting {
+            background-color: #fff8e1;
+            border-left: 4px solid #ffc107;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 0 4px 4px 0;
+        }
+        .troubleshooting-item {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed #ddd;
+        }
+        .troubleshooting-item:last-child {
+            border-bottom: none;
+        }
+        .troubleshooting h3 {
+            color: #ff9800;
+            margin-top: 0;
+        }
+        .collapsible {
+            background-color: #f1f1f1;
+            color: var(--secondary);
+            cursor: pointer;
+            padding: 10px;
+            width: 100%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 15px;
+            margin: 5px 0;
+            border-radius: 4px;
+        }
+        .active, .collapsible:hover {
+            background-color: #ddd;
+        }
+        .collapsible-content {
+            padding: 0 15px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.2s ease-out;
+            background-color: white;
+            border-radius: 0 0 4px 4px;
+        }
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            border-bottom: 1px dotted var(--primary);
+            cursor: help;
+        }
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: var(--secondary);
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 14px;
+        }
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+        @media print {
+            .no-print, .controls, .search-container, .export-import {
+                display: none;
+            }
+            body {
+                background: none;
+                padding: 0;
+            }
+            .checklist-section {
+                box-shadow: none;
+                padding: 5px;
+            }
+            .completed {
+                color: #999;
+            }
+            .collapsible {
+                display: none;
+            }
+            .collapsible-content {
+                max-height: none;
+                padding: 0;
+                overflow: visible;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Vitrea Management Server Installation Checklist</h1>
+    <p>This checklist outlines the key steps for installing and configuring the Vitrea Advanced Visualization Management Server, as detailed in the "Vitrea Advanced Visualization Management Server Install Guide" (VPMC-17427B). Complete each step to ensure a successful deployment.</p>
+    
+    <div class="controls">
+        <button onclick="checkAll()">Check All</button>
+        <button onclick="uncheckAll()">Uncheck All</button>
+        <button class="success" onclick="saveProgress()">Save Progress</button>
+        <button class="secondary" onclick="loadProgress()">Load Progress</button>
+        <button onclick="exportAsPDF()">Export as PDF</button>
+        <button class="danger" onclick="window.print()">Print Checklist</button>
+    </div>
+    
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar">0%</div>
+    </div>
+    
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Search for tasks (e.g., 'DICOM' or 'Firewall')..." onkeyup="filterChecklist()">
+    </div>
+    
+    <!-- PRE-INSTALLATION SECTION -->
+    <div class="checklist-section">
+        <button type="button" class="collapsible">Pre-Installation Requirements</button>
+        <div class="collapsible-content">
+            <h2>Pre-Installation Requirements</h2>
+            <button type="button" class="collapsible">Virtual Machine Deployment (Page 141)</button>
+            <div class="collapsible-content">
+                <div class="checklist-item">
+                    <input type="checkbox" id="vm-1" data-section="pre-install">
+                    <label for="vm-1">Ensure VMware ESXi 7.0 or newer is installed</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="vm-2" data-section="pre-install">
+                    <label for="vm-2">Configure VM with VMXNET3 network drivers</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="vm-3" data-section="pre-install">
+                    <label for="vm-3">Allocate sufficient resources (CPU: 10 cores, RAM: 32GB recommended)</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="vm-4" data-section="pre-install">
+                    <label for="vm-4">Verify virtualization extensions (Intel VT-x/AMD-V) are enabled in BIOS</label>
+                </div>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" id="item1" data-section="pre-install">
+                <label for="item1">Verify Hardware and Software Requirements <span class="page-ref">(Page 138-146)</span></label>
+                <div class="sub-items">
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item1-1" data-section="pre-install">
+                        <label for="item1-1">Confirm CPU supports <span class="tooltip">AVX2<span class="tooltiptext">Advanced Vector Extensions 2 - Required for Vitrea performance</span></span></label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item1-2" data-section="pre-install">
+                        <label for="item1-2">Ensure HP ProLiant DL360 Gen10 with one 10-Core Intel® Xeon® Processor or equivalent</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item1-3" data-section="pre-install">
+                        <label for="item1-3">Verify 16GB RAM (32GB for heavy workloads), DDR3-1333</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item1-4" data-section="pre-install">
+                        <label for="item1-4">Confirm supported OS: Microsoft Windows Server 2025 Standard with Desktop Experience</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item1-5" data-section="pre-install">
+                        <label for="item1-5">Ensure network: 1.0 Gbps connection (10 Gbps recommended)</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item1-6" data-section="pre-install">
+                        <label for="item1-6">Verify supported monitor resolutions for VSTP applications <span class="page-ref">(Appendix E, Page 175)</span></label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item1-7" data-section="pre-install">
+                        <label for="item1-7">Confirm SQL Server 2016 Standard with latest Service Packs and Cumulative Updates</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item1-8" data-section="pre-install">
+                        <label for="item1-8">Ensure 400GB free disk space for DICOM receive and patient data (if no external storage)</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item1-9" data-section="pre-install">
+                        <label for="item1-9">Verify DICOM conformance statements for third-party device compatibility <span class="page-ref">(Page 139)</span></label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" id="item2" data-section="pre-install">
+                <label for="item2">Prepare Vitrea_Resources Folder <span class="page-ref">(Page 14)</span></label>
+                <div class="sub-items">
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item2-1" data-section="pre-install">
+                        <label for="item2-1">Copy product download contents to a designated Vitrea_Resources folder (e.g., E:\Vitrea_Resources)</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" id="item3" data-section="pre-install">
+                <label for="item3">Run Vitrea System Checker Script <span class="page-ref">(Page 162)</span></label>
+                <div class="sub-items">
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item3-1" data-section="pre-install">
+                        <label for="item3-1">Navigate to the VitreaSystemChecker.ps1 script in the Utilities\Scripts\SystemChecker folder</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item3-2" data-section="pre-install">
+                        <label for="item3-2">Run script as administrator per ReadMe instructions to verify security and best practice configurations</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- SYSTEM HARDENING AND SECURITY SECTION -->
+    <div class="checklist-section">
+        <button type="button" class="collapsible">System Hardening and Security</button>
+        <div class="collapsible-content">
+            <h2>System Hardening and Security</h2>
+            <div class="checklist-item">
+                <input type="checkbox" id="item4" data-section="hardening">
+                <label for="item4">Run System Hardening Script <span class="page-ref">(Page 156-159)</span></label>
+                <div class="sub-items">
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item4-1" data-section="hardening">
+                        <label for="item4-1">Navigate to the Utilities\Scripts folder in Vitrea_Resources</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item4-2" data-section="hardening">
+                        <label for="item4-2">Run .\runscript.bat in PowerShell as administrator</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item4-3" data-section="hardening">
+                        <label for="item4-3">Select [M] Management profile and press Enter</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item4-4" data-section="hardening">
+                        <label for="item4-4">If prompted with a security warning, type r and press Enter to run once</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item4-5" data-section="hardening">
+                        <label for="item4-5">Verify security enhancements (e.g., disable Named Pipes, disable SHA1, reset directory ownership to SYSTEM)</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" id="item5" data-section="hardening">
+                <label for="item5">Configure Windows Firewall <span class="page-ref">(Page 122-124)</span></label>
+                <div class="sub-items">
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item5-1" data-section="hardening">
+                        <label for="item5-1">Open Control Panel > System and Security > Windows Defender Firewall > Advanced Settings</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item5-2" data-section="hardening">
+                        <label for="item5-2">Enable ICMP exceptions: Select "Windows Defender Firewall: Allow ICMP exceptions," enable "Allow inbound echo request"</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item5-3" data-section="hardening">
+                        <label for="item5-3">Add inbound rules for ports 3002 (VitreaReceive) and 3003 (VitreaQR): 3002:TCP:::enabled:VitreaReceive and 3003:TCP:::enabled:VitreaQR</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item5-4" data-section="hardening">
+                        <label for="item5-4">For port 3003, set scope to specific IP address or VLAN range of querying device if Query/Retrieve is needed</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" id="item6" data-section="hardening">
+                <label for="item6">Enable SSL/TLS <span class="page-ref">(Page 119-121)</span></label>
+                <div class="sub-items">
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item6-1" data-section="hardening">
+                        <label for="item6-1">Locate customer-installed SSL/TLS certificate in Computer Certificate Store under Personal > Certificates</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item6-2" data-section="hardening">
+                        <label for="item6-2">Run ConfigureTLS_Enterprise.ps1 -Enable -CertificateFriendlyName <Friendly name> in PowerShell as administrator</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item6-3" data-section="hardening">
+                        <label for="item6-3">Document certificate thumbprint for troubleshooting</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- INSTALLATION PROCESS SECTION -->
+    <div class="checklist-section">
+        <button type="button" class="collapsible">Installation Process</button>
+        <div class="collapsible-content">
+            <h2>Installation Process</h2>
+            <div class="checklist-item">
+                <input type="checkbox" id="item7" data-section="installation">
+                <label for="item7">Install Management Server Software <span class="page-ref">(Page 15-26)</span></label>
+                <div class="sub-items">
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item7-1" data-section="installation">
+                        <label for="item7-1">Sign in using a domain account with local administrator rights</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item7-2" data-section="installation">
+                        <label for="item7-2">Run InstallVitrea.exe as administrator from Vitrea_Resources</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item7-3" data-section="installation">
+                        <label for="item7-3">Select Vitrea Enterprise - Management profile from the dropdown</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item7-4" data-section="installation">
+                        <label for="item7-4">Enter Service Account credentials and validate</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item7-5" data-section="installation">
+                        <label for="item7-5">Verify or update Management Service URL and DICOM Receive location</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item7-6" data-section="installation">
+                        <label for="item7-6">Run System Hardening Script when prompted (see above)</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item7-7" data-section="installation">
+                        <label for="item7-7">Click INSTALL and wait 15-20 minutes for installation</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item7-8" data-section="installation">
+                        <label for="item7-8">Reboot the system when prompted</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" id="item8" data-section="installation">
+                <label for="item8">Install Monthly Windows Updates <span class="page-ref">(Page 37)</span></label>
+                <div class="sub-items">
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item8-1" data-section="installation">
+                        <label for="item8-1">Install latest Microsoft Windows updates and reboot the system</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" id="item9" data-section="installation">
+                <label for="item9">Use Database Deployment Tool <span class="page-ref">(Page 27-35)</span></label>
+                <div class="sub-items">
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item9-1" data-section="installation">
+                        <label for="item9-1">Create a database folder (e.g., E:\Database) for local SQL installations</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item9-2" data-section="installation">
+                        <label for="item9-2">Run Database Deployment Tool, enter Fully Qualified Domain Name of SQL Server, and set Database name to VIDI.com</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item9-3" data-section="installation">
+                        <label for="item9-3">Deploy schemas and set permissions for schemas as per the Database Status screen</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- POST-INSTALLATION CONFIGURATION SECTION -->
+    <div class="checklist-section">
+        <button type="button" class="collapsible">Post-Installation Configuration</button>
+        <div class="collapsible-content">
+            <h2>Post-Installation Configuration</h2>
+            <div class="checklist-item">
+                <input type="checkbox" id="item10" data-section="post-install">
+                <label for="item10">Prepare and Activate Licensing <span class="page-ref">(Page 12-14, 55-56)</span></label>
+                <div class="sub-items">
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item10-1" data-section="post-install">
+                        <label for="item10-1">Request licensing form from support@mi.medical.canon</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item10-2" data-section="post-install">
+                        <label for="item10-2">Complete form with customer information and send Host Information XML to Canon Medical Customer Support</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item10-3" data-section="post-install">
+                        <label for="item10-3">Save license file to Vitrea_Resources\Licensing folder</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item10-4" data-section="post-install">
+                        <label for="item10-4">Double-click Start Vitrea icon, select Licensing on Applications Home screen</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item10-5" data-section="post-install">
+                        <label for="item10-5">Click Make Changes, enter reason, and apply license file</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" id="item11" data-section="post-install">
+                <label for="item11">Set Up Accounts and External Groups <span class="page-ref">(Page 57-59)</span></label>
+                <div class="sub-items">
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item11-1" data-section="post-install">
+                        <label for="item11-1">Configure External Groups before disabling BUILTIN groups</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item11-2" data-section="post-install">
+                        <label for="item11-2">In System Configuration, select Group / Role Mapping, click Select External Groups</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item11-3" data-section="post-install">
+                        <label for="item11-3">Add domain groups (e.g., Vitrea Standard Users) to roles and save</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" id="item12" data-section="post-install">
+                <label for="item12">Configure SQL Server Permissions <span class="page-ref">(Page 206-207)</span></label>
+                <div class="sub-items">
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item12-1" data-section="post-install">
+                        <label for="item12-1">Create a WID subfolder in E:\VitreaData_WID</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item12-2" data-section="post-install">
+                        <label for="item12-2">Run ConfigureWID.ps1 with parameters: -InstanceName "VITREASQLSTD" -Port "2222" -DatabaseFilePath "E:\VitreaData_WID" -ClientAccessName "Vitmgmtnode-eng.local"</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item12-3" data-section="post-install">
+                        <label for="item12-3">In SQL Server Management Studio, add NT AUTHORITY\NETWORK with dbcreator and public roles</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" id="item13" data-section="post-install">
+                <label for="item13">Configure Archive and DICOM Settings <span class="page-ref">(Page 60-67, 110-112)</span></label>
+                <div class="sub-items">
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item13-1" data-section="post-install">
+                        <label for="item13-1">In System Configuration, select Archive in Subsystem menu</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item13-2" data-section="post-install">
+                        <label for="item13-2">Add DICOM device: enter Name, AE Title, IP Address, Port, and select Storage checkbox</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item13-3" data-section="post-install">
+                        <label for="item13-3">Test C-ECHO and click Apply</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item13-4" data-section="post-install">
+                        <label for="item13-4">Configure STORE AE Title and QUERY SCP AE Title in System Settings under DICOMQRSSCU component</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" id="item14" data-section="post-install">
+                <label for="item14">Configure AutoDelete <span class="page-ref">(Page 68-71)</span></label>
+                <div class="sub-items">
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item14-1" data-section="post-install">
+                        <label for="item14-1">In System Configuration, select AutoDelete tab</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item14-2" data-section="post-install">
+                        <label for="item14-2">Set rule-based or disk-based marking options (e.g., retention period)</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item14-3" data-section="post-install">
+                        <label for="item14-3">Restart AutoDelete service after saving changes</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" id="item15" data-section="post-install">
+                <label for="item15">Configure Remote Desktop Services (RDS) <span class="page-ref">(Page 77-94)</span></label>
+                <div class="sub-items">
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item15-1" data-section="post-install">
+                        <label for="item15-1">In Server Manager, add roles: Remote Desktop Services, select Standard deployment, and Session-based desktop deployment</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item15-2" data-section="post-install">
+                        <label for="item15-2">Assign RD Connection Broker and RD Web Access roles</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item15-3" data-section="post-install">
+                        <label for="item15-3">Create session collections for Application Servers and Multi Modality Viewer Servers</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item15-4" data-section="post-install">
+                        <label for="item15-4">Add user groups (e.g., Vitrea Standard Users) and clear Enable user profile disks</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item15-5" data-section="post-install">
+                        <label for="item15-5">Configure timeout settings: Set "End a disconnected session" to 1 minute</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" id="item16" data-section="post-install">
+                <label for="item16">Apply RD Licensing <span class="page-ref">(Page 101-109)</span></label>
+                <div class="sub-items">
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item16-1" data-section="post-install">
+                        <label for="item16-1">In Server Manager, select Remote Desktop Services > RD Licensing</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item16-2" data-section="post-install">
+                        <label for="item16-2">Add desired server to Server Pool and activate RD Licensing Server</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item16-3" data-section="post-install">
+                        <label for="item16-3">Enter license key and complete activation wizard</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- OPTIONAL CONFIGURATIONS SECTION -->
+    <div class="checklist-section">
+        <button type="button" class="collapsible">Optional Configurations</button>
+        <div class="collapsible-content">
+            <h2>Optional Configurations</h2>
+            <div class="checklist-item">
+                <input type="checkbox" id="item17" data-section="optional">
+                <label for="item17">Configure Visia CT Lung CAD (Optional) <span class="page-ref">(Page 43-54)</span></label>
+                <div class="sub-items">
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item17-1" data-section="optional">
+                        <label for="item17-1">Ensure Visia CT Lung CAD software version 5.8.1 or newer</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item17-2" data-section="optional">
+                        <label for="item17-2">Create a 100GB volume for Lung CAD data</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item17-3" data-section="optional">
+                        <label for="item17-3">In System Configuration, select Archive, add Lung CAD server details, and test C-ECHO</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item17-4" data-section="optional">
+                        <label for="item17-4">Configure lungCADKeywords and LungCADProcessor component settings</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" id="item18" data-section="optional">
+                <label for="item18">Configure Cedars License Server (Optional) <span class="page-ref">(Page 176-184)</span></label>
+                <div class="sub-items">
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item18-1" data-section="optional">
+                        <label for="item18-1">Install cedarsinstaller-concurrent license-serverer.msi</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item18-2" data-section="optional">
+                        <label for="item18-2">Request CSMC license from support@miradamedical.com with System ID, Location, Purpose, Computer Tag, Duration, and Type</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item18-3" data-section="optional">
+                        <label for="item18-3">Import license file and verify at http://<servername>:6433</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item18-4" data-section="optional">
+                        <label for="item18-4">Add firewall rule for port 6433: 6433:TCP:::enabled:Cedars Floating License Server</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" id="item19" data-section="optional">
+                <label for="item19">Configure Snapshot Converter, Angio Viewer, CT Dental, and Filming <span class="page-ref">(Page 187-196)</span></label>
+                <div class="sub-items">
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item19-1" data-section="optional">
+                        <label for="item19-1">For Snapshot Converter, add script in System Configuration > Scripts</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item19-2" data-section="optional">
+                        <label for="item19-2">For Angio Viewer, configure XAAAngloViewer component with C-arm type and iso-center height</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item19-3" data-section="optional">
+                        <label for="item19-3">For CT Dental, set crosscutFrameHeightForLifeSize and panoramaFrameHeightForLifeSize in System Settings</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item19-4" data-section="optional">
+                        <label for="item19-4">For Filming, configure DiComPrinterDPI in Filming component</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" id="item20" data-section="optional">
+                <label for="item20">Configure PowerScribe Integration (Optional) <span class="page-ref">(Page 163-174)</span></label>
+                <div class="sub-items">
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item20-1" data-section="optional">
+                        <label for="item20-1">Create SSL certificate or self-signed certificate in IIS Manager</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item20-2" data-section="optional">
+                        <label for="item20-2">Enable HTTPS binding on port 443 in IIS</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item20-3" data-section="optional">
+                        <label for="item20-3">Update PowerScribe server settings in System Configuration > Post Processing</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item20-4" data-section="optional">
+                        <label for="item20-4">Add PowerScribe server hostname to hosts file</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- POST-INSTALLATION VERIFICATION SECTION -->
+    <div class="checklist-section">
+        <button type="button" class="collapsible">Post-Installation Verification</button>
+        <div class="collapsible-content">
+            <h2>Post-Installation Verification</h2>
+            <div class="checklist-item">
+                <input type="checkbox" id="item21" data-section="verification">
+                <label for="item21">Verify Remote Desktop Access <span class="page-ref">(Page 95-100, 209-216)</span></label>
+                <div class="sub-items">
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item21-1" data-section="verification">
+                        <label for="item21-1">Access Vitrea Enterprise via RDS client: http(s)://[RDwebhostname]/rdweb</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item21-2" data-section="verification">
+                        <label for="item21-2">Log in as Vitrea-User, verify Drives and Clipboard are enabled</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item21-3" data-section="verification">
+                        <label for="item21-3">Configure Save to Media: Map local drive (e.g., C: or D:) in Remote Desktop Connection and export via Media Manager</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" id="item22" data-section="verification">
+                <label for="item22">Restrict IP Addresses in IIS <span class="page-ref">(Page 202-205)</span></label>
+                <div class="sub-items">
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item22-1" data-section="verification">
+                        <label for="item22-1">In IIS Manager, select Vital folder under Default Web Site</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item22-2" data-section="verification">
+                        <label for="item22-2">Add allowed IP addresses under IP Address and Domain Restrictions</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item22-3" data-section="verification">
+                        <label for="item22-3">Set Access for unspecified clients to Deny</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item22-4" data-section="verification">
+                        <label for="item22-4">To remove IPs, use ConfigureIIS.ps1 -RemoveIpAddresses <IP list> in PowerShell</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" id="item23" data-section="verification">
+                <label for="item23">Troubleshooting SSL/TLS <span class="page-ref">(Page 197-201)</span></label>
+                <div class="sub-items">
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item23-1" data-section="verification">
+                        <label for="item23-1">If SSL/TLS issues occur, replace certificate or run ConfigureTLS_Enterprise.ps1 with new certificate details</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item23-2" data-section="verification">
+                        <label for="item23-2">Add Network Service with Read permissions to certificate if Remote Desktop errors occur</label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" id="item24" data-section="verification">
+                <label for="item24">Verify System Configuration <span class="page-ref">(Page 112)</span></label>
+                <div class="sub-items">
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item24-1" data-section="verification">
+                        <label for="item24-1">Confirm STORE AE Title and QUERY SCP AE Title settings</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="item24-2" data-section="verification">
+                        <label for="item24-2">Verify session and reconnection settings in RDS configuration</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- NOTES SECTION -->
+    <div class="checklist-section">
+        <button type="button" class="collapsible">Additional Notes</button>
+        <div class="collapsible-content">
+            <div class="notes">
+                <h3>Additional Notes</h3>
+                <ul>
+                    <li>Ensure unique AE Titles for DICOM configurations <span class="page-ref">(Page 64, 110-111)</span></li>
+                    <li>Contact Canon Medical Support at support@mi.medical.canon for issues <span class="page-ref">(Page 12)</span></li>
+                    <li>Only English operating systems are supported <span class="page-ref">(Page 146)</span></li>
+                    <li>Virtual Machine deployments require VMware ESXi 7.0 or newer with VMXNET3 drivers <span class="page-ref">(Page 141)</span></li>
+                    <li>Refer to DICOM conformance statements for compatibility <span class="page-ref">(Page 139)</span></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    
+    <!-- TROUBLESHOOTING SECTION -->
+    <div class="checklist-section">
+        <button type="button" class="collapsible">Troubleshooting Guide</button>
+        <div class="collapsible-content">
+            <div class="troubleshooting">
+                <h2>Troubleshooting Guide</h2>
+                
+                <div class="troubleshooting-item">
+                    <h3>1. Installation Fails or Aborts</h3>
+                    <p><strong>Symptoms:</strong></p>
+                    <ul>
+                        <li>InstallVitrea.exe crashes during installation</li>
+                        <li>"Database deployment failed" error</li>
+                        <li>Unexpected reboot during installation</li>
+                    </ul>
+                    <p><strong>Resolution:</strong></p>
+                    <ol>
+                        <li><strong>Check logs:</strong> Review <code>%ProgramFiles%\Canon\Vitrea\Logs\Install.log</code></li>
+                        <li><strong>Verify prerequisites:</strong>
+                            <ul>
+                                <li>.NET Framework 4.8+ installed</li>
+                                <li>SQL Server 2016 Standard running</li>
+                                <li>Local administrator privileges</li>
+                            </ul>
+                        </li>
+                        <li><strong>Free disk space:</strong> Ensure 400GB+ available on installation drive</li>
+                        <li><strong>Disable antivirus:</strong> Temporarily disable during installation</li>
+                    </ol>
+                    <p><strong>Reference:</strong> VPMC-17427B Pages 15-26, 162</p>
+                </div>
+
+                <div class="troubleshooting-item">
+                    <h3>2. Management Service Won't Start</h3>
+                    <p><strong>Symptoms:</strong></p>
+                    <ul>
+                        <li>"Vitrea Management Service terminated unexpectedly"</li>
+                        <li>Error 1053 in Windows Event Log</li>
+                        <li>Ports 3002/3003 not listening</li>
+                    </ul>
+                    <p><strong>Resolution:</strong></p>
+                    <ol>
+                        <li><strong>Verify service account:</strong>
+                            <ul>
+                                <li>Check password expiration</li>
+                                <li>Confirm "Log on as a service" rights (via <code>secpol.msc</code>)</li>
+                            </ul>
+                        </li>
+                        <li><strong>Check dependencies:</strong>
+                            <ul>
+                                <li>SQL Server connectivity (<code>telnet [SQL_Server] 1433</code>)</li>
+                                <li>Windows Firewall exceptions for ports 3002-3003 TCP</li>
+                            </ul>
+                        </li>
+                        <li><strong>Review event logs:</strong> Filter for Source="Vitrea Management"</li>
+                    </ol>
+                    <p><strong>Reference:</strong> VPMC-17427B Pages 119-124, 206-207</p>
+                </div>
+
+                <div class="troubleshooting-item">
+                    <h3>3. DICOM Connectivity Issues</h3>
+                    <p><strong>Symptoms:</strong></p>
+                    <ul>
+                        <li>C-ECHO failures to PACS/Modalities</li>
+                        <li>Studies not appearing in Vitrea</li>
+                        <li>"DICOM Association Rejected" errors</li>
+                    </ul>
+                    <p><strong>Resolution:</strong></p>
+                    <ol>
+                        <li><strong>Verify AE Titles:</strong>
+                            <ul>
+                                <li>Must be unique across all devices</li>
+                                <li>No special characters (use only A-Z, 0-9)</li>
+                            </ul>
+                        </li>
+                        <li><strong>Check network:</strong>
+                            <ul>
+                                <li>Ping PACS/modality IPs</li>
+                                <li>Test ports with <code>Test-NetConnection [IP] -Port [PORT]</code></li>
+                            </ul>
+                        </li>
+                        <li><strong>Validate DICOM settings:</strong>
+                            <ul>
+                                <li>STORE SCP AE Title matches Vitrea configuration</li>
+                                <li>IP restrictions in System Configuration > DICOM</li>
+                            </ul>
+                        </li>
+                    </ol>
+                    <p><strong>Reference:</strong> VPMC-17427B Pages 60-67, 110-112</p>
+                </div>
+
+                <div class="troubleshooting-item">
+                    <h3>4. License Activation Failures</h3>
+                    <p><strong>Symptoms:</strong></p>
+                    <ul>
+                        <li>"Invalid license file" error</li>
+                        <li>Features disabled after 30-day trial</li>
+                        <li>Host ID mismatch</li>
+                    </ul>
+                    <p><strong>Resolution:</strong></p>
+                    <ol>
+                        <li><strong>Verify Host ID:</strong>
+                            <ul>
+                                <li>Compare <code>HostInformation.xml</code> with license file</li>
+                                <li>Re-generate if hardware changed</li>
+                            </ul>
+                        </li>
+                        <li><strong>Check license file:</strong>
+                            <ul>
+                                <li>Ensure it's saved to <code>Vitrea_Resources\Licensing</code></li>
+                                <li>Validate expiration date</li>
+                            </ul>
+                        </li>
+                        <li><strong>Contact support:</strong> Email <code>support@mi.medical.canon</code> with:
+                            <ul>
+                                <li>HostInformation.xml</li>
+                                <li>Error screenshot</li>
+                                <li>Server FQDN</li>
+                            </ul>
+                        </li>
+                    </ol>
+                    <p><strong>Reference:</strong> VPMC-17427B Pages 12-14, 55-56</p>
+                </div>
+
+                <div class="troubleshooting-item">
+                    <h3>5. Remote Desktop Services Problems</h3>
+                    <p><strong>Symptoms:</strong></p>
+                    <ul>
+                        <li>Users can't launch Vitrea via RDWeb</li>
+                        <li>"No available RD Session Host servers"</li>
+                        <li>Clipboard/Drive redirection not working</li>
+                    </ul>
+                    <p><strong>Resolution:</strong></p>
+                    <ol>
+                        <li><strong>Verify RDS roles:</strong>
+                            <ul>
+                                <li>RD Connection Broker online</li>
+                                <li>Session hosts in drain mode?</li>
+                            </ul>
+                        </li>
+                        <li><strong>Check licenses:</strong>
+                            <ul>
+                                <li>RD Licensing Manager shows available licenses</li>
+                                <li>CALs match Windows Server version</li>
+                            </ul>
+                        </li>
+                        <li><strong>Test connectivity:</strong>
+                            <ul>
+                                <li><code>Test-RDSessionHost -ConnectionBroker [FQDN]</code></li>
+                                <li>Port 443 open between clients and RDWeb</li>
+                            </ul>
+                        </li>
+                    </ol>
+                    <p><strong>Reference:</strong> VPMC-17427B Pages 77-109, 209-216</p>
+                </div>
+
+                <div class="troubleshooting-item">
+                    <h3>6. Slow Database Performance</h3>
+                    <p><strong>Symptoms:</strong></p>
+                    <ul>
+                        <li>Delayed study loading</li>
+                        <li>SQL Server high CPU/RAM usage</li>
+                        <li>Timeout errors in Vitrea logs</li>
+                    </ul>
+                    <p><strong>Resolution:</strong></p>
+                    <ol>
+                        <li><strong>Check SQL resources:</strong>
+                            <ul>
+                                <li>Minimum 8 vCPUs, 16GB RAM allocated</li>
+                                <li>SSD storage for database files</li>
+                            </ul>
+                        </li>
+                        <li><strong>Optimize settings:</strong>
+                            <ul>
+                                <li>Enable "Lock Pages in Memory" for SQL service account</li>
+                                <li>Set MaxDOP to 4-8 (based on cores)</li>
+                            </ul>
+                        </li>
+                        <li><strong>Maintenance tasks:</strong>
+                            <ul>
+                                <li>Rebuild indexes weekly</li>
+                                <li>Shrink transaction logs</li>
+                            </ul>
+                        </li>
+                    </ol>
+                    <p><strong>Reference:</strong> VPMC-17427B Pages 27-35, 206-207</p>
+                </div>
+
+                <div class="troubleshooting-item">
+                    <h3>7. SSL/TLS Certificate Issues</h3>
+                    <p><strong>Symptoms:</strong></p>
+                    <ul>
+                        <li>"Invalid certificate" warnings in browsers</li>
+                        <li>RDP connections fail with SSL errors</li>
+                        <li>Vitrea web components not loading</li>
+                    </ul>
+                    <p><strong>Resolution:</strong></p>
+                    <ol>
+                        <li><strong>Verify certificate:</strong>
+                            <ul>
+                                <li>Check expiration date in <code>certmgr.msc</code></li>
+                                <li>Confirm private key is accessible</li>
+                            </ul>
+                        </li>
+                        <li><strong>Permissions:</strong>
+                            <ul>
+                                <li>Grant <code>NETWORK SERVICE</code> read access to certificate</li>
+                                <li>Run <code>ConfigureTLS_Enterprise.ps1 -Repair</code></li>
+                            </ul>
+                        </li>
+                        <li><strong>IIS Configuration:</strong>
+                            <ul>
+                                <li>Bindings match certificate SANs</li>
+                                <li>Disable legacy protocols (SSL 3.0, TLS 1.0)</li>
+                            </ul>
+                        </li>
+                    </ol>
+                    <p><strong>Reference:</strong> VPMC-17427B Pages 119-121, 197-201</p>
+                </div>
+
+                <div class="troubleshooting-item">
+                    <h3>8. AutoDelete Service Not Purging Data</h3>
+                    <p><strong>Symptoms:</strong></p>
+                    <ul>
+                        <li>Disk space not freeing up</li>
+                        <li>AutoDelete.log shows errors</li>
+                        <li>Retention policies ignored</li>
+                    </ul>
+                    <p><strong>Resolution:</strong></p>
+                    <ol>
+                        <li><strong>Check service status:</strong>
+                            <ul>
+                                <li>"Vitrea AutoDelete Service" running</li>
+                                <li>Last run time in System Configuration > AutoDelete</li>
+                            </ul>
+                        </li>
+                        <li><strong>Verify permissions:</strong>
+                            <ul>
+                                <li>Service account has modify rights to <code>E:\VitreaData</code></li>
+                                <li>No files marked as "in use"</li>
+                            </ul>
+                        </li>
+                        <li><strong>Test rules:</strong>
+                            <ul>
+                                <li>Temporarily set retention to 1 day for testing</li>
+                                <li>Manually run <code>Start-VitreaAutoDelete</code> in PowerShell</li>
+                            </ul>
+                        </li>
+                    </ol>
+                    <p><strong>Reference:</strong> VPMC-17427B Pages 68-71</p>
+                </div>
+
+                <div class="troubleshooting-item">
+                    <h3>9. PowerScribe/Visia CT Lung CAD Failures</h3>
+                    <p><strong>Symptoms:</strong></p>
+                    <ul>
+                        <li>Reports not sending to PowerScribe</li>
+                        <li>Lung CAD results not returning to Vitrea</li>
+                        <li>HTTP 500 errors in integration logs</li>
+                    </ul>
+                    <p><strong>Resolution:</strong></p>
+                    <ol>
+                        <li><strong>Validate network paths:</strong>
+                            <ul>
+                                <li>Ping between Vitrea and integration servers</li>
+                                <li>Check <code>hosts</code> file for correct IP mappings</li>
+                            </ul>
+                        </li>
+                        <li><strong>Certificate trust:</strong>
+                            <ul>
+                                <li>Install CA certs in Vitrea's Trusted Root store</li>
+                                <li>Disable certificate revocation checks if needed</li>
+                            </ul>
+                        </li>
+                        <li><strong>Test connectivity:</strong>
+                            <ul>
+                                <li>Use <code>Invoke-WebRequest</code> to test API endpoints</li>
+                                <li>Verify AE Titles match in both systems</li>
+                            </ul>
+                        </li>
+                    </ol>
+                    <p><strong>Reference:</strong> VPMC-17427B Pages 43-54, 163-174</p>
+                </div>
+
+                <div class="troubleshooting-item">
+                    <h3>10. System Slowness or Freezing</h3>
+                    <p><strong>Symptoms:</strong></p>
+                    <ul>
+                        <li>UI lag when loading studies</li>
+                        <li>High CPU during DICOM transfers</li>
+                        <li>Memory leaks over time</li>
+                    </ul>
+                    <p><strong>Resolution:</strong></p>
+                    <ol>
+                        <li><strong>Check AVX2 support:</strong>
+                            <ul>
+                                <li>Run <code>VitreaSystemChecker.ps1</code> (Page 162)</li>
+                                <li>Confirm CPU supports AVX2 instructions</li>
+                            </ul>
+                        </li>
+                        <li><strong>Monitor resources:</strong>
+                            <ul>
+                                <li>Use Performance Monitor to track bottlenecks</li>
+                                <li>Check disk queue length for storage latency</li>
+                            </ul>
+                        </li>
+                        <li><strong>Optimize settings:</strong>
+                            <ul>
+                                <li>Reduce concurrent DICOM operations in System Configuration</li>
+                                <li>Schedule nightly reboots if memory leaks occur</li>
+                            </ul>
+                        </li>
+                    </ol>
+                    <p><strong>Reference:</strong> VPMC-17427B Pages 138-146, 162</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- EXPORT/IMPORT PROGRESS SECTION -->
+    <div class="checklist-section">
+        <button type="button" class="collapsible">Export/Import Progress</button>
+        <div class="collapsible-content">
+            <div class="export-import">
+                <h3>Export/Import Progress</h3>
+                <textarea id="progressData" placeholder="Paste saved progress data here to load"></textarea>
+                <button onclick="exportProgress()">Export Progress</button>
+                <button onclick="importProgress()">Import Progress</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize jsPDF
+        const { jsPDF } = window.jspdf;
+        
+        // Collapsible sections
+        document.querySelectorAll('.collapsible').forEach(button => {
+            button.addEventListener('click', function() {
+                this.classList.toggle('active');
+                const content = this.nextElementSibling;
+                if (content.style.maxHeight) {
+                    content.style.maxHeight = null;
+                } else {
+                    content.style.maxHeight = content.scrollHeight + 'px';
+                }
+            });
+        });
+
+        // Update progress bar
+        function updateProgress() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]:not([disabled])');
+            const checked = document.querySelectorAll('input[type="checkbox"]:checked:not([disabled])');
+            const progress = Math.round((checked.length / checkboxes.length) * 100);
+            
+            const progressBar = document.getElementById('progressBar');
+            progressBar.style.width = progress + '%';
+            progressBar.textContent = progress + '%';
+            
+            // Update label styling
+            checkboxes.forEach(checkbox => {
+                const label = checkbox.nextElementSibling;
+                if (checkbox.checked) {
+                    label.classList.add('completed');
+                } else {
+                    label.classList.remove('completed');
+                }
+            });
+        }
+        
+        // Check all checkboxes
+        function checkAll() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]:not([disabled])');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = true;
+            });
+            updateProgress();
+        }
+        
+        // Uncheck all checkboxes
+        function uncheckAll() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]:not([disabled])');
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            updateProgress();
+        }
+        
+        // Save progress to localStorage
+        function saveProgress() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            const progress = {};
+            
+            checkboxes.forEach(checkbox => {
+                progress[checkbox.id] = checkbox.checked;
+            });
+            
+            localStorage.setItem('vitreaChecklistProgress', JSON.stringify(progress));
+            alert('Progress saved to browser!');
+        }
+        
+        // Load progress from localStorage
+        function loadProgress() {
+            const savedProgress = localStorage.getItem('vitreaChecklistProgress');
+            if (savedProgress) {
+                const progress = JSON.parse(savedProgress);
+                
+                for (const id in progress) {
+                    const checkbox = document.getElementById(id);
+                    if (checkbox) {
+                        checkbox.checked = progress[id];
+                    }
+                }
+                
+                updateProgress();
+                alert('Progress loaded from browser!');
+            } else {
+                alert('No saved progress found in this browser.');
+            }
+        }
+        
+        // Export progress as text
+        function exportProgress() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            const progress = {};
+            
+            checkboxes.forEach(checkbox => {
+                progress[checkbox.id] = checkbox.checked;
+            });
+            
+            const progressString = JSON.stringify(progress, null, 2);
+            document.getElementById('progressData').value = progressString;
+            
+            // Copy to clipboard
+            document.getElementById('progressData').select();
+            document.execCommand('copy');
+            alert('Progress copied to clipboard! Paste it to save elsewhere.');
+        }
+        
+        // Import progress from text
+        function importProgress() {
+            const progressString = document.getElementById('progressData').value;
+            
+            try {
+                const progress = JSON.parse(progressString);
+                
+                for (const id in progress) {
+                    const checkbox = document.getElementById(id);
+                    if (checkbox) {
+                        checkbox.checked = progress[id];
+                    }
+                }
+                
+                updateProgress();
+                alert('Progress imported successfully!');
+            } catch (e) {
+                alert('Invalid progress data. Please paste valid JSON progress data.');
+                console.error(e);
+            }
+        }
+        
+        // Filter checklist items
+        function filterChecklist() {
+            const input = document.getElementById('searchInput');
+            const filter = input.value.toUpperCase();
+            const items = document.querySelectorAll('.checklist-item');
+            const sections = document.querySelectorAll('.checklist-section');
+            
+            items.forEach(item => {
+                const text = item.textContent || item.innerText;
+                if (text.toUpperCase().indexOf(filter) > -1) {
+                    item.style.display = "";
+                    // Highlight parents
+                    let parent = item.closest('.sub-items') || item.closest('.collapsible-content');
+                    while (parent) {
+                        parent.style.display = "";
+                        parent.style.maxHeight = parent.scrollHeight + 'px'; // Ensure section is visible
+                        parent = parent.parentElement.closest('.collapsible-content') || parent.parentElement.closest('.checklist-section');
+                    }
+                } else {
+                    item.style.display = "none";
+                }
+            });
+            
+            // Show/hide sections based on visible items
+            sections.forEach(section => {
+                const visibleItems = section.querySelectorAll('.checklist-item[style=""]');
+                const collapsibleContent = section.querySelector('.collapsible-content');
+                if (visibleItems.length > 0) {
+                    section.style.display = "";
+                    collapsibleContent.style.maxHeight = collapsibleContent.scrollHeight + 'px';
+                } else {
+                    section.style.display = "none";
+                }
+            });
+        }
+        
+        // Export as PDF
+        function exportAsPDF() {
+            const doc = new jsPDF();
+            const checklist = document.querySelector('body');
+            
+            // Add title
+            doc.setFontSize(20);
+            doc.text('Vitrea Management Server Installation Checklist', 10, 15);
+            
+            // Add completion status
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]:not([disabled])');
+            const checked = document.querySelectorAll('input[type="checkbox"]:checked:not([disabled])');
+            const progress = Math.round((checked.length / checkboxes.length) * 100);
+            doc.setFontSize(12);
+            doc.setTextColor(100);
+            doc.text(`Completion Status: ${progress}%`, 10, 25);
+            
+            // Add date
+            const today = new Date();
+            doc.text(`Generated on: ${today.toLocaleDateString()}`, 10, 35);
+            
+            doc.addPage();
+            
+            // Convert HTML to canvas then to PDF
+            html2canvas(checklist, {
+                scale: 0.8,
+                scrollY: -window.scrollY
+            }).then(canvas => {
+                const imgData = canvas.toDataURL('image/png');
+                const imgWidth = doc.internal.pageSize.getWidth() - 20;
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+                
+                doc.addImage(imgData, 'PNG', 10, 10, imgWidth, imgHeight);
+                doc.save('Vitrea_Checklist.pdf');
+            });
+        }
+        
+        // Initialize event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updateProgress);
+            });
+            
+            // Load saved progress if available
+            loadProgress();
+            
+            // Open all collapsible sections by default
+            document.querySelectorAll('.collapsible').forEach(button => {
+                button.classList.add('active');
+                const content = button.nextElementSibling;
+                content.style.maxHeight = content.scrollHeight + 'px';
+            });
+        });
+    </script>
+</body>
+</html>

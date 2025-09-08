@@ -1,0 +1,1584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vitrea Management Server Install Guide Study Tool</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #1a5276;
+        }
+        h2 {
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 5px;
+            margin-top: 30px;
+        }
+        .tab-container {
+            margin-bottom: 20px;
+        }
+        .tab-buttons {
+            display: flex;
+            margin-bottom: 10px;
+        }
+        .tab-btn {
+            padding: 10px 15px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-right: 5px;
+            border-radius: 5px 5px 0 0;
+            transition: background-color 0.3s;
+        }
+        .tab-btn:hover {
+            background-color: #2980b9;
+        }
+        .tab-btn.active {
+            background-color: #1a5276;
+        }
+        .tab-content {
+            display: none;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 0 5px 5px 5px;
+            background-color: white;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .card {
+            background-color: #f9f9f9;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 0 5px 5px 0;
+        }
+        .question {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .answer {
+            display: none;
+            color: #27ae60;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #e8f8f5;
+            border-radius: 5px;
+        }
+        .show-answer {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+        .show-answer:hover {
+            background-color: #2980b9;
+        }
+        .mcq-options {
+            margin-top: 10px;
+        }
+        .mcq-option {
+            margin-bottom: 5px;
+            padding: 5px;
+            cursor: pointer;
+            border-radius: 3px;
+        }
+        .mcq-option:hover {
+            background-color: #eaf2f8;
+        }
+        .mcq-option.selected {
+            background-color: #d4e6f1;
+        }
+        .mcq-feedback {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .correct {
+            background-color: #d5f5e3;
+            color: #27ae60;
+        }
+        .incorrect {
+            background-color: #fadbd8;
+            color: #e74c3c;
+        }
+        .check-answer {
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .check-answer:hover {
+            background-color: #27ae60;
+        }
+        .scenario {
+            background-color: #fef9e7;
+            border-left: 4px solid #f1c40f;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 0 5px 5px 0;
+        }
+        .resolution {
+            display: none;
+            background-color: #e8f8f5;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+        }
+        .show-resolution {
+            background-color: #f39c12;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+        .show-resolution:hover {
+            background-color: #d35400;
+        }
+        .quick-tip {
+            background-color: #eaf2f8;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border-left: 4px solid #3498db;
+        }
+        .search-container {
+            margin-bottom: 20px;
+        }
+        #search-input {
+            padding: 8px;
+            width: 70%;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        #search-btn {
+            padding: 8px 15px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        #search-btn:hover {
+            background-color: #2980b9;
+        }
+        .highlight {
+            background-color: yellow;
+        }
+        .progress-container {
+            margin-top: 20px;
+            background-color: #ecf0f1;
+            border-radius: 5px;
+            padding: 10px;
+        }
+        .progress-bar {
+            height: 20px;
+            background-color: #3498db;
+            border-radius: 3px;
+            width: 0%;
+            transition: width 0.3s;
+        }
+        .progress-text {
+            margin-top: 5px;
+            font-size: 14px;
+        }
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+        .stat-box {
+            text-align: center;
+            padding: 10px;
+            flex: 1;
+        }
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .stat-label {
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .nav-btn {
+            padding: 8px 15px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .nav-btn:hover {
+            background-color: #2980b9;
+        }
+        .nav-btn:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Vitrea Management Server Install Guide Study Tool</h1>
+        
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="Search questions, answers, or scenarios...">
+            <button id="search-btn">Search</button>
+        </div>
+        
+        <div class="tab-container">
+            <div class="tab-buttons">
+                <button class="tab-btn active" data-tab="flashcards">Flash Cards</button>
+                <button class="tab-btn" data-tab="mcq">Multiple Choice</button>
+                <button class="tab-btn" data-tab="troubleshooting">Troubleshooting</button>
+                <button class="tab-btn" data-tab="quicktips">Quick Tips</button>
+            </div>
+            
+            <div id="flashcards" class="tab-content active">
+                <h2>Flash Card Questions</h2>
+                <p>Test your knowledge with these flash card questions. Click "Show Answer" to check your response.</p>
+                
+                <div class="progress-container">
+                    <div class="progress-bar" id="flashcard-progress"></div>
+                    <div class="progress-text" id="flashcard-progress-text">0/50 answered</div>
+                </div>
+                
+                <div class="stats">
+                    <div class="stat-box">
+                        <div class="stat-value" id="fc-correct">0</div>
+                        <div class="stat-label">Correct</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="fc-incorrect">0</div>
+                        <div class="stat-label">Incorrect</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="fc-remaining">50</div>
+                        <div class="stat-label">Remaining</div>
+                    </div>
+                </div>
+                
+                <div class="navigation">
+                    <button class="nav-btn" id="prev-fc" disabled>Previous</button>
+                    <button class="nav-btn" id="next-fc">Next</button>
+                </div>
+                
+                <div id="flashcard-container"></div>
+            </div>
+            
+            <div id="mcq" class="tab-content">
+                <h2>Multiple Choice Questions</h2>
+                <p>Select what you think is the correct answer, then click "Check Answer" to verify.</p>
+                
+                <div class="progress-container">
+                    <div class="progress-bar" id="mcq-progress"></div>
+                    <div class="progress-text" id="mcq-progress-text">0/50 answered</div>
+                </div>
+                
+                <div class="stats">
+                    <div class="stat-box">
+                        <div class="stat-value" id="mcq-correct">0</div>
+                        <div class="stat-label">Correct</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="mcq-incorrect">0</div>
+                        <div class="stat-label">Incorrect</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="mcq-remaining">50</div>
+                        <div class="stat-label">Remaining</div>
+                    </div>
+                </div>
+                
+                <div class="navigation">
+                    <button class="nav-btn" id="prev-mcq" disabled>Previous</button>
+                    <button class="nav-btn" id="next-mcq">Next</button>
+                </div>
+                
+                <div id="mcq-container"></div>
+            </div>
+            
+            <div id="troubleshooting" class="tab-content">
+                <h2>Troubleshooting Scenarios</h2>
+                <p>Review these common troubleshooting scenarios and resolutions.</p>
+                
+                <div class="progress-container">
+                    <div class="progress-bar" id="ts-progress"></div>
+                    <div class="progress-text" id="ts-progress-text">0/25 reviewed</div>
+                </div>
+                
+                <div class="stats">
+                    <div class="stat-box">
+                        <div class="stat-value" id="ts-reviewed">0</div>
+                        <div class="stat-label">Reviewed</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-value" id="ts-remaining">25</div>
+                        <div class="stat-label">Remaining</div>
+                    </div>
+                </div>
+                
+                <div class="navigation">
+                    <button class="nav-btn" id="prev-ts" disabled>Previous</button>
+                    <button class="nav-btn" id="next-ts">Next</button>
+                </div>
+                
+                <div id="troubleshooting-container"></div>
+            </div>
+            
+            <div id="quicktips" class="tab-content">
+                <h2>Quick Tips</h2>
+                <p>Important tips and best practices from the installation guide.</p>
+                <div id="quicktips-container"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data for flashcards
+        const flashcards = [
+            {
+                question: "What is the copyright holder for Vitrea® Advanced Visualization?",
+                answer: "Canon Medical Systems Corporation."
+            },
+            {
+                question: "What is the publication date of the VPMC-17427B Management Server Install Guide?",
+                answer: "2025-04."
+            },
+            {
+                question: "What software versions is the VPMC-17427B Management Server Install Guide valid for?",
+                answer: "Vitrea® Advanced Visualization and 7.16.2.SU01 and later software versions."
+            },
+            {
+                question: "Where is Vitrea® registered as a trademark?",
+                answer: "In the United States and potentially other countries."
+            },
+            {
+                question: "What are the U.S. Government Restricted Rights for DoD regarding this software?",
+                answer: "Use, duplication or disclosure is subject to restrictions as set forth in DFARS 252.227-7013, subparagraph (c)(l)(ii)."
+            },
+            {
+                question: "Who is the authorized sponsor in Australia for Vitrea Advanced Visualization?",
+                answer: "Canon Medical Systems ANZ Pty Limited."
+            },
+            {
+                question: "What is the ANVISA registration number for Brazil?",
+                answer: "10295030090."
+            },
+            {
+                question: "Where is the manufacturer of Vitrea Advanced Visualization located?",
+                answer: "Canon Medical Informatics, Inc.; 5850 Opus Parkway, Suite 300; Minnetonka, MN, USA; 55343."
+            },
+            {
+                question: "What is the primary phone number to report a serious incident related to the device?",
+                answer: "1.800.208.3005."
+            },
+            {
+                question: "Where can the Vitrea Unique Device Identifier (UDI) be located in the software?",
+                answer: "On the Help Central page, under the Version Info section."
+            },
+            {
+                question: "What is a key limitation regarding third-party software running on the Management Server?",
+                answer: "Canon Medical is not responsible for performance impact or defects caused by third-party software."
+            },
+            {
+                question: "What is recommended to install on the Management Server if you have a remote SQL instance for troubleshooting?",
+                answer: "SQL Server Management Studio."
+            },
+            {
+                question: "What is a critical prerequisite for acquiring a license regarding the Windows Operating System?",
+                answer: "The Windows Operating System must be properly activated with a legitimate Microsoft Product Key PRIOR to running the Host Information Tool."
+            },
+            {
+                question: "What is the recommended action regarding the hostname of the system once it is established?",
+                answer: "Do not change the hostname, as it forces a complete removal and re-installation of the Management Server and reprocessing of all patient data."
+            },
+            {
+                question: "For an Enterprise deployment, on which server is the Host Information Tool run for licensing?",
+                answer: "On the single Management Server only."
+            },
+            {
+                question: "What email address is used to request the current licensing form from Canon Medical?",
+                answer: "license@mi.medical.canon."
+            },
+            {
+                question: "What is the executable file name for the Host Information Tool?",
+                answer: "Vitrea Generate License HostInfo (or licenseTool.exe)."
+            },
+            {
+                question: "What is the default file name generated by the Host Information Tool?",
+                answer: "\"hostinfo.xml\"."
+            },
+            {
+                question: "Where is the license file typically saved after acquisition?",
+                answer: "To a Licensing folder within the Vitrea_Resources folder."
+            },
+            {
+                question: "What are the supported SQL Server versions for installation on the Management Server?",
+                answer: "SQL Server 2016 SP2, SQL Server 2017, SQL Server 2019 CU5+."
+            },
+            {
+                question: "What Windows Feature must be added when using a Group Managed Service Account to install the Management Server software?",
+                answer: "RSAT-AD-PowerShell."
+            },
+            {
+                question: "What is the command to manually run the Prep Script from PowerShell?",
+                answer: "`.\\runscript.bat`."
+            },
+            {
+                question: "What registry key can be created to skip the SysPrep process after a failed Vitrea installation?",
+                answer: "`HKLM/Software/Vital Images/Installer/SkipSysPrep` with a value of `1`."
+            },
+            {
+                question: "What account is recommended to log in with for Management Server software installation?",
+                answer: "A domain account with local administrator rights, e.g., Vitrea-Admin."
+            },
+            {
+                question: "What value should be entered for \"Receive Buffers\" on a hardware deployment with a 1GB NIC?",
+                answer: "512."
+            },
+            {
+                question: "What is the recommended UNC path character limit for the Storage location during installation?",
+                answer: "31 characters or fewer."
+            },
+            {
+                question: "What is the default value for the DICOM Receive location field during installation?",
+                answer: "E:\\DICOMReceive."
+            },
+            {
+                question: "What is the recommended name for a Named Instance of the SQL Server database for Vitrea?",
+                answer: "VITREASQLSTD."
+            },
+            {
+                question: "What is the default database name for Vitrea's database?",
+                answer: "VIDicom."
+            },
+            {
+                question: "What is the default port for DICOM Receive (STORE AE Title)?",
+                answer: "3002."
+            },
+            {
+                question: "What is the default AE Title for DICOM Query/Retrieve (QRSCP)?",
+                answer: "QRSCP."
+            },
+            {
+                question: "What is the default port for DICOM Query/Retrieve?",
+                answer: "3003."
+            },
+            {
+                question: "What is the default action for TCP Port 3003 if Query/Retrieve is not needed?",
+                answer: "Block the connection."
+            },
+            {
+                question: "What is the minimum version of Visia CT Lung CAD software required for systems with more than 32 cores?",
+                answer: "Version 5.8.1 or newer."
+            },
+            {
+                question: "What is the default port value for Visia CT Lung CAD Server?",
+                answer: "11121."
+            },
+            {
+                question: "What is the default value for the `requestCAD` row in System Settings for LungCADProcessor to enable auto-processing?",
+                answer: "`true`."
+            },
+            {
+                question: "What is the minimum recommended free disk space for AutoDelete to prevent data rejection?",
+                answer: "20GB."
+            },
+            {
+                question: "What is the default timeout value for \"End a disconnected session\" in Remote Desktop Services?",
+                answer: "1 minute."
+            },
+            {
+                question: "What is the default timeout value for \"Idle session limit\" in Remote Desktop Services?",
+                answer: "30 minutes."
+            },
+            {
+                question: "What is the grace period before the Remote Desktop license expires if not applied?",
+                answer: "Four months."
+            },
+            {
+                question: "What PowerShell command is used to enable SSL/TLS with a certificate hash?",
+                answer: "`.\\ConfigureTLS_Enterprise.ps1 -Enable -CertificateHash <thumbprint>`."
+            },
+            {
+                question: "Where is the Windows Certificate Store folder for Personal Certificates also known as?",
+                answer: "The \"My\" folder."
+            },
+            {
+                question: "What is the recommended page file size (Initial and Maximum) for the Management Server?",
+                answer: "24576 MB."
+            },
+            {
+                question: "What is the default size limit for DICOM instances and non-DICOM evidence in the repository?",
+                answer: "629145600 bytes (600MB)."
+            },
+            {
+                question: "Which JIT algorithms require a license?",
+                answer: "CaScoreAdvisor, OpenRibAP, CTColonCADJIT, LungCadAdvisor, CTBoneRemovalJIT, SpectralAnalysisJIT."
+            },
+            {
+                question: "What is the CPU requirement for Vitrea applications that utilize Advanced Vector Extensions 2 (AVX2)?",
+                answer: "Intel \"Haswell\" Generation or newer processors or AMD Excavator processors."
+            },
+            {
+                question: "What is the minimum recommended RAM for a virtualized Management Server for 512x512 matrix support?",
+                answer: "24GB RAM."
+            },
+            {
+                question: "What is the required network connection speed for Vitrea Enterprise client connections?",
+                answer: "1Gb/s or greater wired connection."
+            },
+            {
+                question: "What is the default location for the Vitrea System Checker Script report?",
+                answer: "C:\\ProgramData\\Vitrea\\SystemChecker."
+            },
+            {
+                question: "What is the default port for the Cedars-Sinai Medical Center (CSMC) Cardiac Suite Floating License Server?",
+                answer: "6433."
+            }
+        ];
+
+        // Data for multiple choice questions
+        const mcqs = [
+            {
+                question: "Which statement is TRUE regarding the reproduction of the Vitrea Management Server Install Guide?",
+                options: [
+                    "Any part of the work can be reproduced freely.",
+                    "Reproduction is allowed with written permission from Canon Medical.",
+                    "Storage in a retrieval system is always prohibited.",
+                    "Transmission by any electronic means is restricted only if for commercial use."
+                ],
+                answer: 1,
+                explanation: "The document states that reproduction is allowed with written permission from Canon Medical."
+            },
+            {
+                question: "For U.S. Government units or agencies other than DoD, what regulation governs the Restricted Rights for this software?",
+                options: [
+                    "DFARS 252.227-7013",
+                    "FAR 52.227-19 (b)(3)",
+                    "18-52.227-86(d) of the NASA FAR Supplement",
+                    "21 CFR 801.109(b)(1)"
+                ],
+                answer: 1,
+                explanation: "For U.S. Government units or agencies other than DoD, the Restricted Rights are governed by FAR 52.227-19 (b)(3)."
+            },
+            {
+                question: "According to the \"Limits of Liability and Disclaimer of Warranty,\" what kind of damages is Canon Medical NOT liable for?",
+                options: [
+                    "Direct damages",
+                    "Indirect damages",
+                    "Incidental damages",
+                    "All of the above are explicitly disclaimed."
+                ],
+                answer: 3,
+                explanation: "Canon Medical explicitly disclaims liability for direct, indirect, and incidental damages."
+            },
+            {
+                question: "Who is the recommended first line of communication for customers regarding service and complaints in Australia?",
+                options: [
+                    "Canon Medical Systems ANZ Pty Limited",
+                    "Canon Medical Informatics, Inc.",
+                    "Distributors",
+                    "Therapeutic Goods Administration"
+                ],
+                answer: 2,
+                explanation: "In Australia, distributors are the recommended first line of communication for service and complaints."
+            },
+            {
+                question: "Which of the following is explicitly stated as confidential and trade secret to Canon Medical?",
+                options: [
+                    "The software itself",
+                    "Ideas and concepts within the software",
+                    "Know-how related to the software",
+                    "All of the above."
+                ],
+                answer: 3,
+                explanation: "All of these elements are considered confidential and trade secrets to Canon Medical."
+            },
+            {
+                question: "What is the purpose of the \"Notice of Confidentiality\" in the document?",
+                options: [
+                    "To inform users about open-source components.",
+                    "To grant broad reproduction rights for the software.",
+                    "To state that the software and its information are proprietary and should not be disclosed or reverse engineered.",
+                    "To encourage sharing of software concepts for collaborative development."
+                ],
+                answer: 2,
+                explanation: "The Notice of Confidentiality states that the software and its information are proprietary and should not be disclosed or reverse engineered."
+            },
+            {
+                question: "What is the primary restriction Federal law imposes on this device?",
+                options: [
+                    "It must be used only in a hospital setting.",
+                    "It is restricted to sale by or on the order of a physician.",
+                    "It cannot be exported outside the United States.",
+                    "It requires annual calibration by a certified technician."
+                ],
+                answer: 1,
+                explanation: "Federal law restricts this device to sale by or on the order of a physician."
+            },
+            {
+                question: "What is the primary purpose of the Management Server Install Guide?",
+                options: [
+                    "To provide clinical usage instructions for Vitrea Advanced Visualization.",
+                    "To detail troubleshooting procedures for network connectivity.",
+                    "To describe the installation procedures for the Management Server medical diagnostic tool.",
+                    "To outline hardware specifications for client workstations."
+                ],
+                answer: 2,
+                explanation: "The primary purpose is to describe the installation procedures for the Management Server medical diagnostic tool."
+            },
+            {
+                question: "Which of the following Microsoft Windows Server Standard Editions is NOT listed as an intended audience for this document?",
+                options: [
+                    "Windows Server 2016 x64 Standard Edition",
+                    "Windows Server 2012 R2 Standard Edition",
+                    "Windows Server 2019 Standard Edition",
+                    "Windows Server 2022 Standard Edition"
+                ],
+                answer: 1,
+                explanation: "Windows Server 2012 R2 Standard Edition is not listed as an intended audience."
+            },
+            {
+                question: "What is Canon Medical's stance on resolving defects determined to be caused by third-party software installed on the Management Server?",
+                options: [
+                    "They will always resolve such defects as part of standard support.",
+                    "They may not be able to resolve such defects.",
+                    "They will only resolve defects if specific antivirus exclusions are provided.",
+                    "They will resolve defects only if the third-party software is also from Canon Medical."
+                ],
+                answer: 1,
+                explanation: "Canon Medical may not be able to resolve defects caused by third-party software."
+            },
+            {
+                question: "What is a key caution regarding changing the hostname of the system after the Management Server is installed?",
+                options: [
+                    "It may only require a simple software patch.",
+                    "It can be done, but will temporarily disable network access.",
+                    "It forces a complete removal and re-installation of the Management Server and reprocessing of all patient data.",
+                    "It only affects the licensing and no other system functions."
+                ],
+                answer: 2,
+                explanation: "Changing the hostname forces a complete removal and re-installation of the Management Server and reprocessing of all patient data."
+            },
+            {
+                question: "What is the primary purpose of the Host Information Tool?",
+                options: [
+                    "To configure network settings.",
+                    "To install Microsoft Windows updates.",
+                    "To collect identifying information from the system for license generation.",
+                    "To troubleshoot database connectivity issues."
+                ],
+                answer: 2,
+                explanation: "The Host Information Tool collects identifying information from the system for license generation."
+            },
+            {
+                question: "Before running the Host Information Tool, which of the following must be activated?",
+                options: [
+                    "The system's antivirus software.",
+                    "The Microsoft Office suite.",
+                    "The copy of Windows.",
+                    "The Vitrea software itself."
+                ],
+                answer: 2,
+                explanation: "The copy of Windows must be activated before running the Host Information Tool."
+            },
+            {
+                question: "How long does Canon Medical Customer Support typically take to send the license file after being contacted?",
+                options: [
+                    "Within 4 hours",
+                    "12-24 hours",
+                    "24-48 hours",
+                    "Up to 5 business days"
+                ],
+                answer: 2,
+                explanation: "Canon Medical Customer Support typically takes 24-48 hours to send the license file."
+            },
+            {
+                question: "Which of the following is NOT listed as a prerequisite to installing the Management Server software?",
+                options: [
+                    "Completing the Enterprise Deployment Active Directory Planning Guide.",
+                    "Installing Microsoft Office on the server.",
+                    "Reviewing the \"List of Required Ports\" section.",
+                    "Completing the \"Prepare for Licensing\" topic."
+                ],
+                answer: 1,
+                explanation: "Installing Microsoft Office is not listed as a prerequisite."
+            },
+            {
+                question: "What is the command to add the RSAT-AD-PowerShell Windows Feature?",
+                options: [
+                    "`Install-WindowsFeature RSAT-AD-PowerShell`",
+                    "`Add-WindowsFeature RSAT-AD-PowerShell`",
+                    "`Enable-WindowsFeature RSAT-AD-PowerShell`",
+                    "`Set-WindowsFeature RSAT-AD-PowerShell`"
+                ],
+                answer: 1,
+                explanation: "The correct command is `Add-WindowsFeature RSAT-AD-PowerShell`."
+            },
+            {
+                question: "If Vitrea software installation fails due to an unsuccessful execution of the Prep Script, what is a recommended first step to resolve it?",
+                options: [
+                    "Reinstall Windows Operating System.",
+                    "Manually run the Prep Script.",
+                    "Contact Canon Medical Customer Support immediately.",
+                    "Disable all Group Policies on the server."
+                ],
+                answer: 1,
+                explanation: "Manually running the Prep Script is the recommended first step."
+            },
+            {
+                question: "Which of the following components can be selected for installation when manually running the Prep Script for server-based deployments?",
+                options: [
+                    "(P) Patient Workstation",
+                    "(M) Management Server",
+                    "(C) Client Application",
+                    "(D) Database Server Only"
+                ],
+                answer: 1,
+                explanation: "(M) Management Server is the correct option for server-based deployments."
+            },
+            {
+                question: "Why is it important to set Local Internet Options on the Management Server?",
+                options: [
+                    "To improve internet browsing speed.",
+                    "To enable single sign-on (SSO) to the Vitrea Enterprise management tools.",
+                    "To block malicious websites.",
+                    "To configure proxy server settings."
+                ],
+                answer: 1,
+                explanation: "Setting Local Internet Options enables single sign-on (SSO) to the Vitrea Enterprise management tools."
+            },
+            {
+                question: "What type of account is required to install the Vitrea software?",
+                options: [
+                    "A built-in Administrator account.",
+                    "A local user account without administrative rights.",
+                    "A domain account with local administrator rights.",
+                    "Any user account, as long as the system is connected to the internet."
+                ],
+                answer: 2,
+                explanation: "A domain account with local administrator rights is required."
+            },
+            {
+                question: "What is the consequence if you enter a value other than `E:\\DICOMReceive` in the DICOM Receive location field during installation?",
+                options: [
+                    "The installation will fail immediately.",
+                    "You must enter that same value in the Root Directory field for DICOM Receive to function correctly.",
+                    "The system will automatically revert to the default value.",
+                    "It will only affect the performance of DICOM storage."
+                ],
+                answer: 1,
+                explanation: "You must enter the same value in the Root Directory field for DICOM Receive to function correctly."
+            },
+            {
+                question: "What does the verification test for Storage location, DICOM Receive folder, and NAS share permissions confirm?",
+                options: [
+                    "That the network speed is adequate.",
+                    "That the share path exists and permissions are set for the service account and management server computer account.",
+                    "That the SQL database is properly configured.",
+                    "That all third-party software is compatible."
+                ],
+                answer: 1,
+                explanation: "The test confirms that the share path exists and permissions are set correctly."
+            },
+            {
+                question: "What is a critical caution when running the Database Deployment Tool?",
+                options: [
+                    "The account installing the Management Server software must be the same account running the Vitrea services.",
+                    "The account used to install the Management Server software and set up the database cannot be the same account that is running the Vitrea services.",
+                    "The database must always be installed on a remote server.",
+                    "The tool can only be run once."
+                ],
+                answer: 1,
+                explanation: "The installation account and service account cannot be the same."
+            },
+            {
+                question: "When configuring a Named Instance for the database, what value should NOT be entered in the Hostname field?",
+                options: [
+                    "localhost",
+                    "FQDN of the SQL Server",
+                    "IP address of the SQL Server",
+                    "The machine name of the SQL Server"
+                ],
+                answer: 0,
+                explanation: "\"localhost\" should not be used when configuring a Named Instance."
+            },
+            {
+                question: "After creating the database using the Database Deployment Tool, how many unassigned schemas will you typically have?",
+                options: [
+                    "One",
+                    "Two",
+                    "Three",
+                    "Four"
+                ],
+                answer: 2,
+                explanation: "There are typically three unassigned schemas after database creation."
+            },
+            {
+                question: "What is the correct order for interacting with schemas after database creation in the Database Deployment Tool?",
+                options: [
+                    "Set Permissions then Deploy.",
+                    "Deploy then Set Permissions.",
+                    "Set Permissions only.",
+                    "Deploy only."
+                ],
+                answer: 1,
+                explanation: "The correct order is Deploy then Set Permissions."
+            },
+            {
+                question: "Why does Canon Medical recommend installing Microsoft Windows monthly updates?",
+                options: [
+                    "It is a mandatory step for Vitrea software functionality.",
+                    "It adheres to standard site policy and security practices.",
+                    "It is required for Vitrea license activation.",
+                    "It automatically optimizes system performance."
+                ],
+                answer: 1,
+                explanation: "It adheres to standard site policy and security practices."
+            },
+            {
+                question: "Under what condition should you configure TCP Port 3003?",
+                options: [
+                    "Only if you plan to use Vitrea as a print server.",
+                    "Only if you plan to use Vitrea as a Query/Retrieve provider in your deployment.",
+                    "Only if you plan to use Vitrea for remote management.",
+                    "Only if you are installing a Multi Modality Viewer Server."
+                ],
+                answer: 1,
+                explanation: "TCP Port 3003 should be configured only if using Vitrea as a Query/Retrieve provider."
+            },
+            {
+                question: "Which of the following is a key dataflow option for CT Scanner to Visia CT Lung CAD and Vitrea?",
+                options: [
+                    "CT Scanner sends data directly to Vitrea, which then sends it to Visia CT Lung CAD for processing before returning results to Vitrea.",
+                    "CT Scanner sends data only to Visia CT Lung CAD, which then directly displays images in Vitrea.",
+                    "CT Scanner sends data directly to both Vitrea and Visia CT Lung CAD, which processes and passes results to Vitrea.",
+                    "Visia CT Lung CAD processes data offline and manually uploads results to Vitrea."
+                ],
+                answer: 2,
+                explanation: "CT Scanner sends data directly to both Vitrea and Visia CT Lung CAD, which processes and passes results to Vitrea."
+            },
+            {
+                question: "What is the purpose of setting the Manufacturer tag (0008,0070) as \"MeVis Medical Solutions\" on the Lung CAD Server?",
+                options: [
+                    "To change the display language in Vitrea.",
+                    "To identify CAD Results from the Lung CAD Server.",
+                    "To enable advanced visualization features.",
+                    "To synchronize patient demographics."
+                ],
+                answer: 1,
+                explanation: "This identifies CAD Results from the Lung CAD Server."
+            },
+            {
+                question: "What is displayed in the Status column on the Study List when Lung CAD patient data is being processed on the Vitrea software?",
+                options: [
+                    "Advanced Processing complete icon.",
+                    "Advanced Processing failed icon.",
+                    "LungCADProcess.WorkItem with a Status of Pending.",
+                    "LungCADProcess.WorkItem with a Status of In Progress."
+                ],
+                answer: 2,
+                explanation: "LungCADProcess.WorkItem with a Status of Pending is displayed."
+            },
+            {
+                question: "When is the \"Your system is not licensed; Please contact your administrator.\" message displayed on the Applications Home screen?",
+                options: [
+                    "After successful license activation.",
+                    "Prior to installing a license.",
+                    "When the system is connected to the internet.",
+                    "When third-party software is detected."
+                ],
+                answer: 1,
+                explanation: "This message appears prior to installing a license."
+            },
+            {
+                question: "What is a critical caution before disabling any BUILTIN groups in Vitrea?",
+                options: [
+                    "Ensure the system is connected to a remote SQL server.",
+                    "Configure the External Groups first to avoid being locked out.",
+                    "Verify all DICOM devices are offline.",
+                    "Install all pending Windows updates."
+                ],
+                answer: 1,
+                explanation: "External Groups must be configured first to avoid being locked out."
+            },
+            {
+                question: "What happens if you select both the \"Storage\" and \"Query /Receive\" checkboxes in the Services area when attaching an Archive?",
+                options: [
+                    "The system will automatically create the appropriate DICOM interfaces.",
+                    "Only storage functionality will be enabled.",
+                    "An error message will display, preventing the setup.",
+                    "The archive will be set up for read-only access."
+                ],
+                answer: 0,
+                explanation: "The system will automatically create the appropriate DICOM interfaces."
+            },
+            {
+                question: "Who can access the Vitrea Administration Tool?",
+                options: [
+                    "Any standard user.",
+                    "Only administrators.",
+                    "Users with \"Vitrea-Service\" account.",
+                    "Anyone with network access."
+                ],
+                answer: 1,
+                explanation: "Only administrators can access the Vitrea Administration Tool."
+            },
+            {
+                question: "What is the consequence if the DICOM Receive drive is less than 30 GB?",
+                options: [
+                    "The installation will fail.",
+                    "The LowWatermark and High Watermark values will automatically change to 1 and 3.",
+                    "The system will prompt for an external drive.",
+                    "DICOM reception will be disabled."
+                ],
+                answer: 1,
+                explanation: "The LowWatermark and High Watermark values will automatically change to 1 and 3."
+            },
+            {
+                question: "What does selecting \"Allow Unknown Hosts to Query\" in DICOM Query/Retrieve configuration mean for the Management Server?",
+                options: [
+                    "It only allows predefined hosts to query.",
+                    "The Management Server is set to be DICOM promiscuous.",
+                    "Querying is disabled.",
+                    "Only encrypted queries are allowed."
+                ],
+                answer: 1,
+                explanation: "It means the Management Server is set to be DICOM promiscuous."
+            },
+            {
+                question: "What is NOT recommended when configuring AutoDelete regarding free disk space?",
+                options: [
+                    "Setting it to less than 20GB of free space.",
+                    "Setting it to delete the oldest patients first.",
+                    "Disabling the AutoDelete rules for manual delete mode.",
+                    "Using Disk and Directory Quota to limit cache size."
+                ],
+                answer: 0,
+                explanation: "Setting AutoDelete to less than 20GB of free space is not recommended."
+            },
+            {
+                question: "What is the purpose of the VIDropBox tool?",
+                options: [
+                    "To configure network settings.",
+                    "To send DICOM to the Management Server when a DICOM modality is not available.",
+                    "To troubleshoot hardware issues.",
+                    "To manage user accounts."
+                ],
+                answer: 1,
+                explanation: "VIDropBox sends DICOM to the Management Server when a DICOM modality is not available."
+            },
+            {
+                question: "What is the primary function of the Remote Desktop Connections Broker (RDCB)?",
+                options: [
+                    "To manage local user accounts.",
+                    "To balance the load of Remote Desktop (RD) client connections to Application Servers and Multi Modality Viewer Servers.",
+                    "To install Windows updates remotely.",
+                    "To configure network firewall rules."
+                ],
+                answer: 1,
+                explanation: "RDCB balances the load of Remote Desktop client connections."
+            },
+            {
+                question: "What is a notable behavior of timeout and reconnection settings configured on a per connection basis?",
+                options: [
+                    "They only apply to new sessions.",
+                    "They only affect disconnected sessions.",
+                    "They are not applied to sessions that are connected when the change is made.",
+                    "They override user-specific settings only when logging in as administrator."
+                ],
+                answer: 2,
+                explanation: "They are not applied to sessions that are connected when the change is made."
+            },
+            {
+                question: "What is the default value for \"Active Session Limit\" in Remote Desktop Services?",
+                options: [
+                    "30 minutes",
+                    "1 hour",
+                    "Never",
+                    "1 minute"
+                ],
+                answer: 2,
+                explanation: "The default is \"Never\"."
+            },
+            {
+                question: "What is the recommended ExecutionPolicy setting for PowerShell after completing SSL/TLS configuration?",
+                options: [
+                    "UnRestricted",
+                    "Bypass",
+                    "AllSigned",
+                    "Restricted"
+                ],
+                answer: 3,
+                explanation: "\"Restricted\" is the recommended setting after configuration."
+            },
+            {
+                question: "What is the purpose of configuring IIS to restrict IP addresses?",
+                options: [
+                    "To increase network bandwidth.",
+                    "To prevent unauthorized access to IIS \"Vital\" folder endpoints.",
+                    "To optimize web server performance.",
+                    "To enable IPv6 communication."
+                ],
+                answer: 1,
+                explanation: "This prevents unauthorized access to IIS \"Vital\" folder endpoints."
+            },
+            {
+                question: "What is a consequence if the Coronary CTA or Dynamic Myo application is installed on the Management Server without configuring VSTP maxAllowedContentLength?",
+                options: [
+                    "The application will not launch.",
+                    "Snapshots cannot be generated.",
+                    "DICOM instances will be rejected.",
+                    "Remote access will be disabled."
+                ],
+                answer: 1,
+                explanation: "Snapshots cannot be generated without proper VSTP configuration."
+            },
+            {
+                question: "Which of the following JIT algorithms has a \"No License\" status if a license is missing?",
+                options: [
+                    "TAVRAdvisor",
+                    "OrthoThumbnailGeneratorApp",
+                    "CTColonCADJIT",
+                    "AutoMPRSpineJIT"
+                ],
+                answer: 2,
+                explanation: "CTColonCADJIT will show \"No License\" status if a license is missing."
+            },
+            {
+                question: "What is the minimum recommended IOPS for VMDKs on a virtualized Management Server for 512x512 matrix support?",
+                options: [
+                    "500 IOPS",
+                    "1000 IOPS",
+                    "1500 IOPS",
+                    "2000 IOPS"
+                ],
+                answer: 2,
+                explanation: "1500 IOPS is the minimum recommended."
+            },
+            {
+                question: "Which of the following is NOT a supported Operating System for the Vitrea Advanced Visualization Management Server?",
+                options: [
+                    "Microsoft Windows Server 2016 Standard Edition with Desktop Experience",
+                    "Microsoft Windows Server 2019 Datacenter Edition with Desktop Experience",
+                    "Microsoft Windows Server 2019 Standard Edition with Desktop Experience",
+                    "Microsoft Windows Server 2022 Standard Edition with Desktop Experience"
+                ],
+                answer: 1,
+                explanation: "Windows Server 2019 Datacenter Edition is not listed as supported."
+            },
+            {
+                question: "What is a critical requirement for an SMB2+ share used to store Vitrea Advanced Visualization data?",
+                options: [
+                    "Must be hosted on a Linux server.",
+                    "Must supply at least 60-80 MB/sec SMB throughput with less than 2 msec response time.",
+                    "Must use an NFS protocol.",
+                    "Must be encrypted at rest regardless of site policy."
+                ],
+                answer: 1,
+                explanation: "The SMB2+ share must supply at least 60-80 MB/sec SMB throughput with less than 2 msec response time."
+            },
+            {
+                question: "What happens if the Cedars-Sinai Medical Center (CSMC) Cardiac Suite License Server cannot reach its Call Home destination for 14 days?",
+                options: [
+                    "The license will automatically renew.",
+                    "The software will revert to a trial version.",
+                    "The license will shut down.",
+                    "It will generate a warning but continue functioning."
+                ],
+                answer: 2,
+                explanation: "The license will shut down if it cannot reach its Call Home destination for 14 days."
+            }
+        ];
+
+        // Data for troubleshooting scenarios
+        const troubleshooting = [
+            {
+                scenario: "You are trying to run the `Vitrea Generate License HostInfo` file, but you receive a \"Failed to write output file: D:\\Vitrea_Resources\" error.",
+                resolution: "Open a command prompt as an administrator, change the directory to `E:\\Vitrea_resources\\Vitrea-7.x\\Utilities\\License Hostinfo Tool\\Bin\\`, and then run `licenseTool.exe --hostinfo-file c:\\temp\\hostfile.xml`."
+            },
+            {
+                scenario: "The Vitrea software installation fails, and you suspect it's due to an unsuccessful execution of the Prep Script caused by a Group Policy.",
+                resolution: "Manually run the Prep Script by navigating to `E:\\Vitrea_Resources\\<media contents>\\Utilities\\OS Configuration Scripts\\<your setup OS version>\\Prep` in PowerShell as an administrator, executing `.\\runscript.bat`, and then creating the `SkipSysPrep` registry key (`HKLM/Software/Vital Images/Installer/SkipSysPrep` with value `1`) before retrying the installation. Remember to remove the key after successful installation."
+            },
+            {
+                scenario: "During the Management Server software installation, a message displays: \"There is a pending reboot. Please reboot the system now otherwise installation may not succeed.\"",
+                resolution: "Canon Medical **recommends clicking the Exit button and rebooting the system** before proceeding with the installation."
+            },
+            {
+                scenario: "You've entered the Storage location and DICOM Receive location during installation, but when you click the `TEST` button, the verification fails.",
+                resolution: "Ensure the Vitrea-admin account has **full permissions to the same location on the NAS as the Vitrea-service account**. If using Unix-based storage, an error might occur as Windows cannot read Unix file permissions, but the installation can continue if the share is correctly set up on the Unix side. Review the displayed information and suggestions for the failed test, then re-complete the storage and DICOM receive field entries."
+            },
+            {
+                scenario: "When attempting to create the database with the Database Deployment Tool (DDT), you encounter a `java.lang.RuntimeException: Cannot find database driver: Driver was not specified...` error.",
+                resolution: "Close the Database Deployment Tool and **double-click on the `C:\\ProgramFiles\\Vital Images\\DatabaseDeploymentTool\\ddt-ui.exe` file to re-open it**."
+            },
+            {
+                scenario: "You have just changed the time zone on your Management Server, and you notice inconsistent logging from Vitrea services.",
+                resolution: "You need to **reboot the system** to ensure the services account for the hour change in logging."
+            },
+            {
+                scenario: "You are configuring a Storage Archive, and you are unable to perform a C-Echo with your DICOM device.",
+                resolution: "You may need to **enable ICMP exceptions for ports 3002 and 3003** in the Windows Firewall. This can be done by enabling \"Windows Defender Firewall: Allow ICMP exceptions\" and adding inbound port exceptions for `3002:TCP:*:enabled:VitreaReceive` and `3003:TCP:*:enabled:VitreaQR` in the Local Group Policy Editor."
+            },
+            {
+                scenario: "After enabling TLS, some Vitrea services do not start or continue to run, and you suspect an issue with the certificate.",
+                resolution: "You need to **re-run the `ConfigureTLS_Enterprise.ps1` script** using the correct thumbprint or friendly name of your digital certificate. First, ensure the PowerShell ExecutionPolicy is set to `Bypass` (and then set it back to `Restricted` afterwards)."
+            },
+            {
+                scenario: "An RDP session error occurs when you add a new or renew an existing digital certificate, stating \"This computer can't connect to the remote computer,\" and the Event Viewer shows \"A fatal error occurred when attempting to access the SSL server credential private key.\"",
+                resolution: "The **Network Service account likely lacks permissions to the digital certificate's private key**. To resolve this, access the Certificate Manager (`certmgr.msc`), locate the server's SSL certificate, right-click it, select \"All Tasks\" -> \"Manage Private Keys,\" add \"Network Service\" with \"Read\" permissions, and then reboot the server or restart the Remote Desktop Services service."
+            },
+            {
+                scenario: "Automatic data processing for Visia CT Lung CAD is not executing despite patient data matching the rules.",
+                resolution: "**Ensure you have a valid CT Lung CAD license activated**. If not, manual processing of data received prior to license activation will be required."
+            },
+            {
+                scenario: "Patient data sent for Visia CT Lung CAD fails to process, and the Study List shows the \"Advanced Processing failed\" icon.",
+                resolution: "Check the Lung CAD Queue status via the Study Directory, Internet browser, or the Work Items in System Configuration to understand the specific failure reason. Verify that the Lung CAD Server is properly configured to communicate with Vitrea and that DICOM tags are correctly set."
+            },
+            {
+                scenario: "The Media Manager on the Application Server(s) is not functioning correctly after you changed the AE Title or the DICOM Receive Port on the Management Server.",
+                resolution: "You must **launch the Media Manager on each Application Server in the deployment and update the AE Title to correspond to the new value**. Additionally, if the Port value was changed from 3002, you need to update the Firewall rule to match the new Port value."
+            },
+            {
+                scenario: "You are unable to access Vitrea Enterprise collections via RDWeb when logged in as the Vitrea-Admin user.",
+                resolution: "By default, the **Vitrea-Admin user does not have permission to view the collections**. The user connecting to RDWeb must have permissions to view the collection, e.g., Vitrea Standard Users."
+            },
+            {
+                scenario: "You changed the timeout and reconnection settings for a Remote Desktop Services collection, but active sessions are not reflecting these changes.",
+                resolution: "Changes to timeout and reconnection settings **are not applied to sessions that are connected when the change is made**. The changes will take effect the next time you establish a new connection to the RD Session Host server."
+            },
+            {
+                scenario: "The Remote Desktop (RD) License Server is not allocating licenses.",
+                resolution: "If the License Server is running on a Vitrea server (typically the Management Server), **ensure the site IT person includes the server in the Terminal Server License Server Group on the domain**. Refer to the \"Troubleshooting\" topic in the Vitrea Administration and Troubleshooting Guide for more detailed troubleshooting."
+            },
+            {
+                scenario: "After configuring IIS to restrict IP addresses, you find that some expected IP addresses cannot access Vitrea's IIS endpoints.",
+                resolution: "Ensure all necessary IPv4 addresses (including the loopback address 127.0.0.1 and all Application Servers' IP addresses) are **listed in the `IPConfigFile.ini` or added via the `-IpAddresses` parameter of the `ConfigureIIS.ps1` script**. If \"Access for unspecified clients\" is set to \"Deny,\" any unlisted IP address will be blocked."
+            },
+            {
+                scenario: "You have installed the Coronary CTA or Dynamic Myo application on the Management Server, but you are unable to generate snapshots.",
+                resolution: "You need to **configure the VSTP `maxAllowedContentLength` request filter**. Log in as administrator, open PowerShell, and execute `Set-WebConfigurationProperty -pspath 'MACHINE/WEBROOT/APPHOST/Default Web Site' -filter \"system.webServer/security/requestFiltering/requestLimits\" -name \"maxAllowedContentLength\" -value 4294967295`. Then, restart the Management Server."
+            },
+            {
+                scenario: "You attempt to export nodules from the Vitrea application to PowerScribe, but the custom fields for nodule information are not appearing in the PowerScribe database.",
+                resolution: "The PowerScribe administrator must **manually enter the required \"PowerScribe Custom Field Names\"** (e.g., Vital_Nodule_Name_[n], Vital_Nodule_Volume_[n]) into the PowerScribe database for each nodule the site wishes to add, prior to exporting."
+            },
+            {
+                scenario: "An error message related to internet access displays when you try to activate the Cedars License Server.",
+                resolution: "This indicates a lack of necessary Internet access. The **CSMC Cardiac Suite License Server requires \"Call Home\" (constant internet access) to `http://vm.csaim.com/`**. You may need to set up rules in your proxy server or white list this connection."
+            },
+            {
+                scenario: "The Cedars Floating License Server has shut down after running for two weeks.",
+                resolution: "The Floating License Server performs a \"Call Home\" function, and if it does not have constant Internet access, the license will shut down after 14 days. You must **reset the server** by obtaining a \"Reset Code\" via email from `http://<servername>:6433` and entering it on the same page."
+            },
+            {
+                scenario: "The CT Dental application is producing incorrect ARP or PID calculation results.",
+                resolution: "This indicates that the pixel calibration settings are incorrect. You need to **confirm the setting of the INFX-8000 system** and then adjust the `PixelCalibrationFPDType` and `PixelCalibrationHeightOfIsocenter` values in the System Settings for `XAAngioViewer` in Vitrea System Configuration."
+            },
+            {
+                scenario: "You are installing Vitrea, and the system has less than 20GB of free disk space.",
+                resolution: "This is a critical situation as **the system could enter a state where it will no longer ingest data and studies will be rejected**. It is cautioned to not set AutoDelete to less than 20GB free space. You may need to free up space or extend partitions."
+            },
+            {
+                scenario: "You changed the AE Title for DICOM Receive (STORE AE Title) in the Vitrea Administration Tool.",
+                resolution: "You must **update the fields in both the Machine Profile and the Enterprise Profile** to ensure they are the same. Additionally, if the Port value was changed from 3002, you need to update the Firewall rule to match the new Port value."
+            },
+            {
+                scenario: "You are attempting to verify name resolution for PowerScribe integration but are unsure how.",
+                resolution: "Ask the site IT for the PowerScribe system's hostname. On the system integrating with PowerScribe, open a Command prompt and **enter `ping -a [hostname]`**. If needed, add the PowerScribe Server hostname to the `C:\\Windows\\System32\\drivers\\etc\\hosts` file or have site IT add it to their DNS servers (forward and reverse lookup)."
+            },
+            {
+                scenario: "You want to install SQL Server Management Studio on a remote SQL instance.",
+                resolution: "**Canon Medical recommends installing SQL Server Management Studio on the Management Server for troubleshooting the database** after completing an Enterprise deployment. Download and install `SSMS-Setup-ENU.exe` from Microsoft's website."
+            }
+        ];
+
+        // Data for quick tips
+        const quicktips = [
+            "**Review Documentation:** Always refer to the **\"ABOUT VITREA MEDICAL IMAGING SOFTWARE DOCUMENT\"** before using the product for important general Vitrea Safety and Regulatory considerations.",
+            "**Contact Support:** For general, non-technical support questions, contact via **`mi.medical.canon`**. For customer technical support in the U.S., call **1.800.208.3005**. Outside the U.S., contact your distributor. For serious incidents, report to Canon Medical at 1.800.208.3005 and the competent authority.",
+            "**Licensing Planning:** **Plan your license configuration process accordingly**, as it takes Canon Medical Customer Support **24-48 hours to send the license file**.",
+            "**Windows Activation:** Ensure your **Windows Operating System is properly activated** with a legitimate Microsoft Product Key **PRIOR to running the Host Information Tool**.",
+            "**Hostname Stability:** **Do not change the hostname of the system once it is established** after Management Server installation, as it requires a complete re-installation and reprocessing of patient data.",
+            "**Antivirus/Third-Party Software:** Be aware that Canon Medical is **not responsible for performance impact or defects caused by third-party software** like Antivirus. Refer to the \"Canon Medical Antivirus Policy\" for specific antivirus exclusions.",
+            "**Prerequisites First:** **Complete all prerequisite guides** (Active Directory Planning, Operating System Setup, Prepare for Licensing) before starting the Management Server software installation.",
+            "**Login Account:** Always **log into the Management Server using a domain account with local administrator rights** (e.g., Vitrea-Admin) for installation and administration tasks.",
+            "**UNC Path for Storage:** When setting the Storage location, a **UNC path must be used, be 31 characters or fewer in length, and cannot include a `$` character**.",
+            "**DICOM Receive Path Consistency:** The value entered in the **DICOM Receive Root Directory field must match** what was entered in the DICOM Receive location field during the installation process for correct functionality.",
+            "**Database Account Segregation:** The account used to **install the Management Server software and set up the database cannot be the same account that runs the Vitrea services**.",
+            "**Schema Deployment Order:** When using the Database Deployment Tool, **Deploy each schema before you Set Permissions for each schema**.",
+            "**Windows Updates:** Canon Medical **recommends installing Microsoft Windows monthly updates**.",
+            "**TCP Port 3003:** If Vitrea is not used as a Query/Retrieve provider, **block TCP Port 3003** in the firewall for security.",
+            "**Visia CT Lung CAD Partition:** For pre-existing deployments, **make a 100GB partition specifically for the Visia Lung CAD software**.",
+            "**Unique AE Titles:** When configuring DICOM Archives or Printers, **use unique AE Title values**.",
+            "**AutoDelete Minimum Space:** **Do not set AutoDelete to less than 20GB of free space** to prevent data ingestion issues and study rejections.",
+            "**External Group Configuration:** **Configure External Groups before disabling any BUILTIN groups** to avoid being locked out of the system.",
+            "**TLS Requirement:** **Canon Medical requires TLS to be enabled** in the Vitrea product for system security and confidentiality. TLS 1.2 is supported on Windows Server 2016/2019/2022.",
+            "**Certificate Expiration:** Create a **calendar appointment 1-2 months before your digital certificate expires** to plan for renewal and change control.",
+            "**PowerShell Execution Policy:** Temporarily set `ExecutionPolicy` to `UnRestricted` or `Bypass` when running configuration scripts, but **always set it back to `Restricted` afterwards** for security.",
+            "**Monitor Configuration:** **Multiple Monitor configurations are supported on two homogeneous monitors**, meaning all connected monitors must be configured with the **same resolution, DPI, and orientation settings**.",
+            "**Supported OS Language:** Only **English Operating Systems are supported**.",
+            "**CSMC License Server Call Home:** The CSMC Cardiac Suite License Server requires **constant internet access (\"Call Home\")** to `http://vm.csaim.com/`. Failure to connect for 14 days will shut down the license.",
+            "**PowerScribe Post Processing:** Ensure **no active users are on the system** when modifying the Post Processing tab for PowerScribe, as it restarts services and can cause session loss.",
+            "**MultiModalityViewerHeadless:** **Canon Medical recommends you do not enable the MultiModalityViewerHeadless algorithm**."
+        ];
+
+        // Tab functionality
+        const tabButtons = document.querySelectorAll('.tab-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const tabId = button.getAttribute('data-tab');
+                
+                // Remove active class from all buttons and contents
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                tabContents.forEach(content => content.classList.remove('active'));
+                
+                // Add active class to clicked button and corresponding content
+                button.classList.add('active');
+                document.getElementById(tabId).classList.add('active');
+                
+                // Update current index for navigation
+                if (tabId === 'flashcards') {
+                    currentIndex = fcCurrentIndex;
+                } else if (tabId === 'mcq') {
+                    currentIndex = mcqCurrentIndex;
+                } else if (tabId === 'troubleshooting') {
+                    currentIndex = tsCurrentIndex;
+                }
+            });
+        });
+
+        // Flashcard functionality
+        const fcContainer = document.getElementById('flashcard-container');
+        let fcCurrentIndex = 0;
+        let fcCorrect = 0;
+        let fcIncorrect = 0;
+        let fcAnswered = 0;
+        const fcTotal = flashcards.length;
+
+        function displayFlashcard(index) {
+            const card = flashcards[index];
+            fcContainer.innerHTML = `
+                <div class="card">
+                    <div class="question">${card.question}</div>
+                    <button class="show-answer">Show Answer</button>
+                    <div class="answer">${card.answer}</div>
+                </div>
+            `;
+            
+            // Add event listener to show answer button
+            const showAnswerBtn = fcContainer.querySelector('.show-answer');
+            const answerDiv = fcContainer.querySelector('.answer');
+            
+            showAnswerBtn.addEventListener('click', () => {
+                answerDiv.style.display = 'block';
+                showAnswerBtn.style.display = 'none';
+                fcAnswered++;
+                updateFlashcardProgress();
+            });
+            
+            updateFlashcardProgress();
+        }
+
+        function updateFlashcardProgress() {
+            const progressBar = document.getElementById('flashcard-progress');
+            const progressText = document.getElementById('flashcard-progress-text');
+            const progress = (fcAnswered / fcTotal) * 100;
+            
+            progressBar.style.width = `${progress}%`;
+            progressText.textContent = `${fcAnswered}/${fcTotal} answered`;
+            
+            document.getElementById('fc-correct').textContent = fcCorrect;
+            document.getElementById('fc-incorrect').textContent = fcIncorrect;
+            document.getElementById('fc-remaining').textContent = fcTotal - fcAnswered;
+        }
+
+        // MCQ functionality
+        const mcqContainer = document.getElementById('mcq-container');
+        let mcqCurrentIndex = 0;
+        let mcqCorrect = 0;
+        let mcqIncorrect = 0;
+        let mcqAnswered = 0;
+        const mcqTotal = mcqs.length;
+
+        function displayMCQ(index) {
+            const mcq = mcqs[index];
+            mcqContainer.innerHTML = `
+                <div class="card">
+                    <div class="question">${mcq.question}</div>
+                    <div class="mcq-options">
+                        ${mcq.options.map((option, i) => `
+                            <div class="mcq-option" data-option="${i}">${option}</div>
+                        `).join('')}
+                    </div>
+                    <button class="check-answer">Check Answer</button>
+                    <div class="mcq-feedback"></div>
+                </div>
+            `;
+            
+            // Add event listeners to options
+            const options = mcqContainer.querySelectorAll('.mcq-option');
+            options.forEach(option => {
+                option.addEventListener('click', () => {
+                    options.forEach(opt => opt.classList.remove('selected'));
+                    option.classList.add('selected');
+                });
+            });
+            
+            // Add event listener to check answer button
+            const checkAnswerBtn = mcqContainer.querySelector('.check-answer');
+            const feedbackDiv = mcqContainer.querySelector('.mcq-feedback');
+            
+            checkAnswerBtn.addEventListener('click', () => {
+                const selectedOption = mcqContainer.querySelector('.mcq-option.selected');
+                if (!selectedOption) return;
+                
+                const selectedIndex = parseInt(selectedOption.getAttribute('data-option'));
+                const isCorrect = selectedIndex === mcq.answer;
+                
+                if (isCorrect) {
+                    feedbackDiv.textContent = "Correct! " + mcq.explanation;
+                    feedbackDiv.className = "mcq-feedback correct";
+                    mcqCorrect++;
+                } else {
+                    feedbackDiv.textContent = "Incorrect. The correct answer is: " + mcq.options[mcq.answer] + ". " + mcq.explanation;
+                    feedbackDiv.className = "mcq-feedback incorrect";
+                    mcqIncorrect++;
+                }
+                
+                feedbackDiv.style.display = 'block';
+                checkAnswerBtn.style.display = 'none';
+                mcqAnswered++;
+                updateMCQProgress();
+            });
+            
+            updateMCQProgress();
+        }
+
+        function updateMCQProgress() {
+            const progressBar = document.getElementById('mcq-progress');
+            const progressText = document.getElementById('mcq-progress-text');
+            const progress = (mcqAnswered / mcqTotal) * 100;
+            
+            progressBar.style.width = `${progress}%`;
+            progressText.textContent = `${mcqAnswered}/${mcqTotal} answered`;
+            
+            document.getElementById('mcq-correct').textContent = mcqCorrect;
+            document.getElementById('mcq-incorrect').textContent = mcqIncorrect;
+            document.getElementById('mcq-remaining').textContent = mcqTotal - mcqAnswered;
+        }
+
+        // Troubleshooting functionality
+        const tsContainer = document.getElementById('troubleshooting-container');
+        let tsCurrentIndex = 0;
+        let tsReviewed = 0;
+        const tsTotal = troubleshooting.length;
+
+        function displayTroubleshooting(index) {
+            const ts = troubleshooting[index];
+            tsContainer.innerHTML = `
+                <div class="scenario">
+                    <div class="scenario-text"><strong>Scenario:</strong> ${ts.scenario}</div>
+                    <button class="show-resolution">Show Resolution</button>
+                    <div class="resolution">${ts.resolution}</div>
+                </div>
+            `;
+            
+            // Add event listener to show resolution button
+            const showResolutionBtn = tsContainer.querySelector('.show-resolution');
+            const resolutionDiv = tsContainer.querySelector('.resolution');
+            
+            showResolutionBtn.addEventListener('click', () => {
+                resolutionDiv.style.display = 'block';
+                showResolutionBtn.style.display = 'none';
+                tsReviewed++;
+                updateTroubleshootingProgress();
+            });
+            
+            updateTroubleshootingProgress();
+        }
+
+        function updateTroubleshootingProgress() {
+            const progressBar = document.getElementById('ts-progress');
+            const progressText = document.getElementById('ts-progress-text');
+            const progress = (tsReviewed / tsTotal) * 100;
+            
+            progressBar.style.width = `${progress}%`;
+            progressText.textContent = `${tsReviewed}/${tsTotal} reviewed`;
+            
+            document.getElementById('ts-reviewed').textContent = tsReviewed;
+            document.getElementById('ts-remaining').textContent = tsTotal - tsReviewed;
+        }
+
+        // Quick tips functionality
+        const qtContainer = document.getElementById('quicktips-container');
+
+        function displayQuickTips() {
+            qtContainer.innerHTML = quicktips.map(tip => `
+                <div class="quick-tip">${tip}</div>
+            `).join('');
+        }
+
+        // Navigation functionality
+        document.getElementById('prev-fc').addEventListener('click', () => {
+            if (fcCurrentIndex > 0) {
+                fcCurrentIndex--;
+                displayFlashcard(fcCurrentIndex);
+                document.getElementById('next-fc').disabled = false;
+                if (fcCurrentIndex === 0) {
+                    document.getElementById('prev-fc').disabled = true;
+                }
+            }
+        });
+
+        document.getElementById('next-fc').addEventListener('click', () => {
+            if (fcCurrentIndex < flashcards.length - 1) {
+                fcCurrentIndex++;
+                displayFlashcard(fcCurrentIndex);
+                document.getElementById('prev-fc').disabled = false;
+                if (fcCurrentIndex === flashcards.length - 1) {
+                    document.getElementById('next-fc').disabled = true;
+                }
+            }
+        });
+
+        document.getElementById('prev-mcq').addEventListener('click', () => {
+            if (mcqCurrentIndex > 0) {
+                mcqCurrentIndex--;
+                displayMCQ(mcqCurrentIndex);
+                document.getElementById('next-mcq').disabled = false;
+                if (mcqCurrentIndex === 0) {
+                    document.getElementById('prev-mcq').disabled = true;
+                }
+            }
+        });
+
+        document.getElementById('next-mcq').addEventListener('click', () => {
+            if (mcqCurrentIndex < mcqs.length - 1) {
+                mcqCurrentIndex++;
+                displayMCQ(mcqCurrentIndex);
+                document.getElementById('prev-mcq').disabled = false;
+                if (mcqCurrentIndex === mcqs.length - 1) {
+                    document.getElementById('next-mcq').disabled = true;
+                }
+            }
+        });
+
+        document.getElementById('prev-ts').addEventListener('click', () => {
+            if (tsCurrentIndex > 0) {
+                tsCurrentIndex--;
+                displayTroubleshooting(tsCurrentIndex);
+                document.getElementById('next-ts').disabled = false;
+                if (tsCurrentIndex === 0) {
+                    document.getElementById('prev-ts').disabled = true;
+                }
+            }
+        });
+
+        document.getElementById('next-ts').addEventListener('click', () => {
+            if (tsCurrentIndex < troubleshooting.length - 1) {
+                tsCurrentIndex++;
+                displayTroubleshooting(tsCurrentIndex);
+                document.getElementById('prev-ts').disabled = false;
+                if (tsCurrentIndex === troubleshooting.length - 1) {
+                    document.getElementById('next-ts').disabled = true;
+                }
+            }
+        });
+
+        // Search functionality
+        document.getElementById('search-btn').addEventListener('click', searchContent);
+        document.getElementById('search-input').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                searchContent();
+            }
+        });
+
+        function searchContent() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            if (!searchTerm) return;
+            
+            // Remove previous highlights
+            document.querySelectorAll('.highlight').forEach(el => {
+                el.classList.remove('highlight');
+            });
+            
+            // Search in current tab
+            const activeTab = document.querySelector('.tab-content.active');
+            const textElements = activeTab.querySelectorAll('.question, .answer, .scenario-text, .resolution, .quick-tip');
+            
+            let found = false;
+            textElements.forEach(el => {
+                const text = el.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    found = true;
+                    highlightText(el, searchTerm);
+                    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            });
+            
+            if (!found) {
+                alert('No matches found for your search term.');
+            }
+        }
+
+        function highlightText(element, searchTerm) {
+            const text = element.textContent;
+            const regex = new RegExp(searchTerm, 'gi');
+            const newText = text.replace(regex, match => `<span class="highlight">${match}</span>`);
+            element.innerHTML = newText;
+        }
+
+        // Initialize
+        displayFlashcard(0);
+        displayMCQ(0);
+        displayTroubleshooting(0);
+        displayQuickTips();
+    </script>
+</body>
+</html>
