@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Canon Medical Systems | Vitrea Administration Guide</title>
+  <style>
+    :root {
+      --canon-red: #CC0000;
+      --light-gray: #f8f9fa;
+      --dark-gray: #333;
+    }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: var(--light-gray);
+      color: var(--dark-gray);
+      line-height: 1.6;
+    }
+    header {
+      background-color: var(--canon-red);
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    h1 {
+      margin: 0;
+      font-size: 1.8em;
+    }
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 220px;
+      height: 100%;
+      background: white;
+      border-right: 1px solid #ddd;
+      padding: 20px;
+      overflow-y: auto;
+    }
+    nav h2 {
+      font-size: 1.2em;
+      color: var(--canon-red);
+      margin-top: 0;
+    }
+    nav a {
+      display: block;
+      margin: 8px 0;
+      text-decoration: none;
+      color: var(--dark-gray);
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
+    .content {
+      margin-left: 240px;
+      padding: 20px;
+      max-width: 900px;
+    }
+    details {
+      margin: 15px 0;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      padding: 12px;
+    }
+    summary {
+      font-weight: bold;
+      cursor: pointer;
+      color: var(--canon-red);
+      font-size: 1.1em;
+    }
+    pre {
+      background: #eee;
+      padding: 10px;
+      border-radius: 5px;
+      overflow-x: auto;
+      font-family: monospace;
+    }
+    .callout {
+      border-left: 5px solid var(--canon-red);
+      background: #ffeaea;
+      padding: 10px;
+      margin: 10px 0;
+    }
+    .tip {
+      border-left: 5px solid #28a745;
+      background: #e6ffed;
+      padding: 10px;
+      margin: 10px 0;
+    }
+    @media (max-width: 800px) {
+      nav {
+        display: none;
+      }
+      .content {
+        margin: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Canon Medical Systems - Vitrea Administration Guide</h1>
+  </header>
+  <nav>
+    <h2>Sections</h2>
+    <a href="#install">Installation Tasks</a>
+    <a href="#reports">Reports & Logos</a>
+    <a href="#system-config">System Configuration</a>
+    <a href="#db-backup">Database Backup & Restore</a>
+    <a href="#storage">Storage Management</a>
+    <a href="#user-roles">Users, Groups & Permissions</a>
+    <a href="#logging">Logs & Monitoring</a>
+  </nav>
+  <div class="content">
+    <details open id="install">
+      <summary>🔧 Installation Tasks</summary>
+      <p>Steps to change hostname after installation:</p>
+      <pre>
+Select Start > All Programs > Vital Images > Vitrea Administration Tool
+Navigate to Configuration Manager > Profiles > EnterpriseProfile
+Edit the AE Title field with a unique value.
+Click Save and Perform Actions.
+      </pre>
+      <div class="callout">
+        ⚠️ Changing the hostname will require service restarts and reconfiguration.
+      </div>
+      <p>To verify no studies are being processed:</p>
+      <pre>
+Right-click Start > Search > VIMS Monitor
+Check Remaining Instances graph.
+      </pre>
+    </details>
+
+    <details id="reports">
+      <summary>🖼️ Reports & Logos</summary>
+      <p>Change the Site Logo:</p>
+      <pre>
+Navigate to:
+C:\Program Files\Vital Images\Reporting\web\static\Logos
+Replace logo.gif with your new logo.
+      </pre>
+      <div class="tip">
+        ✅ Only certain report templates support logos. Test after change!
+      </div>
+      <p>Change CACS Report Guideline:</p>
+      <pre>
+Applications Home > System Configuration
+Subsystem: System Settings
+Component: VitreaClassicSuite
+Edit CACS_Report_Guideline to "Hoff", "Mesa", or "Nasu".
+      </pre>
+    </details>
+
+    <details id="system-config">
+      <summary>⚙️ System Configuration</summary>
+      <p>Disable Pre-Launching:</p>
+      <pre>
+Component: VitreaClient
+Field: enablePrelaunch = false
+      </pre>
+      <p>Enable Snapshots as Secondary Capture:</p>
+      <pre>
+Edit VitreaConfiguration.xml
+Set: SnapshotCreation > SecondaryCapture > enabled = Yes
+      </pre>
+      <p>Configure AE Titles:</p>
+      <pre>
+Component: DicomPrintService
+Field: PrintScuAETitle = [Your AE Title]
+
+Component: DICOMQRSCU
+Field: aeTitle = [Your AE Title]
+      </pre>
+    </details>
+
+    <details id="db-backup">
+      <summary>💾 Database Backup & Restore</summary>
+      <p>Scheduled Backup:</p>
+      <div class="tip">
+        Backups run daily at 1:00 a.m. local time and retain 5 copies.
+      </div>
+      <pre>
+Default paths:
+Enterprise: \\[machinename]\nasroot\DBBackup
+Single Server/Workstation: E:\VitreaData\DBBackup
+      </pre>
+      <p>Manual Backup in SQL:</p>
+      <pre>
+Connect with SQL Server Management Studio
+Right-click VIDicom > Tasks > Back Up
+Set Backup type = Full
+Choose destination path with .bak extension
+      </pre>
+      <p>Manual Restore:</p>
+      <pre>
+Stop all services:
+wmic service where "name like 'Vitrea.%%'" stopservice
+wmic service where "name like 'VSP%%'" stopservice
+      </pre>
+    </details>
+
+    <details id="storage">
+      <summary>🗄️ Storage Management</summary>
+      <p>Change Storage Location:</p>
+      <ol>
+        <li>Stop all services.</li>
+        <li>Detach VIDicom database in SQL.</li>
+        <li>Copy data to new NAS path.</li>
+        <li>Update Registry keys:
+          <pre>
+HKLM\SOFTWARE\Vital Images\VIMS > NasRoot
+HKLM\SOFTWARE\Vital Images\Vitrea > VitreaDataRoot
+          </pre>
+        </li>
+        <li>Update configuration files:
+          <pre>
+C:\ProgramData\Vital Images\Application\conf\vital-config.xml
+          </pre>
+        </li>
+        <li>Update IIS paths.</li>
+        <li>Restart machine.</li>
+      </ol>
+    </details>
+
+    <details id="user-roles">
+      <summary>👥 Users, Groups & Permissions</summary>
+      <p>Groups, Roles, and Permissions Overview:</p>
+      <ul>
+        <li>Groups: External (AD) or Local</li>
+        <li>Users: Windows or local DB users</li>
+        <li>Roles: Sets of permissions</li>
+      </ul>
+      <pre>
+Applications Home > System Configuration > Group/Role Mapping
+      </pre>
+      <div class="tip">
+        ✅ Always refresh configuration data after changes.
+      </div>
+    </details>
+
+    <details id="logging">
+      <summary>📜 Logs & Monitoring</summary>
+      <p>Audit Logs Location:</p>
+      <pre>
+C:\ProgramData\Vitrea\Logs\AuditLogs
+      </pre>
+      <p>Manually trigger audit logging:</p>
+      <pre>
+http://localhost/vitreaSystemHealth/vitreaSystemInfo/auditLogs/perform
+      </pre>
+      <p>Use VIMS Monitor:</p>
+      <pre>
+Search > VIMS Monitor
+Check Remaining Instances graph for ingestion.
+      </pre>
+    </details>
+  </div>
+</body>
+</html>

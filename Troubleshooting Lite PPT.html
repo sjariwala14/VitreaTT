@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Canon Medical Systems - Vitrea Troubleshooting Guide</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background-color: #f8f9fa;
+      color: #333;
+    }
+    header {
+      background-color: #CC0000;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    h1 {
+      margin: 0;
+    }
+    .container {
+      max-width: 900px;
+      margin: 20px auto;
+      padding: 20px;
+      background: white;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      border-radius: 10px;
+    }
+    details {
+      margin-bottom: 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      padding: 10px;
+      background: #fafafa;
+    }
+    summary {
+      font-weight: bold;
+      cursor: pointer;
+      color: #007bff;
+    }
+    pre {
+      background: #eee;
+      padding: 10px;
+      border-radius: 5px;
+      overflow-x: auto;
+    }
+    .callout {
+      border-left: 5px solid #007bff;
+      background: #e9f5ff;
+      padding: 10px;
+      margin: 10px 0;
+    }
+    .error {
+      border-left: 5px solid #dc3545;
+      background: #f8d7da;
+      padding: 10px;
+      margin: 10px 0;
+      color: #721c24;
+    }
+    footer {
+      text-align: center;
+      font-size: 0.9em;
+      color: #666;
+      padding: 20px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Vitrea Troubleshooting Guide</h1>
+    <p>Canon Medical Systems – Healthcare IT Division</p>
+  </header>
+  <div class="container">
+    <div class="callout">
+      <strong>About this page:</strong> All your favorite IT errors in one place. Be the troubleshooting hero. Escalate only when you *really* have to.
+    </div>
+    
+    <details open>
+      <summary>⚙️ Introduction / Agenda</summary>
+      <p>This guide covers troubleshooting Vitrea Advanced Visualization systems (Vitrea Workstation, Vitrea Extend, Enterprise systems). It includes common errors, log locations, ports, and step-by-step fixes.</p>
+    </details>
+
+    <details>
+      <summary>💥 Top Customer Complaints & Questions</summary>
+      <ul>
+        <li>Studies not coming in / incomplete / slow</li>
+        <li>Applications not launching</li>
+        <li>Licensing errors</li>
+        <li>Connectivity issues</li>
+      </ul>
+      <div class="callout">
+        <strong>Questions to Ask:</strong>
+        <ul>
+          <li>One, multiple, or all studies affected?</li>
+          <li>How long has it been happening?</li>
+          <li>Any recent changes on PACS or Vitrea?</li>
+        </ul>
+      </div>
+    </details>
+
+    <details>
+      <summary>📦 What Happens During Ingestion</summary>
+      <p>DicomReceive folder &rarr; DAR file creation &rarr; Database storage &rarr; StudyList update.</p>
+      <div class="callout">
+        <strong>Key Logs:</strong>
+        <pre>C:\ProgramData\Vitrea\Logs\VIMS\DicomReceive.log</pre>
+      </div>
+    </details>
+
+    <details>
+      <summary>🛠️ Services & Processes</summary>
+      <ul>
+        <li>Acceptor → AssocServant → DICOM Receive → RCV3DProcessor → Database → CDAR Archive Integration → FileCopy</li>
+      </ul>
+      <div class="callout">
+        <strong>To check services:</strong>
+        <pre>wmic service where "name like 'VI.%'" get state</pre>
+      </div>
+    </details>
+
+    <details>
+      <summary>🗃️ Log Locations</summary>
+      <pre>
+Main Ingestion Log:
+C:\ProgramData\Vitrea\Logs\VIMS\DicomReceive.log
+Study Tracker:
+C:\ProgramData\Vitrea\Logs\AvCore\StudyTracker\StudyTracker-YYYYMMDDHOUR.log
+      </pre>
+      <div class="callout">
+        <strong>Log Reader Tip:</strong> Use Notepad++ "Find in Files" for cross-file searches.
+      </div>
+    </details>
+
+    <details>
+      <summary>❗ Common Errors & Fixes</summary>
+      <div class="error">
+        <strong>Applications are not launching</strong>
+        <ul>
+          <li>Check licensing on: http://localhost:8700/management/api/license/usage</li>
+          <li>GPU resources in use – ensure other sessions closed</li>
+        </ul>
+      </div>
+      <div class="error">
+        <strong>ERR_DNS_FAIL</strong>
+        <pre>
+Open Internet Options > Connections > LAN settings
+Ensure "Bypass proxy for local addresses" is checked.
+        </pre>
+      </div>
+      <div class="error">
+        <strong>Archive CD/DVD IMAPI Error</strong>
+        <ul>
+          <li>Check DVD hardware</li>
+          <li>Uninstall virtual DVD drives</li>
+        </ul>
+      </div>
+      <div class="error">
+        <strong>StudyList displays no data</strong>
+        <ul>
+          <li>Check UI filters (set Study Date = Any)</li>
+          <li>Verify VAT data directory & AutoDelete settings</li>
+        </ul>
+      </div>
+    </details>
+
+    <details>
+      <summary>🔒 Group Policy, Licensing & Ports</summary>
+      <div class="callout">
+        <strong>Group Policy Settings:</strong>
+        <ul>
+          <li>Prevent IIS installation = Disabled</li>
+          <li>Allow Active Scripting = Enabled</li>
+        </ul>
+      </div>
+      <div class="callout">
+        <strong>Required Ports:</strong>
+        <pre>
+443 - HTTPS PACS Integrations
+3002 - DICOM Receive
+3003 - Query Retrieve
+3389 - RDP
+        </pre>
+      </div>
+    </details>
+
+    <details>
+      <summary>📋 Bonus: Admin Power Moves</summary>
+      <div class="callout">
+        <strong>Stop all services:</strong>
+        <pre>
+wmic service where "name like 'VI.%'" stopservice
+wmic service where "name like 'Vitrea.%'" stopservice
+wmic service where "name like 'VSP%'" stopservice
+        </pre>
+      </div>
+      <div class="callout">
+        <strong>Re-enable services:</strong>
+        <pre>
+wmic service where "name like 'VI.%'" call ChangeStartmode Automatic
+        </pre>
+      </div>
+    </details>
+  </div>
+  <footer>
+    © Canon Medical Systems – IT Troubleshooting Portal (Unofficial). Built with ❤️ for healthcare IT heroes.
+  </footer>
+</body>
+</html>

@@ -1,0 +1,1377 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vitrea Advanced Visualization Troubleshooting Dashboard</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f4f8;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #003087;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .main-page, .sub-page {
+            padding: 20px;
+        }
+        .main-page {
+            display: block;
+        }
+        .sub-page {
+            display: none;
+        }
+        .sub-page.active {
+            display: block;
+        }
+        .toc {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .toc-item {
+            background: #e9ecef;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            transition: transform 0.3s, background 0.3s;
+            cursor: pointer;
+        }
+        .toc-item:hover, .toc-item:focus {
+            transform: translateY(-5px);
+            background: #d1e7ff;
+            outline: none;
+        }
+        .toc-item i {
+            font-size: 2em;
+            color: #003087;
+            margin-bottom: 10px;
+        }
+        .toc-item h3 {
+            margin: 10px 0;
+            color: #003087;
+            font-size: 1.2em;
+        }
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid #003087;
+            margin-bottom: 20px;
+        }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background: #f0f4f8;
+            margin-right: 5px;
+            border-radius: 8px 8px 0 0;
+            transition: background 0.3s;
+        }
+        .tab.active {
+            background: #003087;
+            color: #fff;
+        }
+        .tab:hover, .tab:focus {
+            background: #d1e7ff;
+            outline: none;
+        }
+        .section {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 8px;
+            border-left: 5px solid #003087;
+        }
+        .section h2 {
+            color: #003087;
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+        #searchBar {
+            width: calc(100% - 50px);
+            padding: 12px;
+            margin-bottom: 20px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        #clearSearch {
+            padding: 12px;
+            margin-left: 10px;
+            background: #003087;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background 0.3s;
+        }
+        #clearSearch:hover, #clearSearch:focus {
+            background: #0051c7;
+            outline: none;
+        }
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            border-bottom: 1px dotted #003087;
+            cursor: help;
+        }
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: #003087;
+            color: #fff;
+            text-align: center;
+            border-radius: 5px;
+            padding: 8px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .tooltip:hover .tooltiptext, .tooltip:focus .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+        .navigation {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .nav-btn {
+            padding: 12px 24px;
+            margin: 0 10px;
+            background: #003087;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background 0.3s;
+        }
+        .nav-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .nav-btn:hover:not(:disabled), .nav-btn:focus:not(:disabled) {
+            background: #0051c7;
+            outline: none;
+        }
+        .pro-tip, .reference, .warning, .note {
+            background: #e9ecef;
+            padding: 15px;
+            border-left: 5px solid #003087;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .warning {
+            border-left-color: #ff6200;
+        }
+        pre {
+            background: #f4f4f4;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-size: 0.9em;
+        }
+        code {
+            font-family: 'Consolas', 'Courier New', monospace;
+        }
+        .highlight {
+            background-color: #ffeb3b;
+        }
+        #backToTop {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #003087;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 1.2em;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            transition: background 0.3s, transform 0.3s;
+            z-index: 1000;
+        }
+        #backToTop:hover, #backToTop:focus {
+            background: #0051c7;
+            transform: scale(1.1);
+            outline: none;
+        }
+        #backToTop i {
+            vertical-align: middle;
+        }
+        @media (max-width: 600px) {
+            .toc {
+                grid-template-columns: 1fr;
+            }
+            h1 {
+                font-size: 1.8em;
+            }
+            .tab {
+                padding: 8px 10px;
+                font-size: 0.9em;
+            }
+            #searchBar {
+                width: calc(100% - 40px);
+            }
+            #clearSearch {
+                padding: 8px;
+            }
+            #backToTop {
+                width: 40px;
+                height: 40px;
+                font-size: 1em;
+            }
+        }
+        @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css');
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Vitrea Advanced Visualization Troubleshooting Dashboard</h1>
+        <div style="display: flex; align-items: center;">
+            <input type="text" id="searchBar" placeholder="Search troubleshooting topics..." aria-label="Search troubleshooting topics">
+            <button id="clearSearch" aria-label="Clear search">Clear</button>
+        </div>
+        <div id="pages">
+            <!-- Main Page with TOC -->
+            <div class="main-page" id="main-page" role="region" aria-label="Main page">
+                <div class="toc" role="navigation" aria-label="Table of contents">
+                    <div class="toc-item" data-page="overview-page" tabindex="0" role="button" aria-label="Go to Overview"><i class="fas fa-home"></i><h3>Overview</h3></div>
+                    <div class="toc-item" data-page="introduction-page" tabindex="0" role="button" aria-label="Go to Introduction"><i class="fas fa-book"></i><h3>Introduction</h3></div>
+                    <div class="toc-item" data-page="common-issues-page" tabindex="0" role="button" aria-label="Go to Common Issues"><i class="fas fa-exclamation-circle"></i><h3>Common Issues</h3></div>
+                    <div class="toc-item" data-page="sql-solutions-page" tabindex="0" role="button" aria-label="Go to SQL Solutions"><i class="fas fa-database"></i><h3>SQL Solutions</h3></div>
+                    <div class="toc-item" data-page="services-page" tabindex="0" role="button" aria-label="Go to System Services"><i class="fas fa-cogs"></i><h3>System Services</h3></div>
+                    <div class="toc-item" data-page="logs-page" tabindex="0" role="button" aria-label="Go to Log Analysis"><i class="fas fa-file-alt"></i><h3>Log Analysis</h3></div>
+                    <div class="toc-item" data-page="additional-issues-page" tabindex="0" role="button" aria-label="Go to Additional Issues"><i class="fas fa-tools"></i><h3>Additional Issues</h3></div>
+                </div>
+            </div>
+            <!-- Sub Pages -->
+            <div class="sub-page" id="overview-page" role="region" aria-label="Overview page">
+                <div class="tabs" role="tablist">
+                    <div class="tab active" data-tab="overview" role="tab" aria-selected="true" tabindex="0">Overview</div>
+                </div>
+                <div class="section" id="overview" role="tabpanel">
+                    <h2>Overview</h2>
+                    <div class="section-content show">
+                        <p><strong>Vitrea Advanced Visualization v7.12.3 - 7.16.x</strong></p>
+                        <p>This guide provides comprehensive troubleshooting for Vitrea Workstation, Vitrea Extend, and Enterprise systems.</p>
+                        <ul>
+                            <li><strong>Common Issues:</strong> Diagnose and resolve frequent problems</li>
+                            <li><strong>SQL Solutions:</strong> Database fixes and configuration</li>
+                            <li><strong>System Services:</strong> Manage and troubleshoot Vitrea services</li>
+                            <li><strong>Log Analysis:</strong> Find critical information in log files</li>
+                        </ul>
+                        <div class="pro-tip">
+                            <strong>Pro Tip:</strong> This guide combines all troubleshooting information for Vitrea Workstation, Vitrea Extend, and Enterprise systems (v7.12.3 through 7.16.x).
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="sub-page" id="introduction-page" role="region" aria-label="Introduction page">
+                <div class="tabs" role="tablist">
+                    <div class="tab active" data-tab="introduction" role="tab" aria-selected="true" tabindex="0">Introduction</div>
+                </div>
+                <div class="section" id="introduction" role="tabpanel">
+                    <h2>Introduction to Vitrea Troubleshooting</h2>
+                    <div class="section-content show">
+                        <p>This comprehensive guide covers all aspects of Vitrea troubleshooting, including:</p>
+                        <ul>
+                            <li><strong>Installation:</strong> Configuration, uninstall, repair</li>
+                            <li><strong>DICOM:</strong> Receive, SCU, third-party integrations</li>
+                            <li><strong>Services:</strong> Management, administrator accounts</li>
+                            <li><strong>Licensing:</strong> Vitrea License Server, Remote Desktop</li>
+                            <li><strong>Group Policies:</strong> User accounts, security settings</li>
+                            <li><strong>Firewall:</strong> Port configurations, enable/disable</li>
+                        </ul>
+                        <div class="reference">
+                            <strong>Reference:</strong> Always consult the Vitrea Administration and Troubleshooting Guide (VPMC-17210 B) for complete information.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="sub-page" id="common-issues-page" role="region" aria-label="Common Issues page">
+                <div class="tabs" role="tablist">
+                    <div class="tab active" data-tab="top-customer-complaints" role="tab" aria-selected="true" tabindex="0">Top Customer Complaints</div>
+                    <div class="tab" data-tab="study-ingestion" role="tab" aria-selected="false" tabindex="0">Study Ingestion</div>
+                    <div class="tab" data-tab="application-launch-problems" role="tab" aria-selected="false" tabindex="0">Application Launch</div>
+                    <div class="tab" data-tab="specific-error-solutions" role="tab" aria-selected="false" tabindex="0">Specific Errors</div>
+                    <div class="tab" data-tab="oncology-fusion" role="tab" aria-selected="false" tabindex="0">Oncology Fusion</div>
+                    <div class="tab" data-tab="thin-client-troubleshooting" role="tab" aria-selected="false" tabindex="0">Thin Client</div>
+                    <div class="tab" data-tab="file-system-troubleshooting" role="tab" aria-selected="false" tabindex="0">File System</div>
+                    <div class="tab" data-tab="dicom-receive-problems" role="tab" aria-selected="false" tabindex="0">DICOM Receive</div>
+                    <div class="tab" data-tab="reporting-problems" role="tab" aria-selected="false" tabindex="0">Reporting</div>
+                    <div class="tab" data-tab="sureplaque-package" role="tab" aria-selected="false" tabindex="0">SUREPlaque</div>
+                </div>
+                <div class="section" id="top-customer-complaints" role="tabpanel">
+                    <h2>Top Customer Complaints</h2>
+                    <div class="section-content show">
+                        <h3>Applications Not Launching</h3>
+                        <p><strong>Applies to:</strong> Enterprise, Enterprise Single Server, Vitrea Extend deployments</p>
+                        <p><strong>Possible Causes:</strong></p>
+                        <ul>
+                            <li>Licensing issues (confirm feature is purchased and available)</li>
+                            <li>Application failing to get required resources</li>
+                            <li>Internal application error</li>
+                            <li>Service issues (v7.14.2 specific fix: restart services)</li>
+                            <li><strong>v7.14.2:</strong> Application icons not displaying, unable to open studies (often resolved by restarting services)</li>
+                        </ul>
+                        <p><strong>Solution:</strong></p>
+                        <ul>
+                            <li>Check licensing status at: <a href="http://localhost:8700/management/api/license/usage">http://localhost:8700/management/api/license/usage</a></li>
+                            <li>For “Application name (process id #) terminated abnormally”: Collect the application’s logfile and exception info.</li>
+                            <li>For “Vitrea Client has encountered an error and cannot retrieve required study information. GSB Error Code: ##”: Collect logs for AppShell and SessionHelper.</li>
+                            <li>For “Unable to acquire system resources...”: Ensure correct NVIDIA driver and close other user sessions.</li>
+                            <li><strong>v7.14.2 Scaling Errors:</strong>
+                                <ol>
+                                    <li>Right-click Vitrea shortcut</li>
+                                    <li>Properties → Compatibility</li>
+                                    <li>Change high DPI settings</li>
+                                    <li>Override scaling behavior → SYSTEM</li>
+                                </ol>
+                            </li>
+                            <li><strong>v7.14.2 Icon/Study Issues:</strong> Restart Vitrea services using:
+                                <pre>
+wmic service where "name like 'Vitrea.%%'" stopservice
+wmic service where "name like 'Vitrea.%%'" startservice
+                                </pre>
+                            </li>
+                        </ul>
+                        <h3>Study Ingestion Problems</h3>
+                        <p><strong>Applies to:</strong> Enterprise, Enterprise Single Server, Vitrea Extend, Vitrea Workstation deployments</p>
+                        <p><strong>Common Scenarios:</strong></p>
+                        <ul>
+                            <li>Studies aren't coming into Vitrea</li>
+                            <li>Not all of a study is received</li>
+                            <li>Slow study transfer</li>
+                        </ul>
+                        <p><strong>Diagnostic Questions:</strong></p>
+                        <ul>
+                            <li>Is it one, multiple, or all studies?</li>
+                            <li>How long has this been happening?</li>
+                            <li>Is it specific to certain modalities/PACS/VNA?</li>
+                            <li>Is it just when pushing or also with query retrieve?</li>
+                        </ul>
+                        <h3>StudyList Displays but No Data</h3>
+                        <p><strong>Applies to:</strong> Enterprise, Enterprise Single Server, Vitrea Extend, Vitrea Workstation deployments</p>
+                        <p><strong>Troubleshooting Steps:</strong></p>
+                        <ul>
+                            <li>Check UI filters (set Study Date to “Any”)</li>
+                            <li>Click Search to force refresh</li>
+                            <li>Verify VAT data directory location</li>
+                            <li>Check AutoDelete settings vs. disk space</li>
+                            <li>Review logs: C:\ProgramData\Vitrea\Logs\[VIMS, Management, StackDefinitionBuilder, StudyList, ThumbnailService]</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="section" id="study-ingestion" role="tabpanel">
+                    <h2>Understanding Study Ingestion</h2>
+                    <div class="section-content">
+                        <p><strong>Process Overview:</strong></p>
+                        <ol>
+                            <li>DICOM files transferred to Vitrea</li>
+                            <li>Vitrea builds DAR file</li>
+                            <li>Study stored in database</li>
+                            <li>Appears on StudyList</li>
+                            <li>Application stacks built</li>
+                        </ol>
+                        <p><strong>Key Services Involved:</strong></p>
+                        <ul>
+                            <li>Acceptor → AssocServant → DICOM Receive</li>
+                            <li>RCV3DProcessor → Database</li>
+                            <li>CDAR Archive Integration → FileCopy</li>
+                        </ul>
+                        <p><strong>Places to Look:</strong></p>
+                        <ul>
+                            <li>VIMS Monitor (check processing status)</li>
+                            <li>System Health Study Queue</li>
+                            <li>File system (verify space on C:, DICOM Receive, NAS drives)</li>
+                            <li>Delete and resend test data</li>
+                            <li>Run Wireshark to analyze DICOM communication</li>
+                        </ul>
+                        <p><strong>Critical Log Files:</strong></p>
+                        <ul>
+                            <li>DICOM Receive: C:\ProgramData\Vitrea\Logs\VIMS\DicomReceive.log</li>
+                            <li>Study Tracker: C:\ProgramData\Vitrea\Logs\AvCore\StudyTracker\</li>
+                            <li>VSP Management: C:\ProgramData\Vitrea\Logs\Management\vitrea-management.log</li>
+                            <li>CDAR Integration: C:\ProgramData\Vitrea\Logs\VIMS\DicomReceive.CDARIntegration\</li>
+                        </ul>
+                        <div class="reference">
+                            <strong>Reference:</strong> For a full list of services, see KB 7998.
+                        </div>
+                    </div>
+                </div>
+                <div class="section" id="application-launch-problems" role="tabpanel">
+                    <h2>Application Launch Problems</h2>
+                    <div class="section-content">
+                        <p><strong>Applies to:</strong> Enterprise, Enterprise Single Server, Vitrea Extend deployments</p>
+                        <p><strong>Error Messages:</strong></p>
+                        <ul>
+                            <li>“Application terminated abnormally” - indicates internal error</li>
+                            <li>“Unable to acquire system resources” - GPU allocation issue</li>
+                            <li>“Vitrea Client has encountered an error” - demographic info failure</li>
+                        </ul>
+                        <p><strong>Scaling Errors (v7.14.2):</strong></p>
+                        <ol>
+                            <li>Right-click Vitrea shortcut</li>
+                            <li>Properties → Compatibility</li>
+                            <li>Change high DPI settings</li>
+                            <li>Override scaling behavior → SYSTEM</li>
+                        </ol>
+                        <p><strong>Non-Admin Users:</strong></p>
+                        <ol>
+                            <li>Log onto the client machine as an administrator</li>
+                            <li>Open regedit</li>
+                            <li>Delete HKLM\SOFTWARE\Microsoft\MSLicensing</li>
+                            <li>Delete HKLM\SOFTWARE\Wow6432Node\Microsoft\MSLicensing</li>
+                            <li>Reboot the client machine</li>
+                            <li>Run MSTSC.exe as admin and connect to Vitrea Extend host</li>
+                            <li>Run Vitrea client as a standard user</li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="section" id="specific-error-solutions" role="tabpanel">
+                    <h2>Specific Error Solutions</h2>
+                    <div class="section-content">
+                        <p><strong>ERR_DNS_FAIL on Report Page:</strong></p>
+                        <p><strong>Applies to:</strong> Enterprise Single Server, Vitrea Extend deployments</p>
+                        <ol>
+                            <li>Open Internet Explorer → Tools → Internet options</li>
+                            <li>Connections tab → LAN settings</li>
+                            <li>If using proxy server, check "Bypass proxy server for local addresses"</li>
+                            <li>Click Advanced → Add exceptions for Vitrea machine IPs</li>
+                        </ol>
+                        <p><strong>Connection Credentials Already in Use:</strong></p>
+                        <p><strong>Applies to:</strong> Vitrea Thin Client (Enterprise, Enterprise Single Server, Vitrea Extend deployments)</p>
+                        <ul>
+                            <li>Log off the other session shown in message</li>
+                            <li>Try connecting to a different collection (Enterprise)</li>
+                            <li>Wait for session timeout (default 30 minutes)</li>
+                            <li>Contact admin to log off other session if needed</li>
+                        </ul>
+                        <p><strong>Evidence Could Not Be Saved:</strong></p>
+                        <p><strong>Applies to:</strong> Enterprise, Enterprise Single Server, Vitrea Extend, Vitrea Workstation deployments</p>
+                        <ul>
+                            <li>Reduce number of images in Output Control</li>
+                            <li>Change batch/movie settings to "Good" quality</li>
+                            <li>Disable "Swing" in Movie Playback</li>
+                            <li>Reduce images in Curved MPR/Inset settings</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="section" id="oncology-fusion" role="tabpanel">
+                    <h2>Oncology Fusion Troubleshooting</h2>
+                    <div class="section-content">
+                        <p><strong>Applies to:</strong> Enterprise Single Server, Vitrea Extend, Vitrea Workstation deployments</p>
+                        <p><strong>AE Title Changes:</strong></p>
+                        <ul>
+                            <li><strong>For Mirada XD:</strong> Edit C:\Program Files\Mirada XD\3.6\config\scp.xml</li>
+                            <li><strong>For Mirada RTx:</strong> Edit C:\Program Files\Mirada RT\1.6\config\scp.xml</li>
+                        </ul>
+                        <p><strong>Corrupted Configuration Files:</strong></p>
+                        <ul>
+                            <li><strong>For Mirada XD:</strong> Delete <Default User>\My Document\Mirada XD\xd.cfg, keep factory default: C:\Program Files\Mirada XD\3.6\config\xd.cfg</li>
+                            <li><strong>For Mirada RTx:</strong> Delete rt.cfg in user folders, keep C:\Program Files\Mirada RT\1.6\config\rt.cfg</li>
+                        </ul>
+                        <p><strong>Enabling Hotkeys:</strong></p>
+                        <ol>
+                            <li>Edit C:\Program Files\Mirada XD\3.6\config\scp.xml</li>
+                            <li>Find com.mirada.fusionxd.hotkey.configuration.ui</li>
+                            <li>Change from false to true</li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="section" id="thin-client-troubleshooting" role="tabpanel">
+                    <h2>Thin Client Troubleshooting</h2>
+                    <div class="section-content">
+                        <p><strong>Applies to:</strong> Enterprise, Enterprise Single Server, Vitrea Extend deployments</p>
+                        <p><strong>Connection Errors:</strong></p>
+                        <ol>
+                            <li>Click OK to close error</li>
+                            <li>Wait 5 minutes</li>
+                            <li>Attempt connection again</li>
+                        </ol>
+                        <p><strong>RD License Server:</strong></p>
+                        <pre>
+# PowerShell
+$obj = gwmi -namespace "Root/CIMV2/TerminalServices" Win32_TerminalServiceSetting
+$obj.SetSpecifiedLicenseServerList("hostnameofyourRDLicenseServer")
+                        </pre>
+                        <p><strong>Inactivity Timeout:</strong></p>
+                        <ul>
+                            <li>Direct access: 4 hours</li>
+                            <li>Thin client: 30 minutes</li>
+                            <li>Contact admin to modify</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="section" id="file-system-troubleshooting" role="tabpanel">
+                    <h2>File System Troubleshooting</h2>
+                    <div class="section-content">
+                        <p><strong>Applies to:</strong> Enterprise, Enterprise Single Server, Vitrea Extend, Vitrea Workstation deployments</p>
+                        <div class="warning">
+                            <strong>Critical Checks:</strong> Always verify available disk space on C: drive, DICOM Receive, and NAS drives. Ensure AutoDelete isn't removing incoming data due to low space.
+                        </div>
+                        <p><strong>Corrupted VitreaConfiguration.xml:</strong></p>
+                        <ol>
+                            <li>Close all Vitrea sessions</li>
+                            <li>Navigate to C:\Program Files\Vital Images\Vitrea64\Config</li>
+                            <li>Backup and delete VitreaConfiguration.xml</li>
+                            <li>Repeat for E:\VitreaData\CentralizedPresets\Modified</li>
+                            <li>Repair or reinstall Vitrea</li>
+                        </ol>
+                        <p><strong>Media Manager IMAPI Error:</strong></p>
+                        <ul>
+                            <li>DVD hardware failure (contact Canon Medical Customer Support)</li>
+                            <li>Virtual DVD drive installed (uninstall software)</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="section" id="dicom-receive-problems" role="tabpanel">
+                    <h2>DICOM Receive Problems</h2>
+                    <div class="section-content">
+                        <p><strong>Applies to:</strong> Enterprise, Enterprise Single Server, Vitrea Extend, Vitrea Workstation deployments</p>
+                        <p><strong>Delay in Accepting Association:</strong></p>
+                        <p><strong>Possible Cause:</strong> DNS resolution issue</p>
+                        <p><strong>Diagnostic Commands:</strong></p>
+                        <pre>
+ping -a machineName
+tracert machineName
+nslookup machineName
+                        </pre>
+                        <p><strong>Resolution:</strong></p>
+                        <ul>
+                            <li>Set up Forward/Reverse Lookup Zones in DNS</li>
+                            <li>Or add to hosts file: C:\Windows\System32\drivers\etc\hosts</li>
+                        </ul>
+                        <p><strong>“Download and View” Unavailable:</strong></p>
+                        <pre>
+# Run as Administrator
+assoc .stl=STL
+ftype STL="C:\Program Files\MySTLViewer\stlview.exe" %1 %*
+                        </pre>
+                    </div>
+                </div>
+                <div class="section" id="reporting-problems" role="tabpanel">
+                    <h2>Reporting Problems</h2>
+                    <div class="section-content">
+                        <p><strong>Applies to:</strong> Enterprise, Enterprise Single Server, Vitrea Extend, Vitrea Workstation deployments</p>
+                        <p><strong>Reporting Won't Launch:</strong></p>
+                        <ul>
+                            <li>Add the service user to local Administrators group</li>
+                            <li>Reference: <a href="https://docs.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2012-R2-and-2012/ee791871(v=ws.11)">Technet</a></li>
+                        </ul>
+                        <p><strong>Custom Support Message:</strong></p>
+                        <ol>
+                            <li>System Configuration → System Settings</li>
+                            <li>Component: VitreaClient</li>
+                            <li>Edit SupportDialogContactInfo value</li>
+                            <li>Activate changes</li>
+                        </ol>
+                        <div class="pro-tip">
+                            <strong>Tip:</strong> You can customize the "Please contact support" text on the Collect Performance Logs screen to direct users to your internal IT helpdesk.
+                        </div>
+                    </div>
+                </div>
+                <div class="section" id="sureplaque-package" role="tabpanel">
+                    <h2>SUREPlaque Package Notes</h2>
+                    <div class="section-content">
+                        <p><strong>Applies to:</strong> Enterprise, Enterprise Single Server, Vitrea Extend, Vitrea Workstation deployments</p>
+                        <div class="warning">
+                            <strong>Important:</strong> Be careful with packages that don't include SUREPlaque, especially Non-US Package 1. Non-US Package 4 is recommended for cardiac applications.
+                        </div>
+                        <p><strong>Package Options:</strong></p>
+                        <ul>
+                            <li>A la carte SUREPlaque option</li>
+                            <li>Packages with/without SUREPlaque</li>
+                            <li>Cardiac-related applications bundle</li>
+                        </ul>
+                        <p><strong>Cardiac Applications:</strong></p>
+                        <ul>
+                            <li>Plaque analysis</li>
+                            <li>Vascular assessment</li>
+                            <li>Cardiac CT workflows</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="sub-page" id="sql-solutions-page" role="region" aria-label="SQL Solutions page">
+                <div class="tabs" role="tablist">
+                    <div class="tab active" data-tab="sql-configuration" role="tab" aria-selected="true" tabindex="0">SQL Configuration</div>
+                    <div class="tab" data-tab="database-troubleshooting" role="tab" aria-selected="false" tabindex="0">Database Troubleshooting</div>
+                    <div class="tab" data-tab="complete-study-deletion" role="tab" aria-selected="false" tabindex="0">Study Deletion</div>
+                    <div class="tab" data-tab="datetime-conversion" role="tab" aria-selected="false" tabindex="0">Date/Time Conversion</div>
+                </div>
+                <div class="section" id="sql-configuration" role="tabpanel">
+                    <h2>SQL Configuration Solutions</h2>
+                    <div class="section-content show">
+                        <p><strong>Applies to:</strong> Enterprise, Enterprise Single Server, Vitrea Extend, Vitrea Workstation deployments</p>
+                        <p><strong>Report Page Closing Issue (v7.14.2):</strong></p>
+                        <p>Verify C-STORESCP configuration in dbo.cfg_ArchiveConnection:</p>
+                        <pre>
+UPDATE dbo.cfg_ArchiveConnection
+SET AETitle='DHVITREA'
+WHERE ArchiveConnectionID='6';
+
+UPDATE dbo.cfg_ArchiveConnection
+SET hostname='CWPACSVITAPP01.hosp.dhha.org'
+WHERE ArchiveConnectionID='6';
+
+UPDATE dbo.cfg_ArchiveConnection
+SET Port='3002'
+WHERE ArchiveConnectionID='6';
+                        </pre>
+                        <p><strong>Old Hostname Cleanup (v7.14.2):</strong></p>
+                        <pre>
+DELETE FROM [VIDicom].[dbo].[sys_Service]
+WHERE [Status] = 'OFFLINE';
+                        </pre>
+                        <div class="warning">
+                            <strong>Warning:</strong> Always back up your database before running SQL updates. Deleting the configured default archive can make Vitrea unusable.
+                        </div>
+                    </div>
+                </div>
+                <div class="section" id="database-troubleshooting" role="tabpanel">
+                    <h2>Database Troubleshooting</h2>
+                    <div class="section-content">
+                        <p><strong>Applies to:</strong> Enterprise, Enterprise Single Server, Vitrea Extend, Vitrea Workstation deployments</p>
+                        <p><strong>“Expect connectivity issues” Error:</strong></p>
+                        <ol>
+                            <li>Close the Database Deployment Tool</li>
+                            <li>Stop all Vitrea services</li>
+                            <li>Open SQL Server Management Studio</li>
+                            <li>Connect to SQL instance</li>
+                            <li>Right-click VIDicom → Properties → Options</li>
+                            <li>Change Restrict Access to multi_user</li>
+                        </ol>
+                        <p><strong>Unlocking the Database:</strong></p>
+                        <pre>
+UPDATE dbo.DATABASECHANGELOGLOCK SET LOCKED=0, 
+LOCKGRANTED=null, LOCKEDBY=null where ID=1
+                        </pre>
+                        <p><strong>Indexing Solution:</strong></p>
+                        <pre>
+USE [VIDicom]
+CREATE NONCLUSTERED INDEX [IX_fms_ArtifactMetadata_ArtfactID_Include]
+ON [dbo].[fms_ArtifactMetadata] ([ArtifactId])
+INCLUDE ([Name],[Value],[CreatedBy],[CreatedOn],[UpdatedBy],[UpdatedOn],[Version])
+                        </pre>
+                    </div>
+                </div>
+                <div class="section" id="complete-study-deletion" role="tabpanel">
+                    <h2>Complete Study Deletion Process</h2>
+                    <div class="section-content">
+                        <p><strong>Applies to:</strong> Enterprise, Enterprise Single Server, Vitrea Extend, Vitrea Workstation deployments</p>
+                        <p><strong>When to Use:</strong></p>
+                        <ul>
+                            <li>Dataset appears to delete but remains after refresh</li>
+                            <li>Study failing to build in Vitrea (flatlined in VIMS monitor or no activity)</li>
+                            <li>Duplicate error in MintMetadataProcessor logs</li>
+                            <li>Study in mint_Study but not in Dicom.studytable</li>
+                        </ul>
+                        <p><strong>Steps to Delete Stuck Studies:</strong></p>
+                        <ol>
+                            <li><strong>Locate StudyInstanceUID:</strong>
+                                <pre>
+select * from dicom.studytable where PatientID = '119905'
+select * from dicom.studytable where AccessionNumber = '20180709081239'
+select * from dicom.studytable where PatientName like '%Johnson%'
+select * from dbo.mint_study where PatientID = '119905'
+select * from dbo.mint_study where AccessionNumber = '20180709081239'
+select * from dbo.mint_study where PatientName like '%Johnson%'
+                                </pre>
+                            </li>
+                            <li><strong>Locate StudyUUID:</strong>
+                                <pre>
+select * from dbo.mint_study where PatientID = '119905'
+select * from dbo.mint_study where AccessionNumber = '20180709081239'
+select * from dbo.mint_study where PatientName like '%Johnson%'
+                                </pre>
+                            </li>
+                            <li><strong>Remove StudyUUID Folder:</strong>
+                                <ul>
+                                    <li>Navigate to: E:\VitreaData\mint-data\studies or \\nasroot\mint-data\studies</li>
+                                    <li>Search for the StudyUUID folder and delete it with its contents</li>
+                                    <li>If no folder exists, skip this step</li>
+                                </ul>
+                            </li>
+                            <li><strong>Run Deletion Script:</strong>
+                                <pre>
+/* Clear locked patients if needed */
+--DELETE FROM [Dicom].ItemLock
+
+/* Clear blacklist and remove from mint */
+DELETE FROM mint_Change WHERE StudyInstanceUID = '1.3.51.0.1.1.10.3.1.192.1840909.1840908';
+DELETE FROM mint_Study WHERE StudyInstanceUID = '1.3.51.0.1.1.10.3.1.192.1840909.1840908';
+DELETE FROM mint_Blacklist;
+DELETE FROM dbo.mint_Study WHERE StudyUUID = '808dbdcc-5e76-4643-a5d4-d38ffb15172b';
+UPDATE dbo.mint_Study SET StudyVersion='-1' WHERE StudyUUID = '808dbdcc-5e76-4643-a5d4-d38ffb15172b';
+
+/* Remove from DICOM tables */
+DELETE FROM [Dicom].seriestable WHERE StudyInstanceUID = '1.3.51.0.1.1.10.3.1.192.1840909.1840908';
+DELETE FROM [Dicom].studytable WHERE StudyInstanceUID = '1.3.51.0.1.1.10.3.1.192.1840909.1840908';
+DELETE FROM [Dicom].patienttable WHERE PatientID = '119905';
+DELETE FROM [Dicom].DicomReceive_Instance WHERE StudyInstanceUID = '1.3.51.0.1.1.10.3.1.192.1840909.1840908';
+DELETE FROM [Dicom].DicomReceive_SeriesProgress WHERE StudyInstanceUID = '1.3.51.0.1.1.10.3.1.192.1840909.1840908';
+                                </pre>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="section" id="datetime-conversion" role="tabpanel">
+                    <h2>Date/Time Conversion Utility</h2>
+                    <div class="section-content">
+                        <p><strong>Applies to:</strong> Enterprise, Enterprise Single Server, Vitrea Extend, Vitrea Workstation deployments</p>
+                        <p>This scalar function converts DICOM date/time strings to datetime2:</p>
+                        <pre>
+IF EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[Dicom].[udf_StringToDateTime2]') AND type in (N'FN', N'IF', N'TF', N'FS', N'FT'))
+DROP FUNCTION [Dicom].[udf_StringToDateTime2]
+GO
+
+CREATE FUNCTION [Dicom].[udf_StringToDateTime2]
+(
+    @datestring nvarchar(10),
+    @timestring nvarchar(12)
+)
+RETURNS datetime2
+AS
+BEGIN
+    DECLARE @datedate datetime2;
+    
+    IF @datestring IS NULL AND @timestring IS NULL
+        SET @datedate = SYSDATETIME()
+    ELSE
+    BEGIN
+        -- pad the timestring to correct format: HHmmss
+        SET @timestring = ISNULL(LEFT(@timestring + REPLICATE('0',10), 6), NULL)
+        
+        DECLARE @year nvarchar(4) = SUBSTRING(@datestring, 1, 4)
+        DECLARE @month nvarchar(2) = SUBSTRING(@datestring, 5, 2)
+        DECLARE @day nvarchar(2) = SUBSTRING(@datestring, 7, 2)
+        
+        -- Validate timestring format
+        IF((@year IS NULL OR @year = '')
+            OR (@month IS NULL OR @month = '')
+            OR (@day IS NULL OR @day = '')
+            OR (CHARINDEX(':', @timestring) != 0)
+            OR (CHARINDEX('-', @timestring) != 0)
+            OR( @timestring > '240000'))
+            SET @datedate = SYSDATETIME()
+        ELSE
+            SET @datedate = CONVERT(datetime2, 
+                stuff(stuff(stuff(LEFT(@datestring + @timestring, 14), 9, 0, ' '), 12, 0, ':'), 15, 0, ':'))
+    END
+    RETURN @datedate;
+END;
+GO
+                        </pre>
+                        <p><strong>Validate Study Date/Time:</strong></p>
+                        <p>Check valid StudyDate and StudyTime for each study in Dicom.studytable:</p>
+                        <pre>
+DECLARE
+    @StudyInstanceUid nvarchar(64),
+    @PatientName nvarchar(256),
+    @PatientId nvarchar(64),
+    @AccessionNumber nvarchar(64),
+    @StudyDate nvarchar(12),
+    @StudyTime nvarchar(16),
+    @TempVar datetime2
+
+DECLARE study_cursor CURSOR
+FOR SELECT
+    StudyInstanceUid,
+    PatientName,
+    PatientID,
+    AccessionNumber,
+    StudyDate,
+    StudyTime
+FROM Dicom.studytable
+
+OPEN study_cursor;
+FETCH NEXT FROM study_cursor INTO
+    @StudyInstanceUid,
+    @PatientName,
+    @PatientID,
+    @AccessionNumber,
+    @StudyDate,
+    @StudyTime;
+
+WHILE @@FETCH_STATUS = 0
+BEGIN
+    BEGIN TRY
+        SET @TempVar = [Dicom].[udf_StringToDateTime2] (@StudyDate, @StudyTime)
+        --PRINT 'Valid Studies: ' + @StudyInstanceUid + ';' + @PatientId + ';' + @AccessionNumber + ';' + @PatientName + ';' + @StudyDate + ',' + @StudyTime
+    END TRY
+    BEGIN CATCH
+        PRINT 'Invalid Studies: ' + @StudyInstanceUid + ';' + @PatientId + ';' + @AccessionNumber + ';' + @PatientName + ';' + @StudyDate + ',' + @StudyTime
+    END CATCH
+    FETCH NEXT FROM study_cursor INTO
+        @StudyInstanceUid,
+        @PatientName,
+        @PatientID,
+        @AccessionNumber,
+        @StudyDate,
+        @StudyTime;
+END;
+
+CLOSE study_cursor;
+DEALLOCATE study_cursor;
+                        </pre>
+                    </div>
+                </div>
+            </div>
+            <div class="sub-page" id="services-page" role="region" aria-label="System Services page">
+                <div class="tabs" role="tablist">
+                    <div class="tab active" data-tab="service-troubleshooting" role="tab" aria-selected="true" tabindex="0">Service Troubleshooting</div>
+                    <div class="tab" data-tab="group-policy-objects" role="tab" aria-selected="false" tabindex="0">Group Policy Objects</div>
+                    <div class="tab" data-tab="firewall-ports" role="tab" aria-selected="false" tabindex="0">Firewall & Ports</div>
+                </div>
+                <div class="section" id="service-troubleshooting" role="tabpanel">
+                    <h2>Service Troubleshooting</h2>
+                    <div class="section-content show">
+                        <p><strong>Applies to:</strong> Enterprise, Enterprise Single Server, Vitrea Extend, Vitrea Workstation deployments</p>
+                        <p><strong>Stop All Services:</strong></p>
+                        <pre>
+wmic service where "name like 'VI.%%'" stopservice
+wmic service where "name like 'Vitrea.%%'" stopservice
+wmic service where "name like 'VSP%%'" stopservice
+wmic service where "name = 'W3SVC'" stopservice
+                        </pre>
+                        <p><strong>Disable Services:</strong></p>
+                        <pre>
+wmic service where "name like 'VI.%%'" call ChangeStartmode Disabled
+wmic service where "name like 'Vitrea.%%'" call ChangeStartmode Disabled
+wmic service where "name like 'VSP%%'" call ChangeStartmode Disabled
+                        </pre>
+                        <p><strong>Restart Services:</strong></p>
+                        <pre>
+wmic service where "name = 'W3SVC'" startservice
+wmic service where "name like 'Vitrea.%%'" startservice
+wmic service where "name like 'VI.%%'" startservice
+wmic service where "name like 'VSP%%'" startservice
+                        </pre>
+                        <p><strong>VIMS Configuration File (v7.14.2):</strong></p>
+                        <p>Check the VIMS configuration file at:</p>
+                        <ul>
+                            <li><strong>Location:</strong> E:\VitreaData\VIMSnodeinstallation</li>
+                            <li>Ensure the configuration settings (e.g., node settings, paths) are correct for your deployment.</li>
+                        </ul>
+                        <div class="note">
+                            <strong>Note:</strong> If services are in a bad state and won't stop, disable them first, then kill the processes using <code>wmic process where "name like 'VI.%%'" delete</code>
+                        </div>
+                    </div>
+                </div>
+                <div class="section" id="group-policy-objects" role="tabpanel">
+                    <h2>Group Policy Objects</h2>
+                    <div class="section-content">
+                        <p><strong>Applies to:</strong> Enterprise Single Server, Vitrea Extend deployments</p>
+                        <p><strong>Settings Impacting Performance:</strong></p>
+                        <div class="warning">
+                            <strong>Critical:</strong> "Prevent IIS installation" should be disabled or the Vitrea installer cannot complete.
+                        </div>
+                        <p><strong>For Proper Reporting Functionality:</strong></p>
+                        <ul>
+                            <li>“Allow active scripting” → Enabled</li>
+                            <li>“Allow cut, copy or paste operations from the clipboard via script” → Enabled</li>
+                        </ul>
+                        <p><strong>Configuration Steps:</strong></p>
+                        <ol>
+                            <li>Open Active Directory Users and Computers</li>
+                            <li>Right-click the Vitrea OU → Properties → Group Policy</li>
+                            <li>Edit or create a GPO</li>
+                            <li>Navigate to Computer Configuration → Administrative Templates → Windows Components → Internet Explorer</li>
+                            <li>Enable required settings for Internet, Intranet, and Local Machine zones</li>
+                            <li>Repeat for User Configuration</li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="section" id="firewall-ports" role="tabpanel">
+                    <h2>Firewall and Port Configuration</h2>
+                    <div class="section-content">
+                        <p><strong>Applies to:</strong> Enterprise, Enterprise Single Server, Vitrea Extend, Vitrea Workstation deployments</p>
+                        <p><strong>Required Ports:</strong></p>
+                        <ul>
+                            <li>443 - HTTPS (recommended for PACS integrations)</li>
+                            <li>3002 - DICOM Receive</li>
+                            <li>3003 - Query Retrieve</li>
+                            <li>3389 - Remote Desktop Protocol</li>
+                        </ul>
+                        <p><strong>Firewall Logging:</strong></p>
+                        <pre>
+netsh advfirewall set currentprofile logging filename %systemroot%\system32\LogFiles\Firewall\pfirewall.log
+netsh advfirewall set currentprofile logging maxfilesize 4096
+netsh advfirewall set currentprofile logging droppedconnections enable
+netsh advfirewall set currentprofile logging allowedconnections enable
+                        </pre>
+                    </div>
+                </div>
+            </div>
+            <div class="sub-page" id="logs-page" role="region" aria-label="Log Analysis page">
+                <div class="tabs" role="tablist">
+                    <div class="tab active" data-tab="collecting-performance-logs" role="tab" aria-selected="true" tabindex="0">Performance Logs</div>
+                    <div class="tab" data-tab="log-file-analysis" role="tab" aria-selected="false" tabindex="0">Log File Analysis</div>
+                </div>
+                <div class="section" id="collecting-performance-logs" role="tabpanel">
+                    <h2>Collecting Performance Logs</h2>
+                    <div class="section-content show">
+                        <p><strong>Applies to:</strong> Enterprise, Enterprise Single Server, Vitrea Extend, Vitrea Workstation deployments</p>
+                        <p><strong>Steps:</strong></p>
+                        <ol>
+                            <li>Click gear icon</li>
+                            <li>Select "Collect Performance Logs"</li>
+                            <li>Describe issue</li>
+                            <li>Attach screenshot</li>
+                            <li>Click Save</li>
+                        </ol>
+                        <p><strong>Files Created:</strong></p>
+                        <p>Logs are saved to: C:\NAS\logCollection\current\{year}/{month}\{date-guid}</p>
+                        <ul>
+                            <li><strong>SystemInformationSummary.json:</strong> Contains user connections, version info, and machine details</li>
+                            <li><strong>Server-specific ZIPs:</strong> For Enterprise deployments: ManagementServer.zip and ApplicationServer.zip</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="section" id="log-file-analysis" role="tabpanel">
+                    <h2>Log File Analysis</h2>
+                    <div class="section-content">
+                        <p><strong>Applies to:</strong> Enterprise, Enterprise Single Server, Vitrea Extend, Vitrea Workstation deployments</p>
+                        <p><strong>Simulated Log Viewer:</strong></p>
+                        <pre>
+2023-06-15T09:23:45.123 [INFO] VIMS Service started successfully
+2023-06-15T09:23:46.456 [INFO] DICOM Receiver listening on port 3002
+2023-06-15T09:24:12.789 [WARN] Storage commitment failed for study 1.2.840.113619.2.55.3.2831218245.492.1683716052.492
+2023-06-15T09:25:33.456 [ERROR] Failed to process DICOM file: E:\DicomReceive\CT\1.2.840.113619.2.55.3.2831218245.492.1683716052.492\1.2.840.113619.2.55.3.2831218245.492.1683716052.493.dcm
+2023-06-15T09:26:01.234 [INFO] Study 1.2.840.113619.2.55.3.2831218245.492.1683716052.492 successfully added to database
+2023-06-15T09:26:45.678 [INFO] Thumbnail generation started for 5 new studies
+                        </pre>
+                        <p><strong>Log Reading Advice:</strong> Use advanced tools like Notepad++. The absence of expected log lines can sometimes indicate issues. Not all important log lines include study instance UIDs.</p>
+                        <p><strong>Key Log Locations:</strong></p>
+                        <ul>
+                            <li><strong>VIMS Logs:</strong> C:\ProgramData\Vitrea\Logs\VIMS\</li>
+                            <li><strong>Management Logs:</strong> C:\ProgramData\Vitrea\Logs\Management\</li>
+                            <li><strong>Study Tracker Logs:</strong> C:\ProgramData\Vitrea\Logs\AvCore\StudyTracker\</li>
+                            <li><strong>CDAR Integration Logs:</strong> C:\ProgramData\Vitrea\Logs\VIMS\DicomReceive.CDARIntegration\</li>
+                        </ul>
+                        <div class="pro-tip">
+                            <strong>Tip:</strong> Filter logs by date or error level (e.g., [ERROR], [WARN]) to quickly identify issues.
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="sub-page" id="additional-issues-page" role="region" aria-label="Additional Issues page">
+                <div class="tabs" role="tablist">
+                    <div class="tab active" data-tab="additional-issues" role="tab" aria-selected="true" tabindex="0">Additional Common Issues</div>
+                    <div class="tab" data-tab="troubleshooting-summary" role="tab" aria-selected="false" tabindex="0">Troubleshooting Summary</div>
+                    <div class="tab" data-tab="version-specific-issues" role="tab" aria-selected="false" tabindex="0">Version-Specific Issues</div>
+                </div>
+                <div class="section" id="additional-issues" role="tabpanel">
+                    <h2>Additional Common Issues</h2>
+                    <div class="section-content show">
+                        <p><strong>“All Sessions are in Use” Error:</strong></p>
+                        <p><strong>Applies to:</strong> Application Server (Enterprise deployment)</p>
+                        <ol>
+                            <li>Click Exit to close the error screen</li>
+                            <li>Connect to the Application Server</li>
+                            <li>Access <span class="tooltip">Server Manager<span class="tooltiptext">Found in Windows Administrative Tools</span></span> | Remote Desktop Services</li>
+                            <li>Expand Collections, right-click user in Connections, select Logoff</li>
+                        </ol>
+                        <p><strong>Applications Unable to Load Data:</strong></p>
+                        <p><strong>Applies to:</strong> Enterprise, Vitrea Extend, Vitrea Workstation deployments</p>
+                        <ul>
+                            <li>Verify and correct <span class="tooltip">NASROOT permissions<span class="tooltiptext">Network Attached Storage root directory</span></span> (Management Server must have R/W permissions)</li>
+                            <li>Ensure domain group has R/W permissions</li>
+                        </ul>
+                        <p><strong>AppShell Timeout Error:</strong></p>
+                        <p><strong>Applies to:</strong> Enterprise, Vitrea Extend deployments</p>
+                        <ul>
+                            <li>Check group policies for Vitrea Kiosk launch</li>
+                            <li>Apply group policy and re-login</li>
+                        </ul>
+                        <p><strong>CONFIG REQUIRED Button Displays:</strong></p>
+                        <p><strong>Applies to:</strong> Enterprise, Enterprise Single Server, Vitrea Extend, Vitrea Workstation deployments</p>
+                        <ul>
+                            <li>Run the System Setup Script for Windows 7 from the Install the Vitrea software chapter</li>
+                        </ul>
+                        <p><strong>Credentials Screen Always Displays:</strong></p>
+                        <p><strong>Applies to:</strong> Management Server, Application Server, Multi Modality Viewer Server (Enterprise deployment)</p>
+                        <ul>
+                            <li>Complete the "Configure Site to Zone Assignment List" procedure in the Enterprise Deployment Active Directory Planning Guide</li>
+                            <li>If first login, cancel the prompt, close Vitrea (AppShell), and re-launch</li>
+                        </ul>
+                        <p><strong>Database Deployment Tool Failed:</strong></p>
+                        <p><strong>Applies to:</strong> Enterprise Single Server, Vitrea Extend, Vitrea Workstation deployments</p>
+                        <ol>
+                            <li>Click EXIT on the Vitrea installer screen</li>
+                            <li>Run services.msc and restart SQL Server (VITALSQLEXPRESS)</li>
+                            <li>Open SQL Server Management Studio, set VIDicom to MULTI_USER</li>
+                            <li>Run C:\ProgramFiles\Vital Images\DatabaseDeploymentTool\ddt-ui.exe</li>
+                            <li>Deploy VSP, Dicom Servers, and Vitrea Workstation schemas</li>
+                            <li>Apply permissions and reboot</li>
+                        </ol>
+                        <p><strong>Error Creating FMS Artifact for Report Page:</strong></p>
+                        <p><strong>Applies to:</strong> Enterprise deployment</p>
+                        <ol>
+                            <li>Open gpedit on Management Server and Application Servers</li>
+                            <li>Navigate to Computer Configuration | Administrative Templates | System | Internet Communication Management | Internet Communication Settings</li>
+                            <li>Enable "Turn off Automatic Root Certificates Update"</li>
+                        </ol>
+                        <p><strong>Fails to Create Evidence:</strong></p>
+                        <p><strong>Applies to:</strong> Management Server (Enterprise deployment)</p>
+                        <ul>
+                            <li>Ensure Management Server has full NAS access</li>
+                            <li>Set IIS max content length to 4294967295</li>
+                        </ul>
+                        <p><strong>HTTP 403 Error During Launch:</strong></p>
+                        <p><strong>Applies to:</strong> Enterprise, Enterprise Single Server, Vitrea Extend, Vitrea Workstation deployments</p>
+                        <ol>
+                            <li>Open Region settings, select Administrative language settings</li>
+                            <li>Ensure Welcome screen settings list English (United States)</li>
+                            <li>Copy settings to Welcome screen and system accounts, then reboot</li>
+                        </ol>
+                        <p><strong>Licensing Error for Cedars:</strong></p>
+                        <p><strong>Applies to:</strong> Enterprise deployment</p>
+                        <ul>
+                            <li>Ensure Application Server can reach Floating License Server on port 6433</li>
+                        </ul>
+                        <p><strong>RD Session Host Licensing Mode Not Configured:</strong></p>
+                        <p><strong>Applies to:</strong> Management Server (Enterprise deployment)</p>
+                        <ol>
+                            <li>In PowerShell, run: <code>$obj = gwmi -namespace “Root/CIMV2/TerminalServices” Win32_TerminalServiceSetting; $obj.SetSpecifiedLicenseServerList(“licserver.domain.local”)</code></li>
+                            <li>In regedit, set HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server\RCM\LicensingMode to DWORD 2 (Per Device) or 4 (Per User)</li>
+                            <li>Restart the Management Server</li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="section" id="troubleshooting-summary" role="tabpanel">
+                    <h2>Troubleshooting Summary</h2>
+                    <div class="section-content">
+                        <p><strong>Key Resources:</strong></p>
+                        <ul>
+                            <li>Vitrea Administration and Troubleshooting Guide (VPMC-17210 B)</li>
+                            <li>Knowledge Base articles (e.g., KB 7998 for services)</li>
+                            <li>Canon Medical Customer Support</li>
+                        </ul>
+                        <p><strong>Best Practices:</strong></p>
+                        <ul>
+                            <li>Document all changes</li>
+                            <li>Back up before modifications</li>
+                            <li>Check disk space regularly</li>
+                            <li>Monitor service status</li>
+                        </ul>
+                        <div class="pro-tip">
+                            <strong>Pro Tip:</strong> Regularly review logs and system health to prevent issues before they occur.
+                        </div>
+                    </div>
+                </div>
+                <div class="section" id="version-specific-issues" role="tabpanel">
+                    <h2>Version-Specific Issues</h2>
+                    <div class="section-content">
+                        <p><strong>Version 7.12.3: Report Editor 404 Error</strong></p>
+                        <p><strong>Applies to:</strong> Enterprise, Enterprise Single Server, Vitrea Extend deployments</p>
+                        <ul>
+                            <li>Check IIS configuration to ensure the Report Editor service is running.</li>
+                            <li>Verify the Report Editor URL is correctly configured in System Settings.</li>
+                            <li>Restart IIS using: <code>iisreset</code></li>
+                        </ul>
+                        <p><strong>Version 7.14.2: Application Icons Not Displaying, Unable to Open Studies</strong></p>
+                        <p><strong>Applies to:</strong> Enterprise, Enterprise Single Server, Vitrea Extend deployments</p>
+                        <ul>
+                            <li><strong>Fix:</strong> Restart Vitrea services:
+                                <pre>
+wmic service where "name like 'Vitrea.%%'" stopservice
+wmic service where "name like 'Vitrea.%%'" startservice
+                                </pre>
+                            </li>
+                        </ul>
+                        <p><strong>Version 7.15.5: Application Service Not Checking into SQL</strong></p>
+                        <p><strong>Applies to:</strong> Enterprise, Enterprise Single Server, Vitrea Extend deployments</p>
+                        <ul>
+                            <li>Change .NET app pools in IIS from 2.0 to 4.0:
+                                <ol>
+                                    <li>Open IIS Manager</li>
+                                    <li>Navigate to Application Pools</li>
+                                    <li>Select the Vitrea application pool</li>
+                                    <li>Change .NET CLR Version to v4.0</li>
+                                    <li>Restart the application pool</li>
+                                </ol>
+                            </li>
+                        </ul>
+                        <p><strong>Version 7.15.6: Web Services Down, Exporting Fails</strong></p>
+                        <p><strong>Applies to:</strong> Enterprise, Enterprise Single Server, Vitrea Extend deployments</p>
+                        <ul>
+                            <li><strong>Issue:</strong> Web services are down, and exporting fails immediately with an error (no Wireshark activity).</li>
+                            <li><strong>Cause:</strong> IIS Restriction script was run, and the IP address changed.</li>
+                            <li><strong>Fix:</strong>
+                                <ol>
+                                    <li>Open IIS Manager</li>
+                                    <li>Navigate to the Vitrea site → IP Address and Domain Restrictions</li>
+                                    <li>Remove the old IP address</li>
+                                    <li>Run <code>iisreset</code></li>
+                                    <li>Add the new IP address if needed</li>
+                                </ol>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="navigation">
+            <button class="nav-btn" id="backBtn" aria-label="Back to Main Page">Back to Main Page</button>
+        </div>
+    </div>
+    <button id="backToTop" aria-label="Back to Top"><i class="fas fa-arrow-up"></i></button>
+    <script>
+        console.log('Script initialized');
+
+        function showPage(pageId) {
+            const page = document.getElementById(pageId);
+            if (!page) {
+                console.error(`Page with ID ${pageId} not found`);
+                showPage('main-page');
+                return;
+            }
+            document.querySelectorAll('.main-page, .sub-page').forEach(p => {
+                p.style.display = 'none';
+                p.classList.remove('active');
+            });
+            page.style.display = 'block';
+            page.classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            const firstTab = page.querySelector('.tab');
+            if (firstTab) {
+                showTab(firstTab.dataset.tab);
+            } else {
+                const contents = page.querySelectorAll('.section-content');
+                if (contents.length > 0) {
+                    contents.forEach(content => {
+                        content.classList.add('show');
+                    });
+                } else {
+                    console.warn(`No .section-content found in page ${pageId}`);
+                }
+            }
+        }
+
+        function showTab(tabId) {
+            const page = document.querySelector('.sub-page.active') || document.querySelector('.main-page');
+            if (!page) {
+                console.error('No active page found');
+                showPage('main-page');
+                return;
+            }
+            const section = document.getElementById(tabId);
+            if (!section) {
+                console.error(`Section with ID ${tabId} not found`);
+                return;
+            }
+            const sectionContent = section.querySelector('.section-content');
+            if (!sectionContent) {
+                console.error(`No .section-content found in section ${tabId}`);
+                return;
+            }
+            page.querySelectorAll('.section-content').forEach(content => {
+                content.classList.remove('show');
+                removeHighlights(content);
+            });
+            page.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+                tab.setAttribute('aria-selected', 'false');
+            });
+            sectionContent.classList.add('show');
+            const tab = page.querySelector(`.tab[data-tab="${tabId}"]`);
+            if (tab) {
+                tab.classList.add('active');
+                tab.setAttribute('aria-selected', 'true');
+            } else {
+                console.warn(`No tab found for tabId ${tabId}`);
+            }
+            section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function removeHighlights(element) {
+            const highlights = element.querySelectorAll('.highlight');
+            highlights.forEach(highlight => {
+                const textNode = document.createTextNode(highlight.textContent);
+                highlight.replaceWith(textNode);
+            });
+        }
+
+        function highlightSearchMatches(searchTerm, element) {
+            removeHighlights(element);
+            if (searchTerm) {
+                const regex = new RegExp(`(${searchTerm})`, 'gi');
+                const walker = (node) => {
+                    if (node.nodeType === Node.TEXT_NODE && node.textContent.match(regex)) {
+                        const parts = node.textContent.split(regex);
+                        const fragment = document.createDocumentFragment();
+                        parts.forEach((part, i) => {
+                            fragment.appendChild(document.createTextNode(part));
+                            if (i < parts.length - 1) {
+                                const span = document.createElement('span');
+                                span.className = 'highlight';
+                                span.textContent = searchTerm;
+                                fragment.appendChild(span);
+                            }
+                        });
+                        node.replaceWith(fragment);
+                    } else if (node.nodeType === Node.ELEMENT_NODE) {
+                        Array.from(node.childNodes).forEach(walker);
+                    }
+                };
+                walker(element);
+            }
+        }
+
+        document.querySelectorAll('.toc-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const pageId = item.dataset.page;
+                showPage(pageId);
+            });
+            item.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    const pageId = item.dataset.page;
+                    showPage(pageId);
+                }
+            });
+        });
+
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                const tabId = tab.dataset.tab;
+                if (document.getElementById(tabId)) {
+                    showTab(tabId);
+                }
+            });
+            tab.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    const tabId = tab.dataset.tab;
+                    if (document.getElementById(tabId)) {
+                        showTab(tabId);
+                    }
+                }
+            });
+        });
+
+        document.getElementById('backBtn').addEventListener('click', () => {
+            showPage('main-page');
+        });
+        document.getElementById('backBtn').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                showPage('main-page');
+            }
+        });
+
+        const searchBar = document.getElementById('searchBar');
+        let searchTimeout;
+        searchBar.addEventListener('input', () => {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                const searchTerm = searchBar.value.toLowerCase().trim();
+                document.querySelectorAll('.sub-page').forEach(page => {
+                    page.style.display = 'none';
+                    page.classList.remove('active');
+                });
+                document.querySelectorAll('.section').forEach(section => {
+                    section.style.display = 'none';
+                    removeHighlights(section);
+                });
+                if (!searchTerm) {
+                    showPage('main-page');
+                } else {
+                    document.querySelectorAll('.sub-page').forEach(page => {
+                        const text = page.textContent.toLowerCase();
+                        if (text.includes(searchTerm)) {
+                            page.style.display = 'block';
+                            page.classList.add('active');
+                            page.querySelectorAll('.section').forEach(section => {
+                                if (section.textContent.toLowerCase().includes(searchTerm)) {
+                                    section.style.display = 'block';
+                                    highlightSearchMatches(searchTerm, section);
+                                }
+                            });
+                            const firstMatch = document.querySelector('.sub-page[style*="block"]');
+                            if (firstMatch) {
+                                showPage(firstMatch.id);
+                            } else {
+                                console.warn('No matching pages found for search term:', searchTerm);
+                                showPage('main-page');
+                            }
+                        }
+                    });
+                }
+            }, 300);
+        });
+
+        document.getElementById('clearSearch').addEventListener('click', () => {
+            searchBar.value = '';
+            document.querySelectorAll('.sub-page').forEach(page => {
+                page.style.display = 'none';
+                page.classList.remove('active');
+            });
+            document.querySelectorAll('.section').forEach(section => {
+                section.style.display = 'none';
+                removeHighlights(section);
+            });
+            showPage('main-page');
+        });
+        document.getElementById('clearSearch').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                searchBar.value = '';
+                document.querySelectorAll('.sub-page').forEach(page => {
+                    page.style.display = 'none';
+                    page.classList.remove('active');
+                });
+                document.querySelectorAll('.section').forEach(section => {
+                    section.style.display = 'none';
+                    removeHighlights(section);
+                });
+                showPage('main-page');
+            }
+        });
+
+        const backToTopBtn = document.getElementById('backToTop');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTopBtn.style.display = 'block';
+            } else {
+                backToTopBtn.style.display = 'none';
+            }
+        });
+
+        backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+        backToTopBtn.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        });
+    </script>
+</body>
+</html>
+```

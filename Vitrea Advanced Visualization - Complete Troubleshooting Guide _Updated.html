@@ -1,0 +1,1625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vitrea Advanced Visualization - Complete Troubleshooting Guide</title>
+    <style>
+        :root {
+            --primary: #0066cc; /* Canon blue */
+            --secondary: #e31937; /* Canon red */
+            --light: #f5f7fa;
+            --dark: #333;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .presentation-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .slide {
+            display: none;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+            animation: fadeIn 0.5s;
+        }
+        
+        .slide.active {
+            display: block;
+        }
+        
+        h1 {
+            color: var(--primary);
+            border-bottom: 2px solid var(--secondary);
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        
+        h2 {
+            color: var(--primary);
+            margin-top: 25px;
+        }
+        
+        h3 {
+            color: var(--secondary);
+        }
+        
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        
+        button {
+            padding: 10px 20px;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        button:hover {
+            background-color: var(--secondary);
+            transform: translateY(-2px);
+        }
+        
+        button:disabled {
+            background-color: #95a5a6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        pre {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            border-left: 4px solid var(--primary);
+            font-family: 'Courier New', Courier, monospace;
+            white-space: pre-wrap;
+        }
+        
+        code {
+            font-family: 'Courier New', Courier, monospace;
+            color: var(--secondary);
+            background-color: #f9f2f4;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        
+        .version-badge {
+            background-color: var(--secondary);
+            color: white;
+        }
+        
+        .tip-box {
+            background-color: #e8f4fc;
+            border-left: 4px solid var(--primary);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 5px 5px 0;
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .tip-box i {
+            margin-right: 10px;
+            color: var(--primary);
+            font-size: 24px;
+        }
+        
+        .warning-box {
+            background-color: #fde8e8;
+            border-left: 4px solid var(--danger);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 5px 5px 0;
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .warning-box i {
+            margin-right: 10px;
+            color: var(--danger);
+            font-size: 24px;
+        }
+        
+        .success-box {
+            background-color: #e8f6ea;
+            border-left: 4px solid var(--success);
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 5px 5px 0;
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .success-box i {
+            margin-right: 10px;
+            color: var(--success);
+            font-size: 24px;
+        }
+        
+        .sql-keyword {
+            color: #0077cc;
+            font-weight: bold;
+        }
+        
+        .sql-string {
+            color: #dd1144;
+        }
+        
+        .sql-comment {
+            color: #999988;
+            font-style: italic;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .progress-container {
+            height: 8px;
+            background-color: #ecf0f1;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            width: 0%;
+            transition: width 0.3s;
+        }
+        
+        .slide-counter {
+            text-align: right;
+            color: #7f8c8d;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+        
+        .feature-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            border-top: 4px solid var(--primary);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .feature-card i {
+            font-size: 36px;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        .feature-card h3 {
+            margin-top: 0;
+            color: var(--primary);
+        }
+        
+        .tab-container {
+            margin: 20px 0;
+        }
+        
+        .tab-buttons {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .tab-btn {
+            padding: 10px 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--dark);
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .tab-btn.active {
+            border-bottom: 3px solid var(--primary);
+            color: var(--primary);
+            font-weight: bold;
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 20px 0;
+        }
+        
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        
+        .accordion {
+            margin: 20px 0;
+        }
+        
+        .accordion-item {
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+        
+        .accordion-header {
+            padding: 15px 20px;
+            background-color: #f8f9fa;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        .accordion-header:hover {
+            background-color: #e9ecef;
+        }
+        
+        .accordion-header i {
+            transition: transform 0.3s;
+        }
+        
+        .accordion-header.active {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .accordion-header.active i {
+            transform: rotate(180deg);
+        }
+        
+        .accordion-content {
+            padding: 0 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        
+        .accordion-content.show {
+            padding: 20px;
+            max-height: 1000px;
+        }
+        
+        .flow-chart {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            margin: 30px 0;
+        }
+        
+        .flow-step {
+            background-color: white;
+            border: 2px solid var(--primary);
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 15px 30px;
+            position: relative;
+            font-weight: bold;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        
+        .flow-step:after {
+            content: "→";
+            position: absolute;
+            right: -25px;
+            color: var(--primary);
+            font-size: 24px;
+        }
+        
+        .flow-step:last-child:after {
+            display: none;
+        }
+        
+        .flow-step-text {
+            text-align: center;
+            width: 120px;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        
+        .flow-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0 15px;
+        }
+        
+        .search-box {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            border-left: 4px solid var(--info);
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        .log-entry {
+            font-family: 'Courier New', Courier, monospace;
+            margin: 5px 0;
+            padding: 5px;
+            border-radius: 3px;
+            background-color: #f8f9fa;
+        }
+        
+        .log-error {
+            color: var(--danger);
+        }
+        
+        .log-warning {
+            color: var(--warning);
+        }
+        
+        .log-info {
+            color: var(--info);
+        }
+        
+        .log-success {
+            color: var(--success);
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        /* Animation for the surprise element */
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+            40% {transform: translateY(-30px);}
+            60% {transform: translateY(-15px);}
+        }
+        
+        .surprise {
+            animation: bounce 1s;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .flow-step {
+                margin: 0 5px 20px;
+            }
+            
+            .flow-step:after {
+                right: -15px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="presentation-container">
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        
+        <!-- Slide 1: Title Slide -->
+        <div class="slide active" id="slide1">
+            <div class="slide-counter">1 of 22</div>
+            <h1>Vitrea Advanced Visualization <span class="version-badge badge">v7.14.2 - 7.16.x</span></h1>
+            <h2>Complete Troubleshooting Guide</h2>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <i class="fas fa-bug"></i>
+                    <h3>Common Issues</h3>
+                    <p>Diagnose and resolve frequent problems</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-database"></i>
+                    <h3>SQL Solutions</h3>
+                    <p>Database fixes and configuration</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-cogs"></i>
+                    <h3>System Services</h3>
+                    <p>Manage and troubleshoot Vitrea services</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-file-alt"></i>
+                    <h3>Log Analysis</h3>
+                    <p>Find critical information in log files</p>
+                </div>
+            </div>
+            
+            <div class="tip-box">
+                <i class="fas fa-lightbulb"></i>
+                <div>
+                    <strong>Pro Tip:</strong> This guide combines all troubleshooting information for Vitrea Workstation, Vitrea Extend, and Enterprise systems (v7.14.2 through 7.16.x).
+                </div>
+            </div>
+            
+            <div class="nav-buttons">
+                <button disabled id="prevBtn1">Previous</button>
+                <button id="nextBtn1">Next</button>
+            </div>
+        </div>
+        
+        <!-- Slide 2: Introduction -->
+        <div class="slide" id="slide2">
+            <div class="slide-counter">2 of 22</div>
+            <h1>Introduction to Vitrea Troubleshooting</h1>
+            
+            <p>This comprehensive guide covers all aspects of Vitrea troubleshooting, including:</p>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <i class="fas fa-download"></i>
+                    <h3>Installation</h3>
+                    <p>Configuration, uninstall, repair</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-exchange-alt"></i>
+                    <h3>DICOM</h3>
+                    <p>Receive, SCU, third-party integrations</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-server"></i>
+                    <h3>Services</h3>
+                    <p>Management, administrator accounts</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-key"></i>
+                    <h3>Licensing</h3>
+                    <p>Vitrea License Server, Remote Desktop</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-shield-alt"></i>
+                    <h3>Group Policies</h3>
+                    <p>User accounts, security settings</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-fire-extinguisher"></i>
+                    <h3>Firewall</h3>
+                    <p>Port configurations, enable/disable</p>
+                </div>
+            </div>
+            
+            <div class="warning-box">
+                <i class="fas fa-exclamation-triangle"></i>
+                <div>
+                    <strong>Reference:</strong> Always consult the Vitrea Administration and Troubleshooting Guide (VPMC-17210 B) for complete information.
+                </div>
+            </div>
+            
+            <div class="nav-buttons">
+                <button id="prevBtn2">Previous</button>
+                <button id="nextBtn2">Next</button>
+            </div>
+        </div>
+        
+        <!-- Slide 3: Common Issues -->
+        <div class="slide" id="slide3">
+            <div class="slide-counter">3 of 22</div>
+            <h1>Top Customer Complaints</h1>
+            
+            <div class="accordion">
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <span>Applications not launching</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="accordion-content">
+                        <p>Possible causes:</p>
+                        <ul>
+                            <li>Licensing issues (confirm feature is purchased and available)</li>
+                            <li>Application failing to get required resources</li>
+                            <li>Internal application error</li>
+                            <li>Service issues (v7.14.2 specific fix: restart services)</li>
+                        </ul>
+                        <p>Check licensing status at: <code>http://localhost:8700/management/api/license/usage</code></p>
+                    </div>
+                </div>
+                
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <span>Study ingestion problems</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="accordion-content">
+                        <p>Common scenarios:</p>
+                        <ul>
+                            <li>Studies aren't coming into Vitrea</li>
+                            <li>Not all of a study is received</li>
+                            <li>Slow study transfer</li>
+                        </ul>
+                        <p>Diagnostic questions to ask:</p>
+                        <ul>
+                            <li>Is it one, multiple, or all studies?</li>
+                            <li>How long has this been happening?</li>
+                            <li>Is it specific to certain modalities/PACS/VNA?</li>
+                            <li>Is it just when pushing or also with query retrieve?</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <span>StudyList displays but no data</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="accordion-content">
+                        <p>Troubleshooting steps:</p>
+                        <ol>
+                            <li>Check UI filters (default Study Date = "Today")</li>
+                            <li>Click "Search" to force refresh</li>
+                            <li>Verify VAT data directory location</li>
+                            <li>Check AutoDelete settings vs. disk space</li>
+                            <li>Review relevant log files</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="nav-buttons">
+                <button id="prevBtn3">Previous</button>
+                <button id="nextBtn3">Next</button>
+            </div>
+        </div>
+        
+        <!-- Slide 4: Study Ingestion Process -->
+        <div class="slide" id="slide4">
+            <div class="slide-counter">4 of 22</div>
+            <h1>Understanding Study Ingestion</h1>
+            
+            <div class="flow-chart">
+                <div class="flow-container">
+                    <div class="flow-step">1</div>
+                    <div class="flow-step-text">DICOM files transferred to Vitrea</div>
+                </div>
+                <div class="flow-container">
+                    <div class="flow-step">2</div>
+                    <div class="flow-step-text">Vitrea builds DAR file</div>
+                </div>
+                <div class="flow-container">
+                    <div class="flow-step">3</div>
+                    <div class="flow-step-text">Study stored in database</div>
+                </div>
+                <div class="flow-container">
+                    <div class="flow-step">4</div>
+                    <div class="flow-step-text">Appears on StudyList</div>
+                </div>
+                <div class="flow-container">
+                    <div class="flow-step">5</div>
+                    <div class="flow-step-text">Application stacks built</div>
+                </div>
+            </div>
+            
+            <div class="tab-container">
+                <div class="tab-buttons">
+                    <button class="tab-btn active" data-tab="tab1">Services Involved</button>
+                    <button class="tab-btn" data-tab="tab2">Places to Look</button>
+                    <button class="tab-btn" data-tab="tab3">Log Files</button>
+                </div>
+                
+                <div class="tab-content active" id="tab1">
+                    <p>Key services in the ingestion process:</p>
+                    <ol>
+                        <li>Acceptor → AssocServant → DICOM Receive</li>
+                        <li>RCV3DProcessor → Database</li>
+                        <li>CDAR Archive Integration → FileCopy</li>
+                    </ol>
+                    <p>For a full list of services, see KB 7998</p>
+                </div>
+                
+                <div class="tab-content" id="tab2">
+                    <ul>
+                        <li>VIMS Monitor (check processing status)</li>
+                        <li>System Health Study Queue</li>
+                        <li>File system (verify space on C:, DICOM Receive, NAS drives)</li>
+                        <li>Delete and resend test data</li>
+                        <li>Run Wireshark to analyze DICOM communication</li>
+                    </ul>
+                </div>
+                
+                <div class="tab-content" id="tab3">
+                    <p>Critical log files for ingestion issues:</p>
+                    <ul>
+                        <li>DICOM Receive: <code>C:\ProgramData\Vitrea\Logs\VIMS\DicomReceive.log</code></li>
+                        <li>Study Tracker: <code>C:\ProgramData\Vitrea\Logs\AvCore\StudyTracker\</code></li>
+                        <li>VSP Management: <code>C:\ProgramData\Vitrea\Logs\Management\vitrea-management.log</code></li>
+                        <li>CDAR Integration: <code>C:\ProgramData\Vitrea\Logs\VIMS\DicomReceive.CDARIntegration\</code></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="nav-buttons">
+                <button id="prevBtn4">Previous</button>
+                <button id="nextBtn4">Next</button>
+            </div>
+        </div>
+        
+        <!-- Slide 5: Application Launch Issues -->
+        <div class="slide" id="slide5">
+            <div class="slide-counter">5 of 22</div>
+            <h1>Application Launch Problems</h1>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <h3>Error Messages</h3>
+                    <p>"Application terminated abnormally" - indicates internal error</p>
+                    <p>"Unable to acquire system resources" - GPU allocation issue</p>
+                    <p>"Vitrea Client has encountered an error" - demographic info failure</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-desktop"></i>
+                    <h3>Scaling Errors (v7.14.2)</h3>
+                    <ol>
+                        <li>Right-click Vitrea shortcut</li>
+                        <li>Properties → Compatibility</li>
+                        <li>Change high DPI settings</li>
+                        <li>Override scaling behavior → SYSTEM</li>
+                    </ol>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-user-shield"></i>
+                    <h3>Non-Admin Users</h3>
+                    <ol>
+                        <li>Delete MSLicensing registry keys</li>
+                        <li>Reboot client machine</li>
+                        <li>Run MSTSC.exe as admin</li>
+                    </ol>
+                </div>
+            </div>
+            
+            <div class="search-box">
+                <h3>Quick Issue Search</h3>
+                <input type="text" id="issueSearch" placeholder="Describe your issue...">
+                <button id="searchBtn" style="margin-top: 10px;">Search Solutions</button>
+                <div id="searchResults" class="hidden" style="margin-top: 15px;"></div>
+            </div>
+            
+            <div class="nav-buttons">
+                <button id="prevBtn5">Previous</button>
+                <button id="nextBtn5">Next</button>
+            </div>
+        </div>
+        
+        <!-- Slide 6: SQL Configuration -->
+        <div class="slide" id="slide6">
+            <div class="slide-counter">6 of 22</div>
+            <h1>SQL Configuration Solutions</h1>
+            
+            <h2>Report Page Closing Issue</h2>
+            <p>Verify C-STORESCP configuration in <code>dbo.cfg_ArchiveConnection</code>:</p>
+            
+            <pre><span class="sql-keyword">UPDATE</span> dbo.cfg_ArchiveConnection
+<span class="sql-keyword">SET</span> AETitle=<span class="sql-string">'DHVITREA'</span>
+<span class="sql-keyword">WHERE</span> ArchiveConnectionID=<span class="sql-string">'6'</span>;
+
+<span class="sql-keyword">UPDATE</span> dbo.cfg_ArchiveConnection
+<span class="sql-keyword">SET</span> hostname=<span class="sql-string">'CWPACSVITAPP01.hosp.dhha.org'</span>
+<span class="sql-keyword">WHERE</span> ArchiveConnectionID=<span class="sql-string">'6'</span>;
+
+<span class="sql-keyword">UPDATE</span> dbo.cfg_ArchiveConnection
+<span class="sql-keyword">SET</span> Port=<span class="sql-string">'3002'</span>
+<span class="sql-keyword">WHERE</span> ArchiveConnectionID=<span class="sql-string">'6'</span>;</pre>
+            
+            <h2>Old Hostname Cleanup</h2>
+            <pre><span class="sql-keyword">DELETE FROM</span> [VIDicom].[dbo].[sys_Service]
+<span class="sql-keyword">WHERE</span> [Status] = <span class="sql-string">'OFFLINE'</span>;</pre>
+            
+            <div class="warning-box">
+                <i class="fas fa-exclamation-triangle"></i>
+                <div>
+                    <strong>Warning:</strong> Always back up your database before running SQL updates. Deleting the configured default archive can make Vitrea unusable.
+                </div>
+            </div>
+            
+            <div class="nav-buttons">
+                <button id="prevBtn6">Previous</button>
+                <button id="nextBtn6">Next</button>
+            </div>
+        </div>
+        
+        <!-- Slide 7: Database Issues -->
+        <div class="slide" id="slide7">
+            <div class="slide-counter">7 of 22</div>
+            <h1>Database Troubleshooting</h1>
+            
+            <div class="tab-container">
+                <div class="tab-buttons">
+                    <button class="tab-btn active" data-tab="dbTab1">Connectivity Issues</button>
+                    <button class="tab-btn" data-tab="dbTab2">Single User Mode</button>
+                    <button class="tab-btn" data-tab="dbTab3">Deployment Tool</button>
+                    <button class="tab-btn" data-tab="dbTab4">Stuck Studies</button>
+                </div>
+                
+                <div class="tab-content active" id="dbTab1">
+                    <h3>"Expect connectivity issues" Error</h3>
+                    <p>When using Database Deployment Tool:</p>
+                    <ol>
+                        <li>Close the tool</li>
+                        <li>Stop all Vitrea services</li>
+                        <li>Open SQL Server Management Studio</li>
+                        <li>Connect to SQL instance</li>
+                        <li>Right-click VIDicom → Properties → Options</li>
+                        <li>Change Restrict Access to <code>multi_user</code></li>
+                    </ol>
+                </div>
+                
+                <div class="tab-content" id="dbTab2">
+                    <h3>Unlocking the Database</h3>
+                    <p>If studies appear locked:</p>
+                    <pre><span class="sql-keyword">UPDATE</span> dbo.DATABASECHANGELOGLOCK <span class="sql-keyword">SET</span> LOCKED=0, 
+LOCKGRANTED=<span class="sql-keyword">null</span>, LOCKEDBY=<span class="sql-keyword">null</span> <span class="sql-keyword">where</span> ID=1</pre>
+                </div>
+                
+                <div class="tab-content" id="dbTab3">
+                    <h3>Indexing Solution</h3>
+                    <p>Improve query performance:</p>
+                    <pre><span class="sql-keyword">USE</span> [VIDicom]
+<span class="sql-keyword">CREATE NONCLUSTERED INDEX</span> [IX_fms_ArtifactMetadata_ArtfactID_Include]
+<span class="sql-keyword">ON</span> [dbo].[fms_ArtifactMetadata] ([ArtifactId])
+<span class="sql-keyword">INCLUDE</span> ([Name],[Value],[CreatedBy],[CreatedOn],[UpdatedBy],[UpdatedOn],[Version])</pre>
+                </div>
+                
+                <div class="tab-content" id="dbTab4">
+                    <h3>Deleting Stuck Studies</h3>
+                    <p>When studies won't delete properly:</p>
+                    <ol>
+                        <li>Locate StudyInstanceUID using SQL queries</li>
+                        <li>Find StudyUUID in dbo.mint_study</li>
+                        <li>Remove StudyUUID folder from NAS or VitreaData</li>
+                        <li>Run comprehensive deletion script</li>
+                    </ol>
+                </div>
+            </div>
+            
+            <div class="nav-buttons">
+                <button id="prevBtn7">Previous</button>
+                <button id="nextBtn7">Next</button>
+            </div>
+        </div>
+        
+        <!-- Slide 8: Delete Stuck Studies -->
+        <div class="slide" id="slide8">
+            <div class="slide-counter">8 of 22</div>
+            <h1>Complete Study Deletion Process</h1>
+            
+            <h2>When to Use This Solution</h2>
+            <ul>
+                <li>Dataset appears to delete but remains after refresh</li>
+                <li>Study failing to build in Vitrea</li>
+                <li>Duplicate error in MintMetadataProcessor logs</li>
+                <li>Study in <code>mint_Study</code> but not in <code>Dicom.studytable</code></li>
+            </ul>
+            
+            <h2>SQL Script to Remove Stuck Study</h2>
+            <pre><span class="sql-comment">/* Clear locked patients if needed */</span>
+<span class="sql-comment">--DELETE FROM [Dicom].ItemLock</span>
+
+<span class="sql-comment">/* Clear blacklist and remove from mint */</span>
+<span class="sql-keyword">DELETE FROM</span> mint_Change <span class="sql-keyword">WHERE</span> StudyInstanceUID = <span class="sql-string">'1.3.51.0.1.1.10.3.1.192.1840909.1840908'</span>;
+<span class="sql-keyword">DELETE FROM</span> mint_Study <span class="sql-keyword">WHERE</span> StudyInstanceUID = <span class="sql-string">'1.3.51.0.1.1.10.3.1.192.1840909.1840908'</span>;
+<span class="sql-keyword">DELETE FROM</span> mint_Blacklist;
+<span class="sql-keyword">DELETE FROM</span> dbo.mint_Study <span class="sql-keyword">WHERE</span> StudyUUID = <span class="sql-string">'808dbdcc-5e76-4643-a5d4-d38ffb15172b'</span>;
+<span class="sql-keyword">UPDATE</span> dbo.mint_Study <span class="sql-keyword">SET</span> StudyVersion=<span class="sql-string">'-1'</span> <span class="sql-keyword">WHERE</span> StudyUUID = <span class="sql-string">'808dbdcc-5e76-4643-a5d4-d38ffb15172b'</span>;
+
+<span class="sql-comment">/* Remove from DICOM tables */</span>
+<span class="sql-keyword">DELETE FROM</span> [Dicom].seriestable <span class="sql-keyword">WHERE</span> StudyInstanceUID = <span class="sql-string">'1.3.51.0.1.1.10.3.1.192.1840909.1840908'</span>;
+<span class="sql-keyword">DELETE FROM</span> [Dicom].studytable <span class="sql-keyword">WHERE</span> StudyInstanceUID = <span class="sql-string">'1.3.51.0.1.1.10.3.1.192.1840909.1840908'</span>;</pre>
+            
+            <div class="nav-buttons">
+                <button id="prevBtn8">Previous</button>
+                <button id="nextBtn8">Next</button>
+            </div>
+        </div>
+        
+        <!-- Slide 9: Service Management -->
+        <div class="slide" id="slide9">
+            <div class="slide-counter">9 of 22</div>
+            <h1>Service Troubleshooting</h1>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <i class="fas fa-power-off"></i>
+                    <h3>Stop All Services</h3>
+                    <pre>wmic service where "name like 'VI.%%'" stopservice
+wmic service where "name like 'Vitrea.%%'" stopservice
+wmic service where "name like 'VSP%%'" stopservice
+wmic service where "name = 'W3SVC'" stopservice</pre>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-ban"></i>
+                    <h3>Disable Services</h3>
+                    <pre>wmic service where "name like 'VI.%%'" call ChangeStartmode Disabled
+wmic service where "name like 'Vitrea.%%'" call ChangeStartmode Disabled
+wmic service where "name like 'VSP%%'" call ChangeStartmode Disabled</pre>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-play"></i>
+                    <h3>Restart Services</h3>
+                    <pre>wmic service where "name = 'W3SVC'" startservice
+wmic service where "name like 'Vitrea.%%'" startservice
+wmic service where "name like 'VI.%%'" startservice
+wmic service where "name like 'VSP%%'" startservice</pre>
+                </div>
+            </div>
+            
+            <div class="tip-box">
+                <i class="fas fa-info-circle"></i>
+                <div>
+                    <strong>Note:</strong> If services are in a bad state and won't stop, disable them first, then kill the processes using <code>wmic process where "name like 'VI.%%'" delete</code>
+                </div>
+            </div>
+            
+            <div class="nav-buttons">
+                <button id="prevBtn9">Previous</button>
+                <button id="nextBtn9">Next</button>
+            </div>
+        </div>
+        
+        <!-- Slide 10: Group Policy Objects -->
+        <div class="slide" id="slide10">
+            <div class="slide-counter">10 of 22</div>
+            <h1>Group Policy Objects</h1>
+            
+            <p>Settings that impact Vitrea performance:</p>
+            
+            <div class="success-box">
+                <i class="fas fa-check-circle"></i>
+                <div>
+                    <strong>Critical:</strong> "Prevent IIS installation" should be <strong>disabled</strong> or the Vitrea installer cannot complete.
+                </div>
+            </div>
+            
+            <p>For proper Reporting functionality:</p>
+            <ul>
+                <li>"Allow active scripting" → Enabled</li>
+                <li>"Allow cut, copy or paste operations from the clipboard via script" → Enabled</li>
+            </ul>
+            
+            <h2>Configuration Steps</h2>
+            <ol>
+                <li>Open Active Directory Users and Computers</li>
+                <li>Right-click the Vitrea OU → Properties → Group Policy</li>
+                <li>Edit or create a GPO</li>
+                <li>Navigate to Computer Configuration → Administrative Templates → Windows Components → Internet Explorer</li>
+                <li>Enable required settings for Internet, Intranet, and Local Machine zones</li>
+                <li>Repeat for User Configuration</li>
+            </ol>
+            
+            <div class="nav-buttons">
+                <button id="prevBtn10">Previous</button>
+                <button id="nextBtn10">Next</button>
+            </div>
+        </div>
+        
+        <!-- Slide 11: Firewall and Ports -->
+        <div class="slide" id="slide11">
+            <div class="slide-counter">11 of 22</div>
+            <h1>Firewall and Port Configuration</h1>
+            
+            <h2>Required Ports</h2>
+            <ul>
+                <li><strong>443</strong> - HTTPS (recommended for PACS integrations)</li>
+                <li><strong>3002</strong> - DICOM Receive</li>
+                <li><strong>3003</strong> - Query Retrieve</li>
+                <li><strong>3389</strong> - Remote Desktop Protocol</li>
+            </ul>
+            
+            <h2>Firewall Logging</h2>
+            <pre>netsh advfirewall set currentprofile logging filename %systemroot%\system32\LogFiles\Firewall\pfirewall.log
+netsh advfirewall set currentprofile logging maxfilesize 4096
+netsh advfirewall set currentprofile logging droppedconnections enable
+netsh advfirewall set currentprofile logging allowedconnections enable</pre>
+            
+            <div class="nav-buttons">
+                <button id="prevBtn11">Previous</button>
+                <button id="nextBtn11">Next</button>
+            </div>
+        </div>
+        
+        <!-- Slide 12: Collecting Logs -->
+        <div class="slide" id="slide12">
+            <div class="slide-counter">12 of 22</div>
+            <h1>Collecting Performance Logs</h1>
+            
+            <div class="flow-chart">
+                <div class="flow-container">
+                    <div class="flow-step">1</div>
+                    <div class="flow-step-text">Click gear icon</div>
+                </div>
+                <div class="flow-container">
+                    <div class="flow-step">2</div>
+                    <div class="flow-step-text">Select "Collect Performance Logs"</div>
+                </div>
+                <div class="flow-container">
+                    <div class="flow-step">3</div>
+                    <div class="flow-step-text">Describe issue</div>
+                </div>
+                <div class="flow-container">
+                    <div class="flow-step">4</div>
+                    <div class="flow-step-text">Attach screenshot</div>
+                </div>
+                <div class="flow-container">
+                    <div class="flow-step">5</div>
+                    <div class="flow-step-text">Click Save</div>
+                </div>
+            </div>
+            
+            <h2>Files Created</h2>
+            <p>Logs are saved to: <code>C:\NAS\logCollection\current\{year}/{month}\{date-guid}</code></p>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <i class="fas fa-file-code"></i>
+                    <h3>SystemInformationSummary.json</h3>
+                    <p>Contains user connections, version info, and machine details</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-archive"></i>
+                    <h3>Server-specific ZIPs</h3>
+                    <p>For Enterprise deployments: ManagementServer.zip and ApplicationServer.zip</p>
+                </div>
+            </div>
+            
+            <div class="nav-buttons">
+                <button id="prevBtn12">Previous</button>
+                <button id="nextBtn12">Next</button>
+            </div>
+        </div>
+        
+        <!-- Slide 13: Log Analysis -->
+        <div class="slide" id="slide13">
+            <div class="slide-counter">13 of 22</div>
+            <h1>Log File Analysis</h1>
+            
+            <div class="search-box">
+                <h3>Simulated Log Viewer</h3>
+                <div style="height: 200px; overflow-y: scroll; background-color: #1e1e1e; color: #d4d4d4; padding: 10px; font-family: 'Courier New', Courier, monospace;">
+                    <div class="log-info">2023-06-15T09:23:45.123 [INFO] VIMS Service started successfully</div>
+                    <div class="log-info">2023-06-15T09:23:46.456 [INFO] DICOM Receiver listening on port 3002</div>
+                    <div class="log-warning">2023-06-15T09:24:12.789 [WARN] Storage commitment failed for study 1.2.840.113619.2.55.3.2831218245.492.1683716052.492</div>
+                    <div class="log-error">2023-06-15T09:25:33.456 [ERROR] Failed to process DICOM file: E:\DicomReceive\CT\1.2.840.113619.2.55.3.2831218245.492.1683716052.492\1.2.840.113619.2.55.3.2831218245.492.1683716052.493.dcm</div>
+                    <div class="log-success">2023-06-15T09:26:01.234 [INFO] Study 1.2.840.113619.2.55.3.2831218245.492.1683716052.492 successfully added to database</div>
+                    <div class="log-info">2023-06-15T09:26:45.678 [INFO] Thumbnail generation started for 5 new studies</div>
+                </div>
+                <div style="margin-top: 15px;">
+                    <button id="filterErrors">Show Errors Only</button>
+                    <button id="filterWarnings">Show Warnings</button>
+                    <button id="showAllLogs">Show All</button>
+                </div>
+            </div>
+            
+            <div class="tip-box">
+                <i class="fas fa-search"></i>
+                <div>
+                    <strong>Log Reading Advice:</strong> Use advanced tools like Notepad++. The absence of expected log lines can sometimes indicate issues. Not all important log lines include study instance UIDs.
+                </div>
+            </div>
+            
+            <div class="nav-buttons">
+                <button id="prevBtn13">Previous</button>
+                <button id="nextBtn13">Next</button>
+            </div>
+        </div>
+        
+        <!-- Slide 14: Specific Error Solutions -->
+        <div class="slide" id="slide14">
+            <div class="slide-counter">14 of 22</div>
+            <h1>Specific Error Solutions</h1>
+            
+            <div class="accordion">
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <span>ERR_DNS_FAIL on Report page</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="accordion-content">
+                        <ol>
+                            <li>Open Internet Explorer → Tools → Internet options</li>
+                            <li>Connections tab → LAN settings</li>
+                            <li>If using proxy server, check "Bypass proxy server for local addresses"</li>
+                            <li>Click Advanced → Add exceptions for Vitrea machine IPs</li>
+                        </ol>
+                    </div>
+                </div>
+                
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <span>Connection credentials already in use</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="accordion-content">
+                        <p>Multiple logins by same user not supported:</p>
+                        <ol>
+                            <li>Log off the other session shown in message</li>
+                            <li>Try connecting to a different collection (Enterprise)</li>
+                            <li>Wait for session timeout (default 30 minutes)</li>
+                            <li>Contact admin to log off other session if needed</li>
+                        </ol>
+                    </div>
+                </div>
+                
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <span>Evidence could not be saved</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="accordion-content">
+                        <p>For large batches/movies:</p>
+                        <ul>
+                            <li>Reduce number of images in Output Control</li>
+                            <li>Change batch/movie settings to "Good" quality</li>
+                            <li>Disable "Swing" in Movie Playback</li>
+                            <li>Reduce images in Curved MPR/Inset settings</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="nav-buttons">
+                <button id="prevBtn14">Previous</button>
+                <button id="nextBtn14">Next</button>
+            </div>
+        </div>
+        
+        <!-- Slide 15: Oncology Fusion -->
+        <div class="slide" id="slide15">
+            <div class="slide-counter">15 of 22</div>
+            <h1>Oncology Fusion Troubleshooting</h1>
+            
+            <div class="tab-container">
+                <div class="tab-buttons">
+                    <button class="tab-btn active" data-tab="oncoTab1">AE Title Changes</button>
+                    <button class="tab-btn" data-tab="oncoTab2">Session Restoration</button>
+                    <button class="tab-btn" data-tab="oncoTab3">Hotkey Configuration</button>
+                </div>
+                
+                <div class="tab-content active" id="oncoTab1">
+                    <h3>For Mirada XD</h3>
+                    <p>Manually edit <code>scp.xml</code> at:</p>
+                    <code>Program Files\Mirada XD\3.6\config</code>
+                    
+                    <h3>For Mirada RTx</h3>
+                    <p>Manually edit <code>scp.xml</code> at:</p>
+                    <code>Program Files\Mirada RT\1.6\config</code>
+                </div>
+                
+                <div class="tab-content" id="oncoTab2">
+                    <h3>Corrupted Configuration Files</h3>
+                    <p>For Mirada XD:</p>
+                    <ol>
+                        <li>Delete <code>&lt;Default User&gt;\My Document\Mirada XD\xd.cfg</code></li>
+                        <li>Delete <code>All Users\My Document\Mirada XD\xd.cfg</code></li>
+                        <li>Keep only factory default: <code>Program Files\Mirada XD\3.6\config\xd.cfg</code></li>
+                    </ol>
+                    
+                    <p>For Mirada RTx, same process but for <code>rt.cfg</code></p>
+                </div>
+                
+                <div class="tab-content" id="oncoTab3">
+                    <h3>Enabling Hotkeys</h3>
+                    <p>For Mirada XD:</p>
+                    <ol>
+                        <li>Edit <code>Program Files\Mirada XD\3.6\config\scp.xml</code></li>
+                        <li>Find <code>com.mirada.fusionxd.hotkey.configuration.ui</code></li>
+                        <li>Change from <code>false</code> to <code>true</code></li>
+                    </ol>
+                </div>
+            </div>
+            
+            <div class="nav-buttons">
+                <button id="prevBtn15">Previous</button>
+                <button id="nextBtn15">Next</button>
+            </div>
+        </div>
+        
+        <!-- Slide 16: Thin Client Issues -->
+        <div class="slide" id="slide16">
+            <div class="slide-counter">16 of 22</div>
+            <h1>Thin Client Troubleshooting</h1>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <i class="fas fa-desktop"></i>
+                    <h3>Connection Errors</h3>
+                    <p>After adding new server to collection:</p>
+                    <ol>
+                        <li>Click OK to close error</li>
+                        <li>Wait 5 minutes</li>
+                        <li>Attempt connection again</li>
+                    </ol>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-key"></i>
+                    <h3>RD License Server</h3>
+                    <p>If not allocating licenses:</p>
+                    <pre># PowerShell
+$obj = gwmi -namespace "Root/CIMV2/TerminalServices" Win32_TerminalServiceSetting
+$obj.SetSpecifiedLicenseServerList("hostnameofyourRDLicenseServer")</pre>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-user-clock"></i>
+                    <h3>Inactivity Timeout</h3>
+                    <p>Default settings:</p>
+                    <ul>
+                        <li>Direct access: 4 hours</li>
+                        <li>Thin client: 30 minutes</li>
+                    </ul>
+                    <p>Contact admin to modify</p>
+                </div>
+            </div>
+            
+            <div class="nav-buttons">
+                <button id="prevBtn16">Previous</button>
+                <button id="nextBtn16">Next</button>
+            </div>
+        </div>
+        
+        <!-- Slide 17: File System Issues -->
+        <div class="slide" id="slide17">
+            <div class="slide-counter">17 of 22</div>
+            <h1>File System Troubleshooting</h1>
+            
+            <div class="warning-box">
+                <i class="fas fa-exclamation-triangle"></i>
+                <div>
+                    <strong>Critical Checks:</strong> Always verify available disk space on C: drive, DICOM Receive, and NAS drives. Ensure AutoDelete isn't removing incoming data due to low space.
+                </div>
+            </div>
+            
+            <h2>Corrupted VitreaConfiguration.xml</h2>
+            <ol>
+                <li>Close all Vitrea sessions</li>
+                <li>Navigate to <code>C:\Program Files\Vital Images\Vitrea64\Config</code></li>
+                <li>Backup and delete VitreaConfiguration.xml</li>
+                <li>Repeat for <code>E:\VitreaData\CentralizedPresets\Modified</code></li>
+                <li>Repair or reinstall Vitrea</li>
+            </ol>
+            
+            <h2>Media Manager IMAPI Error</h2>
+            <p>Causes:</p>
+            <ul>
+                <li>DVD hardware failure (contact support)</li>
+                <li>Virtual DVD drive installed (uninstall software)</li>
+            </ul>
+            
+            <div class="nav-buttons">
+                <button id="prevBtn17">Previous</button>
+                <button id="nextBtn17">Next</button>
+            </div>
+        </div>
+        
+        <!-- Slide 18: DICOM Receive Issues -->
+        <div class="slide" id="slide18">
+            <div class="slide-counter">18 of 22</div>
+            <h1>DICOM Receive Problems</h1>
+            
+            <h2>Delay in Accepting Association</h2>
+            <p>Possible DNS resolution issue:</p>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <i class="fas fa-network-wired"></i>
+                    <h3>Diagnostic Commands</h3>
+                    <pre>ping -a machineName
+tracert machineName
+nslookup machineName</pre>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-server"></i>
+                    <h3>Resolution</h3>
+                    <ul>
+                        <li>Set up Forward/Reverse Lookup Zones in DNS</li>
+                        <li>Or add to hosts file: <code>C:\Windows\System32\drivers\etc\hosts</code></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <h2>"Download and View" Unavailable</h2>
+            <p>For missing file associations (e.g., .STL files):</p>
+            <pre># Run as Administrator
+assoc .stl=STL
+ftype STL="C:\Program Files\MySTLViewer\stlview.exe" %1 %*</pre>
+            
+            <div class="nav-buttons">
+                <button id="prevBtn18">Previous</button>
+                <button id="nextBtn18">Next</button>
+            </div>
+        </div>
+        
+        <!-- Slide 19: Reporting Issues -->
+        <div class="slide" id="slide19">
+            <div class="slide-counter">19 of 22</div>
+            <h1>Reporting Problems</h1>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <h3>Reporting Won't Launch</h3>
+                    <p>Solution:</p>
+                    <p>Add the service user to local Administrators group</p>
+                    <a href="https://technet.microsoft.com/en-us/library/cc739265(v=ws.10).aspx" target="_blank">Technet Reference</a>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-cog"></i>
+                    <h3>Custom Support Message</h3>
+                    <ol>
+                        <li>System Configuration → System Settings</li>
+                        <li>Component: VitreaClient</li>
+                        <li>Edit SupportDialogContactInfo value</li>
+                        <li>Activate changes</li>
+                    </ol>
+                </div>
+            </div>
+            
+            <div class="success-box">
+                <i class="fas fa-check-circle"></i>
+                <div>
+                    <strong>Tip:</strong> You can customize the "Please contact support" text on the Collect Performance Logs screen to direct users to your internal IT helpdesk.
+                </div>
+            </div>
+            
+            <div class="nav-buttons">
+                <button id="prevBtn19">Previous</button>
+                <button id="nextBtn19">Next</button>
+            </div>
+        </div>
+        
+        <!-- Slide 20: SUREPlaque Considerations -->
+        <div class="slide" id="slide20">
+            <div class="slide-counter">20 of 22</div>
+            <h1>SUREPlaque Package Notes</h1>
+            
+            <div class="warning-box">
+                <i class="fas fa-exclamation-triangle"></i>
+                <div>
+                    <strong>Important:</strong> Be careful with packages that don't include SUREPlaque, especially Non-US Package 1. Non-US Package 4 is recommended for cardiac applications.
+                </div>
+            </div>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <i class="fas fa-box-open"></i>
+                    <h3>Package Options</h3>
+                    <ul>
+                        <li>A la carte SUREPlaque option</li>
+                        <li>Packages with/without SUREPlaque</li>
+                        <li>Cardiac-related applications bundle</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-heartbeat"></i>
+                    <h3>Cardiac Applications</h3>
+                    <p>Ensure proper package selection for:</p>
+                    <ul>
+                        <li>Plaque analysis</li>
+                        <li>Vascular assessment</li>
+                        <li>Cardiac CT workflows</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="nav-buttons">
+                <button id="prevBtn20">Previous</button>
+                <button id="nextBtn20">Next</button>
+            </div>
+        </div>
+        
+        <!-- Slide 21: Date/Time Conversion Function -->
+        <div class="slide" id="slide21">
+            <div class="slide-counter">21 of 22</div>
+            <h1>Date/Time Conversion Utility</h1>
+            
+            <p>This scalar function converts DICOM date/time strings to <code>datetime2</code>:</p>
+            
+            <pre><span class="sql-keyword">CREATE FUNCTION</span> [Dicom].[udf_StringToDateTime2]
+(
+    @datestring <span class="sql-keyword">nvarchar</span>(10),
+    @timestring <span class="sql-keyword">nvarchar</span>(12)
+)
+<span class="sql-keyword">RETURNS</span> datetime2
+<span class="sql-keyword">AS</span>
+<span class="sql-keyword">BEGIN</span>
+    <span class="sql-keyword">DECLARE</span> @datedate datetime2;
+    
+    <span class="sql-keyword">IF</span> @datestring <span class="sql-keyword">IS NULL</span> <span class="sql-keyword">AND</span> @timestring <span class="sql-keyword">IS NULL</span>
+        <span class="sql-keyword">SET</span> @datedate = <span class="sql-keyword">SYSDATETIME</span>()
+    <span class="sql-keyword">ELSE</span>
+    <span class="sql-keyword">BEGIN</span>
+        <span class="sql-comment">-- pad the timestring to correct format: HHmmss</span>
+        <span class="sql-keyword">SET</span> @timestring = <span class="sql-keyword">ISNULL</span>(<span class="sql-keyword">LEFT</span>(@timestring + <span class="sql-keyword">REPLICATE</span>(<span class="sql-string">'0'</span>,10), 6), <span class="sql-keyword">NULL</span>)
+        
+        <span class="sql-keyword">DECLARE</span> @year <span class="sql-keyword">nvarchar</span>(4) = <span class="sql-keyword">SUBSTRING</span>(@datestring, 1, 4)
+        <span class="sql-keyword">DECLARE</span> @month <span class="sql-keyword">nvarchar</span>(2) = <span class="sql-keyword">SUBSTRING</span>(@datestring, 5, 2)
+        <span class="sql-keyword">DECLARE</span> @day <span class="sql-keyword">nvarchar</span>(2) = <span class="sql-keyword">SUBSTRING</span>(@datestring, 7, 2)
+        
+        <span class="sql-comment">-- Validate timestring format</span>
+        <span class="sql-keyword">IF</span>((@year <span class="sql-keyword">IS NULL</span> <span class="sql-keyword">OR</span> @year = <span class="sql-string">''</span>)
+            <span class="sql-keyword">OR</span> (@month <span class="sql-keyword">IS NULL</span> <span class="sql-keyword">OR</span> @month = <span class="sql-string">''</span>)
+            <span class="sql-keyword">OR</span> (@day <span class="sql-keyword">IS NULL</span> <span class="sql-keyword">OR</span> @day = <span class="sql-string">''</span>)
+            <span class="sql-keyword">OR</span> (<span class="sql-keyword">CHARINDEX</span>(<span class="sql-string">':'</span>, @timestring) != 0)
+            <span class="sql-keyword">OR</span> (<span class="sql-keyword">CHARINDEX</span>(<span class="sql-string">'-'</span>, @timestring) != 0)
+            <span class="sql-keyword">OR</span>( @timestring > <span class="sql-string">'240000'</span>))
+            <span class="sql-keyword">SET</span> @datedate = <span class="sql-keyword">SYSDATETIME</span>()
+        <span class="sql-keyword">ELSE</span>
+            <span class="sql-keyword">SET</span> @datedate = <span class="sql-keyword">CONVERT</span>(datetime2, 
+                <span class="sql-keyword">stuff</span>(<span class="sql-keyword">stuff</span>(<span class="sql-keyword">stuff</span>(<span class="sql-keyword">LEFT</span>(@datestring + @timestring, 14), 9, 0, <span class="sql-string">' '</span>), 12, 0, <span class="sql-string">':'</span>), 15, 0, <span class="sql-string">':'</span>))
+    <span class="sql-keyword">END</span>
+    <span class="sql-keyword">RETURN</span> @datedate;
+<span class="sql-keyword">END</span>;</pre>
+            
+            <div class="nav-buttons">
+                <button id="prevBtn21">Previous</button>
+                <button id="nextBtn21">Next</button>
+            </div>
+        </div>
+        
+        <!-- Slide 22: Summary and Resources -->
+        <div class="slide" id="slide22">
+            <div class="slide-counter">22 of 22</div>
+            <h1>Troubleshooting Summary</h1>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <i class="fas fa-book"></i>
+                    <h3>Key Resources</h3>
+                    <ul>
+                        <li>Vitrea Administration and Troubleshooting Guide (VPMC-17210 B)</li>
+                        <li>Knowledge Base articles (e.g., KB 7998 for services)</li>
+                        <li>Canon Medical Customer Support</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-check-circle"></i>
+                    <h3>Best Practices</h3>
+                    <ul>
+                        <li>Document all changes</li>
+                        <li>Back up before modifications</li>
+                        <li>Check disk space regularly</li>
+                        <li>Monitor service status</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div id="surpriseContainer" style="text-align: center; margin: 30px 0;">
+                <button id="surpriseBtn" style="background-color: var(--secondary); padding: 15px 30px; font-size: 18px;">
+                    <i class="fas fa-gift"></i> Click for a Surprise!
+                </button>
+                <div id="surpriseContent" class="hidden" style="margin-top: 20px;">
+                    <img src="https://media.giphy.com/media/3o7abKhOpu0NwenH3O/giphy.gif" alt="Celebration" style="max-width: 300px; border-radius: 10px;">
+                    <h3 style="color: var(--secondary);">Congratulations!</h3>
+                    <p>You've completed the Vitrea Troubleshooting Guide. Happy troubleshooting!</p>
+                </div>
+            </div>
+            
+            <div class="nav-buttons">
+                <button id="prevBtn22">Previous</button>
+                <button disabled id="nextBtn22">Next</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Slide navigation
+        let currentSlide = 1;
+        const totalSlides = 22;
+        
+        function showSlide(n) {
+            // Hide all slides
+            document.querySelectorAll('.slide').forEach(slide => {
+                slide.classList.remove('active');
+            });
+            
+            // Show the selected slide
+            document.getElementById(`slide${n}`).classList.add('active');
+            
+            // Update progress bar
+            const progressPercentage = (n / totalSlides) * 100;
+            document.getElementById('progressBar').style.width = `${progressPercentage}%`;
+            
+            // Update current slide
+            currentSlide = n;
+        }
+        
+        function nextSlide() {
+            if (currentSlide < totalSlides) {
+                showSlide(currentSlide + 1);
+            }
+        }
+        
+        function prevSlide() {
+            if (currentSlide > 1) {
+                showSlide(currentSlide - 1);
+            }
+        }
+        
+        // Set up event listeners for all next buttons
+        for (let i = 1; i <= totalSlides; i++) {
+            const nextBtn = document.getElementById(`nextBtn${i}`);
+            if (nextBtn) {
+                nextBtn.addEventListener('click', nextSlide);
+            }
+        }
+        
+        // Set up event listeners for all previous buttons
+        for (let i = 1; i <= totalSlides; i++) {
+            const prevBtn = document.getElementById(`prevBtn${i}`);
+            if (prevBtn) {
+                prevBtn.addEventListener('click', prevSlide);
+            }
+        }
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'ArrowRight') {
+                nextSlide();
+            } else if (event.key === 'ArrowLeft') {
+                prevSlide();
+            }
+        });
+        
+        // Tab functionality
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const tabId = this.getAttribute('data-tab');
+                const tabContainer = this.closest('.tab-container');
+                
+                // Remove active class from all buttons and contents
+                tabContainer.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                tabContainer.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                // Add active class to clicked button and corresponding content
+                this.classList.add('active');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+        
+        // Accordion functionality
+        document.querySelectorAll('.accordion-header').forEach(header => {
+            header.addEventListener('click', function() {
+                this.classList.toggle('active');
+                const content = this.nextElementSibling;
+                if (content.style.maxHeight) {
+                    content.style.maxHeight = null;
+                    content.classList.remove('show');
+                } else {
+                    content.style.maxHeight = content.scrollHeight + 'px';
+                    content.classList.add('show');
+                }
+            });
+        });
+        
+        // Log filtering
+        document.getElementById('filterErrors').addEventListener('click', function() {
+            document.querySelectorAll('.log-entry').forEach(entry => {
+                entry.style.display = 'none';
+            });
+            document.querySelectorAll('.log-error').forEach(error => {
+                error.style.display = 'block';
+            });
+        });
+        
+        document.getElementById('filterWarnings').addEventListener('click', function() {
+            document.querySelectorAll('.log-entry').forEach(entry => {
+                entry.style.display = 'none';
+            });
+            document.querySelectorAll('.log-warning').forEach(warning => {
+                warning.style.display = 'block';
+            });
+        });
+        
+        document.getElementById('showAllLogs').addEventListener('click', function() {
+            document.querySelectorAll('.log-entry').forEach(entry => {
+                entry.style.display = 'block';
+            });
+        });
+        
+        // Simple search functionality
+        const issueSolutions = {
+            "icon": "Check application services and restart if needed",
+            "scaling": "Right-click shortcut → Properties → Compatibility → Change high DPI settings → Override scaling behavior → SYSTEM",
+            "login": "Delete MSLicensing registry keys and reboot",
+            "report": "Verify C-STORESCP configuration in dbo.cfg_ArchiveConnection",
+            "study": "Check VIMS Monitor and System Health Study Queue",
+            "database": "Check database connectivity and VIDicom settings",
+            "service": "Restart Vitrea services using WMIC commands",
+            "dicom": "Check DICOM receive folder and port configurations",
+            "error": "Review relevant log files for error details"
+        };
+        
+        document.getElementById('searchBtn').addEventListener('click', function() {
+            const searchTerm = document.getElementById('issueSearch').value.toLowerCase();
+            const resultsDiv = document.getElementById('searchResults');
+            resultsDiv.classList.remove('hidden');
+            
+            let found = false;
+            resultsDiv.innerHTML = '<h4>Possible Solutions:</h4><ul>';
+            
+            for (const [key, solution] of Object.entries(issueSolutions)) {
+                if (searchTerm.includes(key)) {
+                    resultsDiv.innerHTML += `<li>${solution}</li>`;
+                    found = true;
+                }
+            }
+            
+            if (!found) {
+                resultsDiv.innerHTML += '<li>No specific solution found. Check logs and contact support if needed.</li>';
+            }
+            
+            resultsDiv.innerHTML += '</ul>';
+        });
+        
+        // Surprise button
+        document.getElementById('surpriseBtn').addEventListener('click', function() {
+            const surpriseContent = document.getElementById('surpriseContent');
+            surpriseContent.classList.remove('hidden');
+            surpriseContent.classList.add('surprise');
+            
+            // Reset animation after it completes
+            setTimeout(() => {
+                surpriseContent.classList.remove('surprise');
+            }, 1000);
+        });
+        
+        // Initialize first slide
+        showSlide(1);
+    </script>
+</body>
+</html>
