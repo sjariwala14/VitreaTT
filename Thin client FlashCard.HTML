@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vitrea Thin Client Install Guide Quiz</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            background-color: #005b96;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            border-radius: 5px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.2em;
+        }
+        h2 {
+            color: #005b96;
+            border-bottom: 2px solid #005b96;
+            padding-bottom: 10px;
+            margin-top: 30px;
+        }
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+            flex-wrap: wrap;
+        }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #e1e5eb;
+            margin-right: 5px;
+            border-radius: 5px 5px 0 0;
+            transition: all 0.3s ease;
+        }
+        .tab.active {
+            background-color: #005b96;
+            color: white;
+        }
+        .tab:hover:not(.active) {
+            background-color: #b3cde0;
+        }
+        .content-section {
+            display: none;
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .content-section.active {
+            display: block;
+        }
+        .question {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-left: 4px solid #005b96;
+            background-color: #f8f9fa;
+        }
+        .options {
+            margin-top: 10px;
+        }
+        .option {
+            margin: 8px 0;
+            padding: 8px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .option:hover {
+            background-color: #d1e7ff;
+        }
+        .option.selected {
+            background-color: #005b96;
+            color: white;
+        }
+        .option.correct {
+            background-color: #28a745;
+            color: white;
+        }
+        .option.incorrect {
+            background-color: #dc3545;
+            color: white;
+        }
+        .feedback {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            display: none;
+        }
+        .feedback.correct {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .feedback.incorrect {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        button {
+            background-color: #005b96;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #003d66;
+        }
+        .flashcard {
+            width: 80%;
+            margin: 20px auto;
+            perspective: 1000px;
+        }
+        .flashcard-inner {
+            position: relative;
+            width: 100%;
+            height: 300px;
+            text-align: center;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+        }
+        .flashcard.flipped .flashcard-inner {
+            transform: rotateY(180deg);
+        }
+        .flashcard-front, .flashcard-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .flashcard-back {
+            transform: rotateY(180deg);
+            background-color: #f8f9fa;
+        }
+        .flashcard-nav {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .flashcard-nav button {
+            margin: 0 10px;
+        }
+        .scenario {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 4px solid #6c757d;
+        }
+        .scenario h3 {
+            margin-top: 0;
+            color: #005b96;
+        }
+        .scenario-solution {
+            display: none;
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #e2e3e5;
+            border-radius: 4px;
+        }
+        .progress-container {
+            width: 100%;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .progress-bar {
+            height: 20px;
+            background-color: #005b96;
+            border-radius: 5px;
+            width: 0%;
+            transition: width 0.5s;
+        }
+        .score-display {
+            text-align: center;
+            font-size: 1.2em;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+        .quick-tip {
+            background-color: #e7f1ff;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            border-left: 4px solid #005b96;
+        }
+        .quick-tip h3 {
+            margin-top: 0;
+            color: #005b96;
+        }
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            .flashcard {
+                width: 95%;
+            }
+            .tab {
+                padding: 8px 12px;
+                font-size: 14px;
+                margin-bottom: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Vitrea Thin Client Install Guide</h1>
+            <p>Interactive Training and Assessment Tool</p>
+        </header>
+
+        <div class="tab-container">
+            <div class="tab active" onclick="openSection('flashcards')">Flashcards</div>
+            <div class="tab" onclick="openSection('quiz')">Multiple Choice Quiz</div>
+            <div class="tab" onclick="openSection('troubleshooting')">Troubleshooting</div>
+            <div class="tab" onclick="openSection('tips')">Quick Tips</div>
+        </div>
+
+        <!-- Flashcards Section -->
+        <div id="flashcards" class="content-section active">
+            <h2>Flashcard Review</h2>
+            <p>Click on the flashcard to flip it and reveal the answer. Use the navigation buttons to move between cards.</p>
+            
+            <div class="flashcard" id="currentFlashcard" onclick="flipFlashcard()">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front">
+                        <h3 id="flashcardQuestion">Question will appear here</h3>
+                    </div>
+                    <div class="flashcard-back">
+                        <h3>Answer</h3>
+                        <p id="flashcardAnswer">Answer will appear here</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flashcard-nav">
+                <button onclick="prevFlashcard()">Previous</button>
+                <span id="flashcardCounter">1/50</span>
+                <button onclick="nextFlashcard()">Next</button>
+            </div>
+            
+            <div class="progress-container">
+                <div class="progress-bar" id="flashcardProgress"></div>
+            </div>
+        </div>
+
+        <!-- Multiple Choice Quiz Section -->
+        <div id="quiz" class="content-section">
+            <h2>Multiple Choice Quiz</h2>
+            <p>Test your knowledge with these multiple choice questions. Select your answer to see immediate feedback.</p>
+            
+            <div class="score-display">
+                Score: <span id="quizScore">0</span>/50
+            </div>
+            
+            <div class="progress-container">
+                <div class="progress-bar" id="quizProgress"></div>
+            </div>
+            
+            <div id="quizQuestionsContainer">
+                <!-- Questions will be dynamically inserted here -->
+            </div>
+            
+            <div style="text-align: center; margin-top: 20px;">
+                <button onclick="resetQuiz()">Reset Quiz</button>
+            </div>
+        </div>
+
+        <!-- Troubleshooting Section -->
+        <div id="troubleshooting" class="content-section">
+            <h2>Troubleshooting Scenarios</h2>
+            <p>Review common troubleshooting scenarios and solutions from the Vitrea Thin Client Install Guide.</p>
+            
+            <div id="scenariosContainer">
+                <!-- Scenarios will be dynamically inserted here -->
+            </div>
+        </div>
+
+        <!-- Quick Tips Section -->
+        <div id="tips" class="content-section">
+            <h2>Quick Tips</h2>
+            <p>Important reminders and best practices from the Vitrea Thin Client Install Guide.</p>
+            
+            <div id="tipsContainer">
+                <!-- Tips will be dynamically inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Flashcard data
+        const flashcards = [
+            ["What is the publication date of the 'Vitrea Thin Client Install Guide' (VPMC-17209 E)?", "2025-04"],
+            ["Which software versions are valid for this publication?", "Vitrea® Advanced Visualization and 7.16.2.SU01 and later software versions."],
+            ["Who holds the copyright for the Vitrea® Advanced Visualization documentation?", "Canon Medical Systems Corporation."],
+            ["What is Vitrea's trademark status?", "Vitrea is a registered trademark in the United States and may have protection in other countries."],
+            ["Under DFARS 252.227-7013, what restrictions apply to the use of this software by the U.S. Department of Defense (DoD)?", "Use, duplication or disclosure of the software by the U.S. Government is subject to restrictions as set forth in subparagraph (c)(l)(ii) of the Rights in Technical Data and Computer Software clause."],
+            ["What is Canon Medical's liability regarding direct, indirect, special, incidental, or consequential damages based on software defects or documentation use?", "Canon Medical shall have no liability of any kind for such damages."],
+            ["Is the software and its information considered proprietary to Canon Medical?", "Yes, it is proprietary, confidential, and trade secret to Canon Medical."],
+            ["Who is allowed to disclose the software and its information without express written consent from Canon Medical?", "No one, other than authorized representatives of the user's employer who are contractually obligated not to disclose it."],
+            ["What is prohibited regarding the software's confidential and trade secret information?", "Users shall not attempt to discern Canon Medical's confidential and trade secret information and shall not reverse compile, disassemble, or otherwise reverse engineer this software or any information contained therein."],
+            ["Where can information about the Vitrea unique device identifier (UDI) be located?", "On the Help Central page."],
+            ["What information does the Vitrea UDI contain?", "Software version information and manufacture date."],
+            ["What is the purpose of Vitrea Release Notes?", "They contain late-breaking information not available at the time the Education and Reference Guide was released."],
+            ["What is the primary restriction for the sale of this device according to Federal law?", "Federal law restricts this device to sale by or on the order of a physician, as directed by 21 CFR 801.109(b)(1)."],
+            ["What is one key function that the Vitrea Thin Client software provides?", "It provides functionality necessary for PACS integrations."],
+            ["What is another key function that the Vitrea Thin Client software provides, besides PACS integrations?", "It provides for a custom Start Vitrea shortcut on the Desktop."],
+            ["Name one of the two methods to access the Vitrea enterprise application software mentioned in the guide.", "Use the Microsoft Remote Desktop Services Client, or use the Vitrea Thin Client software."],
+            ["What is the minimum recommended bandwidth for the network connection between the remote client and the server?", "Minimum 5 Mbps."],
+            ["What is the maximum acceptable latency for the network connection between the remote client and the server?", "A network connection should not exceed a maximum of 100ms latency."],
+            ["List two supported Windows Operating Systems for the Vitrea Thin Client software.", "Microsoft Windows 10 Professional or Enterprise 64-bit Edition with latest Service Packs, and Microsoft Windows 11 Professional or Enterprise 64-bit Edition with latest Service Packs."],
+            ["What is the native resolution of a standard 4k monitor supported by Vitrea Thin Client?", "3840x2160."],
+            ["What is Canon Medical's recommendation regarding Microsoft Windows updates before installing Vitrea Thin Client?", "Canon Medical recommends installing Microsoft Windows monthly updates."],
+            ["What is a crucial step recommended before starting a Vitrea installation, even if no Windows Updates are found?", "Reboot the machine."],
+            ["What file should be executed to install the Vitrea Thin Client software?", "InstallVitreaThinClient.exe."],
+            ["After installation, what shortcut is typically available on the client system desktop to launch Vitrea?", "Start Vitrea shortcut."],
+            ["What is the character limit for the hostname entered in the 'Vitrea Server' field?", "15 characters."],
+            ["If the Vitrea Server Remote Desktop service accepts connections on a non-standard port, how should it be entered with the hostname?", "Add it at the end of the hostname, separated with a colon character (e.g., management.mydomain.com:3389)."],
+            ["When does the prompt for the Vitrea Server location display?", "On the first launch."],
+            ["How can a user change the monitor preference after it has been initially set?", "From the Applications Home screen, click the gear icon in the upper right corner and select 'Set Monitor Preference'."],
+            ["What is the purpose of completing the 'Set Up the Vitrea Media Manager Config' procedure?", "To allow importing data without having to launch Vitrea."],
+            ["Where must the client reside for Media Manager functionality?", "On the LAN."],
+            ["What is the Windows tool used to improve Vitrea Thin Client connection time by modifying certificate path validation settings?", "gpedit.msc."],
+            ["What two checkboxes should be cleared in the 'Network Retrieval' tab of the 'Certificate Path Validation Settings' to improve connection time?", "'Automatically update certificates in the Microsoft Root Certificate Program (recommended)' and 'Allow issuer certificate (AIA) retrieval during path validation (recommended)'."],
+            ["What is the known cause of image blurring and artifacting on systems with Barco monitors related to RDP connection transition?", "The remote desktop compression algorithm."],
+            ["Why does Canon Medical recommend against performing the RemoteFX data compression procedure on the servers?", "It will apply to all connections rather than only the specific machines experiencing the issue."],
+            ["Name one of the three possible values for 'RemoteFX data compression' settings.", "Optimized to use less memory, Balances memory and network bandwidth, or Reduced bandwidth consumption while marginally increasing memory consumption (approximately 200 KB per session)."],
+            ["What is the first step to uninstall the Vitrea Thin Client software?", "Click the Start button and select Settings | Apps."],
+            ["What new feature in Vitrea software allows remotely logged-on users to access local drives?", "The Thin Client Local Drive Access feature."],
+            ["Is the Thin Client Local Drive Access feature enabled by default?", "Yes, it is enabled by default."],
+            ["Name one type of data transfer feature supported by Thin Client Local Drive Access.", "Save As, Download and View, Save to Media, or Media Manager Import."],
+            ["What is one limitation mentioned for remote saves?", "File downloads may not complete if the Vitrea session is closed or there is a network disconnection, or file downloads may not be possible if a Server side GPO explicitly disallows it, or if there are permissions restrictions preventing drive access."],
+            ["How can a user switch between test and production environments for Vitrea Thin Client?", "From the Start menu, select Start Vitrea - Remote Configuration, and enter the IP address or hostname and port of the desired environment."],
+            ["What is the command line option to perform a quiet installation of Vitrea Thin Client without restart and with a log file?", "`InstallVitreaThinClient.exe /quiet /norestart /log <logFilePath> profile=VitreaThinClient MANAGEMENT_HOST=<mgmtServerFQDN>`."],
+            ["What is the default RDP port that Vitrea Thin Client connects to?", "3389."],
+            ["How can the RDP port be set directly in the Windows registry from the command line?", "`reg add 'HKCU\Software\Vital Images\AppShell' /v VitreaServerRDPPort /d 1189` (with 1189 being an example port)."],
+            ["What is the default timeout period for a Vitrea Thin Client Remote session?", "10 seconds."],
+            ["Which file needs to be modified to configure the timeout period for a Vitrea Thin Client Remote session?", "VitreaAppConfig.xml."],
+            ["When saving to CD/DVD media, how must the CD/DVD be formatted?", "As a Live File System."],
+            ["What is the minimum CPU requirement for Vitrea Thin Client?", "1 GHz 64-bit (x64) Processor."],
+            ["What is the minimum required system memory for Vitrea Thin Client?", "4GB of system memory with at least 500MB of free memory available."],
+            ["Are Virtual Desktop Infrastructure (VDI) or double remote desktop sessions supported for accessing Vitrea software?", "No, they are not supported."]
+        ];
+
+        // Quiz questions data
+        const quizQuestions = [
+            ["What is the primary purpose of the Vitrea Thin Client software?", ["To manage server hardware.", "To provide functionality for PACS integrations.", "To offer direct patient imaging.", "To replace the operating system."], 1],
+            ["According to federal law, who is restricted from selling this device?", ["Anyone without a medical license.", "Anyone not authorized by Canon Medical.", "Anyone other than by or on the order of a physician.", "Any foreign entities."], 2],
+            ["What is the copyright date for the Vitrea® Advanced Visualization documentation?", ["1997 - 2015", "2005 - 2025", "1997 - 2025", "2025 only"], 2],
+            ["Which of the following is NOT a right restricted to Canon Medical regarding their software?", ["Reproduction", "Storage in a retrieval system", "Transmission by any means", "Independent verification by the user"], 3],
+            ["If this software is delivered to a unit or agency of the U.S. Government other than DoD, which FAR clause governs its Restricted Rights?", ["DFARS 252.227-7013", "FAR 52.227-19 (b)(3)", "18-52.227-86(d)", "FAR 52.227-101"], 1],
+            ["Canon Medical's warranty includes:", ["An express warranty of merchantability.", "An implied warranty of fitness for a particular purpose.", "A warranty for direct or consequential damages.", "No warranty, express or implied, including merchantability or fitness for a particular purpose."], 3],
+            ["The information in the Vitrea software is described as:", ["Public domain.", "Freely shareable.", "Proprietary, confidential, and trade secret.", "Open-source."], 2],
+            ["Where can you find the unique device identifier (UDI) for Vitrea?", ["On the software installation disc.", "On the physical device label.", "On the Help Central page.", "In the system registry."], 2],
+            ["Which of these is NOT a method of accessing the Vitrea enterprise application software?", ["Microsoft Remote Desktop Services Client", "Vitrea Thin Client software", "Direct web browser access without any client software", "Both A and B are methods."], 2],
+            ["What is the minimum recommended bandwidth for the network connection between the remote client and the server?", ["1 Mbps", "5 Mbps", "10 Mbps", "20 Mbps"], 1],
+            ["What is the maximum network latency allowed between the remote client and the server for optimal performance?", ["50ms", "100ms", "200ms", "500ms"], 1],
+            ["Which Windows Operating System version is explicitly supported for Vitrea Thin Client?", ["Windows 7 64-bit", "Windows 8.1 Professional 32-bit", "Windows 10 Professional or Enterprise 64-bit Edition", "Windows XP"], 2],
+            ["What is the recommended native resolution for a standard 24” monitor?", ["1024 x 768", "1280 x 800", "1920 x 1200", "2560 x 1440"], 2],
+            ["Before installing Vitrea Thin Client software, what does Canon Medical recommend regarding Windows updates?", ["Skip them to save time.", "Install only critical updates.", "Install all monthly Microsoft Windows updates.", "Install them after Vitrea."], 2],
+            ["If a 'There is a pending reboot' message displays during Vitrea Thin Client installation, what is the recommended action?", ["Click 'Continue' to proceed with the installation.", "Click 'Exit' and reboot the system.", "Ignore the message.", "Run as administrator again."], 1],
+            ["What information is entered into the 'Vitrea Server' field when launching the Vitrea Remote Client?", ["The client machine's IP address.", "The hostname of the Management Server.", "The user's login ID.", "The application server's name."], 1],
+            ["When launching Vitrea for the first time with multiple monitors, what choice does the software offer?", ["Hide extra displays.", "Select one display or all displays.", "Adjust display refresh rates.", "Turn off all but one monitor."], 1],
+            ["What is the purpose of the 'Vitrea Media Manager Config (Optional Procedure)'?", ["To back up patient data.", "To allow importing data without launching Vitrea.", "To configure network settings.", "To update the software."], 1],
+            ["Which Windows tool is used to access 'Group Policy Editor' (gpedit.msc) to improve Vitrea Thin Client connection time?", ["Command Prompt", "Registry Editor", "Start button search", "Task Manager"], 2],
+            ["What is the primary cause of image blurring and artifacting on systems using Barco monitors during RDP connection transitions?", ["Outdated video drivers.", "Incorrect monitor calibration.", "The remote desktop compression algorithm.", "Low bandwidth."], 2],
+            ["Where does Canon Medical recommend adjusting RemoteFX data compression settings for Barco monitor issues?", ["On the server, for all connections.", "On the affected Thin Client machine with Barco monitors, via Local Policy.", "On the network router.", "On the Barco monitor itself."], 1],
+            ["How is the Vitrea Thin Client software typically uninstalled?", ["By deleting the installation folder.", "Using the 'Add/Remove Programs' (Settings | Apps) feature.", "Running an uninstall script from the command line only.", "By restoring the system to a previous point."], 1],
+            ["What is the default state of the Thin Client Local Drive Access feature?", ["Disabled.", "Enabled.", "Only enabled for administrators.", "Requires manual configuration for each user."], 1],
+            ["Which of the following is NOT listed as a supported data transfer feature for Thin Client Local Drive Access?", ["Save As", "Download and View", "Print to local printer", "Media Manager Import"], 2],
+            ["What is a potential limitation for remote saves when using Vitrea Thin Client?", ["Files are always encrypted by default.", "File downloads may not complete if the Vitrea session is closed.", "Only small files can be downloaded.", "Server-side GPO always allows downloads."], 1],
+            ["To switch between test and production environments for Vitrea Thin Client, what menu option is used?", ["Start Vitrea - Server Management", "Start Vitrea - Remote Configuration", "Start Vitrea - Network Settings", "Start Vitrea - User Preferences"], 1],
+            ["What is the command line option to disable the monitor preference dialog during installation?", ["noMonitor=false", "monitorPrompt=off", "noMonitorPrompt=true", "displayOff=true"], 2],
+            ["The default RDP port for Vitrea Thin Client connections is:", ["22", "80", "3389", "443"], 2],
+            ["To configure a non-default RDP port for Vitrea Thin Client via command line in the Windows registry, which key is typically modified?", ["HKLM\\Software\\Vital Images\\AppShell", "HKCU\\Software\\Vital Images\\AppShell", "HKLM\\System\\CurrentControlSet\\Services\\TerminalServices", "HKCU\\Control Panel\\Desktop"], 1],
+            ["What is the default time interval for the '<ClientServerConnectTimeoutInMs>' variable?", ["5 seconds", "10 seconds", "30 seconds", "60 seconds"], 1],
+            ["How must a CD/DVD be formatted if you want to save to it using a Vitrea Thin Client?", ["NTFS", "FAT32", "Like a USB flash drive (Live File System)", "ISO9660"], 2],
+            ["What is the minimum physical hardware requirement for a Vitrea Thin Client's hard drive?", ["20GB with 10GB available", "40GB with at least 15GB available", "80GB with 20GB available", "100GB with 50GB available"], 1],
+            ["Which browser is listed as a prerequisite for PACS Integrations?", ["Mozilla Firefox", "Google Chrome", "An Internet browser", "Microsoft Edge"], 2],
+            ["What is the recommended network connection speed for Vitrea Enterprise client connections?", ["100 Mbps", "1.0 Gbps", "10 Gbps", "Any standard Ethernet speed."], 1],
+            ["What is the operating system requirement for a Macintosh client accessing Vitrea Enterprise?", ["macOS 10.15 Catalina or later", "OS X 10.9 or later", "macOS 11 Big Sur or later", "Any Mac OS X version."], 1],
+            ["Are PACS integrations supported with the Mac OS Client?", ["Yes, fully supported.", "Yes, with limited functionality.", "No, they are not supported.", "Only for specific PACS systems."], 2],
+            ["What type of network connection does Canon Medical recommend for accessing Vitrea Enterprise?", ["Cellular connections.", "Wireless connections older than Wi-Fi 5.", "A wired connection of 1Gb/s or greater.", "Any internet connection."], 2],
+            ["What type of client access is explicitly NOT supported by Canon Medical for Vitrea software?", ["Access over a VPN.", "Access using a standard laptop.", "Use of Virtual Desktop Infrastructure (VDI) or double remote desktop sessions.", "Access from a tablet."], 2],
+            ["If you are prompted for a password when trying to connect to an application collection, what might need modification?", ["Firewall settings.", "Local internet options to allow for trusted sites.", "Network adapter settings.", "Server licensing."], 1],
+            ["If you cannot authenticate to an application collection, what might be required?", ["A software reinstallation.", "Authentication delegation.", "A new user account.", "A system reboot."], 1],
+            ["If you see more than one instance of Vitrea Thin Client in Add/Remove Programs, what is the recommended action?", ["Leave them as is.", "Right-click the desired instance and select Uninstall.", "Delete the oldest instance manually.", "Reinstall the software."], 1],
+            ["After adding an Application Server to a collection, if a connection error displays for Vitrea Thin Client, what is the initial step to resolve it?", ["Immediately restart the server.", "Click OK to close the error screen and wait approximately five minutes before trying again.", "Reinstall the Vitrea Thin Client.", "Check network cables."], 1],
+            ["What issue can occur if saved credentials exist on the client machine when Vitrea Thin Client is configured to request credentials?", ["Improved connection speed.", "An error may display.", "Automatic login.", "It has no effect."], 1],
+            ["How can saved credentials be removed if they are causing a credential request issue?", ["By changing the Windows user password.", "By selecting the server from the Computer list in Remote Desktop Client and clicking delete credentials.", "By reinstalling the operating system.", "By clearing browser history."], 1],
+            ["What does Canon Medical recommend regarding security for protecting PHI?", ["Use strong passwords only.", "Physically secure their device/server/system in a secured location.", "Only access from secure networks.", "Implement frequent data backups."], 1],
+            ["What type of CALs must be purchased by the customer for RDS?", ["Server CALs", "Client CALs", "RDS CALs (device or user)", "Application CALs"], 2],
+            ["When accessing Vitrea Enterprise over the Internet, what might cause the experience to fluctuate?", ["The type of monitor used.", "Inconsistencies in the Internet connection.", "The time of day.", "Too many users."], 1],
+            ["What is a required component automatically installed as part of the Vitrea Thin Client software?", ["Microsoft SQL Server Express", "Visual C++ 2015-2022 Redistributable", "Adobe Acrobat Reader", "Java Runtime Environment"], 1],
+            ["What action is recommended if a 'Drive Not Accessible' error displays when trying to save to a CD/DVD from the Vitrea Thin Client?", ["Try a different USB drive.", "Verify the CD/DVD is loaded and formatted as 'Like a USB flash drive'.", "Restart the Vitrea Thin Client application.", "Check network permissions."], 1],
+            ["What does the 'Manufacturing Date' for the Vitrea Thin Client refer to in the document?", ["See 'Date of Publication'", "The date the specific unit was assembled", "The date the software was first compiled", "N.A."], 0]
+        ];
+
+        // Troubleshooting scenarios
+        const scenarios = [
+            ["During the installation of Vitrea Thin Client, a message appears stating, 'There is a pending reboot. Please reboot the system now otherwise installation may not succeed.' You haven't rebooted since the last Windows Updates.", "You should click the Exit button and reboot the system immediately. Even if no Windows Updates were found, a reboot is required to clear any 'Reboot flag' that might prevent successful installation of Vitrea or its components like Microsoft SQL Server."],
+            ["After installing Vitrea Thin Client, users report image blurring and artifacting on their systems that use Barco monitors and video cards when connecting to the Vitrea Server.", "This issue is typically caused by the remote desktop compression algorithm. To resolve it, Canon Medical recommends updating the Local Policy on the affected Thin Client machine(s) by enabling the 'Do not allow hardware accelerated decoding' setting within `Computer Configuration | Administrative Templates | Windows Components | Remote Desktop Services | Remote Desktop Connection Client` in `gpedit.msc`. Then, restart the remote desktop client."],
+            ["You are attempting to save data from Vitrea Thin Client to a CD/DVD, but you encounter a 'Drive Not Accessible' error.", "You should verify that the CD/DVD is loaded in the drive tray and that it is formatted for use 'Like a USB flash drive' (Live File System) on the Vitrea Thin Client."],
+            ["When trying to connect to an application collection via Vitrea Thin Client, you are unexpectedly prompted for a password, even though you believe it should connect seamlessly.", "You may need to modify the local internet options to allow for trusted sites. Additionally, you might require authentication delegation. Refer to Appendix C: Vitrea Thin Client Group Policy Settings in the Enterprise Deployment Active Directory Planning Guide for more detailed information."],
+            ["You have tried to uninstall the Vitrea Thin Client software from Add/Remove Programs, but an error message displays stating that you need to reboot the system before the uninstall can complete.", "Click OK to close the error screen, then reboot the Vitrea Thin Client. After the reboot, you can attempt the uninstall again."],
+            ["After adding a new Application Server to a collection, users attempting to connect to the Vitrea Thin Client receive a connection error message.", "Click OK to close the error screen and then wait approximately five minutes before attempting to connect to the Vitrea Thin Client again."],
+            ["The Vitrea Thin Client is configured to request credentials when connecting to the server, but an error occurs due to existing saved credentials on the client machine.", "Open the Remote Desktop Client, select the server from the Computer list, and then click 'delete' where it says 'You can edit or delete these credentials'. Confirm by clicking Yes on the prompt."],
+            ["You are setting up a Vitrea Thin Client and want to ensure the fastest possible connection time by modifying system policies.", "You should navigate to `Computer Configuration | Windows Settings | Security Settings | Public Key Policies` in `gpedit.msc`. In the 'Certificate Path Validation Settings,' select the 'Network Retrieval' tab, enable 'Define these policy settings,' and clear both 'Automatically update certificates in the Microsoft Root Certificate Program (recommended)' and 'Allow issuer certificate (AIA) retrieval during path validation (recommended)' checkboxes."],
+            ["You need to deploy Vitrea Thin Client to multiple users on a shared system and want to set the Management Server Host Name for all users centrally.", "You should install the Vitrea Thin Client using the command line to set the Management Server Host Name for all users. Refer to the 'Vitrea Thin Client command lines' section in the guide for the specific command."],
+            ["You want to prevent the monitor preference dialog from displaying on multi-monitor systems during the first launch of the Vitrea Thin Client software when installing via command line.", "Include the `noMonitorPrompt=true` parameter in your installation command line. For example: `InstallVitreaThinClient.exe /quiet /norestart /log <logFilePath> profile=VitreaThinClient MANAGEMENT_HOST=<mgmtServerFQDN> noMonitorPrompt=true`."],
+            ["You want to access local (client) drives from within your remote Vitrea session, but you are concerned about file download issues.", "Be aware that file downloads may not complete if the Vitrea session is closed or there is a network disconnection. Also, downloads may be impossible if a Server side Group Policy Object (GPO) explicitly disallows it or if there are permissions restrictions preventing drive access."],
+            ["You need to access Vitrea Enterprise on a Mac OS X computer, but you are unsure if PACS integrations will work.", "The sources state that Vitrea enterprise client machines installed with a Mac Operating System do not support PACS integrations."],
+            ["You notice that more than one instance of the Vitrea Thin Client software is listed in 'Add/Remove Programs' (or Settings | Apps).", "On the Add/Remove Programs screen, right-click the desired Vitrea Thin Client instance to modify and select Uninstall, then complete the installer screens and click Reboot when prompted."],
+            ["You want to quickly switch the Vitrea Thin Client connection from your production environment to a test environment.", "From the Start menu, select 'Start Vitrea - Remote Configuration.' In the 'Vitrea Server' field, enter the IP address or hostname and port (if different from 3389) of the test environment. You can use the same method to switch back to production."],
+            ["The Vitrea Thin Client system you are using takes longer than 10 seconds to connect after the RDP session starts, leading to timeouts.", "You need to configure the timeout period. Log into the Vitrea Thin Client machine, navigate to `C:\\Program Files\\Vital Images\\AppShell`, open the `VitreaAppConfig.xml` file, scroll to the `<ClientServerConnectTimeoutInMs>` variable, and enter a desired time interval value (in milliseconds) greater than 10000 (10 seconds), then save the file."],
+            ["You are accessing Vitrea Enterprise from a remote location over the Internet, and the performance is inconsistent.", "The Vitrea experience may fluctuate due to inconsistencies in the Internet connection. Canon Medical recommends accessing Vitrea Enterprise using a wired connection of 1Gb/s or greater and advises against access over cellular connections or wireless connections older than Wi-Fi 5."],
+            ["Your organization uses Virtual Desktop Infrastructure (VDI), and you are considering deploying Vitrea Thin Client within this environment.", "The guide explicitly states that use of Virtual Desktop Infrastructure (VDI) or double remote desktop sessions to access to the Vitrea software is not supported."],
+            ["You are experiencing issues that you suspect might be related to third-party software running on the Vitrea Thin Client.", "Canon Medical states it is not responsible for third-party software running on the Vitrea Thin Client. Any performance impact may lead to an inconsistent user experience, and Canon Medical may not be able to resolve defects determined to be caused by third-party software."],
+            ["You need to uninstall Vitrea Thin Client using a command line, but you don't know the original installation folder.", "You can often locate the `InstallVitreaThinClient.exe` file on the system within the `C:\\ProgramData\\PackageCache` directory location. Then, run the uninstall command: `InstallVitreaThinClient.exe /uninstall /quiet /norestart /log <logFilePath> profile=VitreaThinClient`."],
+            ["Your Vitrea Server RDP service is configured to accept connections on a non-standard port, and you need the Vitrea Thin Client to connect to it.", "You can set the port at connection time via the Remote Client Configuration dialog by entering the Vitrea Server host name and the RDP Port separated by a colon character (e.g., `management.mydomain.com:XXXX`). Alternatively, you can directly set the desired port value in the Windows registry using a command line like `reg add 'HKCU\\Software\\Vital Images\\AppShell' /v VitreaServerRDPPort /d <PortNumber>`."],
+            ["You need to confirm the version information and manufacture date of your Vitrea software.", "You can locate this information by accessing the unique device identifier (UDI). Click the `?` at the top of the window to display the Global Options menu, then select Help (Central). The UDI is displayed under the Version Info section."],
+            ["You are advised to refer to the 'ABOUT VITREA MEDICAL IMAGING SOFTWARE DOCUMENT' before using the Vitrea Thin Client.", "This document includes important information regarding general Vitrea Safety and Regulatory considerations."],
+            ["Your Vitrea deployment requires specific SQL Server versions and Management Server installation prior to setting up Thin Clients.", "Ensure that SQL Server 2016 SP2, SQL Server 2017, or SQL Server 2019 have been installed using the appropriate guide, and the Management Server has been installed per its installation guide. These are prerequisites for Enterprise Deployment."],
+            ["You need to find contact information for customer technical support for Vitrea Thin Client.", "In the U.S., call the Customer Support line at 1.800.208.3005. Outside the U.S., you should contact your distributor. You can also send an email to support@mi.medical.canon."],
+            ["You need to report a serious incident that has occurred in relation to the Vitrea device.", "It should be reported to Canon Medical at 1.800.208.3005 and the competent authority of the Member State in which the user and/or patient is established. More detailed contact information is available at mi.medical.canon/contact-us."]
+        ];
+
+        // Quick tips
+        const tips = [
+            "Always Reboot Before Installation: Canon Medical strongly recommends rebooting your machine before starting the Vitrea Thin Client installation, even if no Windows Updates are found, to ensure a successful installation. This prevents issues caused by pending reboot flags.",
+            "Install Windows Updates: Ensure you install Microsoft Windows monthly updates before installing Vitrea Thin Client software, following your site's policy.",
+            "Verify Network Performance: Before installation, confirm that the local computer has a minimum 5 Mbps bandwidth and 100ms latency between the remote client and the server. Reduced performance can occur with lower speeds or higher latency.",
+            "Physically Secure Devices: To protect PHI (Protected Health Information), ensure that your device/server/system is physically secured in a secured location.",
+            "Prefer Wired Connections: For optimal performance when accessing Vitrea Enterprise, use a wired network connection of 1Gb/s or greater. Avoid cellular connections or older wireless connections (older than Wi-Fi 5).",
+            "Avoid Unsupported Access Methods: Do NOT use Virtual Desktop Infrastructure (VDI) or double remote desktop sessions to access the Vitrea software, as these are not supported.",
+            "Be Mindful of Third-Party Software: Canon Medical is not responsible for the performance impact of third-party software running on the Vitrea Thin Client, which may lead to an inconsistent user experience or unresolved defects.",
+            "Format CD/DVDs for Saving: If saving to CD/DVD media, ensure it is formatted as a Live File System (e.g., 'Like a USB flash drive').",
+            "Report Serious Incidents: Any serious incident related to the device should be reported directly to Canon Medical at 1.800.208.3005 and the relevant competent authority.",
+            "Locate UDI for Info: The Vitrea Unique Device Identifier (UDI), found on the Help Central page, contains the software version information and manufacture date.",
+            "Pre-installation Prerequisites: Always ensure all Enterprise Deployment prerequisites, such as server configurations and SQL Server installations, are completed before installing the Thin Client.",
+            "Monitor Preference for Multi-Displays: On multi-monitor setups, Vitrea will prompt you to select the preferred monitor for launching. This preference is remembered, and cannot be changed during a session."
+        ];
+
+        // Global variables
+        let currentFlashcardIndex = 0;
+
+        // Initialize the application
+        window.onload = function() {
+            // Initialize flashcards
+            updateFlashcard();
+            
+            // Initialize quiz
+            initializeQuiz();
+            
+            // Initialize troubleshooting scenarios
+            initializeScenarios();
+            
+            // Initialize quick tips
+            initializeTips();
+        };
+
+        // Flashcard functions
+        function updateFlashcard() {
+            document.getElementById("flashcardQuestion").innerHTML = flashcards[currentFlashcardIndex][0];
+            document.getElementById("flashcardAnswer").innerHTML = flashcards[currentFlashcardIndex][1];
+            document.getElementById("flashcardCounter").innerHTML = (currentFlashcardIndex + 1) + "/50";
+            document.getElementById("flashcardProgress").style.width = ((currentFlashcardIndex + 1) / 50 * 100) + "%";
+            
+            // Reset flip state
+            document.getElementById("currentFlashcard").className = "flashcard";
+        }
+
+        function flipFlashcard() {
+            const card = document.getElementById("currentFlashcard");
+            if (card.className === "flashcard") {
+                card.className = "flashcard flipped";
+            } else {
+                card.className = "flashcard";
+            }
+        }
+
+        function nextFlashcard() {
+            if (currentFlashcardIndex < 49) {
+                currentFlashcardIndex++;
+                updateFlashcard();
+            }
+        }
+
+        function prevFlashcard() {
+            if (currentFlashcardIndex > 0) {
+                currentFlashcardIndex--;
+                updateFlashcard();
+            }
+        }
+
+        // Quiz functions
+        function initializeQuiz() {
+            const quizContainer = document.getElementById("quizQuestionsContainer");
+            
+            for (let i = 0; i < quizQuestions.length; i++) {
+                let questionHTML = `<div class="question" id="question${i}"><h3>${i + 1}. ${quizQuestions[i][0]}</h3><div class="options">`;
+                
+                let optionsHTML = "";
+                for (let j = 0; j < quizQuestions[i][1].length; j++) {
+                    optionsHTML += `<div class="option" onclick="selectOption(${i}, ${j})">${quizQuestions[i][1][j]}</div>`;
+                }
+                
+                const feedbackHTML = `<div class="feedback" id="feedback${i}"></div>`;
+                
+                quizContainer.innerHTML += questionHTML + optionsHTML + "</div>" + feedbackHTML + "</div>";
+            }
+        }
+
+        function selectOption(questionIndex, optionIndex) {
+            const feedback = document.getElementById(`feedback${questionIndex}`);
+            
+            // Remove any previous selections
+            const optionElements = document.getElementById(`question${questionIndex}`).getElementsByClassName("option");
+            for (let i = 0; i < optionElements.length; i++) {
+                optionElements[i].className = "option";
+            }
+            
+            // Highlight selected option
+            document.getElementById(`question${questionIndex}`).getElementsByClassName("option")[optionIndex].className = "option selected";
+            
+            // Check answer and provide feedback
+            if (optionIndex === quizQuestions[questionIndex][2]) {
+                feedback.className = "feedback correct";
+                feedback.innerHTML = `Correct! ${quizQuestions[questionIndex][1][optionIndex]} is the right answer.`;
+                feedback.style.display = "block";
+                
+                // Highlight correct answer
+                document.getElementById(`question${questionIndex}`).getElementsByClassName("option")[optionIndex].className = "option correct";
+            } else {
+                feedback.className = "feedback incorrect";
+                feedback.innerHTML = `Incorrect. The correct answer is: ${quizQuestions[questionIndex][1][quizQuestions[questionIndex][2]]}`;
+                feedback.style.display = "block";
+                
+                // Highlight correct answer
+                document.getElementById(`question${questionIndex}`).getElementsByClassName("option")[quizQuestions[questionIndex][2]].className = "option correct";
+                // Highlight incorrect selection
+                document.getElementById(`question${questionIndex}`).getElementsByClassName("option")[optionIndex].className = "option incorrect";
+            }
+            
+            // Update score
+            let score = 0;
+            for (let i = 0; i < quizQuestions.length; i++) {
+                const optionElements = document.getElementById(`question${i}`).getElementsByClassName("option");
+                for (let j = 0; j < optionElements.length; j++) {
+                    if (optionElements[j].className === "option correct selected") {
+                        score++;
+                        break;
+                    }
+                }
+            }
+            
+            document.getElementById("quizScore").innerHTML = score;
+            document.getElementById("quizProgress").style.width = (score / quizQuestions.length * 100) + "%";
+        }
+
+        function resetQuiz() {
+            for (let i = 0; i < quizQuestions.length; i++) {
+                const optionElements = document.getElementById(`question${i}`).getElementsByClassName("option");
+                for (let j = 0; j < optionElements.length; j++) {
+                    optionElements[j].className = "option";
+                }
+                document.getElementById(`feedback${i}`).style.display = "none";
+            }
+            
+            document.getElementById("quizScore").innerHTML = "0";
+            document.getElementById("quizProgress").style.width = "0%";
+        }
+
+        // Troubleshooting scenarios
+        function initializeScenarios() {
+            const scenariosContainer = document.getElementById("scenariosContainer");
+            
+            for (let i = 0; i < scenarios.length; i++) {
+                const scenarioHTML = `<div class="scenario"><h3>Scenario ${i + 1}</h3><p>${scenarios[i][0]}</p>` +
+                               `<button onclick="showSolution(${i})">Show Solution</button>` +
+                               `<div class="scenario-solution" id="solution${i}"><p>${scenarios[i][1]}</p></div></div>`;
+                
+                scenariosContainer.innerHTML += scenarioHTML;
+            }
+        }
+
+        function showSolution(index) {
+            const solution = document.getElementById(`solution${index}`);
+            if (solution.style.display === "none" || solution.style.display === "") {
+                solution.style.display = "block";
+            } else {
+                solution.style.display = "none";
+            }
+        }
+
+        // Quick tips
+        function initializeTips() {
+            const tipsContainer = document.getElementById("tipsContainer");
+            
+            for (let i = 0; i < tips.length; i++) {
+                const tipHTML = `<div class="quick-tip"><h3>Tip ${i + 1}</h3><p>${tips[i]}</p></div>`;
+                tipsContainer.innerHTML += tipHTML;
+            }
+        }
+
+        // Tab navigation
+        function openSection(sectionName) {
+            const tabs = document.getElementsByClassName("tab");
+            const sections = document.getElementsByClassName("content-section");
+            
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].className = "tab";
+                sections[i].className = "content-section";
+            }
+            
+            document.getElementById(sectionName).className = "content-section active";
+            
+            for (let i = 0; i < tabs.length; i++) {
+                if (tabs[i].getAttribute("onclick") === `openSection('${sectionName}')`) {
+                    tabs[i].className = "tab active";
+                    break;
+                }
+            }
+        }
+    </script>
+</body>
+</html>

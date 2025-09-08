@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vitrea Thin Client Installation Checklist</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            color: #0066cc;
+            text-align: center;
+            border-bottom: 2px solid #0066cc;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #0066cc;
+            background-color: #e6f2ff;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        h2:hover {
+            background-color: #d6e9ff;
+        }
+        h2::after {
+            content: "+";
+            font-size: 1.2em;
+        }
+        h2.expanded::after {
+            content: "-";
+        }
+        h3 {
+            color: #004080;
+            margin-top: 20px;
+            border-left: 4px solid #0066cc;
+            padding-left: 10px;
+        }
+        .section {
+            margin-bottom: 30px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 0 15px;
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .content {
+            display: none;
+            padding: 10px 0;
+        }
+        .expanded + .content {
+            display: block;
+        }
+        .checklist-item {
+            margin: 10px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+        .checklist-item input {
+            position: absolute;
+            left: 0;
+            top: 3px;
+        }
+        .checklist-item label {
+            cursor: pointer;
+        }
+        .checklist-item.completed label {
+            color: #666;
+            text-decoration: line-through;
+        }
+        .note {
+            background-color: #fffde7;
+            border-left: 4px solid #ffd600;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 0.9em;
+        }
+        .command {
+            font-family: monospace;
+            background-color: #f0f0f0;
+            padding: 2px 5px;
+            border-radius: 3px;
+            word-break: break-all;
+        }
+        .progress-container {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .progress-bar {
+            height: 20px;
+            background-color: #4CAF50;
+            border-radius: 5px;
+            width: 0%;
+            transition: width 0.3s;
+            text-align: center;
+            color: white;
+            font-size: 12px;
+            line-height: 20px;
+        }
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+        }
+        button {
+            background-color: #0066cc;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0055aa;
+        }
+        .sub-item {
+            margin-left: 20px;
+            padding-left: 15px;
+            border-left: 2px solid #e0e0e0;
+        }
+        .page-ref {
+            font-size: 0.8em;
+            color: #666;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <h1>Vitrea Thin Client Installation Checklist</h1>
+    <p>This interactive checklist outlines the key steps for installing and configuring the Vitrea Thin Client software, as detailed in the "Vitrea Thin Client Install Guide" (VPMC-17209E).</p>
+    
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar">0%</div>
+    </div>
+    
+    <div class="controls">
+        <button id="expandAll">Expand All</button>
+        <button id="collapseAll">Collapse All</button>
+        <button id="resetAll">Reset All</button>
+        <button id="saveState">Save Progress</button>
+    </div>
+    
+    <div class="section">
+        <h2>Pre-Installation Requirements</h2>
+        <div class="content">
+            <h3>Verify Hardware and Software Requirements <span class="page-ref">(Page 36-37)</span></h3>
+            <div class="checklist-item">
+                <input type="checkbox" id="req1">
+                <label for="req1">Confirm 1 GHz 64-bit (x64) processor</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="req2">
+                <label for="req2">Ensure 4GB system memory with at least 500MB free</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="req3">
+                <label for="req3">Verify 40GB hard drive with at least 15GB available</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="req4">
+                <label for="req4">Confirm supported OS: Microsoft Windows 10/11 Professional or Enterprise 64-bit with latest Service Packs, or Mac OS X 10.9+ for RDS client (no PACS integration on Mac)</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="req5">
+                <label for="req5">Ensure 1.0 Gbps network connection with minimum 5 Mbps bandwidth and ≤100ms latency</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="req6">
+                <label for="req6">Verify monitor resolutions: Minimum 1280x1024, Recommended 1920x1200 or 2560x1600, Maximum 3840x2160 (4K)</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="req7">
+                <label for="req7">Confirm RDP 10 for Windows 10 and Visual C++ 2015-2022 Redistributable (automatically installed)</label>
+            </div>
+            
+            <h3>Complete Enterprise Deployment Prerequisites <span class="page-ref">(Page 9-10)</span></h3>
+            <div class="checklist-item">
+                <input type="checkbox" id="ent1">
+                <label for="ent1">Verify completion of Enterprise Deployment Active Directory Planning Guide procedures</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="ent2">
+                <label for="ent2">Confirm completion of Enterprise Deployment Operating System Setup Guide procedures</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="ent3">
+                <label for="ent3">Ensure Vitrea Enterprise servers are configured per the Operating System Setup Guide</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="ent4">
+                <label for="ent4">Verify SQL Server 2016 SP2, 2017, or 2019 is installed per SQL Server Setup Guide or Remote SQL Server Setup Instructions</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="ent5">
+                <label for="ent5">Confirm Management Server is installed per the Management Server Installation Guide</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="ent6">
+                <label for="ent6">Verify Application Servers and/or Multi Modality Viewer Servers are installed per the Application Server Installation Guide</label>
+            </div>
+            
+            <h3>Install Monthly Windows Updates <span class="page-ref">(Page 11-12)</span></h3>
+            <div class="checklist-item">
+                <input type="checkbox" id="upd1">
+                <label for="upd1">Click Start > Settings > Update & Security > Check for updates</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="upd2">
+                <label for="upd2">Install updates and click Restart now when prompted</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="upd3">
+                <label for="upd3">Repeat until no further updates are available</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="upd4">
+                <label for="upd4">Reboot the system before installation to clear any pending reboot flags</label>
+            </div>
+        </div>
+    </div>
+    
+    <div class="section">
+        <h2>Installation Process</h2>
+        <div class="content">
+            <h3>Install Vitrea Thin Client Software <span class="page-ref">(Page 12-13)</span></h3>
+            <div class="checklist-item">
+                <input type="checkbox" id="inst1">
+                <label for="inst1">Sign in as an administrator</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="inst2">
+                <label for="inst2">Navigate to Utilities/Vitrea Thin Client folder on the client machine</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="inst3">
+                <label for="inst3">Right-click InstallVitreaThinClient.exe and select Run as Administrator</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="inst4">
+                <label for="inst4">If prompted with "There is a pending reboot" message, click Exit and reboot the system</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="inst5">
+                <label for="inst5">Click INSTALL and wait for completion (approximately 5-10 minutes)</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="inst6">
+                <label for="inst6">Click EXIT when installation is complete</label>
+            </div>
+            
+            <h3>Command Line Installation (Optional) <span class="page-ref">(Page 22-23)</span></h3>
+            <div class="checklist-item">
+                <input type="checkbox" id="cli1">
+                <label for="cli1">Run: <span class="command">InstallVitreaThinClient.exe /quiet /norestart /log &lt;logFilePath&gt; profile=VitreaThinClient MANAGEMENT_HOST=&lt;mgmtServerFQDN&gt;</span></label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="cli2">
+                <label for="cli2">To disable monitor preference dialog: Add <span class="command">noMonitorPrompt=true</span> to the command</label>
+            </div>
+        </div>
+    </div>
+    
+    <div class="section">
+        <h2>Post-Installation Configuration</h2>
+        <div class="content">
+            <h3>Launch Vitrea Remote Client <span class="page-ref">(Page 13-14)</span></h3>
+            <div class="checklist-item">
+                <input type="checkbox" id="post1">
+                <label for="post1">Double-click the Start Vitrea shortcut on the desktop</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="post2">
+                <label for="post2">Enter the Management Server hostname (max 15 characters) in the Vitrea Server field (e.g., management.mydomain.com)</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="post3">
+                <label for="post3">If using a non-standard RDP port, append it (e.g., management.mydomain.com:3389)</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="post4">
+                <label for="post4">Click Continue</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="post5">
+                <label for="post5">Select the desired server collection (e.g., Advanced, MiniViewer) from the Collection Pool Selector</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="post6">
+                <label for="post6">Enter Windows credentials if prompted (required with SSL certificate)</label>
+            </div>
+            
+            <h3>Set Monitor Preference <span class="page-ref">(Page 14-16)</span></h3>
+            <div class="checklist-item">
+                <input type="checkbox" id="mon1">
+                <label for="mon1">Launch Vitrea software</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="mon2">
+                <label for="mon2">Select One Display or All Displays when prompted</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="mon3">
+                <label for="mon3">If One Display, move the Display Selection window to the desired monitor and click Continue</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="mon4">
+                <label for="mon4">To change preference later: From Applications Home, click gear icon > Set Monitor Preference</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="mon5">
+                <label for="mon5">Click OK and relaunch Vitrea to select a new monitor</label>
+            </div>
+            
+            <h3>Configure Vitrea Media Manager (Optional) <span class="page-ref">(Page 17)</span></h3>
+            <div class="checklist-item">
+                <input type="checkbox" id="med1">
+                <label for="med1">Right-click Start > Search > Vitrea Media Manager Configuration</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="med2">
+                <label for="med2">Enter Management Server hostname in Vims IP / Host field</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="med3">
+                <label for="med3">Click Apply and launch Media Manager</label>
+            </div>
+            
+            <h3>Improve Connection Time (Optional) <span class="page-ref">(Page 18)</span></h3>
+            <div class="checklist-item">
+                <input type="checkbox" id="conn1">
+                <label for="conn1">Right-click Start > Search > gpedit.msc</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="conn2">
+                <label for="conn2">Navigate to Computer Configuration > Windows Settings > Security Settings > Public Key Policies</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="conn3">
+                <label for="conn3">Double-click Certificate Path Validation Settings > Network Retrieval tab</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="conn4">
+                <label for="conn4">Check Define these policy settings</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="conn5">
+                <label for="conn5">Uncheck Automatically update certificates in the Microsoft Root Certificate Program and Allow issuer certificate (AIA) retrieval</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="conn6">
+                <label for="conn6">Click OK</label>
+            </div>
+            
+            <h3>Resolve RDP Connection Transition Issue (Barco Monitors, Optional) <span class="page-ref">(Page 18-19)</span></h3>
+            <div class="sub-item">
+                <h4>For Host System:</h4>
+                <div class="checklist-item">
+                    <input type="checkbox" id="rdp1">
+                    <label for="rdp1">Edit Group Policy Object: Computer Configuration > Administrative Templates > Windows Components > Remote Desktop Services > Remote Desktop Session Host > Remote Session Environment > RemoteFX data</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="rdp2">
+                    <label for="rdp2">Select compression option (e.g., Optimized to use less memory)</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="rdp3">
+                    <label for="rdp3">Click OK</label>
+                </div>
+            </div>
+            <div class="sub-item">
+                <h4>For Thin Client with Barco Monitors:</h4>
+                <div class="checklist-item">
+                    <input type="checkbox" id="rdp4">
+                    <label for="rdp4">Right-click Start > Search > gpedit.msc</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="rdp5">
+                    <label for="rdp5">Navigate to Computer Configuration > Administrative Templates > Windows Components > Remote Desktop Services > Remote Desktop Connection Client</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="rdp6">
+                    <label for="rdp6">Enable Do not allow hardware accelerated decoding and click Apply</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="rdp7">
+                    <label for="rdp7">Restart the remote desktop client</label>
+                </div>
+            </div>
+            
+            <h3>Configure RDP Port (Optional) <span class="page-ref">(Page 23)</span></h3>
+            <div class="checklist-item">
+                <input type="checkbox" id="port1">
+                <label for="port1">Via Remote Client Configuration: Enter hostname and port (e.g., VM1-MGMT-IF-1189:1189) and click Continue</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="port2">
+                <label for="port2">Via Registry: Run <span class="command">reg add "HKCU\Software\Vital Images\Appshell" /v VitreaServerRDPort /d 1189</span></label>
+            </div>
+            
+            <h3>Configure Timeout Period (Optional) <span class="page-ref">(Page 24)</span></h3>
+            <div class="checklist-item">
+                <input type="checkbox" id="time1">
+                <label for="time1">Navigate to C:\Program Files\Vital Images\AppShell</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="time2">
+                <label for="time2">Open VitreaAppConfig.xml</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="time3">
+                <label for="time3">Set &lt;ClientServerConnectTimeoutMs&gt; to desired value (default 10 seconds)</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="time4">
+                <label for="time4">Save the file</label>
+            </div>
+            
+            <h3>Configure Save to Media (Optional) <span class="page-ref">(Page 24-25)</span></h3>
+            <div class="checklist-item">
+                <input type="checkbox" id="save1">
+                <label for="save1">Format CD/DVD as Live File System: From Start > Computer, select CD/DVD drive</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="save2">
+                <label for="save2">Choose Like a USB flash drive and click Next</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="save3">
+                <label for="save3">Verify CD/DVD is loaded and formatted correctly if "Drive Not Accessible" error occurs</label>
+            </div>
+        </div>
+    </div>
+    
+    <div class="section">
+        <h2>Post-Installation Verification and Troubleshooting</h2>
+        <div class="content">
+            <h3>Verify Installation <span class="page-ref">(Page 13)</span></h3>
+            <div class="checklist-item">
+                <input type="checkbox" id="ver1">
+                <label for="ver1">Confirm Start Vitrea shortcut appears on the desktop</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="ver2">
+                <label for="ver2">Ensure successful connection to the selected server collection</label>
+            </div>
+            
+            <h3>Troubleshoot Common Issues <span class="page-ref">(Page 33-35)</span></h3>
+            <div class="checklist-item">
+                <input type="checkbox" id="trouble1">
+                <label for="trouble1">Password Prompt on Connection: Modify local internet options for trusted sites (see Enterprise Deployment Active Directory Planning Guide, Appendix C)</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="trouble2">
+                <label for="trouble2">Authentication Failure: Enable authentication delegation (see Enterprise Deployment Active Directory Planning Guide, Appendix C)</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="trouble3">
+                <label for="trouble3">Uninstall Reboot Error: Click OK, reboot the system, and retry uninstallation</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="trouble4">
+                <label for="trouble4">Multiple Instances in Add/Remove Programs: Right-click the desired Vitrea Thin Client instance in Add/Remove Programs. Select Uninstall, complete installer screens, and reboot</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="trouble5">
+                <label for="trouble5">No Available Computers Error: Click OK, wait 5 minutes, and retry connection</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="trouble6">
+                <label for="trouble6">Credential Request Issue: Open Remote Desktop Client, select server, delete saved credentials, and confirm</label>
+            </div>
+            
+            <h3>Uninstall Vitrea Thin Client (Optional) <span class="page-ref">(Page 20, 22-23)</span></h3>
+            <div class="checklist-item">
+                <input type="checkbox" id="un1">
+                <label for="un1">Via Settings: Start > Settings > Apps > VitreaThinClient > Uninstall/Change > UNINSTALL > EXIT</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="un2">
+                <label for="un2">Via Command Line: Run <span class="command">InstallVitreaThinClient.exe /uninstall /quiet /norestart /log &lt;LogFilePath&gt; profile=VitreaThinClient</span> as administrator</label>
+            </div>
+        </div>
+    </div>
+    
+    <div class="section">
+        <h2>Additional Notes</h2>
+        <div class="content">
+            <div class="note">
+                <p>Ensure physical security of the device to protect PHI <span class="page-ref">(Page 36)</span></p>
+            </div>
+            <div class="note">
+                <p>Purchase and configure RDS CALs (device or user) as required <span class="page-ref">(Page 36)</span></p>
+            </div>
+            <div class="note">
+                <p>For multi-monitor setups, refer to the Multiple Monitor Setup Guide <span class="page-ref">(Page 37)</span></p>
+            </div>
+            <div class="note">
+                <p>Windows 10 support ends October 14, 2025; plan to upgrade to Windows 11 for future compatibility <span class="page-ref">(Page 37)</span></p>
+            </div>
+            <div class="note">
+                <p>Contact Canon Medical Support at 1-800-208-3005 or support@mi.medical.canon for issues <span class="page-ref">(Page 5)</span></p>
+            </div>
+            <div class="note">
+                <p>Verify supported monitor resolutions for VSTP applications <span class="page-ref">(Page 39)</span></p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Toggle section expansion
+        document.querySelectorAll('h2').forEach(header => {
+            header.addEventListener('click', () => {
+                header.classList.toggle('expanded');
+            });
+        });
+        
+        // Expand all sections
+        document.getElementById('expandAll').addEventListener('click', () => {
+            document.querySelectorAll('h2').forEach(header => {
+                header.classList.add('expanded');
+            });
+        });
+        
+        // Collapse all sections
+        document.getElementById('collapseAll').addEventListener('click', () => {
+            document.querySelectorAll('h2').forEach(header => {
+                header.classList.remove('expanded');
+            });
+        });
+        
+        // Reset all checkboxes
+        document.getElementById('resetAll').addEventListener('click', () => {
+            document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                checkbox.checked = false;
+                updateProgress();
+            });
+            localStorage.removeItem('vitreaChecklistState');
+        });
+        
+        // Save progress
+        document.getElementById('saveState').addEventListener('click', () => {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            const state = Array.from(checkboxes).map(cb => cb.checked);
+            localStorage.setItem('vitreaChecklistState', JSON.stringify(state));
+            alert('Progress saved!');
+        });
+        
+        // Load saved progress
+        function loadSavedState() {
+            const savedState = localStorage.getItem('vitreaChecklistState');
+            if (savedState) {
+                const state = JSON.parse(savedState);
+                const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+                checkboxes.forEach((checkbox, index) => {
+                    checkbox.checked = state[index] || false;
+                });
+                updateProgress();
+            }
+        }
+        
+        // Update progress bar
+        function updateProgress() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            const checked = Array.from(checkboxes).filter(cb => cb.checked).length;
+            const total = checkboxes.length;
+            const percentage = Math.round((checked / total) * 100);
+            
+            const progressBar = document.getElementById('progressBar');
+            progressBar.style.width = percentage + '%';
+            progressBar.textContent = percentage + '%';
+            
+            // Update checklist item styling
+            document.querySelectorAll('.checklist-item').forEach(item => {
+                const checkbox = item.querySelector('input');
+                if (checkbox.checked) {
+                    item.classList.add('completed');
+                } else {
+                    item.classList.remove('completed');
+                }
+            });
+        }
+        
+        // Add event listeners to all checkboxes
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', updateProgress);
+        });
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            loadSavedState();
+            updateProgress();
+            
+            // Expand first section by default
+            document.querySelector('h2').classList.add('expanded');
+        });
+    </script>
+</body>
+</html>
