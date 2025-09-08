@@ -1,0 +1,1012 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Vitrea Administration Reference</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --warning: #e74c3c;
+            --highlight: #fffde7;
+            --note: #7f8c8d;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f7fa;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        h1 {
+            color: var(--primary);
+            margin: 0;
+            border-bottom: 2px solid var(--secondary);
+            padding-bottom: 10px;
+        }
+        
+        .search-container {
+            display: flex;
+            gap: 10px;
+        }
+        
+        #searchInput {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            min-width: 250px;
+        }
+        
+        #searchButton {
+            padding: 8px 16px;
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .mindmap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .central-node {
+            background-color: var(--secondary);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: fit-content;
+        }
+        
+        .central-node:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        
+        .branches {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            width: 100%;
+        }
+        
+        .branch {
+            flex: 1;
+            min-width: 280px;
+            max-width: 380px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .branch:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+        }
+        
+        .branch-header {
+            background-color: var(--primary);
+            color: white;
+            padding: 12px 15px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .branch-header::after {
+            content: '+';
+            font-size: 18px;
+        }
+        
+        .branch-header.active::after {
+            content: '-';
+        }
+        
+        .branch-content {
+            padding: 15px;
+            display: none;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        
+        .branch-content.show {
+            display: block;
+        }
+        
+        .sub-node {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .sub-node:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .sub-node-header {
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 8px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .sub-node-header::after {
+            content: '+';
+            font-size: 18px;
+        }
+        
+        .sub-node-header.active::after {
+            content: '-';
+        }
+        
+        .sub-node-content {
+            display: none;
+            padding: 10px;
+            background-color: var(--light);
+            border-radius: 5px;
+            margin-top: 8px;
+        }
+        
+        .sub-node-content.show {
+            display: block;
+        }
+        
+        .leaf-node {
+            margin-left: 15px;
+            margin-top: 8px;
+            padding: 8px;
+            background-color: #e8f4fc;
+            border-radius: 5px;
+            font-size: 14px;
+            position: relative;
+        }
+        
+        .leaf-node.has-tooltip:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            left: 100%;
+            top: 0;
+            min-width: 200px;
+            max-width: 300px;
+            background-color: var(--dark);
+            color: white;
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 13px;
+            z-index: 100;
+            margin-left: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .step-by-step {
+            margin-top: 10px;
+            padding-left: 15px;
+            border-left: 3px solid var(--secondary);
+        }
+        
+        .step {
+            margin-bottom: 8px;
+            position: relative;
+            padding-left: 20px;
+        }
+        
+        .step::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--secondary);
+        }
+        
+        .registry-key {
+            font-family: 'Courier New', monospace;
+            background-color: #f0f0f0;
+            padding: 2px 4px;
+            border-radius: 3px;
+            cursor: help;
+        }
+        
+        .sql-query {
+            font-family: 'Courier New', monospace;
+            background-color: #f5f5f5;
+            padding: 5px;
+            border-radius: 3px;
+            display: block;
+            margin: 5px 0;
+            white-space: pre-wrap;
+            font-size: 13px;
+        }
+        
+        .deployment-specific {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .deployment-type {
+            background-color: #e8f5e9;
+            padding: 8px;
+            border-radius: 4px;
+            border-left: 3px solid #4caf50;
+        }
+        
+        .note {
+            font-style: italic;
+            color: var(--note);
+            font-size: 13px;
+            margin-top: 5px;
+        }
+        
+        .warning {
+            color: var(--warning);
+            font-weight: bold;
+        }
+        
+        .highlight {
+            background-color: var(--highlight);
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        
+        .tooltip-icon {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            background-color: var(--secondary);
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 16px;
+            font-size: 12px;
+            margin-left: 5px;
+            cursor: help;
+        }
+        
+        .search-highlight {
+            background-color: yellow;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 768px) {
+            .branches {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .branch {
+                width: 100%;
+                max-width: 100%;
+            }
+            
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .search-container {
+                width: 100%;
+            }
+            
+            #searchInput {
+                flex-grow: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Complete Vitrea Administration Reference</h1>
+            <div class="search-container">
+                <input type="text" id="searchInput" placeholder="Search for settings, registry keys...">
+                <button id="searchButton">Search</button>
+            </div>
+        </header>
+        
+        <div class="mindmap">
+            <div class="central-node" onclick="toggleAll()">
+                Vitrea Administration Procedures
+                <div style="font-size: 14px; font-weight: normal; margin-top: 5px;">Click to expand/collapse all</div>
+            </div>
+            
+            <div class="branches">
+                <!-- Previous branches I-III would be here -->
+                <!-- Branch 4 -->
+                <div class="branch">
+                    <div class="branch-header" onclick="toggleBranch(this)">
+                        IV. Application Configurations
+                    </div>
+                    <div class="branch-content">
+                        <!-- JIT Processing -->
+                        <div class="sub-node">
+                            <div class="sub-node-header" onclick="toggleSubNode(this)">
+                                Just-In-Time (JIT) Processing
+                            </div>
+                            <div class="sub-node-content">
+                                <div class="leaf-node">Framework for background processing algorithms</div>
+                                <div class="step-by-step">
+                                    <div class="step">Configuration path: System Settings → Processing → JIT</div>
+                                    <div class="step">Enable/disable specific algorithms</div>
+                                    <div class="step">Set timeout values per algorithm</div>
+                                </div>
+                                <div class="leaf-node">Registry keys:</div>
+                                <div class="leaf-node">- <span class="registry-key" data-tooltip="Master switch for JIT processing">HKLM\Software\Vital\Vitrea\JIT\Enabled</span></div>
+                                <div class="leaf-node">- <span class="registry-key" data-tooltip="Global timeout setting in minutes">HKLM\Software\Vital\Vitrea\JIT\DefaultTimeout</span></div>
+                                <div class="leaf-node warning">Most algorithms require specific licenses</div>
+                            </div>
+                        </div>
+                        
+                        <!-- CT Colon CAD -->
+                        <div class="sub-node">
+                            <div class="sub-node-header" onclick="toggleSubNode(this)">
+                                CT Colon CAD
+                            </div>
+                            <div class="sub-node-content">
+                                <div class="leaf-node">Automatic triggering via DICOM tags:</div>
+                                <div class="leaf-node">- Study Description</div>
+                                <div class="leaf-node">- Series Description</div>
+                                <div class="leaf-node">- Body Part Examined</div>
+                                <div class="leaf-node">- Protocol Name</div>
+                                
+                                <div class="step-by-step">
+                                    <div class="step">Default keywords: "colon, prone, supine, decubitus"</div>
+                                    <div class="step">To add custom keywords:</div>
+                                    <div class="step">1. Edit <span class="registry-key">HKLM\Software\Vital\Vitrea\ColonCAD\Keywords</span></div>
+                                    <div class="step">2. Add comma-separated values</div>
+                                    <div class="step">3. Restart VSP Processing Service</div>
+                                </div>
+                                
+                                <div class="leaf-node">Timeout settings:</div>
+                                <div class="leaf-node">- Default: <span class="highlight">45 minutes</span></div>
+                                <div class="leaf-node">- Retry attempts: <span class="highlight">3</span></div>
+                                
+                                <div class="sql-query">-- SQL to monitor ColonCAD processing
+SELECT StudyUID, Status, StartTime, EndTime 
+FROM JITProcessingLog
+WHERE Algorithm = 'ColonCAD'
+ORDER BY StartTime DESC</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Vitrea Lung CAD -->
+                        <div class="sub-node">
+                            <div class="sub-node-header" onclick="toggleSubNode(this)">
+                                Vitrea Lung CAD
+                            </div>
+                            <div class="sub-node-content">
+                                <div class="leaf-node warning">Only available OUS (Outside United States)</div>
+                                <div class="leaf-node">Requires license key: <span class="registry-key">VITREA-LUNG-CAD-XXXX</span></div>
+                                
+                                <div class="step-by-step">
+                                    <div class="step">Configuration:</div>
+                                    <div class="step">1. Enable in System Settings → Clinical Apps</div>
+                                    <div class="step">2. Set trigger keywords ("bronch, chest, lung, pulmonary")</div>
+                                    <div class="step">3. Configure timeout (default 45min)</div>
+                                    <div class="step">4. Restart services</div>
+                                </div>
+                                
+                                <div class="leaf-node">Registry keys:</div>
+                                <div class="leaf-node">- <span class="registry-key">HKLM\Software\Vital\Vitrea\LungCAD\Enabled</span> (1/0)</div>
+                                <div class="leaf-node">- <span class="registry-key">HKLM\Software\Vital\Vitrea\LungCAD\Keywords</span></div>
+                                <div class="leaf-node">- <span class="registry-key">HKLM\Software\Vital\Vitrea\LungCAD\Timeout</span> (in minutes)</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Brain Perfusion CT -->
+                        <div class="sub-node">
+                            <div class="sub-node-header" onclick="toggleSubNode(this)">
+                                Brain Perfusion CT
+                            </div>
+                            <div class="sub-node-content">
+                                <div class="leaf-node">Deconvolution methods:</div>
+                                <div class="leaf-node">- 2D: SVD, SVD+, Bayesian</div>
+                                <div class="leaf-node">- 4D: SVD+, Bayesian</div>
+                                
+                                <div class="step-by-step">
+                                    <div class="step">Default configuration:</div>
+                                    <div class="step">1. Checks for Bayesian license first</div>
+                                    <div class="step">2. Falls back to SVD+ if unavailable</div>
+                                    <div class="step">3. SVD used as last resort</div>
+                                </div>
+                                
+                                <div class="leaf-node">Registry override:</div>
+                                <div class="leaf-node">- <span class="registry-key">HKLM\Software\Vital\Vitrea\Perfusion\2DMethod</span></div>
+                                <div class="leaf-node">- <span class="registry-key">HKLM\Software\Vital\Vitrea\Perfusion\4DMethod</span></div>
+                                <div class="leaf-node">Valid values: "SVD", "SVDPLUS", "BAYESIAN"</div>
+                                
+                                <div class="sql-query">-- Query perfusion processing stats
+SELECT Method, AVG(ProcessingTime) as AvgTime
+FROM PerfusionProcessingLog
+GROUP BY Method</div>
+                            </div>
+                        </div>
+                        
+                        <!-- TAVR Settings -->
+                        <div class="sub-node">
+                            <div class="sub-node-header" onclick="toggleSubNode(this)">
+                                TAVR Settings
+                            </div>
+                            <div class="sub-node-content">
+                                <div class="leaf-node">Phase detection ranges:</div>
+                                <div class="leaf-node">- Systole: <span class="highlight">30-40%</span> (default)</div>
+                                <div class="leaf-node">- Diastole: <span class="highlight">65-75%</span> (default)</div>
+                                
+                                <div class="step-by-step">
+                                    <div class="step">To modify ranges:</div>
+                                    <div class="step">1. Edit <span class="registry-key">HKLM\Software\Vital\Vitrea\TAVR\SystoleRange</span></div>
+                                    <div class="step">2. Edit <span class="registry-key">HKLM\Software\Vital\Vitrea\TAVR\DiastoleRange</span></div>
+                                    <div class="step">3. Format as "min-max" (e.g., "25-35")</div>
+                                </div>
+                                
+                                <div class="leaf-node">Automatic measurements:</div>
+                                <div class="leaf-node">- Aortic cusps: <span class="registry-key">TAVR_Cusps_Initialized</span> (True/False)</div>
+                                <div class="leaf-node">- Iliac access: <span class="registry-key">TAVR_Iliac_Access_Initialized</span> (True/False)</div>
+                                
+                                <div class="note">Changes require restart of Vitrea Advanced Visualization service</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Branch 5 -->
+                <div class="branch">
+                    <div class="branch-header" onclick="toggleBranch(this)">
+                        V. Performance Optimization
+                    </div>
+                    <div class="branch-content">
+                        <!-- Olea Performance -->
+                        <div class="sub-node">
+                            <div class="sub-node-header" onclick="toggleSubNode(this)">
+                                Olea Performance
+                            </div>
+                            <div class="sub-node-content">
+                                <div class="deployment-specific">
+                                    <div class="deployment-type">
+                                        <strong>Applicable to:</strong> Enterprise, Single Server, Extend
+                                    </div>
+                                </div>
+                                
+                                <div class="step-by-step">
+                                    <div class="step">To improve Thick MPR performance:</div>
+                                    <div class="step">1. Locate <span class="registry-key">OleaSuite.l4j.ini</span></div>
+                                    <div class="step">2. Add line: <span class="highlight">-Dolea.sdk.poolthreadsize=XX</span></div>
+                                    <div class="step">3. Where XX = logical processors (default 8)</div>
+                                    <div class="step">4. Restart Olea services</div>
+                                </div>
+                                
+                                <div class="leaf-node">Additional parameters:</div>
+                                <div class="leaf-node">- <span class="registry-key">-Xmx8g</span> (heap size)</div>
+                                <div class="leaf-node">- <span class="registry-key">-Dolea.sdk.gpucache=true</span></div>
+                                
+                                <div class="sql-query">-- Monitor Olea performance
+SELECT Application, AVG(RenderTime) as AvgRenderTime
+FROM PerformanceMetrics
+WHERE Application LIKE 'Olea%'
+GROUP BY Application</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Application Pre-Launching -->
+                        <div class="sub-node">
+                            <div class="sub-node-header" onclick="toggleSubNode(this)">
+                                Application Pre-Launching
+                            </div>
+                            <div class="sub-node-content">
+                                <div class="leaf-node">Default: <span class="highlight">Enabled</span></div>
+                                <div class="leaf-node">Reduces user-perceived startup time</div>
+                                
+                                <div class="step-by-step">
+                                    <div class="step">To disable:</div>
+                                    <div class="step">1. Edit <span class="registry-key">VitreaClient.config</span></div>
+                                    <div class="step">2. Set <span class="highlight">&lt;enablePrelaunch&gt;false&lt;/enablePrelaunch&gt;</span></div>
+                                    <div class="step">3. Save and restart Vitrea Client</div>
+                                </div>
+                                
+                                <div class="leaf-node">Affected applications:</div>
+                                <div class="leaf-node">- Vitrea Advanced Visualization</div>
+                                <div class="leaf-node">- Reporting Module</div>
+                                <div class="leaf-node">- Clinical Applications</div>
+                                
+                                <div class="note">Disabling may increase first-launch time by 15-30 seconds</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Study List Auto Refresh -->
+                        <div class="sub-node">
+                            <div class="sub-node-header" onclick="toggleSubNode(this)">
+                                Study List Auto Refresh
+                            </div>
+                            <div class="sub-node-content">
+                                <div class="leaf-node">Default: <span class="highlight">20 seconds</span> interval</div>
+                                
+                                <div class="step-by-step">
+                                    <div class="step">To disable:</div>
+                                    <div class="step">1. Edit <span class="registry-key">HKLM\Software\Vital\Vitrea\UI\searchAutoRefresh</span></div>
+                                    <div class="step">2. Set to <span class="highlight">0</span></div>
+                                    <div class="step">3. Restart Vitrea Client</div>
+                                </div>
+                                
+                                <div class="leaf-node">Impact:</div>
+                                <div class="leaf-node">- Reduces polling against remote archives</div>
+                                <div class="leaf-node">- Local archive changes still appear</div>
+                                <div class="leaf-node">- Manual refresh still available</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Report Output Size -->
+                        <div class="sub-node">
+                            <div class="sub-node-header" onclick="toggleSubNode(this)">
+                                Report Output Size
+                            </div>
+                            <div class="sub-node-content">
+                                <div class="leaf-node">Default: Normal resolution</div>
+                                <div class="leaf-node">High-res option increases size by <span class="highlight">2.5x</span></div>
+                                
+                                <div class="step-by-step">
+                                    <div class="step">To enable high-res:</div>
+                                    <div class="step">1. Edit <span class="registry-key">HKLM\Software\Vital\Vitrea\Reporting\resizeDropAreas</span></div>
+                                    <div class="step">2. Set to <span class="highlight">1</span></div>
+                                    <div class="step">3. Restart Reporting Service</div>
+                                </div>
+                                
+                                <div class="leaf-node">Storage impact:</div>
+                                <div class="leaf-node">- PDF reports: ~2MB → ~5MB</div>
+                                <div class="leaf-node">- DICOM SR: ~500KB → ~1.2MB</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Monitor Preference -->
+                        <div class="sub-node">
+                            <div class="sub-node-header" onclick="toggleSubNode(this)">
+                                Monitor Preference
+                            </div>
+                            <div class="sub-node-content">
+                                <div class="deployment-specific">
+                                    <div class="deployment-type">
+                                        <strong>Applicable to:</strong> Single Server, Extend, Workstation
+                                    </div>
+                                </div>
+                                
+                                <div class="step-by-step">
+                                    <div class="step">To set preferred monitor:</div>
+                                    <div class="step">1. Launch Vitrea on desired monitor</div>
+                                    <div class="step">2. Position all windows as preferred</div>
+                                    <div class="step">3. Close Vitrea (saves layout)</div>
+                                </div>
+                                
+                                <div class="leaf-node">Configuration storage:</div>
+                                <div class="leaf-node">- <span class="registry-key">HKCU\Software\Vital\Vitrea\Display\MonitorPref</span></div>
+                                <div class="leaf-node">- <span class="registry-key">HKCU\Software\Vital\Vitrea\Display\WindowPositions</span></div>
+                                
+                                <div class="leaf-node warning">Cannot be changed during active session</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Branch 6 -->
+                <div class="branch">
+                    <div class="branch-header" onclick="toggleBranch(this)">
+                        VI. Monitoring & Troubleshooting
+                    </div>
+                    <div class="branch-content">
+                        <!-- System Health Application -->
+                        <div class="sub-node">
+                            <div class="sub-node-header" onclick="toggleSubNode(this)">
+                                System Health Application
+                            </div>
+                            <div class="sub-node-content">
+                                <div class="leaf-node">Key monitoring tabs:</div>
+                                <div class="leaf-node">- Services: Running/Offline/Stopped</div>
+                                <div class="leaf-node">- Certificates: Expiration status</div>
+                                <div class="leaf-node">- User Sessions: Active connections</div>
+                                <div class="leaf-node">- Computer Info: System resources</div>
+                                
+                                <div class="step-by-step">
+                                    <div class="step">Access methods:</div>
+                                    <div class="step">1. Via Start Menu: "Vitrea System Health"</div>
+                                    <div class="step">2. Direct executable: <span class="registry-key">VitreaHealth.exe</span></div>
+                                    <div class="step">3. Web interface (Enterprise only): https://&lt;server&gt;:8443/health</div>
+                                </div>
+                                
+                                <div class="leaf-node">Critical alerts:</div>
+                                <div class="leaf-node">- <span class="warning">Service Problem</span>: Critical service down</div>
+                                <div class="leaf-node">- <span class="warning">Immediate Action Required</span>: Certificate expiring</div>
+                                
+                                <div class="sql-query">-- Query system health history
+SELECT CheckTime, Component, Status, Message
+FROM SystemHealthLog
+ORDER BY CheckTime DESC</div>
+                            </div>
+                        </div>
+                        
+                        <!-- VIMS Monitor -->
+                        <div class="sub-node">
+                            <div class="sub-node-header" onclick="toggleSubNode(this)">
+                                VIMS Monitor
+                            </div>
+                            <div class="sub-node-content">
+                                <div class="leaf-node">Key indicators:</div>
+                                <div class="leaf-node">- <span class="highlight">Flat line at zero</span>: Processing complete</div>
+                                <div class="leaf-node">- <span class="highlight">Sawtooth pattern</span>: Active processing</div>
+                                <div class="leaf-node">- <span class="warning">Sustained high values</span>: Potential backlog</div>
+                                
+                                <div class="step-by-step">
+                                    <div class="step">Access methods:</div>
+                                    <div class="step">1. Start Menu: "VIMS Monitor"</div>
+                                    <div class="step">2. Command line: <span class="registry-key">VimsMonitor.exe</span></div>
+                                </div>
+                                
+                                <div class="leaf-node">Advanced metrics:</div>
+                                <div class="leaf-node">- Instances remaining</div>
+                                <div class="leaf-node">- Processing rate (instances/sec)</div>
+                                <div class="leaf-node">- Queue depth</div>
+                                
+                                <div class="sql-query">-- Check VIMS processing stats
+SELECT StudyUID, ReceivedTime, ProcessedTime, 
+       DATEDIFF(second, ReceivedTime, ProcessedTime) as ProcessTime
+FROM VIMSProcessingLog
+WHERE ProcessedTime > DATEADD(hour, -1, GETDATE())</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Work Items -->
+                        <div class="sub-node">
+                            <div class="sub-node-header" onclick="toggleSubNode(this)">
+                                Work Items
+                            </div>
+                            <div class="sub-node-content">
+                                <div class="leaf-node">Status values:</div>
+                                <div class="leaf-node">- Pending: Waiting for resources</div>
+                                <div class="leaf-node">- In Progress: Currently processing</div>
+                                <div class="leaf-node">- Completed: Successful finish</div>
+                                <div class="leaf-node">- Error: Failed processing</div>
+                                
+                                <div class="step-by-step">
+                                    <div class="step">Management console:</div>
+                                    <div class="step">1. Open "Vitrea Work Item Manager"</div>
+                                    <div class="step">2. Filter by status/type</div>
+                                    <div class="step">3. Select items → Right-click actions</div>
+                                </div>
+                                
+                                <div class="leaf-node">Cancellation notes:</div>
+                                <div class="leaf-node">- Only "Pending" or "In Progress" can be canceled</div>
+                                <div class="leaf-node">- Canceled items remain visible with status</div>
+                                
+                                <div class="sql-query">-- Find stuck work items
+SELECT WorkItemID, StudyUID, Algorithm, Status, 
+       DATEDIFF(minute, StartTime, GETDATE()) as MinutesRunning
+FROM WorkItems
+WHERE Status = 'InProgress' AND DATEDIFF(hour, StartTime, GETDATE()) > 2</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Stuck Studies -->
+                        <div class="sub-node">
+                            <div class="sub-node-header" onclick="toggleSubNode(this)">
+                                Stuck Studies (7.12+)
+                            </div>
+                            <div class="sub-node-content">
+                                <div class="leaf-node">Symptoms:</div>
+                                <div class="leaf-node">- Study appears in processing state indefinitely</div>
+                                <div class="leaf-node">- Not visible in Study List</div>
+                                <div class="leaf-node">- VIMS Monitor shows no activity</div>
+                                
+                                <div class="step-by-step">
+                                    <div class="step">Resolution procedure:</div>
+                                    <div class="step warning">1. Stop all VIMS services</div>
+                                    <div class="step">2. Execute SQL:
+                                        <div class="sql-query">DELETE FROM Dicom.ReceivedStudy_Temp
+WHERE StudyUID IN (
+    SELECT StudyUID FROM Studies 
+    WHERE Status = 'Processing'
+    AND DATEDIFF(hour, ReceivedTime, GETDATE()) > 1
+)</div>
+                                    </div>
+                                    <div class="step">3. Delete folder: <span class="registry-key">E:\VitreaData\VIMS\DICOMReceive</span></div>
+                                    <div class="step">4. Restart VIMS services</div>
+                                    <div class="step">5. Manually delete stuck studies from Study List</div>
+                                </div>
+                                
+                                <div class="leaf-node">Prevention:</div>
+                                <div class="leaf-node">- Ensure adequate disk space</div>
+                                <div class="leaf-node">- Monitor VIMS service health</div>
+                                <div class="leaf-node">- Regular system maintenance</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Journaling -->
+                        <div class="sub-node">
+                            <div class="sub-node-header" onclick="toggleSubNode(this)">
+                                Journaling
+                            </div>
+                            <div class="sub-node-content">
+                                <div class="leaf-node">Default: <span class="highlight">Enabled on crash</span></div>
+                                <div class="leaf-node">Journal location: <span class="registry-key">%TEMP%\Vitrea\Journals</span></div>
+                                
+                                <div class="step-by-step">
+                                    <div class="step">Playback procedure:</div>
+                                    <div class="step">1. Set registry key:
+                                        <div class="leaf-node"><span class="registry-key">HKLM\Software\Vital\Vitrea\Dev\JournalPlaybackPath</span></div>
+                                    </div>
+                                    <div class="step">2. Disable pre-launching</div>
+                                    <div class="step">3. Load matching patient/volume data</div>
+                                    <div class="step">4. Launch Vitrea (auto-plays journal)</div>
+                                </div>
+                                
+                                <div class="leaf-node">Requirements:</div>
+                                <div class="leaf-node">- Same screen resolution or larger</div>
+                                <div class="leaf-node">- Identical dataset available</div>
+                                <div class="leaf-node">- Same Vitrea version</div>
+                                
+                                <div class="note">Primary use case: Troubleshooting application crashes</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Branch 7 -->
+                <div class="branch">
+                    <div class="branch-header" onclick="toggleBranch(this)">
+                        VII. Licensing & Language
+                    </div>
+                    <div class="branch-content">
+                        <!-- CSMC Cardiac Suite -->
+                        <div class="sub-node">
+                            <div class="sub-node-header" onclick="toggleSubNode(this)">
+                                CSMC Cardiac Suite License
+                            </div>
+                            <div class="sub-node-content">
+                                <div class="leaf-node warning">Requires constant internet connection to:</div>
+                                <div class="leaf-node">- <span class="registry-key">http://vm.csaim.com/</span></div>
+                                <div class="leaf-node">- Port: <span class="highlight">80</span> (HTTP)</div>
+                                
+                                <div class="step-by-step">
+                                    <div class="step">Installation:</div>
+                                    <div class="step">1. Contact Canon Medical Support</div>
+                                    <div class="step">2. Receive license file (24-48 hours)</div>
+                                    <div class="step">3. Install using <span class="registry-key">LicenseManager.exe</span></div>
+                                    <div class="step">4. Configure firewall (inbound TCP 6433)</div>
+                                </div>
+                                
+                                <div class="leaf-node">Failure scenarios:</div>
+                                <div class="leaf-node">- 14 days offline → License shutdown</div>
+                                <div class="leaf-node">- Incorrect date/time → Validation failure</div>
+                                <div class="leaf-node">- Firewall block → Immediate failure</div>
+                                
+                                <div class="sql-query">-- Check license status
+SELECT Feature, ExpiryDate, Status 
+FROM LicenseStatus
+WHERE Feature LIKE 'CSMC%'</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Vitrea Lung CAD -->
+                        <div class="sub-node">
+                            <div class="sub-node-header" onclick="toggleSubNode(this)">
+                                Vitrea Lung CAD Licensing
+                            </div>
+                            <div class="sub-node-content">
+                                <div class="leaf-node warning">Only available outside United States</div>
+                                
+                                <div class="step-by-step">
+                                    <div class="step">Activation:</div>
+                                    <div class="step">1. Obtain license key from Canon</div>
+                                    <div class="step">2. Enter in License Manager</div>
+                                    <div class="step">3. Restart Vitrea services</div>
+                                    <div class="step">4. Enable in System Settings</div>
+                                </div>
+                                
+                                <div class="leaf-node">Verification:</div>
+                                <div class="leaf-node">- Check <span class="registry-key">HKLM\Software\Vital\Licenses\LungCAD</span></div>
+                                <div class="leaf-node">- Value should show expiration date</div>
+                                
+                                <div class="note">License format: VITREA-LUNG-CAD-XXXX-YYYYMMDD</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Language Settings -->
+                        <div class="sub-node">
+                            <div class="sub-node-header" onclick="toggleSubNode(this)">
+                                Language Settings
+                            </div>
+                            <div class="sub-node-content">
+                                <div class="leaf-node">Supported languages:</div>
+                                <div class="leaf-node">- English (en-US)</div>
+                                <div class="leaf-node">- French (fr-FR)</div>
+                                <div class="leaf-node">- German (de-DE)</div>
+                                <div class="leaf-node">- Spanish (es-ES)</div>
+                                <div class="leaf-node">- Japanese (ja-JP)</div>
+                                
+                                <div class="step-by-step">
+                                    <div class="step">Configuration:</div>
+                                    <div class="step">1. Open Windows Region settings</div>
+                                    <div class="step">2. Set preferred language</div>
+                                    <div class="step">3. Log out and back in</div>
+                                </div>
+                                
+                                <div class="leaf-node">Registry keys:</div>
+                                <div class="leaf-node">- <span class="registry-key">HKCU\Control Panel\International</span></div>
+                                <div class="leaf-node">- <span class="registry-key">HKLM\SYSTEM\CurrentControlSet\Control\Nls\Language</span></div>
+                                
+                                <div class="note">Some clinical applications may require language-specific packages</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle functions
+        function toggleBranch(header) {
+            const branch = header.parentElement;
+            const content = branch.querySelector('.branch-content');
+            content.classList.toggle('show');
+            header.classList.toggle('active');
+        }
+        
+        function toggleSubNode(header) {
+            header.classList.toggle('active');
+            const content = header.nextElementSibling;
+            content.classList.toggle('show');
+        }
+        
+        function toggleAll() {
+            const branches = document.querySelectorAll('.branch');
+            const firstBranchContent = branches[0].querySelector('.branch-content');
+            const isShowing = firstBranchContent.classList.contains('show');
+            
+            branches.forEach(branch => {
+                const content = branch.querySelector('.branch-content');
+                if (isShowing) {
+                    content.classList.remove('show');
+                    branch.querySelector('.branch-header').classList.remove('active');
+                    // Also close all sub-nodes
+                    const subNodes = branch.querySelectorAll('.sub-node-content');
+                    subNodes.forEach(node => node.classList.remove('show'));
+                    const subHeaders = branch.querySelectorAll('.sub-node-header');
+                    subHeaders.forEach(header => header.classList.remove('active'));
+                } else {
+                    content.classList.add('show');
+                    branch.querySelector('.branch-header').classList.add('active');
+                }
+            });
+        }
+        
+        // Search functionality
+        document.getElementById('searchButton').addEventListener('click', performSearch);
+        document.getElementById('searchInput').addEventListener('keyup', function(e) {
+            if (e.key === 'Enter') performSearch();
+        });
+        
+        function performSearch() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            if (!searchTerm) {
+                removeHighlights();
+                return;
+            }
+            
+            // First remove previous highlights
+            removeHighlights();
+            
+            // Search through all text content
+            const elements = document.querySelectorAll('.branch-content, .sub-node-content');
+            let found = false;
+            
+            elements.forEach(element => {
+                if (element.textContent.toLowerCase().includes(searchTerm)) {
+                    // Expand parent elements
+                    element.classList.add('show');
+                    if (element.classList.contains('sub-node-content')) {
+                        element.parentElement.querySelector('.sub-node-header').classList.add('active');
+                        element.closest('.branch').querySelector('.branch-content').classList.add('show');
+                        element.closest('.branch').querySelector('.branch-header').classList.add('active');
+                    }
+                    
+                    // Highlight matching text
+                    highlightText(element, searchTerm);
+                    found = true;
+                }
+            });
+            
+            if (!found) {
+                alert('No matches found for "' + searchTerm + '"');
+            }
+        }
+        
+        function highlightText(element, searchTerm) {
+            const text = element.textContent;
+            const regex = new RegExp(searchTerm, 'gi');
+            const newText = text.replace(regex, match => 
+                `<span class="search-highlight">${match}</span>`
+            );
+            
+            // Create a temporary div to parse HTML
+            const temp = document.createElement('div');
+            temp.innerHTML = newText;
+            
+            // Replace element's content while preserving structure
+            Array.from(element.childNodes).forEach(child => {
+                if (child.nodeType === Node.TEXT_NODE) {
+                    const span = document.createElement('span');
+                    span.innerHTML = child.textContent.replace(regex, match => 
+                        `<span class="search-highlight">${match}</span>`
+                    );
+                    child.replaceWith(span);
+                }
+            });
+        }
+        
+        function removeHighlights() {
+            document.querySelectorAll('.search-highlight').forEach(highlight => {
+                const parent = highlight.parentNode;
+                parent.replaceChild(document.createTextNode(highlight.textContent), highlight);
+                parent.normalize();
+            });
+        }
+        
+        // Open first sub-node of each branch by default
+        document.addEventListener('DOMContentLoaded', function() {
+            const branches = document.querySelectorAll('.branch');
+            branches.forEach(branch => {
+                const firstSubNode = branch.querySelector('.sub-node');
+                if (firstSubNode) {
+                    const header = firstSubNode.querySelector('.sub-node-header');
+                    const content = firstSubNode.querySelector('.sub-node-content');
+                    header.classList.add('active');
+                    content.classList.add('show');
+                }
+            });
+            
+            // Add tooltip behavior to registry keys
+            document.querySelectorAll('.registry-key').forEach(el => {
+                if (!el.hasAttribute('data-tooltip')) {
+                    el.setAttribute('data-tooltip', 'Windows Registry key');
+                }
+                el.classList.add('has-tooltip');
+            });
+        });
+    </script>
+</body>
+</html>

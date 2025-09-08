@@ -1,0 +1,1664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vitrea AV Study Guide</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1, h2, h3 {
+            color: #0066cc;
+        }
+        .tab {
+            overflow: hidden;
+            border: 1px solid #ccc;
+            background-color: #f1f1f1;
+            border-radius: 5px 5px 0 0;
+        }
+        .tab button {
+            background-color: inherit;
+            float: left;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 14px 16px;
+            transition: 0.3s;
+            font-size: 16px;
+        }
+        .tab button:hover {
+            background-color: #ddd;
+        }
+        .tab button.active {
+            background-color: #0066cc;
+            color: white;
+        }
+        .tabcontent {
+            display: none;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-top: none;
+            border-radius: 0 0 5px 5px;
+            background-color: white;
+        }
+        .flashcard {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        .flashcard h3 {
+            margin-top: 0;
+            color: #0066cc;
+        }
+        .flashcard .answer {
+            display: none;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px dashed #ddd;
+        }
+        .show-answer {
+            background-color: #0066cc;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .show-answer:hover {
+            background-color: #0055aa;
+        }
+        .question {
+            background-color: #f9f9f9;
+            border-left: 4px solid #0066cc;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 0 5px 5px 0;
+        }
+        .options {
+            margin-top: 10px;
+        }
+        .option {
+            margin: 5px 0;
+        }
+        .check-answer {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .check-answer:hover {
+            background-color: #3e8e41;
+        }
+        .feedback {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            display: none;
+        }
+        .correct {
+            background-color: #dff0d8;
+            color: #3c763d;
+        }
+        .incorrect {
+            background-color: #f2dede;
+            color: #a94442;
+        }
+        .scenario {
+            background-color: #e7f3fe;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 0 5px 5px 0;
+        }
+        .resolution {
+            display: none;
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #d9edf7;
+            border-radius: 4px;
+        }
+        .show-resolution {
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .show-resolution:hover {
+            background-color: #0b7dda;
+        }
+        .search-container {
+            margin-bottom: 20px;
+        }
+        #searchInput {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .quick-tips {
+            background-color: #fff8e1;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 0 5px 5px 0;
+        }
+        .quick-tips ul {
+            padding-left: 20px;
+        }
+        .summary {
+            background-color: #e8f5e9;
+            border-left: 4px solid #4CAF50;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 0 5px 5px 0;
+        }
+        .counter {
+            font-size: 14px;
+            color: #666;
+            margin-top: 10px;
+        }
+        @media (max-width: 768px) {
+            .tab button {
+                padding: 10px 12px;
+                font-size: 14px;
+            }
+            .flashcard, .question, .scenario {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Vitrea AV: Administration, Troubleshooting, and Configuration Guide</h1>
+        
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Search for topics, questions, or scenarios...">
+        </div>
+        
+        <div class="tab">
+            <button class="tablinks active" onclick="openTab(event, 'flashcards')">Flash Cards</button>
+            <button class="tablinks" onclick="openTab(event, 'questions')">Multiple Choice</button>
+            <button class="tablinks" onclick="openTab(event, 'scenarios')">Troubleshooting</button>
+            <button class="tablinks" onclick="openTab(event, 'tips')">Quick Tips</button>
+        </div>
+        
+        <div id="flashcards" class="tabcontent" style="display: block;">
+            <h2>Flash Cards</h2>
+            <div class="counter">Showing <span id="flashcardCount">50</span> of 50 flash cards</div>
+            
+            <!-- Flash Cards 1-10 -->
+            <div class="flashcard">
+                <h3>1. Administrative Procedures</h3>
+                <p>What are the optional procedures for different Vitrea deployments?</p>
+                <div class="answer">
+                    <p>Optional procedures for Enterprise, Enterprise Single Server, Vitrea extend, or Vitrea workstation deployments.</p>
+                </div>
+                <button class="show-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            </div>
+            
+            <div class="flashcard">
+                <h3>2. Windows DPI Settings</h3>
+                <p>How do you adjust DPI settings for 4K displays?</p>
+                <div class="answer">
+                    <p>Adjusts Dots Per Inch scaling for 4K Displays only. Performed for Vitrea extend or Vitrea workstation deployments. Set to 100%. Requires sign out to take effect.</p>
+                </div>
+                <button class="show-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            </div>
+            
+            <div class="flashcard">
+                <h3>3. Administrative Reveal Desktop</h3>
+                <p>What does the Administrative Reveal Desktop feature do?</p>
+                <div class="answer">
+                    <p>Allows Vitrea administrators to minimize the Vitrea application for administrative work. Available for Enterprise, Enterprise Single Server, Vitrea extend, and Vitrea workstation deployments. Launches Windows Explorer and reveals the Start menu. System resets on Kiosk session close.</p>
+                </div>
+                <button class="show-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            </div>
+            
+            <div class="flashcard">
+                <h3>4. Audit Logging</h3>
+                <p>How does Vitrea AV handle user logons and audit logging?</p>
+                <div class="answer">
+                    <p>Vitrea AV uses Integrated Windows Authentication for user logons. Audit logon events can be collected via Microsoft security audit policy settings.</p>
+                </div>
+                <button class="show-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            </div>
+            
+            <div class="flashcard">
+                <h3>5. Restarting Management Server (Enterprise)</h3>
+                <p>What are the considerations for restarting the Management Server in an Enterprise deployment?</p>
+                <div class="answer">
+                    <p>Ensure no Application Servers are restarting or have active user sessions in Vitrea. Restart the "VSP Application Service" on the Management Server separately after its services report online.</p>
+                </div>
+                <button class="show-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            </div>
+            
+            <div class="flashcard">
+                <h3>6. Restarting Application Servers (Enterprise)</h3>
+                <p>What are the best practices for restarting Application Servers in an Enterprise deployment?</p>
+                <div class="answer">
+                    <p>Avoid restarting while the Management Server is restarting. Ensure no active user sessions. Allow at least a minute between restarting multiple Application Servers.</p>
+                </div>
+                <button class="show-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            </div>
+            
+            <div class="flashcard">
+                <h3>7. CACS Report Guideline Default Setting</h3>
+                <p>How is the CACS Report Guideline default setting determined?</p>
+                <div class="answer">
+                    <p>Based on Vitrea software license locale; "Nasu" for Japanese, "Hoff" for United States. Available for all deployments.</p>
+                </div>
+                <button class="show-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            </div>
+            
+            <div class="flashcard">
+                <h3>8. Change AE Title (Upgrade)</h3>
+                <p>What is required before upgrading to 7.16.3 regarding AE Title?</p>
+                <div class="answer">
+                    <p>Required for all deployments before upgrading to 7.16.3. The AE Title must be changed to UPGRADE.</p>
+                </div>
+                <button class="show-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            </div>
+            
+            <div class="flashcard">
+                <h3>9. Default Export Destination</h3>
+                <p>How do you configure the default export destination and what's required for changes to take effect?</p>
+                <div class="answer">
+                    <p>Configurable for Enterprise, Enterprise Single Server, Vitrea Extend, and Vitrea workstation deployments. Active sessions must reconnect for changes to apply.</p>
+                </div>
+                <button class="show-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            </div>
+            
+            <div class="flashcard">
+                <h3>10. Evidence Order on Studylist Results</h3>
+                <p>How is evidence ordered on Studylist Results by default and how can it be changed?</p>
+                <div class="answer">
+                    <p>Default is "false," meaning the most recent snapshot is on the far right. Set newestToOldestResultOrdering to "true" for the most recent to display on the far left.</p>
+                </div>
+                <button class="show-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            </div>
+            
+            <!-- Flash Cards 11-20 -->
+            <div class="flashcard">
+                <h3>11. Change Hostname Applicability</h3>
+                <p>When can you change the hostname of a Vitrea system?</p>
+                <div class="answer">
+                    <p>Only for Enterprise Single Server, Vitrea extend, or a Vitrea workstation deployment. System must be removed from domain before changing hostname.</p>
+                </div>
+                <button class="show-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            </div>
+            
+            <div class="flashcard">
+                <h3>12. Hostname Restrictions</h3>
+                <p>What are the restrictions for Vitrea hostnames?</p>
+                <div class="answer">
+                    <p>The hostname cannot be "Vitrea". Limited to 15 characters.</p>
+                </div>
+                <button class="show-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            </div>
+            
+            <div class="flashcard">
+                <h3>13. VitreaHostnameTool.exe</h3>
+                <p>What is VitreaHostnameTool.exe used for?</p>
+                <div class="answer">
+                    <p>Used to update Vitrea configuration after changing hostname. A "Test Run" performs a dry run without applying changes.</p>
+                </div>
+                <button class="show-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            </div>
+            
+            <div class="flashcard">
+                <h3>14. Site Logo on Report Page</h3>
+                <p>What are the requirements for the site logo on report pages?</p>
+                <div class="answer">
+                    <p>Supports .JPG and .PNG files. Only applicable to Full Cardiac, Calcium Score, and Generic reports.</p>
+                </div>
+                <button class="show-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            </div>
+            
+            <div class="flashcard">
+                <h3>15. Change Storage Location (Enterprise Caution)</h3>
+                <p>What should you consider when changing storage location in Enterprise deployments?</p>
+                <div class="answer">
+                    <p>Copying data takes a significant amount of time. Canon Medical recommends starting copy well in advance.</p>
+                </div>
+                <button class="show-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            </div>
+            
+            <div class="flashcard">
+                <h3>16. NASRoot Directory UNC Path Limit</h3>
+                <p>What is the UNC path length limitation for NASRoot directory?</p>
+                <div class="answer">
+                    <p>The UNC path of the NASRoot directory must be 31 characters or fewer.</p>
+                </div>
+                <button class="show-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            </div>
+            
+            <div class="flashcard">
+                <h3>17. Robocopy Command</h3>
+                <p>What command can be used to copy NASRoot contents?</p>
+                <div class="answer">
+                    <p>Robocopy C:\SourcePath C:\DestinationPath /MIR /dcopy:T /SEC can be used to copy NASRoot contents.</p>
+                </div>
+                <button class="show-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            </div>
+            
+            <div class="flashcard">
+                <h3>18. SQL Server Database Location</h3>
+                <p>What happens if you move a database to remote storage?</p>
+                <div class="answer">
+                    <p>Moving a database residing on the Management Server to a remote storage device will affect performance.</p>
+                </div>
+                <button class="show-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            </div>
+            
+            <div class="flashcard">
+                <h3>19. Change Storage Location (Non-Enterprise Caution)</h3>
+                <p>What should you know about changing storage location in non-Enterprise deployments?</p>
+                <div class="answer">
+                    <p>This procedure is not meant to change storage to a network drive for Enterprise Single Server, Vitrea extend, or workstation deployments.</p>
+                </div>
+                <button class="show-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            </div>
+            
+            <div class="flashcard">
+                <h3>20. Configure AE Title for PrintSCU/QRSCU</h3>
+                <p>What is required when configuring AE Title for PrintSCU/QRSCU?</p>
+                <div class="answer">
+                    <p>Applicable to all deployments. Requires a unique AE Title value.</p>
+                </div>
+                <button class="show-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            </div>
+            
+            <!-- Flash Cards 21-30 -->
+            <div class="flashcard">
+                <h3>21. Autosave Feature (VitreaClassic)</h3>
+                <p>What does the VitreaClassic autosave feature do?</p>
+                <div class="answer">
+                    <p>Automatically creates a Vitrea Saved session upon idle timeout. Applies only to VitreaClassic, not other third-party applications. Disabled by default.</p>
+                </div>
+                <button class="show-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            </div>
+            
+            <div class="flashcard">
+                <h3>22. Remote Desktop Session Settings (Autosave)</h3>
+                <p>What are the recommended Remote Desktop session settings for autosave?</p>
+                <div class="answer">
+                    <p>"End a disconnected session" to 1 minute, "Active session limit" to Never, "Idle session limit" to 30 minutes. "Disconnect from the session" radio button should be selected.</p>
+                </div>
+                <button class="show-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            </div>
+            
+            <div class="flashcard">
+                <h3>23. CSMC Cardiac Suite Floating License Server Requirement</h3>
+                <p>What is required for the CSMC Cardiac Suite Floating License Server?</p>
+                <div class="answer">
+                    <p>Requires constant internet access (Call Home) to http://vm.csaim.com/. License will shut down if not reachable within 14 days.</p>
+                </div>
+                <button class="show-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            </div>
+            
+            <div class="flashcard">
+                <h3>24. CSMC License Acquisition</h3>
+                <p>How do you acquire a CSMC license?</p>
+                <div class="answer">
+                    <p>Contact Canon Medical Customer Support; typically requires 24-48 hours to receive the license file.</p>
+                </div>
+                <button class="show-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            </div>
+            
+            <div class="flashcard">
+                <h3>25. Vitrea Workstation CSMC Licensing</h3>
+                <p>What are the licensing options for Vitrea Workstation CSMC?</p>
+                <div class="answer">
+                    <p>Can be Local Node-Locked (installed on each workstation) or use a Floating License Server (not recommended to set up on a Workstation).</p>
+                </div>
+                <button class="show-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            </div>
+            
+            <div class="flashcard">
+                <h3>26. CT Colon CAD Keywords</h3>
+                <p>What are the standard and custom keywords for CT Colon CAD?</p>
+                <div class="answer">
+                    <p>Standard keywords are colon, prone, supine, and decubitus. Custom keywords are added using a | character.</p>
+                </div>
+                <button class="show-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            </div>
+            
+            <div class="flashcard">
+                <h3>27. CT Colon CAD Task Timeout</h3>
+                <p>What is the default timeout for CT Colon CAD tasks?</p>
+                <div class="answer">
+                    <p>Default value is 45 minutes. Vitrea retries processing up to three times after a timeout or load failure.</p>
+                </div>
+                <button class="show-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            </div>
+            
+            <div class="flashcard">
+                <h3>28. Deconvolution Methods (2D Brain Perfusion CT)</h3>
+                <p>What deconvolution methods are supported for 2D Brain Perfusion CT?</p>
+                <div class="answer">
+                    <p>Supported values are SVD, SVD+, and Bayesian.</p>
+                </div>
+                <button class="show-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            </div>
+            
+            <div class="flashcard">
+                <h3>29. Deconvolution Methods (4D Brain Perfusion CT)</h3>
+                <p>What deconvolution methods are supported for 4D Brain Perfusion CT?</p>
+                <div class="answer">
+                    <p>Supported values are SVD+ and Bayesian.</p>
+                </div>
+                <button class="show-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            </div>
+            
+            <div class="flashcard">
+                <h3>30. Evidence Auto Export Configuration</h3>
+                <p>How do you configure evidence auto export?</p>
+                <div class="answer">
+                    <p>Set performAutoExport to "true" and autoExportServerKeys with desired archive keys (comma-separated).</p>
+                </div>
+                <button class="show-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            </div>
+            
+            <!-- Flash Cards 31-40 -->
+            <div class="flashcard">
+                <h3>31. "report" EvidenceType (Auto Export)</h3>
+                <p>What happens if you enable "report" EvidenceType for auto export?</p>
+                <div class="answer">
+                    <p>If enabled, you lose the ability to create a draft report. Report is committed and automatically exported upon saving/publishing.</p>
+                </div>
+                <button class="show-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            </div>
+            
+            <div class="flashcard">
+                <h3>32. Export Reminder Feature</h3>
+                <p>What does the export reminder feature do?</p>
+                <div class="answer">
+                    <p>Displays a dialog reminding the user to export findings/reports after closing all applications for a study. Default is "off" (false).</p>
+                </div>
+                <button class="show-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            </div>
+            
+            <div class="flashcard">
+                <h3>33. External Groups (Mapping)</h3>
+                <p>How are external groups mapped in Vitrea?</p>
+                <div class="answer">
+                    <p>Maps Active Directory group(s) to Vitrea roles (Service, User, Admin). Never deselect the Admin Role for the BUILTIN Administrators Group.</p>
+                </div>
+                <button class="show-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            </div>
+            
+            <div class="flashcard">
+                <h3>34. Global Illumination Batch/Movie Quality</h3>
+                <p>What are the quality settings for Global Illumination rendering?</p>
+                <div class="answer">
+                    <p>Default is Medium. Values can be "Low," "Medium," or "High". Lower quality for faster playback.</p>
+                </div>
+                <button class="show-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            </div>
+            
+            <div class="flashcard">
+                <h3>35. Increased Output Size for Published Reports</h3>
+                <p>What happens when you enable resizeDropAreas for published reports?</p>
+                <div class="answer">
+                    <p>Enabling resizeDropAreas increases report image file size by 2.5x.</p>
+                </div>
+                <button class="show-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            </div>
+            
+            <div class="flashcard">
+                <h3>36. Interpreting Physicians and Operators (Ultrasound)</h3>
+                <p>How are interpreting physicians and operators managed for ultrasound?</p>
+                <div class="answer">
+                    <p>Manually added/edited/deleted within System Configuration > Ultrasound. Linked to the Vitrea Study List.</p>
+                </div>
+                <button class="show-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            </div>
+            
+            <div class="flashcard">
+                <h3>37. Just-In-Time (JIT) Processing</h3>
+                <p>What is JIT Processing in Vitrea?</p>
+                <div class="answer">
+                    <p>Enables/disables and configures algorithms that run within the JIT framework. Algorithms are processed when system resources are available.</p>
+                </div>
+                <button class="show-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            </div>
+            
+            <div class="flashcard">
+                <h3>38. Mirada RTX Evidence Blacklisting</h3>
+                <p>How do you prevent evidence blacklisting in Mirada RTX?</p>
+                <div class="answer">
+                    <p>Change export.sc.compatibility to false in XD.cfg to prevent blacklisting.</p>
+                </div>
+                <button class="show-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            </div>
+            
+            <div class="flashcard">
+                <h3>39. Open Rib JIT Mode (OpenRibAP)</h3>
+                <p>What does OpenRibAP JIT mode do?</p>
+                <div class="answer">
+                    <p>Runs Rib segmentation in the background to cache results for faster load times. Only processes CT Datasets and ORIGINAL PRIMARY images.</p>
+                </div>
+                <button class="show-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            </div>
+            
+            <div class="flashcard">
+                <h3>40. OpenRibAP Filter Keyword</h3>
+                <p>What is the default filter keyword for OpenRibAP?</p>
+                <div class="answer">
+                    <p>Default filter is "openrib" in the Series/Study Description.</p>
+                </div>
+                <button class="show-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            </div>
+            
+            <!-- Flash Cards 41-50 -->
+            <div class="flashcard">
+                <h3>41. Remote Desktop Sessions (Rejoining)</h3>
+                <p>What is the default behavior for rejoining Remote Desktop sessions?</p>
+                <div class="answer">
+                    <p>Default prevents rejoining sessions from different client systems. Setting AllowDuplicateUserConnections to "true" allows rejoining but may result in undefined behavior.</p>
+                </div>
+                <button class="show-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            </div>
+            
+            <div class="flashcard">
+                <h3>42. Series Sequence Numbering Defaults</h3>
+                <p>What are the default series sequence numbering values?</p>
+                <div class="answer">
+                    <p>initialSequenceNumber is 500, incrementalStep is 1.</p>
+                </div>
+                <button class="show-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            </div>
+            
+            <div class="flashcard">
+                <h3>43. SQL Server Permissions (Vitrea Administrators)</h3>
+                <p>What permissions are required for Vitrea Administrators in SQL Server?</p>
+                <div class="answer">
+                    <p>The Vitrea Administrators group must exist. Grant sysadmin role to this group.</p>
+                </div>
+                <button class="show-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            </div>
+            
+            <div class="flashcard">
+                <h3>44. SQL Server Services Recovery</h3>
+                <p>How should SQL Server services be configured for recovery?</p>
+                <div class="answer">
+                    <p>Ensure SQL Server (VITALSQLEXPRESS) is set to Restart the Service on first, second, and subsequent failures.</p>
+                </div>
+                <button class="show-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            </div>
+            
+            <div class="flashcard">
+                <h3>45. TAVR Systole/Diastole Ranges</h3>
+                <p>What are the default TAVR systole and diastole ranges?</p>
+                <div class="answer">
+                    <p>Default systole range is 30-40%, diastole range is 65-75%.</p>
+                </div>
+                <button class="show-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            </div>
+            
+            <div class="flashcard">
+                <h3>46. Uncommitted Evidence Retention Period</h3>
+                <p>What is the default retention period for uncommitted evidence?</p>
+                <div class="answer">
+                    <p>Default changed to 1000 years (from 6 months) for Vitrea 7.10+. Configurable in ISO-8601 format.</p>
+                </div>
+                <button class="show-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            </div>
+            
+            <div class="flashcard">
+                <h3>47. Vitrea Lung CAD Availability</h3>
+                <p>Where is Vitrea Lung CAD available?</p>
+                <div class="answer">
+                    <p>Only available in the OUS (Outside United States). Requires a new CT Vitrea Lung CAD license.</p>
+                </div>
+                <button class="show-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            </div>
+            
+            <div class="flashcard">
+                <h3>48. 3D Angio XA Archive Types</h3>
+                <p>How are 3D Angio XA archives configured?</p>
+                <div class="answer">
+                    <p>Must be configured to use either Toshiba or Standard positioner angles. Creating two archives with different keys allows exporting both c-arm angles and entire studies.</p>
+                </div>
+                <button class="show-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            </div>
+            
+            <div class="flashcard">
+                <h3>49. Database Backup Job</h3>
+                <p>When are database backups scheduled?</p>
+                <div class="answer">
+                    <p>Scheduled daily at 1:00 a.m. (local time). Keeps five copies of backup files.</p>
+                </div>
+                <button class="show-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            </div>
+            
+            <div class="flashcard">
+                <h3>50. Database Restore Version Compatibility</h3>
+                <p>What version requirements exist for database restore?</p>
+                <div class="answer">
+                    <p>The database schema is coupled to the build version; you must be running the same version of Vitrea software as when the backup was created.</p>
+                </div>
+                <button class="show-answer" onclick="toggleAnswer(this)">Show Answer</button>
+            </div>
+            
+        </div>
+        
+        <div id="questions" class="tabcontent">
+            <h2>Multiple Choice Questions</h2>
+            <div class="counter">Showing <span id="questionCount">50</span> of 50 questions</div>
+            
+            <!-- Questions 1-10 -->
+            <div class="question">
+                <p>1. For which deployment(s) will you adjust Windows DPI Settings for 4K Displays?</p>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q1" id="q1a" value="a"> <label for="q1a">a) Enterprise only</label></div>
+                    <div class="option"><input type="radio" name="q1" id="q1b" value="b"> <label for="q1b">b) Enterprise Single Server only</label></div>
+                    <div class="option"><input type="radio" name="q1" id="q1c" value="c"> <label for="q1c">c) Vitrea extend or a Vitrea workstation</label></div>
+                    <div class="option"><input type="radio" name="q1" id="q1d" value="d"> <label for="q1d">d) All deployments</label></div>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(1, 'c')">Check Answer</button>
+                <div class="feedback" id="feedback1"></div>
+            </div>
+            
+            <div class="question">
+                <p>2. What is the recommended DPI scaling setting for Vitrea extend or Vitrea workstation deployments on 4K displays?</p>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q2" id="q2a" value="a"> <label for="q2a">a) 125%</label></div>
+                    <div class="option"><input type="radio" name="q2" id="q2b" value="b"> <label for="q2b">b) 150%</label></div>
+                    <div class="option"><input type="radio" name="q2" id="q2c" value="c"> <label for="q2c">c) 200%</label></div>
+                    <div class="option"><input type="radio" name="q2" id="q2d" value="d"> <label for="q2d">d) 100%</label></div>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(2, 'd')">Check Answer</button>
+                <div class="feedback" id="feedback2"></div>
+            </div>
+            
+            <div class="question">
+                <p>3. After changing DPI scaling settings, what action is required for the new setting to take effect?</p>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q3" id="q3a" value="a"> <label for="q3a">a) Restart the Vitrea application</label></div>
+                    <div class="option"><input type="radio" name="q3" id="q3b" value="b"> <label for="q3b">b) Sign out</label></div>
+                    <div class="option"><input type="radio" name="q3" id="q3c" value="c"> <label for="q3c">c) Reboot the system</label></div>
+                    <div class="option"><input type="radio" name="q3" id="q3d" value="d"> <label for="q3d">d) Relaunch Control Panel</label></div>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(3, 'b')">Check Answer</button>
+                <div class="feedback" id="feedback3"></div>
+            </div>
+            
+            <div class="question">
+                <p>4. Which deployments allow a Vitrea administrator to use the "Reveal Desktop" option?</p>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q4" id="q4a" value="a"> <label for="q4a">a) Vitrea extend only</label></div>
+                    <div class="option"><input type="radio" name="q4" id="q4b" value="b"> <label for="q4b">b) Vitrea workstation only</label></div>
+                    <div class="option"><input type="radio" name="q4" id="q4c" value="c"> <label for="q4c">c) Enterprise Single Server only</label></div>
+                    <div class="option"><input type="radio" name="q4" id="q4d" value="d"> <label for="q4d">d) Enterprise, Enterprise Single Server, Vitrea extend, and Vitrea workstation</label></div>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(4, 'd')">Check Answer</button>
+                <div class="feedback" id="feedback4"></div>
+            </div>
+            
+            <div class="question">
+                <p>5. What happens when you select "Reveal Desktop" from within the Vitrea software?</p>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q5" id="q5a" value="a"> <label for="q5a">a) The system logs out</label></div>
+                    <div class="option"><input type="radio" name="q5" id="q5b" value="b"> <label for="q5b">b) The Vitrea application closes</label></div>
+                    <div class="option"><input type="radio" name="q5" id="q5c" value="c"> <label for="q5c">c) Windows Explorer launches and reveals the Start menu</label></div>
+                    <div class="option"><input type="radio" name="q5" id="q5d" value="d"> <label for="q5d">d) A new Kiosk session begins</label></div>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(5, 'c')">Check Answer</button>
+                <div class="feedback" id="feedback5"></div>
+            </div>
+            
+            <div class="question">
+                <p>6. Vitrea AV uses which authentication method for user logons?</p>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q6" id="q6a" value="a"> <label for="q6a">a) Password-based authentication</label></div>
+                    <div class="option"><input type="radio" name="q6" id="q6b" value="b"> <label for="q6b">b) Integrated Windows Authentication</label></div>
+                    <div class="option"><input type="radio" name="q6" id="q6c" value="c"> <label for="q6c">c) Two-factor authentication</label></div>
+                    <div class="option"><input type="radio" name="q6" id="q6d" value="d"> <label for="q6d">d) Biometric authentication</label></div>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(6, 'b')">Check Answer</button>
+                <div class="feedback" id="feedback6"></div>
+            </div>
+            
+            <div class="question">
+                <p>7. According to best practices for restarting Enterprise servers, what should you ensure when restarting the Management Server?</p>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q7" id="q7a" value="a"> <label for="q7a">a) All Application Servers are already restarted</label></div>
+                    <div class="option"><input type="radio" name="q7" id="q7b" value="b"> <label for="q7b">b) There are no active user sessions in Vitrea on any of the Application Servers or the Management Server</label></div>
+                    <div class="option"><input type="radio" name="q7" id="q7c" value="c"> <label for="q7c">c) The Management Server's services are offline</label></div>
+                    <div class="option"><input type="radio" name="q7" id="q7d" value="d"> <label for="q7d">d) All Application Servers are marked as offline on the System Health page</label></div>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(7, 'b')">Check Answer</button>
+                <div class="feedback" id="feedback7"></div>
+            </div>
+            
+            <div class="question">
+                <p>8. When restarting multiple Application Servers in an Enterprise deployment, what is the recommended time interval between each restart request?</p>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q8" id="q8a" value="a"> <label for="q8a">a) 10 seconds</label></div>
+                    <div class="option"><input type="radio" name="q8" id="q8b" value="b"> <label for="q8b">b) 30 seconds</label></div>
+                    <div class="option"><input type="radio" name="q8" id="q8c" value="c"> <label for="q8c">c) At least a minute</label></div>
+                    <div class="option"><input type="radio" name="q8" id="q8d" value="d"> <label for="q8d">d) 5 minutes</label></div>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(8, 'c')">Check Answer</button>
+                <div class="feedback" id="feedback8"></div>
+            </div>
+            
+            <div class="question">
+                <p>9. What is the default CACS Report Guideline setting for a Japanese Vitrea software license locale?</p>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q9" id="q9a" value="a"> <label for="q9a">a) Hoff</label></div>
+                    <div class="option"><input type="radio" name="q9" id="q9b" value="b"> <label for="q9b">b) Mesa</label></div>
+                    <div class="option"><input type="radio" name="q9" id="q9c" value="c"> <label for="q9c">c) Mesap</label></div>
+                    <div class="option"><input type="radio" name="q9" id="q9d" value="d"> <label for="q9d">d) Nasu</label></div>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(9, 'd')">Check Answer</button>
+                <div class="feedback" id="feedback9"></div>
+            </div>
+            
+            <div class="question">
+                <p>10. Which value is used for the CACS Report Guideline setting in the United States?</p>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q10" id="q10a" value="a"> <label for="q10a">a) Mesa</label></div>
+                    <div class="option"><input type="radio" name="q10" id="q10b" value="b"> <label for="q10b">b) Mesap</label></div>
+                    <div class="option"><input type="radio" name="q10" id="q10c" value="c"> <label for="q10c">c) Nasu</label></div>
+                    <div class="option"><input type="radio" name="q10" id="q10d" value="d"> <label for="q10d">d) Hoff</label></div>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(10, 'd')">Check Answer</button>
+                <div class="feedback" id="feedback10"></div>
+            </div>
+            
+            <!-- Questions 11-20 -->
+            <div class="question">
+                <p>11. Before upgrading to Vitrea 7.16.3, what specific AE Title must be entered according to the procedure?</p>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q11" id="q11a" value="a"> <label for="q11a">a) VITREA_UPGRADE</label></div>
+                    <div class="option"><input type="radio" name="q11" id="q11b" value="b"> <label for="q11b">b) UPGRADE</label></div>
+                    <div class="option"><input type="radio" name="q11" id="q11c" value="c"> <label for="q11c">c) NEW_VERSION</label></div>
+                    <div class="option"><input type="radio" name="q11" id="q11d" value="d"> <label for="q11d">d) TEMP_AE</label></div>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(11, 'b')">Check Answer</button>
+                <div class="feedback" id="feedback11"></div>
+            </div>
+            
+            <div class="question">
+                <p>12. To change the default export destination in Vitrea AV, which component dropdown menu should be selected in System Settings?</p>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q12" id="q12a" value="a"> <label for="q12a">a) Archive</label></div>
+                    <div class="option"><input type="radio" name="q12" id="q12b" value="b"> <label for="q12b">b) VitreaClassicSuite</label></div>
+                    <div class="option"><input type="radio" name="q12" id="q12c" value="c"> <label for="q12c">c) SessionHelper</label></div>
+                    <div class="option"><input type="radio" name="q12" id="q12d" value="d"> <label for="q12d">d) DICOMExportService</label></div>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(12, 'a')">Check Answer</button>
+                <div class="feedback" id="feedback12"></div>
+            </div>
+            
+            <div class="question">
+                <p>13. By default, how does the most recent snapshot display on the Studylist Results tab?</p>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q13" id="q13a" value="a"> <label for="q13a">a) In the far left position</label></div>
+                    <div class="option"><input type="radio" name="q13" id="q13b" value="b"> <label for="q13b">b) In the middle position</label></div>
+                    <div class="option"><input type="radio" name="q13" id="q13c" value="c"> <label for="q13c">c) In the second position from the left</label></div>
+                    <div class="option"><input type="radio" name="q13" id="q13d" value="d"> <label for="q13d">d) In the far right position</label></div>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(13, 'd')">Check Answer</button>
+                <div class="feedback" id="feedback13"></div>
+            </div>
+            
+            <div class="question">
+                <p>14. To change the order of snapshots on the Studylist Results tab so the most recent displays in the far left position, what value should be entered for the newestToOldestResultOrdering row?</p>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q14" id="q14a" value="a"> <label for="q14a">a) false</label></div>
+                    <div class="option"><input type="radio" name="q14" id="q14b" value="b"> <label for="q14b">b) true</label></div>
+                    <div class="option"><input type="radio" name="q14" id="q14c" value="c"> <label for="q14c">c) default</label></div>
+                    <div class="option"><input type="radio" name="q14" id="q14d" value="d"> <label for="q14d">d) inverted</label></div>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(14, 'b')">Check Answer</button>
+                <div class="feedback" id="feedback14"></div>
+            </div>
+            
+            <div class="question">
+                <p>15. What is a prerequisite for changing the hostname if the system is installed on a domain?</p>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q15" id="q15a" value="a"> <label for="q15a">a) Change the AE Title first</label></div>
+                    <div class="option"><input type="radio" name="q15" id="q15b" value="b"> <label for="q15b">b) Stop all VSP services</label></div>
+                    <div class="option"><input type="radio" name="q15" id="q15c" value="c"> <label for="q15c">c) Remove it from the domain</label></div>
+                    <div class="option"><input type="radio" name="q15" id="q15d" value="d"> <label for="q15d">d) Run the HostnameUpdate Tool</label></div>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(15, 'c')">Check Answer</button>
+                <div class="feedback" id="feedback15"></div>
+            </div>
+            
+            <div class="question">
+                <p>16. What is the maximum character limit for the desired new hostname?</p>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q16" id="q16a" value="a"> <label for="q16a">a) 10 characters</label></div>
+                    <div class="option"><input type="radio" name="q16" id="q16b" value="b"> <label for="q16b">b) 15 characters</label></div>
+                    <div class="option"><input type="radio" name="q16" id="q16c" value="c"> <label for="q16c">c) 20 characters</label></div>
+                    <div class="option"><input type="radio" name="q16" id="q16d" value="d"> <label for="q16d">d) 25 characters</label></div>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(16, 'b')">Check Answer</button>
+                <div class="feedback" id="feedback16"></div>
+            </div>
+            
+            <div class="question">
+                <p>17. Which file types are supported for the site logo on the Report page?</p>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q17" id="q17a" value="a"> <label for="q17a">a) BMP and GIF</label></div>
+                    <div class="option"><input type="radio" name="q17" id="q17b" value="b"> <label for="q17b">b) Only GIF</label></div>
+                    <div class="option"><input type="radio" name="q17" id="q17c" value="c"> <label for="q17c">c) JPG and PNG</label></div>
+                    <div class="option"><input type="radio" name="q17" id="q17d" value="d"> <label for="q17d">d) All image file types</label></div>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(17, 'c')">Check Answer</button>
+                <div class="feedback" id="feedback17"></div>
+            </div>
+            
+            <div class="question">
+                <p>18. Which reports contain Logos after changing the site logo?</p>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q18" id="q18a" value="a"> <label for="q18a">a) All reports</label></div>
+                    <div class="option"><input type="radio" name="q18" id="q18b" value="b"> <label for="q18b">b) Full Cardiac and Generic only</label></div>
+                    <div class="option"><input type="radio" name="q18" id="q18c" value="c"> <label for="q18c">c) Full Cardiac, Calcium Score, and Generic</label></div>
+                    <div class="option"><input type="radio" name="q18" id="q18d" value="d"> <label for="q18d">d) Calcium Score and Generic only</label></div>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(18, 'c')">Check Answer</button>
+                <div class="feedback" id="feedback18"></div>
+            </div>
+            
+            <div class="question">
+                <p>19. When changing the storage location for an Enterprise deployment, what is the maximum recommended UNC path length for the NASRoot directory?</p>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q19" id="q19a" value="a"> <label for="q19a">a) 25 characters</label></div>
+                    <div class="option"><input type="radio" name="q19" id="q19b" value="b"> <label for="q19b">b) 31 characters</label></div>
+                    <div class="option"><input type="radio" name="q19" id="q19c" value="c"> <label for="q19c">c) 50 characters</label></div>
+                    <div class="option"><input type="radio" name="q19" id="q19d" value="d"> <label for="q19d">d) No limit</label></div>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(19, 'b')">Check Answer</button>
+                <div class="feedback" id="feedback19"></div>
+            </div>
+            
+            <div class="question">
+                <p>20. What PowerShell script is used to stop all Vitrea services when changing the NASRoot directory for an Enterprise deployment?</p>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q20" id="q20a" value="a"> <label for="q20a">a) Stop-VitreaServices.ps1</label></div>
+                    <div class="option"><input type="radio" name="q20" id="q20b" value="b"> <label for="q20b">b) Disable-VitreaServices.ps1</label></div>
+                    <div class="option"><input type="radio" name="q20" id="q20c" value="c"> <label for="q20c">c) Manage-VitreaServices.ps1 -action stop</label></div>
+                    <div class="option"><input type="radio" name="q20" id="q20d" value="d"> <label for="q20d">d) .\Manage-VitreaServices.ps1 -action disable</label></div>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(20, 'd')">Check Answer</button>
+                <div class="feedback" id="feedback20"></div>
+            </div>
+            
+            <!-- Questions 21-30 -->
+            <div class="question">
+                <p>21. Which sub-application does the Auto_Save_Session_On_Timeout feature primarily apply to?</p>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q21" id="q21a" value="a"> <label for="q21a">a) Multi Modality Viewer</label></div>
+                    <div class="option"><input type="radio" name="q21" id="q21b" value="b"> <label for="q21b">b) Medis</label></div>
+                    <div class="option"><input type="radio" name="q21" id="q21c" value="c"> <label for="q21c">c) Mirada</label></div>
+                    <div class="option"><input type="radio" name="q21" id="q21d" value="d"> <label for="q21d">d) VitreaClassic</label></div>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(21, 'd')">Check Answer</button>
+                <div class="feedback" id="feedback21"></div>
+            </div>
+            
+            <div class="question">
+                <p>22. By default, what is the idle session limit for Remote Desktop Collection Broker or Group Policy settings to ensure the Autosave feature is correctly enabled?</p>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q22" id="q22a" value="a"> <label for="q22a">a) 1 minute</label></div>
+                    <div class="option"><input type="radio" name="q22" id="q22b" value="b"> <label for="q22b">b) 10 minutes</label></div>
+                    <div class="option"><input type="radio" name="q22" id="q22c" value="c"> <label for="q22c">c) 30 minutes</label></div>
+                    <div class="option"><input type="radio" name="q22" id="q22d" value="d"> <label for="q22d">d) Never</label></div>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(22, 'c')">Check Answer</button>
+                <div class="feedback" id="feedback22"></div>
+            </div>
+            
+            <div class="question">
+                <p>23. What is a critical requirement for the CSMC Cardiac Suite Floating License Server to function correctly?</p>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q23" id="q23a" value="a"> <label for="q23a">a) Local network access only</label></div>
+                    <div class="option"><input type="radio" name="q23" id="q23b" value="b"> <label for="q23b">b) Constant internet access to http://vm.csaim.com/</label></div>
+                    <div class="option"><input type="radio" name="q23" id="q23c" value="c"> <label for="q23c">c) Monthly manual license updates</label></div>
+                    <div class="option"><input type="radio" name="q23" id="q23d" value="d"> <label for="q23d">d) Access to a VPN connection</label></div>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(23, 'b')">Check Answer</button>
+                <div class="feedback" id="feedback23"></div>
+            </div>
+            
+            <div class="question">
+                <p>24. If the CSMC Cardiac Suite Floating License Server cannot reach its Call Home destination within 14 days, what will happen?</p>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q24" id="q24a" value="a"> <label for="q24a">a) A warning notification is sent</label></div>
+                    <div class="option"><input type="radio" name="q24" id="q24b" value="b"> <label for="q24b">b) The license automatically renews</label></div>
+                    <div class="option"><input type="radio" name="q24" id="q24c" value="c"> <label for="q24c">c) Your floating license will shut down</label></div>
+                    <div class="option"><input type="radio" name="q24" id="q24d" value="d"> <label for="q24d">d) Performance will be degraded</label></div>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(24, 'c')">Check Answer</button>
+                <div class="feedback" id="feedback24"></div>
+            </div>
+            
+            <div class="question">
+                <p>25. What is the approximate time Canon Medical Customer Support typically requires to send a valid CSMC license file after being contacted?</p>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q25" id="q25a" value="a"> <label for="q25a">a) 1-2 hours</label></div>
+                    <div class="option"><input type="radio" name="q25" id="q25b" value="b"> <label for="q25b">b) 6-12 hours</label></div>
+                    <div class="option"><input type="radio" name="q25" id="q25c" value="c"> <label for="q25c">c) 24-48 hours</label></div>
+                    <div class="option"><input type="radio" name="q25" id="q25d" value="d"> <label for="q25d">d) 3-5 days</label></div>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(25, 'c')">Check Answer</button>
+                <div class="feedback" id="feedback25"></div>
+            </div>
+            
+            <div class="question">
+                <p>26. What happens if an unsupported value for the default deconvolution method is specified for 2D or 4D Brain Perfusion CT applications?</p>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q26" id="q26a" value="a"> <label for="q26a">a) The application crashes</label></div>
+                    <div class="option"><input type="radio" name="q26" id="q26b" value="b"> <label for="q26b">b) An error is logged and the factory default deconvolution method is used</label></div>
+                    <div class="option"><input type="radio" name="q26" id="q26c" value="c"> <label for="q26c">c) The setting is ignored, and no deconvolution occurs</label></div>
+                    <div class="option"><input type="radio" name="q26" id="q26d" value="d"> <label for="q26d">d) The system prompts for a valid value</label></div>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(26, 'b')">Check Answer</button>
+                <div class="feedback" id="feedback26"></div>
+            </div>
+            
+            <div class="question">
+                <p>27. If a valid Bayesian license is not available for 2D Brain Perfusion CT, what will be the default deconvolution method?</p>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q27" id="q27a" value="a"> <label for="q27a">a) SVD</label></div>
+                    <div class="option"><input type="radio" name="q27" id="q27b" value="b"> <label for="q27b">b) SVD+</label></div>
+                    <div class="option"><input type="radio" name="q27" id="q27c" value="c"> <label for="q27c">c) Bayesian</label></div>
+                    <div class="option"><input type="radio" name="q27" id="q27d" value="d"> <label for="q27d">d) None</label></div>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(27, 'a')">Check Answer</button>
+                <div class="feedback" id="feedback27"></div>
+            </div>
+            
+            <div class="question">
+                <p>28. Which setting allows you to automatically export any evidence generated by applications in Vitrea AV to a configurable list of archives as DICOM?</p>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q28" id="q28a" value="a"> <label for="q28a">a) exportEvidenceManual</label></div>
+                    <div class="option"><input type="radio" name="q28" id="q28b" value="b"> <label for="q28b">b) archiveEvidenceAutomatically</label></div>
+                    <div class="option"><input type="radio" name="q28" id="q28c" value="c"> <label for="q28c">c) performAutoExport</label></div>
+                    <div class="option"><input type="radio" name="q28" id="q28d" value="d"> <label for="q28d">d) enableEvidenceTransfer</label></div>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(28, 'c')">Check Answer</button>
+                <div class="feedback" id="feedback28"></div>
+            </div>
+            
+            <div class="question">
+                <p>29. If you enable the report EvidenceType for Evidence Auto Export, what is a consequence regarding draft reports?</p>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q29" id="q29a" value="a"> <label for="q29a">a) You can still create draft reports, but they are also exported</label></div>
+                    <div class="option"><input type="radio" name="q29" id="q29b" value="b"> <label for="q29b">b) Draft reports are saved locally only</label></div>
+                    <div class="option"><input type="radio" name="q29" id="q29c" value="c"> <label for="q29c">c) You will lose the ability to create a draft report</label></div>
+                    <div class="option"><input type="radio" name="q29" id="q29d" value="d"> <label for="q29d">d) Reports are exported only when published</label></div>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(29, 'c')">Check Answer</button>
+                <div class="feedback" id="feedback29"></div>
+            </div>
+            
+            <div class="question">
+                <p>30. What service type must be selected for the DICOM device created for Structured Report (SR) export?</p>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q30" id="q30a" value="a"> <label for="q30a">a) Query /Retrieve</label></div>
+                    <div class="option"><input type="radio" name="q30" id="q30b" value="b"> <label for="q30b">b) PrintSCU</label></div>
+                    <div class="option"><input type="radio" name="q30" id="q30c" value="c"> <label for="q30c">c) Storage</label></div>
+                    <div class="option"><input type="radio" name="q30" id="q30d" value="d"> <label for="q30d">d) Worklist</label></div>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(30, 'c')">Check Answer</button>
+                <div class="feedback" id="feedback30"></div>
+            </div>
+            
+            <!-- Questions 31-40 -->
+            <div class="question">
+                <p>31. What is the default setting for the Export Reminder feature?</p>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q31" id="q31a" value="a"> <label for="q31a">a) On (true)</label></div>
+                    <div class="option"><input type="radio" name="q31" id="q31b" value="b"> <label for="q31b">b) Off (false)</label></div>
+                    <div class="option"><input type="radio" name="q31" id="q31c" value="c"> <label for="q31c">c) Enabled only for administrators</label></div>
+                    <div class="option"><input type="radio" name="q31" id="q31d" value="d"> <label for="q31d">d) Configurable per user</label></div>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(31, 'b')">Check Answer</button>
+                <div class="feedback" id="feedback31"></div>
+            </div>
+            
+            <div class="question">
+                <p>32. When mapping external groups, which group should you never deselect the Admin Role selection or change the selection to a new Role for?</p>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q32" id="q32a" value="a"> <label for="q32a">a) Vitrea Users Group</label></div>
+                    <div class="option"><input type="radio" name="q32" id="q32b" value="b"> <label for="q32b">b) Vitrea Services Group</label></div>
+                    <div class="option"><input type="radio" name="q32" id="q32c" value="c"> <label for="q32c">c) BUILTIN Administrators Group</label></div>
+                    <div class="option"><input type="radio" name="q32" id="q32d" value="d"> <label for="q32d">d) All External Groups</label></div>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(32, 'c')">Check Answer</button>
+                <div class="feedback" id="feedback32"></div>
+            </div>
+            
+            <div class="question">
+                <p>33. What is the default rendering quality level for playback of batches and/or movies for Global Illumination Rendering images?</p>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q33" id="q33a" value="a"> <label for="q33a">a) Low</label></div>
+                    <div class="option"><input type="radio" name="q33" id="q33b" value="b"> <label for="q33b">b) Medium</label></div>
+                    <div class="option"><input type="radio" name="q33" id="q33c" value="c"> <label for="q33c">c) High</label></div>
+                    <div class="option"><input type="radio" name="q33" id="q33d" value="d"> <label for="q33d">d) Very High</label></div>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(33, 'b')">Check Answer</button>
+                <div class="feedback" id="feedback33"></div>
+            </div>
+            
+            <div class="question">
+                <p>34. Enabling the resizeDropAreas setting for published reports causes what effect on report images?</p>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q34" id="q34a" value="a"> <label for="q34a">a) They are compressed, reducing file size</label></div>
+                    <div class="option"><input type="radio" name="q34" id="q34b" value="b"> <label for="q34b">b) They are cropped to fit the layout</label></div>
+                    <div class="option"><input type="radio" name="q34" id="q34c" value="c"> <label for="q34c">c) They will increase in file size by 2.5x</label></div>
+                    <div class="option"><input type="radio" name="q34" id="q34d" value="d"> <label for="q34d">d) The resolution is reduced</label></div>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(34, 'c')">Check Answer</button>
+                <div class="feedback" id="feedback34"></div>
+            </div>
+            
+            <div class="question">
+                <p>35. Which subsystem menu allows you to add, edit, and delete Interpreting Physicians and Operators for Ultrasound studies?</p>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q35" id="q35a" value="a"> <label for="q35a">a) System Settings</label></div>
+                    <div class="option"><input type="radio" name="q35" id="q35b" value="b"> <label for="q35b">b) Group / Role Mapping</label></div>
+                    <div class="option"><input type="radio" name="q35" id="q35c" value="c"> <label for="q35c">c) Ultrasound</label></div>
+                    <div class="option"><input type="radio" name="q35" id="q35d" value="d"> <label for="q35d">d) Licensed Clinical Applications</label></div>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(35, 'c')">Check Answer</button>
+                <div class="feedback" id="feedback35"></div>
+            </div>
+            
+            <div class="question">
+                <p>36. Which JIT algorithm is explicitly NOT recommended to enable by Canon Medical?</p>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q36" id="q36a" value="a"> <label for="q36a">a) CTColonCADJIT</label></div>
+                    <div class="option"><input type="radio" name="q36" id="q36b" value="b"> <label for="q36b">b) LungCadAdvisor</label></div>
+                    <div class="option"><input type="radio" name="q36" id="q36c" value="c"> <label for="q36c">c) OpenRibAP</label></div>
+                    <div class="option"><input type="radio" name="q36" id="q36d" value="d"> <label for="q36d">d) MultiModalityViewerHeadless</label></div>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(36, 'd')">Check Answer</button>
+                <div class="feedback" id="feedback36"></div>
+            </div>
+            
+            <div class="question">
+                <p>37. What is the default apFilterKeyword for OpenRibAP mode to avoid processing unrelated data?</p>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q37" id="q37a" value="a"> <label for="q37a">a) rib_scan</label></div>
+                    <div class="option"><input type="radio" name="q37" id="q37b" value="b"> <label for="q37b">b) thoracic</label></div>
+                    <div class="option"><input type="radio" name="q37" id="q37c" value="c"> <label for="q37c">c) ribcage</label></div>
+                    <div class="option"><input type="radio" name="q37" id="q37d" value="d"> <label for="q37d">d) openrib</label></div>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(37, 'd')">Check Answer</button>
+                <div class="feedback" id="feedback37"></div>
+            </div>
+            
+            <div class="question">
+                <p>38. What is the default initialSequenceNumber value for Series Sequence Numbering for Evidence?</p>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q38" id="q38a" value="a"> <label for="q38a">a) 1</label></div>
+                    <div class="option"><input type="radio" name="q38" id="q38b" value="b"> <label for="q38b">b) 100</label></div>
+                    <div class="option"><input type="radio" name="q38" id="q38c" value="c"> <label for="q38c">c) 500</label></div>
+                    <div class="option"><input type="radio" name="q38" id="q38d" value="d"> <label for="q38d">d) 1000</label></div>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(38, 'c')">Check Answer</button>
+                <div class="feedback" id="feedback38"></div>
+            </div>
+            
+            <div class="question">
+                <p>39. Which SQL Server role should be granted to the Vitrea Administrators group for proper permissions?</p>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q39" id="q39a" value="a"> <label for="q39a">a) db_owner</label></div>
+                    <div class="option"><input type="radio" name="q39" id="q39b" value="b"> <label for="q39b">b) public</label></div>
+                    <div class="option"><input type="radio" name="q39" id="q39c" value="c"> <label for="q39c">c) sysadmin</label></div>
+                    <div class="option"><input type="radio" name="q39" id="q39d" value="d"> <label for="q39d">d) securityadmin</label></div>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(39, 'c')">Check Answer</button>
+                <div class="feedback" id="feedback39"></div>
+            </div>
+            
+            <div class="question">
+                <p>40. What is the default minimum phase percent for TAVR Systole volumes?</p>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q40" id="q40a" value="a"> <label for="q40a">a) 25</label></div>
+                    <div class="option"><input type="radio" name="q40" id="q40b" value="b"> <label for="q40b">b) 30</label></div>
+                    <div class="option"><input type="radio" name="q40" id="q40c" value="c"> <label for="q40c">c) 35</label></div>
+                    <div class="option"><input type="radio" name="q40" id="q40d" value="d"> <label for="q40d">d) 40</label></div>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(40, 'b')">Check Answer</button>
+                <div class="feedback" id="feedback40"></div>
+            </div>
+            
+            <!-- Questions 41-50 -->
+            <div class="question">
+                <p>41. What is the default recommended maximum amount of data you can save to media (maxSaveToMediaSize)?</p>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q41" id="q41a" value="a"> <label for="q41a">a) 25GB</label></div>
+                    <div class="option"><input type="radio" name="q41" id="q41b" value="b"> <label for="q41b">b) 49GB</label></div>
+                    <div class="option"><input type="radio" name="q41" id="q41c" value="c"> <label for="q41c">c) 75GB</label></div>
+                    <div class="option"><input type="radio" name="q41" id="q41d" value="d"> <label for="q41d">d) 100GB</label></div>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(41, 'b')">Check Answer</button>
+                <div class="feedback" id="feedback41"></div>
+            </div>
+            
+            <div class="question">
+                <p>42. What is the default retention period for uncommitted evidence in Vitrea 7.10 and newer?</p>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q42" id="q42a" value="a"> <label for="q42a">a) 6 months</label></div>
+                    <div class="option"><input type="radio" name="q42" id="q42b" value="b"> <label for="q42b">b) 1 year</label></div>
+                    <div class="option"><input type="radio" name="q42" id="q42c" value="c"> <label for="q42c">c) 10 years</label></div>
+                    <div class="option"><input type="radio" name="q42" id="q42d" value="d"> <label for="q42d">d) 1000 years</label></div>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(42, 'd')">Check Answer</button>
+                <div class="feedback" id="feedback42"></div>
+            </div>
+            
+            <div class="question">
+                <p>43. Which region is Vitrea Lung CAD specifically available in?</p>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q43" id="q43a" value="a"> <label for="q43a">a) North America</label></div>
+                    <div class="option"><input type="radio" name="q43" id="q43b" value="b"> <label for="q43b">b) Europe</label></div>
+                    <div class="option"><input type="radio" name="q43" id="q43c" value="c"> <label for="q43c">c) Asia</label></div>
+                    <div class="option"><input type="radio" name="q43" id="q43d" value="d"> <label for="q43d">d) OUS (Outside United States)</label></div>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(43, 'd')">Check Answer</button>
+                <div class="feedback" id="feedback43"></div>
+            </div>
+            
+            <div class="question">
+                <p>44. What type of angle information is expected in the positioner angle DICOM tag by Toshiba fluoroscopes?</p>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q44" id="q44a" value="a"> <label for="q44a">a) Detector angle information</label></div>
+                    <div class="option"><input type="radio" name="q44" id="q44b" value="b"> <label for="q44b">b) Gantry angle information</label></div>
+                    <div class="option"><input type="radio" name="q44" id="q44c" value="c"> <label for="q44c">c) Patient angle information</label></div>
+                    <div class="option"><input type="radio" name="q44" id="q44d" value="d"> <label for="q44d">d) Isocenter angle information</label></div>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(44, 'b')">Check Answer</button>
+                <div class="feedback" id="feedback44"></div>
+            </div>
+            
+            <div class="question">
+                <p>45. In 3D Angio XA, if the c-arm angle shown on the volume view displays in red text, what does it indicate?</p>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q45" id="q45a" value="a"> <label for="q45a">a) The fluoroscope is malfunctioning</label></div>
+                    <div class="option"><input type="radio" name="q45" id="q45b" value="b"> <label for="q45b">b) The image quality is low</label></div>
+                    <div class="option"><input type="radio" name="q45" id="q45c" value="c"> <label for="q45c">c) The volume is rotated to a position outside the range of possible fluoroscope positions</label></div>
+                    <div class="option"><input type="radio" name="q45" id="q45d" value="d"> <label for="q45d">d) The measurement is inaccurate</label></div>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(45, 'c')">Check Answer</button>
+                <div class="feedback" id="feedback45"></div>
+            </div>
+            
+            <div class="question">
+                <p>46. What is the default primary angle limit (right/left) for c-arm angle limits in Vitrea for 3D Angio XA volumes?</p>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q46" id="q46a" value="a"> <label for="q46a">a) 90 degrees</label></div>
+                    <div class="option"><input type="radio" name="q46" id="q46b" value="b"> <label for="q46b">b) 100 degrees</label></div>
+                    <div class="option"><input type="radio" name="q46" id="q46c" value="c"> <label for="q46c">c) 115 degrees</label></div>
+                    <div class="option"><input type="radio" name="q46" id="q46d" value="d"> <label for="q46d">d) 120 degrees</label></div>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(46, 'c')">Check Answer</button>
+                <div class="feedback" id="feedback46"></div>
+            </div>
+            
+            <div class="question">
+                <p>47. How many copies of database backup files does the scheduled database backup job keep?</p>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q47" id="q47a" value="a"> <label for="q47a">a) 3</label></div>
+                    <div class="option"><input type="radio" name="q47" id="q47b" value="b"> <label for="q47b">b) 5</label></div>
+                    <div class="option"><input type="radio" name="q47" id="q47c" value="c"> <label for="q47c">c) 7</label></div>
+                    <div class="option"><input type="radio" name="q47" id="q47d" value="d"> <label for="q47d">d) 10</label></div>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(47, 'b')">Check Answer</button>
+                <div class="feedback" id="feedback47"></div>
+            </div>
+            
+            <div class="question">
+                <p>48. In the System Health application, what does a "Service Problem" status for a service indicate?</p>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q48" id="q48a" value="a"> <label for="q48a">a) The service is running normally</label></div>
+                    <div class="option"><input type="radio" name="q48" id="q48b" value="b"> <label for="q48b">b) The service is stopped intentionally</label></div>
+                    <div class="option"><input type="radio" name="q48" id="q48c" value="c"> <label for="q48c">c) A service required for Vitrea software to run is down</label></div>
+                    <div class="option"><input type="radio" name="q48" id="q48d" value="d"> <label for="q48d">d) The service is offline for maintenance</label></div>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(48, 'c')">Check Answer</button>
+                <div class="feedback" id="feedback48"></div>
+            </div>
+            
+            <div class="question">
+                <p>49. What is the default setting for TAVR_Iliac_Access_Initialized?</p>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q49" id="q49a" value="a"> <label for="q49a">a) True - automatic measurements</label></div>
+                    <div class="option"><input type="radio" name="q49" id="q49b" value="b"> <label for="q49b">b) False - manual measurements</label></div>
+                    <div class="option"><input type="radio" name="q49" id="q49c" value="c"> <label for="q49c">c) Only for Enterprise deployments</label></div>
+                    <div class="option"><input type="radio" name="q49" id="q49d" value="d"> <label for="q49d">d) Configurable per user</label></div>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(49, 'a')">Check Answer</button>
+                <div class="feedback" id="feedback49"></div>
+            </div>
+            
+            <div class="question">
+                <p>50. What happens if you try to restore a database backup from a different Vitrea software version?</p>
+                <div class="options">
+                    <div class="option"><input type="radio" name="q50" id="q50a" value="a"> <label for="q50a">a) It will automatically convert the schema</label></div>
+                    <div class="option"><input type="radio" name="q50" id="q50b" value="b"> <label for="q50b">b) The restore will fail due to version mismatch</label></div>
+                    <div class="option"><input type="radio" name="q50" id="q50c" value="c"> <label for="q50c">c) Only partial data will be restored</label></div>
+                    <div class="option"><input type="radio" name="q50" id="q50d" value="d"> <label for="q50d">d) It will prompt to upgrade the database</label></div>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(50, 'b')">Check Answer</button>
+                <div class="feedback" id="feedback50"></div>
+            </div>
+            
+        </div>
+        
+        <div id="scenarios" class="tabcontent">
+            <h2>Troubleshooting Scenarios</h2>
+            <div class="counter">Showing <span id="scenarioCount">25</span> of 25 scenarios</div>
+            
+            <!-- Scenarios 1-5 -->
+            <div class="scenario">
+                <h3>1. DPI Settings Not Taking Effect</h3>
+                <p>You are adjusting Windows DPI settings for a Vitrea extend deployment on a 4K display, but the changes do not seem to take effect.</p>
+                <div class="resolution">
+                    <p><strong>Resolution:</strong> You must sign out after changing the setting for the new DPI scaling factor to take effect.</p>
+                </div>
+                <button class="show-resolution" onclick="toggleResolution(this)">Show Resolution</button>
+            </div>
+            
+            <div class="scenario">
+                <h3>2. Application Servers Going Offline During Management Server Restart</h3>
+                <p>While restarting the Management Server in an Enterprise deployment, Application Servers suddenly go offline on the System Health page.</p>
+                <div class="resolution">
+                    <p><strong>Resolution:</strong> Ensure there are no Application Servers in the middle of being restarted when restarting the Management Server. Also, avoid restarting Application Servers while the Management Server is restarting.</p>
+                </div>
+                <button class="show-resolution" onclick="toggleResolution(this)">Show Resolution</button>
+            </div>
+            
+            <div class="scenario">
+                <h3>3. CACS Report Guideline Changes Not Reflecting</h3>
+                <p>You are attempting to change the CACS Report Guideline default setting, but the changes are not immediately reflected in the Vitrea software.</p>
+                <div class="resolution">
+                    <p><strong>Resolution:</strong> After changing the guideline, the new default value should be selected automatically in the Vitrea software. If not, ensure you clicked "Activate Changes" and performed the steps correctly.</p>
+                </div>
+                <button class="show-resolution" onclick="toggleResolution(this)">Show Resolution</button>
+            </div>
+            
+            <div class="scenario">
+                <h3>4. AE Title Change Before Upgrade</h3>
+                <p>An upgrade to Vitrea 7.16.3 is planned, but patient data processing is incomplete. You're told to change the AE Title for the upgrade but aren't sure which one.</p>
+                <div class="resolution">
+                    <p><strong>Resolution:</strong> You must change the AE Title to "UPGRADE" to ensure all patient data has been processed before the upgrade.</p>
+                </div>
+                <button class="show-resolution" onclick="toggleResolution(this)">Show Resolution</button>
+            </div>
+            
+            <div class="scenario">
+                <h3>5. Export Destination Changes Not Visible to Users</h3>
+                <p>You've changed the default export destination in Vitrea AV, but users currently working in active sessions are not seeing the new default.</p>
+                <div class="resolution">
+                    <p><strong>Resolution:</strong> All active sessions during the change must reconnect to Vitrea before the new default archive will show as selected.</p>
+                </div>
+                <button class="show-resolution" onclick="toggleResolution(this)">Show Resolution</button>
+            </div>
+            
+            <!-- Scenarios 6-10 -->
+            <div class="scenario">
+                <h3>6. Hostname Change Causes System Failure</h3>
+                <p>You change the hostname of an Enterprise Single Server after Vitrea installation, but Vitrea no longer functions.</p>
+                <div class="resolution">
+                    <p><strong>Resolution:</strong> After changing the hostname, Vitrea will no longer function and requires specific post-hostname change procedures, including running VitreaHostnameTool.exe and potentially reinstalling VIMS components if the installation screen displays.</p>
+                </div>
+                <button class="show-resolution" onclick="toggleResolution(this)">Show Resolution</button>
+            </div>
+            
+            <div class="scenario">
+                <h3>7. HostnameUpdate Tool Fails</h3>
+                <p>You are attempting to change the hostname of your Vitrea system, but the HostnameUpdate Tool fails.</p>
+                <div class="resolution">
+                    <p><strong>Resolution:</strong> The HostnameUpdate Tool will fail if the hostname is "Vitrea". Do not use "Vitrea" as the hostname.</p>
+                </div>
+                <button class="show-resolution" onclick="toggleResolution(this)">Show Resolution</button>
+            </div>
+            
+            <div class="scenario">
+                <h3>8. Site Logo Not Displaying Correctly</h3>
+                <p>You changed the site logo on the Report page by placing a new image file, but it doesn't display correctly, or is not available for all reports.</p>
+                <div class="resolution">
+                    <p><strong>Resolution:</strong> Ensure the logo image is in .JPG or .PNG format and renamed to logo.gif. The change only applies to Full Cardiac, Calcium Score, and Generic reports.</p>
+                </div>
+                <button class="show-resolution" onclick="toggleResolution(this)">Show Resolution</button>
+            </div>
+            
+            <div class="scenario">
+                <h3>9. NASRoot Path Length Concern</h3>
+                <p>You're changing the storage location for an Enterprise deployment, and you're concerned about the path length.</p>
+                <div class="resolution">
+                    <p><strong>Resolution:</strong> The UNC path of the NASRoot directory must be 31 characters or fewer due to Windows max path length limits.</p>
+                </div>
+                <button class="show-resolution" onclick="toggleResolution(this)">Show Resolution</button>
+            </div>
+            
+            <div class="scenario">
+                <h3>10. SQL Server Performance Issues After Storage Change</h3>
+                <p>After changing the NASRoot directory, you encounter issues with SQL Server database performance.</p>
+                <div class="resolution">
+                    <p><strong>Resolution:</strong> If your database resides on the Management Server, moving it to a remote storage device will affect your performance. Confirm and update database backup locations if the database location is changed.</p>
+                </div>
+                <button class="show-resolution" onclick="toggleResolution(this)">Show Resolution</button>
+            </div>
+            
+            <!-- Scenarios 11-15 -->
+            <div class="scenario">
+                <h3>11. CSMC License Server Activation Failure</h3>
+                <p>You are setting up a CSMC Cardiac Suite Floating License Server, but activation fails with an error message indicating a lack of internet access.</p>
+                <div class="resolution">
+                    <p><strong>Resolution:</strong> The CSMC Cardiac Suite Floating License Server requires a Call Home (constant internet access) to http://vm.csaim.com/. You may need to set up rules in your proxy server to allow this connection or whitelist the site.</p>
+                </div>
+                <button class="show-resolution" onclick="toggleResolution(this)">Show Resolution</button>
+            </div>
+            
+            <div class="scenario">
+                <h3>12. CSMC License Server Stops Functioning</h3>
+                <p>The CSMC Cardiac Suite Floating License Server stops functioning after two weeks, and you did not provide constant internet access.</p>
+                <div class="resolution">
+                    <p><strong>Resolution:</strong> The Floating License Server performs a Call Home every day for two weeks and then shuts down if constant internet access is not provided. To reset it, you need to obtain a reset code via email from http://:6433 and enter it into the Reset Code field.</p>
+                </div>
+                <button class="show-resolution" onclick="toggleResolution(this)">Show Resolution</button>
+            </div>
+            
+            <div class="scenario">
+                <h3>13. CT Colon CAD Not Processing</h3>
+                <p>You enable CT Colon CAD processing, but studies with relevant keywords are not being processed automatically, and you see "No License" in the Status column for CTColonCADJIT.</p>
+                <div class="resolution">
+                    <p><strong>Resolution:</strong> This indicates a Colon CAD license does not exist on the system. You need to add a valid Colon CAD license for JIT processing to enable and create CADProcess.WorkItem.</p>
+                </div>
+                <button class="show-resolution" onclick="toggleResolution(this)">Show Resolution</button>
+            </div>
+            
+            <div class="scenario">
+                <h3>14. StudyList Status Icon Changes</h3>
+                <p>After enabling an intensive task like Colon CAD, you notice the StudyList status icon changes from yellow to green, then back to yellow, or disappears entirely for a study that should be fully processed.</p>
+                <div class="resolution">
+                    <p><strong>Resolution:</strong> This can occur when multiple intensive tasks (e.g., Colon CAD and Lung CAD) are triggered for a given study. One algorithm finishes, and another starts. You can manually request Colon CAD or Lung CAD via the StudyList context menu or launch an appropriate application (like CT Colon Analysis) to trigger the algorithms if they haven't run or failed.</p>
+                </div>
+                <button class="show-resolution" onclick="toggleResolution(this)">Show Resolution</button>
+            </div>
+            
+            <div class="scenario">
+                <h3>15. Evidence Not Auto-Exporting</h3>
+                <p>You have configured Evidence Auto Export, but some evidence types are not being automatically exported.</p>
+                <div class="resolution">
+                    <p><strong>Resolution:</strong> Check the supportedEvidenceTypes key in EvidenceAutoExporter. By default, it includes image, batch, and session. If you want to auto-export reports, you must add report to this comma-separated list.</p>
+                </div>
+                <button class="show-resolution" onclick="toggleResolution(this)">Show Resolution</button>
+            </div>
+            
+            <!-- Scenarios 16-20 -->
+            <div class="scenario">
+                <h3>16. Report Printing Margin Issues</h3>
+                <p>You are printing a report from the Report page, and the margins appear too large, cutting off content.</p>
+                <div class="resolution">
+                    <p><strong>Resolution:</strong> This issue can be addressed by editing the VI_report_print.css file located at C:\Program Files\Vital Images\Reporting\web\static\Javascript and adjusting the desired page margin.</p>
+                </div>
+                <button class="show-resolution" onclick="toggleResolution(this)">Show Resolution</button>
+            </div>
+            
+            <div class="scenario">
+                <h3>17. Large File Sizes After Enabling resizeDropAreas</h3>
+                <p>You've enabled resizeDropAreas to improve readability of snapshot overlay text in published reports, but you notice a significant increase in file sizes for your reports.</p>
+                <div class="resolution">
+                    <p><strong>Resolution:</strong> This is expected behavior. When resizeDropAreas is enabled, report images will increase in file size by 2.5x.</p>
+                </div>
+                <button class="show-resolution" onclick="toggleResolution(this)">Show Resolution</button>
+            </div>
+            
+            <div class="scenario">
+                <h3>18. Monitor Preference Option Unavailable</h3>
+                <p>You're logged into the Vitrea software, but when you attempt to select "Set Monitor Preference" from the gear icon, the option is unavailable.</p>
+                <div class="resolution">
+                    <p><strong>Resolution:</strong> This option is only available when not in an active session. Once the monitor preference is set, users are prevented from changing the monitor settings during a session. You need to relaunch Vitrea to reset it.</p>
+                </div>
+                <button class="show-resolution" onclick="toggleResolution(this)">Show Resolution</button>
+            </div>
+            
+            <div class="scenario">
+                <h3>19. SUREPlaque Measurements Not Exporting</h3>
+                <p>You're trying to view SUREPlaque measurements in a spreadsheet, but no .csv file is generated when you press Alt+v in the volume view.</p>
+                <div class="resolution">
+                    <p><strong>Resolution:</strong> Ensure you pressed v after the cursor shape changed to the hand holding two arrows (by holding down Alt). Also, verify that the three required registry keys (VesselOutputType, VPSpreadSheetFormat, VesselFileLocation) are correctly set up.</p>
+                </div>
+                <button class="show-resolution" onclick="toggleResolution(this)">Show Resolution</button>
+            </div>
+            
+            <div class="scenario">
+                <h3>20. VSP Services Fail to Start</h3>
+                <p>VSP services on your Vitrea workstation deployment fail to start, and no logs are generated.</p>
+                <div class="resolution">
+                    <p><strong>Resolution:</strong> Check the Event Viewer for errors. Verify that the service user is granted "Logon as Service" rights to the local server, and check if the service user's password has changed.</p>
+                </div>
+                <button class="show-resolution" onclick="toggleResolution(this)">Show Resolution</button>
+            </div>
+            
+            <!-- Scenarios 21-25 -->
+            <div class="scenario">
+                <h3>21. Database Restore Version Mismatch</h3>
+                <p>You need to restore a database backup, but the Vitrea software version on your system is newer than the version when the backup was created.</p>
+                <div class="resolution">
+                    <p><strong>Resolution:</strong> The database schema is coupled to the build version. You must be running the same version of the Vitrea software as was installed when the database backup was created to successfully restore it.</p>
+                </div>
+                <button class="show-resolution" onclick="toggleResolution(this)">Show Resolution</button>
+            </div>
+            
+            <div class="scenario">
+                <h3>22. Studies Stuck in VIMS Processing</h3>
+                <p>Studies become "stuck" in VIMS processing and are not visible in Vitrea, even though new studies are processing correctly.</p>
+                <div class="resolution">
+                    <p><strong>Resolution:</strong> For Vitrea 7.12 and later, you can resolve this by: 1) Stopping all VIMS services; 2) Deleting entries in Dicom.ReceivedStudy_Temp table in the VIDicom database; 3) Deleting everything in the DICOMReceive folder; 4) Restarting VIMS Services; 5) Refreshing the Study List and manually deleting the "stuck" studies.</p>
+                </div>
+                <button class="show-resolution" onclick="toggleResolution(this)">Show Resolution</button>
+            </div>
+            
+            <div class="scenario">
+                <h3>23. DICOM Processing "Sawtoothing" Graph</h3>
+                <p>You're monitoring DICOM processing using VIMS Monitor, and the "Remaining Instances" graph displays a "sawtoothing" line instead of a flat line at zero.</p>
+                <div class="resolution">
+                    <p><strong>Resolution:</strong> A "sawtoothing" line indicates there is still incoming data being processed. You should wait for all incoming data to complete processing before assuming a problem.</p>
+                </div>
+                <button class="show-resolution" onclick="toggleResolution(this)">Show Resolution</button>
+            </div>
+            
+            <div class="scenario">
+                <h3>24. TAVR Iliac Measurements Not Automatic</h3>
+                <p>You enabled the TAVR_Iliac_Access_Initialized setting, expecting automatic Iliac measurements, but users still need to define them manually.</p>
+                <div class="resolution">
+                    <p><strong>Resolution:</strong> The default is TRUE for automatic measurements. To disable automatic Iliac access measurements and force manual definition, you need to set TAVR_Iliac_Access_Initialized to false.</p>
+                </div>
+                <button class="show-resolution" onclick="toggleResolution(this)">Show Resolution</button>
+            </div>
+            
+            <div class="scenario">
+                <h3>25. Rejoining Remote Desktop Sessions</h3>
+                <p>You want to allow a user to attach to an existing remote desktop session on an Enterprise deployment from a different client system, but the default configuration prevents this.</p>
+                <div class="resolution">
+                    <p><strong>Resolution:</strong> Create a RemoteDesktopInfo.Service.exe.config file in C:\ProgramData\Vitrea\DeploymentConfiguration and set the AllowDuplicateUserConnections value to true. Be aware that this may result in undefined behavior.</p>
+                </div>
+                <button class="show-resolution" onclick="toggleResolution(this)">Show Resolution</button>
+            </div>
+            
+        </div>
+        
+        <div id="tips" class="tabcontent">
+            <h2>Quick Tips and Summary</h2>
+            
+            <div class="quick-tips">
+                <h3>Quick Tips</h3>
+                <ul>
+                    <li><strong>Deployment Specificity:</strong> Always check the "N O T E" section in the documentation; procedures often apply only to specific deployment types (Enterprise, Enterprise Single Server, Vitrea extend, or Vitrea workstation).</li>
+                    <li><strong>Sign Out/Restart:</strong> Many configuration changes, especially those affecting Windows settings (like DPI) or application-level settings, require you to sign out of Vitrea or restart the software/machine for changes to take effect.</li>
+                    <li><strong>AE Titles:</strong> When configuring DICOM devices or changing hostnames, always use unique AE Title values where specified.</li>
+                    <li><strong>Licensing:</strong> For specialized features like CSMC Cardiac Suite or CT/Lung CAD, a valid license is required. Contact Canon Medical Customer Support for license acquisition. Be aware of "Call Home" requirements for floating licenses.</li>
+                    <li><strong>System Configuration:</strong> The "System Configuration" screen in Vitrea (accessed via Applications Home tab) is your central hub for most administrative settings.</li>
+                    <li><strong>Intensive Tasks (JIT):</strong> Be mindful that applications like Colon CAD and Lung CAD are "Intensive tasks" that require significant system resources. Monitor their status via the "Work Items" screen.</li>
+                    <li><strong>Data Migration/Storage:</strong> Copying large amounts of data for storage location changes can take a significant amount of time. Ensure UNC paths adhere to character limits (e.g., 31 characters for NASRoot).</li>
+                    <li><strong>Database Management:</strong> Regular database backups are scheduled automatically. Manual backups are crucial before upgrades. For database restoration, the Vitrea software version must match the version when the backup was created.</li>
+                    <li><strong>Registry Keys:</strong> Many advanced configurations or troubleshooting steps involve modifying Registry Keys (e.g., changing NASRoot, Journaling, SUREPlaque measurements). Exercise caution and follow instructions precisely.</li>
+                    <li><strong>System Health:</strong> Use the "System Health" application to monitor the status of services, certificates, user sessions, and hardware. Pay attention to "Immediate Action Required" alerts for certificates.</li>
+                </ul>
+            </div>
+            
+            <div class="summary">
+                <h3>Summary</h3>
+                <p>Vitrea administration encompasses a wide range of tasks, from basic Windows settings adjustments for 4K displays to complex server and database configurations for Enterprise deployments. Key administrative areas include managing server restarts and services, configuring DICOM-related settings like AE Titles for various functionalities (upgrade, print, query/retrieve), and customizing data handling such as export destinations and evidence retention periods.</p>
+                <p>The system offers "Just-In-Time Processing" for automated analysis applications like CT Colon CAD and Vitrea Lung CAD, which can be configured based on specific DICOM tags and keywords. User and group management, including mapping Active Directory groups to Vitrea roles, is handled through the "Group / Role Mapping" section. Performance can be optimized for specific applications like Olea Breast, and diagnostic tools like "Journaling" help record and play back workflows for troubleshooting. Critical system health and data processing can be monitored using the "System Health" and "VIMS Monitor" applications, and procedures exist for resolving "stuck" studies.</p>
+                <p>Overall, successful Vitrea administration relies on careful adherence to documented procedures, understanding deployment-specific requirements, and proactive monitoring of system health and processes.</p>
+            </div>
+            
+            <div class="summary">
+                <h3>Deep Dive: Changing the Storage Location (NASRoot Directory)</h3>
+                <p><strong>Enterprise Deployments:</strong> Typically undertaken to expand storage capacity or relocate the NASRoot directory from the Management Server to a dedicated remote server for better scalability and performance. This is a time-consuming process if existing data needs to be copied, potentially taking days for multiple terabytes of data.</p>
+                <p><strong>Key Steps:</strong></p>
+                <ol>
+                    <li>Preparation: Add new storage or set up the external storage device share with appropriate permissions.</li>
+                    <li>Service Stoppage: All Vitrea services on ALL Vitrea Servers must be stopped using a PowerShell script.</li>
+                    <li>Database Handling: If the database resides within the NASRoot, it must be detached from SQL Server Management Studio before data copying.</li>
+                    <li>Data Copying & Path Limit: The UNC path of the new directory must be 31 characters or fewer due to Windows path length limits.</li>
+                    <li>Permissions: Meticulous configuration of Network Share Permissions and NTFS Directory Permissions is paramount.</li>
+                    <li>Database Re-attachment & Updates: The database must be attached to the new location and configuration updated.</li>
+                    <li>System Configuration Updates: The new NASRoot location must be updated in numerous Registry Keys and configuration files.</li>
+                    <li>Service Re-enablement & Verification: All Vitrea services must be re-enabled and started.</li>
+                </ol>
+                <p><strong>Enterprise Single Server, Vitrea extend, and Vitrea workstation Deployments:</strong> This procedure is specifically for correcting a misconfiguration where the VitreaData folder was accidentally placed on an incorrect local drive. It is NOT intended to change the storage location to a network drive for these deployments.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab functionality
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+        
+        // Flashcard functionality
+        function toggleAnswer(button) {
+            var answer = button.previousElementSibling;
+            if (answer.style.display === "block") {
+                answer.style.display = "none";
+                button.textContent = "Show Answer";
+            } else {
+                answer.style.display = "block";
+                button.textContent = "Hide Answer";
+            }
+        }
+        
+        // Multiple choice functionality
+        function checkAnswer(questionNum, correctAnswer) {
+            var selectedOption = document.querySelector('input[name="q' + questionNum + '"]:checked');
+            var feedback = document.getElementById('feedback' + questionNum);
+            
+            if (!selectedOption) {
+                feedback.textContent = "Please select an answer.";
+                feedback.className = "feedback incorrect";
+                feedback.style.display = "block";
+                return;
+            }
+            
+            if (selectedOption.value === correctAnswer) {
+                feedback.textContent = "Correct! Well done.";
+                feedback.className = "feedback correct";
+            } else {
+                feedback.textContent = "Incorrect. The correct answer is " + correctAnswer.toUpperCase() + ".";
+                feedback.className = "feedback incorrect";
+            }
+            feedback.style.display = "block";
+        }
+        
+        // Scenario functionality
+        function toggleResolution(button) {
+            var resolution = button.previousElementSibling;
+            if (resolution.style.display === "block") {
+                resolution.style.display = "none";
+                button.textContent = "Show Resolution";
+            } else {
+                resolution.style.display = "block";
+                button.textContent = "Hide Resolution";
+            }
+        }
+        
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('keyup', function() {
+            var input = this.value.toLowerCase();
+            var activeTab = document.querySelector('.tabcontent[style="display: block;"]');
+            
+            if (!activeTab) return;
+            
+            var items;
+            if (activeTab.id === 'flashcards') {
+                items = activeTab.getElementsByClassName('flashcard');
+                updateCounter('flashcardCount', items, input);
+            } else if (activeTab.id === 'questions') {
+                items = activeTab.getElementsByClassName('question');
+                updateCounter('questionCount', items, input);
+            } else if (activeTab.id === 'scenarios') {
+                items = activeTab.getElementsByClassName('scenario');
+                updateCounter('scenarioCount', items, input);
+            }
+        });
+        
+        function updateCounter(counterId, items, input) {
+            var visibleCount = 0;
+            
+            for (var i = 0; i < items.length; i++) {
+                var text = items[i].textContent.toLowerCase();
+                if (text.includes(input)) {
+                    items[i].style.display = "";
+                    visibleCount++;
+                } else {
+                    items[i].style.display = "none";
+                }
+            }
+            
+            document.getElementById(counterId).textContent = visibleCount;
+        }
+    </script>
+</body>
+</html>

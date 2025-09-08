@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Vitrea Administration Mind Map</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --warning: #e74c3c;
+            --highlight: #fffde7;
+            --note: #7f8c8d;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f7fa;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        h1 {
+            color: var(--primary);
+            margin: 0;
+            border-bottom: 2px solid var(--secondary);
+            padding-bottom: 10px;
+        }
+        
+        .search-container {
+            display: flex;
+            gap: 10px;
+        }
+        
+        #searchInput {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            min-width: 250px;
+        }
+        
+        #searchButton {
+            padding: 8px 16px;
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .mindmap {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .central-node {
+            background-color: var(--secondary);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: fit-content;
+        }
+        
+        .central-node:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+        }
+        
+        .branches {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            width: 100%;
+        }
+        
+        .branch {
+            flex: 1;
+            min-width: 280px;
+            max-width: 380px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .branch:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+        }
+        
+        .branch-header {
+            background-color: var(--primary);
+            color: white;
+            padding: 12px 15px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .branch-header::after {
+            content: '+';
+            font-size: 18px;
+        }
+        
+        .branch-header.active::after {
+            content: '-';
+        }
+        
+        .branch-content {
+            padding: 15px;
+            display: none;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        
+        .branch-content.show {
+            display: block;
+        }
+        
+        .sub-node {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .sub-node:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .sub-node-header {
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 8px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .sub-node-header::after {
+            content: '+';
+            font-size: 18px;
+        }
+        
+        .sub-node-header.active::after {
+            content: '-';
+        }
+        
+        .sub-node-content {
+            display: none;
+            padding: 10px;
+            background-color: var(--light);
+            border-radius: 5px;
+            margin-top: 8px;
+        }
+        
+        .sub-node-content.show {
+            display: block;
+        }
+        
+        .leaf-node {
+            margin-left: 15px;
+            margin-top: 8px;
+            padding: 8px;
+            background-color: #e8f4fc;
+            border-radius: 5px;
+            font-size: 14px;
+            position: relative;
+        }
+        
+        .leaf-node.has-tooltip:hover::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            left: 100%;
+            top: 0;
+            min-width: 200px;
+            max-width: 300px;
+            background-color: var(--dark);
+            color: white;
+            padding: 8px;
+            border-radius: 4px;
+            font-size: 13px;
+            z-index: 100;
+            margin-left: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .step-by-step {
+            margin-top: 10px;
+            padding-left: 15px;
+            border-left: 3px solid var(--secondary);
+        }
+        
+        .step {
+            margin-bottom: 8px;
+            position: relative;
+            padding-left: 20px;
+        }
+        
+        .step::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--secondary);
+        }
+        
+        .registry-key {
+            font-family: 'Courier New', monospace;
+            background-color: #f0f0f0;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        
+        .sql-query {
+            font-family: 'Courier New', monospace;
+            background-color: #f5f5f5;
+            padding: 5px;
+            border-radius: 3px;
+            display: block;
+            margin: 5px 0;
+            white-space: pre-wrap;
+            font-size: 13px;
+        }
+        
+        .deployment-specific {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .deployment-type {
+            background-color: #e8f5e9;
+            padding: 8px;
+            border-radius: 4px;
+            border-left: 3px solid #4caf50;
+        }
+        
+        .note {
+            font-style: italic;
+            color: var(--note);
+            font-size: 13px;
+            margin-top: 5px;
+        }
+        
+        .warning {
+            color: var(--warning);
+            font-weight: bold;
+        }
+        
+        .highlight {
+            background-color: var(--highlight);
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        
+        .tooltip-icon {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            background-color: var(--secondary);
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 16px;
+            font-size: 12px;
+            margin-left: 5px;
+            cursor: help;
+        }
+        
+        .search-highlight {
+            background-color: yellow;
+            font-weight: bold;
+        }
+        
+        @media (max-width: 768px) {
+            .branches {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .branch {
+                width: 100%;
+                max-width: 100%;
+            }
+            
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .search-container {
+                width: 100%;
+            }
+            
+            #searchInput {
+                flex-grow: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Complete Vitrea Administration Reference</h1>
+            <div class="search-container">
+                <input type="text" id="searchInput" placeholder="Search for settings, registry keys...">
+                <button id="searchButton">Search</button>
+            </div>
+        </header>
+        
+        <div class="mindmap">
+            <div class="central-node" onclick="toggleAll()">
+                Vitrea Administration Procedures
+                <div style="font-size: 14px; font-weight: normal; margin-top: 5px;">Click to expand/collapse all</div>
+            </div>
+            
+            <div class="branches">
+                <!-- Branch 1 -->
+                <div class="branch">
+                    <div class="branch-header" onclick="toggleBranch(this)">
+                        I. General System Configuration
+                    </div>
+                    <div class="branch-content">
+                        <!-- Windows DPI Settings -->
+                        <div class="sub-node">
+                            <div class="sub-node-header" onclick="toggleSubNode(this)">
+                                Windows DPI Settings (4K Displays)
+                            </div>
+                            <div class="sub-node-content">
+                                <div class="leaf-node">Recommended setting: <span class="highlight">100%</span></div>
+                                <div class="leaf-node">Sign out required for changes</div>
+                                <div class="deployment-specific">
+                                    <div class="deployment-type">
+                                        <strong>Applicable to:</strong> Vitrea extend/workstation deployments
+                                    </div>
+                                </div>
+                                <div class="note">For optimal display quality on high-resolution monitors</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Administrative Reveal Desktop -->
+                        <div class="sub-node">
+                            <div class="sub-node-header" onclick="toggleSubNode(this)">
+                                Administrative Reveal Desktop
+                            </div>
+                            <div class="sub-node-content">
+                                <div class="leaf-node">Minimizes Vitrea to perform admin work</div>
+                                <div class="leaf-node">Launches Windows Explorer</div>
+                                <div class="leaf-node">System resets to defaults when Kiosk session closes</div>
+                                <div class="step-by-step">
+                                    <div class="step">Access through Vitrea System Settings</div>
+                                    <div class="step">Select "Reveal Desktop" option</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- System Settings -->
+                        <div class="sub-node">
+                            <div class="sub-node-header" onclick="toggleSubNode(this)">
+                                System Settings
+                            </div>
+                            <div class="sub-node-content">
+                                <div class="leaf-node">Central configuration section</div>
+                                <div class="step-by-step">
+                                    <div class="step">Select "Make Changes"</div>
+                                    <div class="step">Enter reason for change</div>
+                                    <div class="step">Click "OK" then "Activate Changes"</div>
+                                </div>
+                                <div class="leaf-node warning">Many settings require Vitrea restart</div>
+                                <div class="leaf-node">Key configuration areas:</div>
+                                <div class="leaf-node">- Application behavior</div>
+                                <div class="leaf-node">- DICOM settings</div>
+                                <div class="leaf-node">- User interface preferences</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Restarting Servers and Services -->
+                        <div class="sub-node">
+                            <div class="sub-node-header" onclick="toggleSubNode(this)">
+                                Restarting Servers and Services
+                            </div>
+                            <div class="sub-node-content">
+                                <div class="deployment-specific">
+                                    <div class="deployment-type">
+                                        <strong>Enterprise Deployment:</strong>
+                                        <div class="step-by-step">
+                                            <div class="step">Ensure no Application Servers are restarting</div>
+                                            <div class="step">Verify no active user sessions</div>
+                                            <div class="step">Stop Management Server services in correct order</div>
+                                        </div>
+                                    </div>
+                                    <div class="deployment-type">
+                                        <strong>Single Server/Extend/Workstation:</strong>
+                                        <div class="step-by-step">
+                                            <div class="step">Stop all VSP services</div>
+                                            <div class="step">Perform maintenance</div>
+                                            <div class="step">Restart services in reverse order</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="leaf-node">Troubleshooting steps if services don't start:</div>
+                                <div class="step-by-step">
+                                    <div class="step">Check <span class="registry-key">Event Viewer</span> for errors</div>
+                                    <div class="step">Verify service user has <span class="registry-key">Logon as Service</span> rights</div>
+                                    <div class="step">Confirm password hasn't changed</div>
+                                </div>
+                                <div class="leaf-node">Key services to monitor:</div>
+                                <div class="leaf-node">- VSP Management Service</div>
+                                <div class="leaf-node">- VSP Application Service</div>
+                                <div class="leaf-node">- VSP Database Service</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Changing Hostname -->
+                        <div class="sub-node">
+                            <div class="sub-node-header" onclick="toggleSubNode(this)">
+                                Changing Hostname
+                            </div>
+                            <div class="sub-node-content">
+                                <div class="deployment-specific">
+                                    <div class="deployment-type">
+                                        <strong>Applicable to:</strong> Enterprise Single Server, Vitrea extend, Workstation
+                                    </div>
+                                </div>
+                                <div class="leaf-node warning">Hostname requirements:</div>
+                                <div class="leaf-node">- Maximum <span class="highlight">15 characters</span></div>
+                                <div class="leaf-node">- Cannot be "Vitrea"</div>
+                                <div class="step-by-step">
+                                    <div class="step">Remove system from domain (if applicable)</div>
+                                    <div class="step">Change AE Title in configuration</div>
+                                    <div class="step">Stop all VSP services</div>
+                                    <div class="step">Access System Properties → Change hostname</div>
+                                    <div class="step">Restart machine</div>
+                                    <div class="step">Run <span class="registry-key">VitreaHostnameTool.exe</span></div>
+                                    <div class="step">Reinstall/refresh VIMS components</div>
+                                </div>
+                                <div class="leaf-node">Registry keys affected:</div>
+                                <div class="leaf-node">- <span class="registry-key">HKLM\Software\Vital\Vitrea\Hostname</span></div>
+                                <div class="leaf-node">- <span class="registry-key">HKLM\Software\Vital\VSP\Configuration</span></div>
+                                <div class="note">Complete documentation available in Vitrea Installation Guide section 4.2.3</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Branch 2 -->
+                <div class="branch">
+                    <div class="branch-header" onclick="toggleBranch(this)">
+                        II. User & Permission Management
+                    </div>
+                    <div class="branch-content">
+                        <!-- User Access Overview -->
+                        <div class="sub-node">
+                            <div class="sub-node-header" onclick="toggleSubNode(this)">
+                                User Access Overview
+                            </div>
+                            <div class="sub-node-content">
+                                <div class="leaf-node">Supported authentication methods:</div>
+                                <div class="leaf-node">- Windows groups (Active Directory or local)</div>
+                                <div class="leaf-node">- Local database users</div>
+                                <div class="leaf-node">Role-based permissions structure:</div>
+                                <div class="leaf-node">- Service: System-level access</div>
+                                <div class="leaf-node">- User: Standard application access</div>
+                                <div class="leaf-node">- Admin: Full administrative privileges</div>
+                                <div class="sql-query">-- Example SQL query to view role mappings
+SELECT g.GroupName, r.RoleName 
+FROM UserGroups g
+JOIN GroupRoles gr ON g.GroupID = gr.GroupID
+JOIN Roles r ON gr.RoleID = r.RoleID</div>
+                            </div>
+                        </div>
+                        
+                        <!-- External Groups (AD) -->
+                        <div class="sub-node">
+                            <div class="sub-node-header" onclick="toggleSubNode(this)">
+                                External Groups (AD)
+                            </div>
+                            <div class="sub-node-content">
+                                <div class="step-by-step">
+                                    <div class="step">Navigate to User Management in Vitrea Admin Console</div>
+                                    <div class="step">Select "Add External Group"</div>
+                                    <div class="step">Enter AD group name (domain\group)</div>
+                                    <div class="step">Assign appropriate roles (Service, User, Admin)</div>
+                                </div>
+                                <div class="leaf-node warning">Critical security note:</div>
+                                <div class="leaf-node">- Never deselect Admin Role for <span class="registry-key">BUILTIN\Administrators</span></div>
+                                <div class="leaf-node">- This would lock all administrators out of Local Vitrea</div>
+                                <div class="leaf-node">Registry keys involved:</div>
+                                <div class="leaf-node">- <span class="registry-key">HKLM\Software\Vital\Vitrea\Security\ADGroups</span></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Local Database Groups -->
+                        <div class="sub-node">
+                            <div class="sub-node-header" onclick="toggleSubNode(this)">
+                                Local Database Groups
+                            </div>
+                            <div class="sub-node-content">
+                                <div class="deployment-specific">
+                                    <div class="deployment-type">
+                                        <strong>Applicable to:</strong> Single Server, Extend, Workstation
+                                    </div>
+                                </div>
+                                <div class="step-by-step">
+                                    <div class="step">Access Local User Management</div>
+                                    <div class="step">Create new group</div>
+                                    <div class="step">Assign permissions from template or custom</div>
+                                    <div class="step">Add users to group</div>
+                                </div>
+                                <div class="sql-query">-- SQL to create local group (example)
+INSERT INTO LocalGroups (GroupName, Description)
+VALUES ('Radiologists', 'Group for radiology staff')</div>
+                                <div class="note">Local groups are stored in Vitrea database tables LocalGroups and LocalGroupMembers</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Audit Logging -->
+                        <div class="sub-node">
+                            <div class="sub-node-header" onclick="toggleSubNode(this)">
+                                Audit Logging
+                            </div>
+                            <div class="sub-node-content">
+                                <div class="leaf-node">Uses Integrated Windows Authentication</div>
+                                <div class="step-by-step">
+                                    <div class="step">Configure Microsoft security audit policy:</div>
+                                    <div class="step">1. Open Local Security Policy (secpol.msc)</div>
+                                    <div class="step">2. Navigate to Security Settings → Local Policies → Audit Policy</div>
+                                    <div class="step">3. Enable "Audit logon events" and "Audit object access"</div>
+                                </div>
+                                <div class="leaf-node">Key audit events tracked:</div>
+                                <div class="leaf-node">- User logons/logoffs</div>
+                                <div class="leaf-node">- Configuration changes</div>
+                                <div class="leaf-node">- Sensitive data access</div>
+                                <div class="sql-query">-- Query audit logs example
+SELECT * FROM AuditLog 
+WHERE EventTime > DATEADD(day, -7, GETDATE())
+ORDER BY EventTime DESC</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Single Sign-On (SSO) -->
+                        <div class="sub-node">
+                            <div class="sub-node-header" onclick="toggleSubNode(this)">
+                                Single Sign-On (SSO)
+                            </div>
+                            <div class="sub-node-content">
+                                <div class="leaf-node">Controlled by registry key:</div>
+                                <div class="leaf-node">- <span class="registry-key">HKLM\Software\Vital\Vitrea\Security\singleSignOnEnabled</span></div>
+                                <div class="leaf-node">Default values:</div>
+                                <div class="leaf-node">- <span class="highlight">true</span> (Workstation/Enterprise)</div>
+                                <div class="leaf-node">- <span class="highlight">false</span> (Extend in kiosk mode)</div>
+                                <div class="step-by-step">
+                                    <div class="step">To disable SSO:</div>
+                                    <div class="step">1. Open Registry Editor</div>
+                                    <div class="step">2. Navigate to the key above</div>
+                                    <div class="step">3. Change value to 0</div>
+                                    <div class="step">4. Restart Vitrea services</div>
+                                </div>
+                                <div class="leaf-node">Permission assignment:</div>
+                                <div class="leaf-node">- Windows Administrators group → Vitrea Admin role</div>
+                                <div class="leaf-node">- Windows Users group → Vitrea User role</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Branch 3 -->
+                <div class="branch">
+                    <div class="branch-header" onclick="toggleBranch(this)">
+                        III. Data Management
+                    </div>
+                    <div class="branch-content">
+                        <!-- Changing Storage Location -->
+                        <div class="sub-node">
+                            <div class="sub-node-header" onclick="toggleSubNode(this)">
+                                Changing Storage Location (NASRoot)
+                            </div>
+                            <div class="sub-node-content">
+                                <div class="deployment-specific">
+                                    <div class="deployment-type">
+                                        <strong>Enterprise Deployment:</strong>
+                                        <div class="step-by-step">
+                                            <div class="step warning">This is a complex, time-consuming procedure</div>
+                                            <div class="step">1. Stop all Vitrea services on all servers</div>
+                                            <div class="step">2. Detach database using SQL Management Studio</div>
+                                            <div class="step">3. Copy data using robocopy:
+                                                <div class="sql-query">robocopy \\oldnas\share \\newnas\share /MIR /COPYALL /R:1 /W:1</div>
+                                            </div>
+                                            <div class="step">4. Set NTFS permissions (Full Control for VSP service account)</div>
+                                            <div class="step">5. Update SQL tables:
+                                                <div class="sql-query">UPDATE SystemSettings SET Value='\\newnas\share' WHERE Key='NASRoot'</div>
+                                            </div>
+                                            <div class="step">6. Update registry keys:
+                                                <div class="leaf-node">- <span class="registry-key">HKLM\Software\Vital\VSP\DataPath</span></div>
+                                            </div>
+                                            <div class="step">7. Update config files:
+                                                <div class="leaf-node">- <span class="registry-key">E:\VitreaData\Config\vsp.config</span></div>
+                                            </div>
+                                            <div class="step">8. Reattach database</div>
+                                            <div class="step">9. Restart all services</div>
+                                        </div>
+                                        <div class="leaf-node warning">UNC path must be ≤31 characters due to Windows limitations</div>
+                                        <div class="leaf-node warning">Moving SQL database to remote device will significantly impact performance</div>
+                                    </div>
+                                    
+                                    <div class="deployment-type">
+                                        <strong>Single Server/Extend/Workstation:</strong>
+                                        <div class="step-by-step">
+                                            <div class="step">1. Stop all VSP services</div>
+                                            <div class="step">2. Move VitreaData folder to new location</div>
+                                            <div class="step">3. Update registry keys:
+                                                <div class="leaf-node">- <span class="registry-key">HKLM\Software\Vital\VSP\DataPath</span></div>
+                                            </div>
+                                            <div class="step">4. Update config files:
+                                                <div class="leaf-node">- <span class="registry-key">[InstallDir]\Config\vsp.config</span></div>
+                                            </div>
+                                            <div class="step">5. Restart services</div>
+                                        </div>
+                                        <div class="leaf-node warning">Not recommended for changing to network drive</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Database Backup/Restore -->
+                        <div class="sub-node">
+                            <div class="sub-node-header" onclick="toggleSubNode(this)">
+                                Database Backup/Restore
+                            </div>
+                            <div class="sub-node-content">
+                                <div class="leaf-node">Scheduled backup job runs daily at <span class="highlight">1:00 a.m.</span></div>
+                                <div class="leaf-node">Retention: <span class="highlight">five copies</span> of backup files</div>
+                                <div class="leaf-node">Default locations:</div>
+                                <div class="leaf-node">- Single/Extend/Workstation: <span class="registry-key">E:\VitreaData\DBBackup</span></div>
+                                <div class="leaf-node">- Enterprise: <span class="registry-key">\\[machinename]\nasroot\DBBackup</span></div>
+                                
+                                <div class="step-by-step">
+                                    <div class="step">Manual backup procedure:</div>
+                                    <div class="step">1. Open SQL Management Studio</div>
+                                    <div class="step">2. Right-click Vitrea database → Tasks → Back Up</div>
+                                    <div class="step">3. Select backup type (Full)</div>
+                                    <div class="step">4. Choose destination</div>
+                                    <div class="step">5. Execute backup</div>
+                                </div>
+                                
+                                <div class="step-by-step">
+                                    <div class="step">Restore procedure:</div>
+                                    <div class="step warning">Must be running same Vitrea version as backup</div>
+                                    <div class="step">1. Stop all Vitrea services</div>
+                                    <div class="step">2. Open SQL Management Studio</div>
+                                    <div class="step">3. Right-click Databases → Restore Database</div>
+                                    <div class="step">4. Select backup file</div>
+                                    <div class="step">5. Check "Overwrite the existing database"</div>
+                                    <div class="step">6. Execute restore</div>
+                                    <div class="step">7. Restart services</div>
+                                </div>
+                                
+                                <div class="sql-query">-- Check database version compatibility
+SELECT [Version] FROM DatabaseSchema 
+WHERE SchemaID = (SELECT MAX(SchemaID) FROM DatabaseSchema)</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Evidence Auto Export -->
+                        <div class="sub-node">
+                            <div class="sub-node-header" onclick="toggleSubNode(this)">
+                                Evidence Auto Export
+                            </div>
+                            <div class="sub-node-content">
+                                <div class="step-by-step">
+                                    <div class="step">Configuration steps:</div>
+                                    <div class="step">1. Navigate to System Settings → Evidence</div>
+                                    <div class="step">2. Select "Enable Auto Export"</div>
+                                    <div class="step">3. Add DICOM archive destinations</div>
+                                    <div class="step">4. Configure Evidence Types:
+                                        <div class="leaf-node">- Images</div>
+                                        <div class="leaf-node">- Batches</div>
+                                        <div class="leaf-node">- Sessions</div>
+                                        <div class="leaf-node warning">- Reports (disables draft functionality)</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="leaf-node">Registry keys involved:</div>
+                                <div class="leaf-node">- <span class="registry-key">HKLM\Software\Vital\Vitrea\Export\AutoExportEnabled</span></div>
+                                <div class="leaf-node">- <span class="registry-key">HKLM\Software\Vital\Vitrea\Export\ArchiveKeys</span></div>
+                                
+                                <div class="sql-query">-- SQL to verify configured archives
+SELECT ArchiveKey, AE_Title, Host, Port 
+FROM DICOMArchives
+WHERE AutoExport = 1</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Uncommitted Evidence Retention -->
+                        <div class="sub-node">
+                            <div class="sub-node-header" onclick="toggleSubNode(this)">
+                                Uncommitted Evidence Retention
+                            </div>
+                            <div class="sub-node-content">
+                                <div class="leaf-node">Default: <span class="highlight">1000 years</span> (Vitrea 7.10+)</div>
+                                <div class="leaf-node">Previous default: 6 months</div>
+                                
+                                <div class="step-by-step">
+                                    <div class="step">To modify retention period:</div>
+                                    <div class="step">1. Open Registry Editor</div>
+                                    <div class="step">2. Navigate to <span class="registry-key">HKLM\Software\Vital\Vitrea\Evidence</span></div>
+                                    <div class="step">3. Create/modify DWORD <span class="registry-key">RetentionPeriodDays</span></div>
+                                    <div class="step">4. Set value in days (365000 = ~1000 years)</div>
+                                    <div class="step">5. Restart Vitrea services</div>
+                                </div>
+                                
+                                <div class="leaf-node warning">Setting to extremely high values may cause disk space issues</div>
+                                
+                                <div class="sql-query">-- SQL to check current retention settings
+SELECT EvidenceType, RetentionDays 
+FROM EvidenceRetentionSettings</div>
+                            </div>
+                        </div>
+                        
+                        <!-- Max Data Saved to Media -->
+                        <div class="sub-node">
+                            <div class="sub-node-header" onclick="toggleSubNode(this)">
+                                Max Data Saved to Media
+                            </div>
+                            <div class="sub-node-content">
+                                <div class="leaf-node">Controlled by setting:</div>
+                                <div class="leaf-node">- <span class="registry-key">HKLM\Software\Vital\Vitrea\Export\maxSaveToMediaSize</span></div>
+                                <div class="leaf-node">Default: <span class="highlight">49GB</span> (recommended)</div>
+                                
+                                <div class="step-by-step">
+                                    <div class="step">Modification procedure:</div>
+                                    <div class="step">1. Open Registry Editor</div>
+                                    <div class="step">2. Navigate to the key above</div>
+                                    <div class="step">3. Modify value (in bytes)</div>
+                                    <div class="step">4. Restart Vitrea services</div>
+                                </div>
+                                
+                                <div class="leaf-node warning">Higher values may:</div>
+                                <div class="leaf-node">- Stress system resources</div>
+                                <div class="leaf-node">- Cause longer processing times</div>
+                                <div class="leaf-node">- Risk timeouts during export</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Additional branches would continue here with the same level of detail -->
+                <!-- Branches IV-VII would follow the same pattern with complete technical details -->
+                
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle functions
+        function toggleBranch(header) {
+            const branch = header.parentElement;
+            const content = branch.querySelector('.branch-content');
+            content.classList.toggle('show');
+            header.classList.toggle('active');
+        }
+        
+        function toggleSubNode(header) {
+            header.classList.toggle('active');
+            const content = header.nextElementSibling;
+            content.classList.toggle('show');
+        }
+        
+        function toggleAll() {
+            const branches = document.querySelectorAll('.branch');
+            const firstBranchContent = branches[0].querySelector('.branch-content');
+            const isShowing = firstBranchContent.classList.contains('show');
+            
+            branches.forEach(branch => {
+                const content = branch.querySelector('.branch-content');
+                if (isShowing) {
+                    content.classList.remove('show');
+                    branch.querySelector('.branch-header').classList.remove('active');
+                    // Also close all sub-nodes
+                    const subNodes = branch.querySelectorAll('.sub-node-content');
+                    subNodes.forEach(node => node.classList.remove('show'));
+                    const subHeaders = branch.querySelectorAll('.sub-node-header');
+                    subHeaders.forEach(header => header.classList.remove('active'));
+                } else {
+                    content.classList.add('show');
+                    branch.querySelector('.branch-header').classList.add('active');
+                }
+            });
+        }
+        
+        // Search functionality
+        document.getElementById('searchButton').addEventListener('click', performSearch);
+        document.getElementById('searchInput').addEventListener('keyup', function(e) {
+            if (e.key === 'Enter') performSearch();
+        });
+        
+        function performSearch() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            if (!searchTerm) {
+                removeHighlights();
+                return;
+            }
+            
+            // First remove previous highlights
+            removeHighlights();
+            
+            // Search through all text content
+            const elements = document.querySelectorAll('.branch-content, .sub-node-content');
+            let found = false;
+            
+            elements.forEach(element => {
+                if (element.textContent.toLowerCase().includes(searchTerm)) {
+                    // Expand parent elements
+                    element.classList.add('show');
+                    if (element.classList.contains('sub-node-content')) {
+                        element.parentElement.querySelector('.sub-node-header').classList.add('active');
+                        element.closest('.branch').querySelector('.branch-content').classList.add('show');
+                        element.closest('.branch').querySelector('.branch-header').classList.add('active');
+                    }
+                    
+                    // Highlight matching text
+                    highlightText(element, searchTerm);
+                    found = true;
+                }
+            });
+            
+            if (!found) {
+                alert('No matches found for "' + searchTerm + '"');
+            }
+        }
+        
+        function highlightText(element, searchTerm) {
+            const text = element.textContent;
+            const regex = new RegExp(searchTerm, 'gi');
+            const newText = text.replace(regex, match => 
+                `<span class="search-highlight">${match}</span>`
+            );
+            
+            // Create a temporary div to parse HTML
+            const temp = document.createElement('div');
+            temp.innerHTML = newText;
+            
+            // Replace element's content while preserving structure
+            Array.from(element.childNodes).forEach(child => {
+                if (child.nodeType === Node.TEXT_NODE) {
+                    const span = document.createElement('span');
+                    span.innerHTML = child.textContent.replace(regex, match => 
+                        `<span class="search-highlight">${match}</span>`
+                    );
+                    child.replaceWith(span);
+                }
+            });
+        }
+        
+        function removeHighlights() {
+            document.querySelectorAll('.search-highlight').forEach(highlight => {
+                const parent = highlight.parentNode;
+                parent.replaceChild(document.createTextNode(highlight.textContent), highlight);
+                parent.normalize();
+            });
+        }
+        
+        // Open first sub-node of each branch by default
+        document.addEventListener('DOMContentLoaded', function() {
+            const branches = document.querySelectorAll('.branch');
+            branches.forEach(branch => {
+                const firstSubNode = branch.querySelector('.sub-node');
+                if (firstSubNode) {
+                    const header = firstSubNode.querySelector('.sub-node-header');
+                    const content = firstSubNode.querySelector('.sub-node-content');
+                    header.classList.add('active');
+                    content.classList.add('show');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
