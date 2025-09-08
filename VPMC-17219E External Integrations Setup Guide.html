@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vitrea® Advanced Visualization Setup Guide</title>
+    <style>
+        :root {
+            --canon-blue: #c41017;
+            --canon-light-blue: #ed1c24;
+            --canon-dark-blue: #003b6f;
+            --canon-gray: #f5f5f5;
+            --canon-dark-gray: #333333;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: var(--canon-dark-gray);
+            line-height: 1.6;
+            background-color: var(--canon-gray);
+        }
+        header {
+            background: linear-gradient(140deg, var(--canon-gray), #c41017);
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        .logo {
+            max-width: 150px;
+            margin-bottom: 10px;
+        }
+        h1, h2, h3 {
+            color: var(--canon-dark-blue);
+        }
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .collapsible {
+            background: var(--canon-blue);
+            color: white;
+            cursor: pointer;
+            padding: 15px;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 18px;
+            margin: 10px 0;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        .collapsible:hover {
+            background: var(--canon-light-blue);
+        }
+        .content {
+            padding: 0 18px;
+            display: none;
+            overflow: hidden;
+            background: var(--canon-gray);
+            border-radius: 5px;
+        }
+        .progress-tracker {
+            margin: 20px 0;
+            padding: 10px;
+            background: var(--canon-gray);
+            border-radius: 5px;
+        }
+        .progress-tracker label {
+            margin-right: 10px;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .modal-content h3 {
+            margin-top: 0;
+        }
+        .close {
+            float: right;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        .note, .caution {
+            background: #e0f7fa;
+            padding: 10px;
+            margin: 10px 0;
+            border-left: 4px solid var(--canon-dark-blue);
+        }
+        .caution {
+            background: #ffebee;
+            border-left: 4px solid var(--canon-light-blue);
+        }
+        button {
+            background: var(--canon-dark-blue);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: var(--canon-blue);
+        }
+        pre {
+            background: #f8f8f8;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        code {
+            font-family: 'Courier New', Courier, monospace;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+        }
+        th, td {
+            border: 1px solid var(--canon-dark-gray);
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background: var(--canon-blue);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="https://global.canon/en/corporate/logo/img/logo_01.png" alt="Canon Medical Logo" class="logo">
+        <h1>Vitrea® Advanced Visualization: External Integrations Setup Guide</h1>
+    </header>
+    <div class="container">
+        <h2>Configure an External Integration</h2>
+        <p>Prior to using this guide, ensure you have completed the tasks listed in the Vitrea Installation Prerequisites section.</p>
+
+        <div class="progress-tracker">
+            <h3>Setup Progress</h3>
+            <label><input type="checkbox" id="prereq-check"> Prerequisites Completed</label>
+            <label><input type="checkbox" id="server-check"> Server Configuration Completed</label>
+            <label><input type="checkbox" id="export-check"> Evidence Auto Export Configured</label>
+            <label><input type="checkbox" id="api-check"> Integration API Configured</label>
+            <label><input type="checkbox" id="ui-check"> User Interface Configured</label>
+            <p id="progress-text">Progress: 0/5 tasks completed</p>
+        </div>
+
+        <button class="collapsible">Vitrea Installation Prerequisites</button>
+        <div class="content">
+            <h3>Vitrea Enterprise Deployment Prerequisites</h3>
+            <p>Complete the following tasks per the respective guides:</p>
+            <ul>
+                <li>Follow the Enterprise Deployment Active Directory Planning Guide.</li>
+                <li>Add integration user groups to NAS Root Share and Vitrea application.</li>
+                <li>Configure servers per the Operating System Setup Guide.</li>
+                <li>Add systems to DNS servers (forward and reverse).</li>
+                <li>Install SQL Server 2016/2017/2019.</li>
+                <li>Install Management and Application Servers, and Vitrea Thin Client(s).</li>
+            </ul>
+            <div class="note">
+                <strong>NOTE:</strong> For upgrades, refer to the Enterprise Deployment Upgrade Guide.
+            </div>
+            <h3>Vitrea Enterprise Single Server Prerequisites</h3>
+            <ul>
+                <li>Create domain system accounts and groups.</li>
+                <li>Set up Computer Policy and client machine in the same domain.</div>
+        </div>
+
+        <button class="collapsible">Configure the Vitrea Server</button>
+        <div class="content">
+            <h3>Ensure No Data Processing</h3>
+            <p>Use VIMS Monitor to confirm no DICOM data is being processed (flat line on Remaining Instances graph).</p>
+            <h3>Configure Integration Storage Archive</h3>
+            <ol>
+                <li>Start Vitrea, go to System Configuration > Archive.</li>
+                <li>Add a new archive with Name, Key, Host, Port, and AE Title.</li>
+                <li>Select Storage, test connectivity, and activate changes.</li>
+            </ol>
+            <div class="note">
+                <strong>NOTE:</strong> Ensure PACS is configured to accept data from Vitrea.
+            </div>
+        </div>
+
+        <button class="collapsible">Configure Evidence Auto Export</button>
+        <div class="content">
+            <div class="caution">
+                <strong>CAUTION:</strong> Export Reminder is not supported in integrated deployments.
+            </div>
+            <ol>
+                <li>Go to System Configuration > System Settings > EvidenceAutoExporter.</li>
+                <li>Set <code>performAutoExport</code> to <code>true</code> and specify archive keys.</li>
+                <li>Activate changes and verify settings.</li>
+            </ol>
+            <p>Optional settings: monochrome export, secondary capture, reduced size, and evidence types.</p>
+        </div>
+
+        <button class="collapsible">Integration API Configuration</button>
+        <div class="content">
+            <h3>ProtocolHandler Usage</h3>
+            <p>Use <code>vitrea://</code> or <code>https://</code> to control Vitrea via ProtocolHandler. Below are examples of valid launch commands:</p>
+            <h4>launchbasic - Launch by Study Instance</h4>
+            <pre><code>vitrea://launchbasic?managementHost=g93-hp380p-1.yourdomain.com&applicationId=MultiModalityViewer&studyInstanceUid=1.2.840.113747.373395450582.92121592621.91717941310.40720.73903&studyInstanceUid=1.2.840.113747.373395450582.92121592621.91717941310.40720.73904</code></pre>
+            <h4>launchbasic - Launch by Accession Number</h4>
+            <pre><code>vitrea://launchbasic?managementHost=g93-hp380p-1.yourdomain.com&accessionNumber=6129c6d317bb183e</code></pre>
+            <h4>launchbasic - Launch by Patient ID</h4>
+            <pre><code>vitrea://launchbasic?managementHost=g91-hp380p-1.yourdomain.com&profile=default&patientId=000101</code></pre>
+            <h4>launchbasic - Launch by Series Instance</h4>
+            <pre><code>vitrea://launchbasic?managementHost=g93-hp380p-1.yourdomain.com&profile=default&studyInstanceUid_0=1.2.840.113747.373395450582.92121592621.91717941310.40720.73903&seriesInstanceUid_0_0=1.2.840.113747.422557691686.747196392806.738425503395.884650.1&seriesInstanceUid_0_1=1.2.840.113747.422557691686.747196392806.738425503395.884650.2&studyInstanceUid_1=1.2.840.113747.373395450582.92121592621.91717941310.40720.8000&seriesInstanceUid_1_0=1.2.840.113747.422557691686.747196392806.738425503395.80000.1</code></pre>
+            <h4>launchdirect - Launch by Series Instance</h4>
+            <pre><code>vitrea://launchdirect?managementHost=g91-hp380p-1.yourdomain.com&profile=default&launchContext=ew0KICAic3R1ZGllcyI6IFsNCiAgICB7DQogICAgICAic3R1ZHlJbnN0YW5jZVVpZCI6ICIxLjIuODQwLjExMzc0Ny4zMjE4Mjc1MTQ3LjU0MTM3ODQ5MTUzNC4xMzUyNDcyNTg1NDkuODUwMTE1LjQ3NjYiLA0KICAgICAgInNlcmllcyI6IFsNCiAgICAgICAgew0KICAgICAgICAgICJzZXJpZXNJbnN0YW5jZVVpZCI6ICIxLjIuODQwLjExMzc0Ny4yOTY2OTMxNjYzOTAuODk3NDQ1MTc4NDY4Ljc0NTYzMTk4Mzc1Ni4yODQzMzguNTAiDQogICAgICAgIH0NCiAgICAgIF0NCiAgICB9LA0KICAgIHsNCiAgICAgICJzdHVkeUluc3RhbmNlVWlkIjogIjEuMi44NDAuMTEzNzQ3LjY3NTg3NDgzMzUxOS4zNzUwNTYzNzIwOC4zNTU3NjQwMTMyNS41ODMwNDYuNjg1MCIsDQogICAgICAic2VyaWVzIjogWw0KICAgICAgICB7DQogICAgICAgICAgInNlcmllc0luc3RhbmNlVWlkIjogIjEuMi44NDAuMTEzNzQ3LjgyODE1NTM0OTc1MS4yNjQwNjM4NDk5MjMuODA2ODYyOTA3ODU2Ljg2Nzc1My41MSINCiAgICAgICAgfQ0KICAgICAgXQ0KICAgIH0NCiAgXQ0KfQ==</code></pre>
+            <h4>launch - Launch by Patient ID</h4>
+            <pre><code>vitrea://launch?managementHost=g93-hp380p-1.yourdomain.com&profile=&launchContext=ew0KICAicGF0aWVudElkIjogIjEyMzQ1Ig0KfQ==</code></pre>
+            <div class="note">
+                <strong>NOTE:</strong> Patient ID is useful for multi-study launches.
+            </div>
+            <h4>launch - Launch by Accession Number</h4>
+            <pre><code>vitrea://launch?managementHost=g93-hp380p-1.yourdomain.com&profile=&launchContext=ew0KICAiYWNjZXNzaW9uTnVtYmVyIjogIjEyMzQ1Njc4OSINCn0=</code></pre>
+            <h4>launch - Launch by Multiple Search Parameters</h4>
+            <pre><code>vitrea://launch?managementHost=g93-hp380p-1.yourdomain.com&profile=default&launchContext=ew0KICAiYXBwbGljYXRpb25JZCI6ICJDVENvbG9uQW5hbHlzaXMiLA0KICAicGF0aWVudElkIjogIjEzMzAwMSIsDQogICJwYXRpZW50TmFtZSI6ICJDb2xvbl45IiwNCiAgInBhdGllbnRCaXJ0aERhdGUiOiAiMTkzMzAyMDIiLA0KICAiYWNjZXNzaW9uTnVtYmVyIjogImI1M2IwNWFhMTMxYjIwZTkiLA0KICAic3R1ZHlEZXNjcmlwdGlvbiI6ICJDT0xPTiIsDQogICJzdHVkeURhdGUiOiAiMTk5OTAxMDEiDQp9</code></pre>
+            <div class="note">
+                <strong>NOTE:</strong> Modality is not a supported search field for launch.
+            </div>
+            <h3>VitreaConduitClient (COM)</h3>
+            <p>Provides bi-directional control via COM, similar to ProtocolHandler. Key verbs include <code>initialize</code>, <code>launchdirect</code>, <code>launch</code>, <code>show</code>, <code>hide</code>, <code>quit</code>, and <code>close</code>.</p>
+            <div class="caution">
+                <strong>CAUTION:</strong> Ensure all UIDs follow the DICOM standard format (starting with "1.2.840...") to avoid launch errors.
+            </div>
+        </div>
+
+        <button class="collapsible">User Interface Configuration</button>
+        <div class="content">
+            <h3>User Interface Overview</h3>
+            <p>This section describes the Vitrea Conduit user interface elements for external integrations.</p>
+            <h4>Basic Status</h4>
+            <p>Vitrea Conduit displays status messages during state transitions:</p>
+            <table>
+                <tr><th>Message</th><th>Meaning</th></tr>
+                <tr><td>Disconnected</td><td>Vitrea Conduit is not connected to Vitrea (initial state or connection lost).</td></tr>
+                <tr><td>Starting Session</td><td>Establishing a user session with Vitrea.</td></tr>
+                <tr><td>Connecting to best session</td><td>Communicating with the Management Server to find the best Application Server.</td></tr>
+                <tr><td>Connecting</td><td>Establishing a connection to the Application Server.</td></tr>
+                <tr><td>Connected</td><td>Connected to an Application Server, waiting for commands.</td></tr>
+                <tr><td>Unable to connect to Vitrea</td><td>Error connecting to Vitrea; check logs.</td></tr>
+                <tr><td>Processing Request</td><td>Validating a received command (e.g., launch, quit).</td></tr>
+                <tr><td>Launching</td><td>Launching the clinical application with specified patient data.</td></tr>
+                <tr><td>Unable to process request</td><td>Unexpected error; check logs.</td></tr>
+                <tr><td>Closing</td><td>Destroying the current patient context.</td></tr>
+                <tr><td>Patient closed</td><td>Patient context destroyed.</td></tr>
+            </table>
+            <h4>Collections</h4>
+            <p>Users or groups can be assigned to Remote Desktop Collections. If multiple collections are available, users are prompted to select one. If only one collection is assigned, no prompt appears.</p>
+            <h4>Study/Series Selector (Picklist)</h4>
+            <p>The Picklist appears when:</p>
+            <ul>
+                <li>A search-based launch (by Patient ID or Accession Number) contains multiple studies.</li>
+                <li>Vitrea is missing data present in the Source Archive.</li>
+                <li>A multi-study launch exceeds the maximum defined in the Integration Client Profile.</li>
+            </ul>
+            <p>Users can select specific studies or series to launch. Mousing over items displays details (e.g., Study Accession Number). Launch modes (study-based or series-based) cannot be mixed.</p>
+            <h4>Retrieve Status</h4>
+            <p>During data retrieval from the Source Archive, the interface shows:</p>
+            <ul>
+                <li><strong>Receiving:</strong> DICOM data is being transferred to Vitrea.</li>
+                <li><strong>Processing:</strong> Vitrea is ingesting the data (e.g., building stacks).</li>
+            </ul>
+            <p>A summary at the bottom details the retrieved items (e.g., series from a specific study).</p>
+            <h4>Study Errors</h4>
+            <p>If errors occur during data processing (e.g., invalid DICOM), an error message displays, highlighting issues in red (e.g., Error receiving/storing study). Users can:</p>
+            <ul>
+                <li>Click Cancel to move to the next study.</li>
+                <li>Review Vitrea DICOM Receive logs to troubleshoot (e.g., mismatched Patient IDs).</li>
+            </ul>
+            <h4>Demographics Mismatch</h4>
+            <p>If enabled in the Integration Client Profile, discrepancies between Vitrea and Source Archive patient data trigger a mismatch screen, highlighting differing values in red. The screen ignores spaces/commas in Patient Name fields.</p>
+            <div class="note">
+                <strong>NOTE:</strong> The Demographics Mismatch screen only appears if a Query/Retrieve Archive is specified.
+            </div>
+            <h4>Successful Launch</h4>
+            <p>Upon successful launch, the specified clinical application opens with the selected patient data. Multiple applications can be launched if configured.</p>
+        </div>
+
+        <button class="collapsible">Troubleshooting Tips</button>
+        <div class="content">
+            <p>Click below to view common troubleshooting issues and solutions.</p>
+            <button onclick="openModal()">View Troubleshooting Tips</button>
+        </div>
+
+        <div id="troubleshooting-modal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">×</span>
+                <h3>Troubleshooting</h3>
+                <ul>
+                    <li><strong>Blank screen on launch:</strong> Verify Internet Options and DNS settings.</li>
+                    <li><strong>"Unable to find studies":</strong> Push data to Vitrea or define Query/Retrieve archive.</li>
+                    <li><strong>"Unable to process request":</strong> Check for disparate patient data or mixed launch modes.</li>
+                    <li><strong>"Authentication error":</strong> Restart integration server software.</li>
+                    <li><strong>"All Collections full":</strong> Close Vitrea session and contact administrator.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Collapsible sections
+        const collapsibles = document.getElementsByClassName("collapsible");
+        for (let i = 0; i < collapsibles.length; i++) {
+            collapsibles[i].addEventListener("click", function() {
+                this.classList.toggle("active");
+                const content = this.nextElementSibling;
+                content.style.display = content.style.display === "block" ? "none" : "block";
+            });
+        }
+
+        // Progress tracker
+        const checkboxes = document.querySelectorAll('.progress-tracker input[type="checkbox"]');
+        const progressText = document.getElementById('progress-text');
+        function updateProgress() {
+            const checkedCount = document.querySelectorAll('.progress-tracker input[type="checkbox"]:checked').length;
+            progressText.textContent = `Progress: ${checkedCount}/5 tasks completed`;
+        }
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', updateProgress);
+        });
+
+        // Modal functionality
+        const modal = document.getElementById("troubleshooting-modal");
+        function openModal() {
+            modal.style.display = "flex";
+        }
+        function closeModal() {
+            modal.style.display = "none";
+        }
+        window.onclick = function(event) {
+            if (event.target === modal) {
+                closeModal();
+            }
+        };
+    </script>
+</body>
+</html>

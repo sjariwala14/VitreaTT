@@ -1,0 +1,1566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vitrea External Integration Flash Cards</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .card {
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            background-color: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .card-content {
+            display: none;
+        }
+        .card-content.active {
+            display: block;
+        }
+        .question {
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        .answer {
+            margin-top: 15px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-left: 4px solid #3498db;
+        }
+        .progress {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+            color: #7f8c8d;
+        }
+        .filter-controls {
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+        .filter-controls label {
+            margin-right: 5px;
+        }
+        select {
+            padding: 5px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        .card-type {
+            font-size: 0.8em;
+            color: #7f8c8d;
+            margin-bottom: 10px;
+        }
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .hidden {
+            display: none;
+        }
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #f1f1f1;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            border-radius: 5px 5px 0 0;
+            margin-right: 5px;
+        }
+        .tab.active {
+            background-color: white;
+            border-bottom: 1px solid white;
+            margin-bottom: -1px;
+            font-weight: bold;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .quick-tip {
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-left: 4px solid #3498db;
+        }
+        .quick-tip strong {
+            color: #2c3e50;
+        }
+        .mc-option {
+            margin: 5px 0;
+        }
+        .mc-feedback {
+            margin-top: 15px;
+            padding: 10px;
+            font-weight: bold;
+        }
+        @media (max-width: 600px) {
+            .controls {
+                flex-direction: column;
+            }
+            button {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+            .tab {
+                padding: 8px 12px;
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Vitrea External Integration Flash Cards</h1>
+        
+        <div class="tabs">
+            <div class="tab active" data-tab="flashcards">Flashcards</div>
+            <div class="tab" data-tab="multiple-choice">Multiple Choice</div>
+            <div class="tab" data-tab="troubleshooting">Troubleshooting</div>
+            <div class="tab" data-tab="quick-tips">Quick Tips</div>
+        </div>
+        
+        <div class="tab-content active" id="flashcards">
+            <div class="filter-controls">
+                <label for="card-filter">Filter by:</label>
+                <select id="card-filter">
+                    <option value="all">All Questions</option>
+                    <option value="prerequisites">Prerequisites</option>
+                    <option value="configuration">Configuration</option>
+                    <option value="integration">Integration</option>
+                    <option value="dicom">DICOM</option>
+                    <option value="troubleshooting">Troubleshooting</option>
+                </select>
+                <button id="shuffle-btn">Shuffle Cards</button>
+            </div>
+            
+            <div class="progress">
+                <span id="current-card">1</span> of <span id="total-cards">50</span>
+            </div>
+            
+            <div class="card">
+                <div class="card-content active" id="question">
+                    <div class="card-type">Flashcard Question</div>
+                    <div class="question" id="question-text">Loading questions...</div>
+                </div>
+                <div class="card-content" id="answer">
+                    <div class="card-type">Flashcard Answer</div>
+                    <div class="answer" id="answer-text"></div>
+                </div>
+            </div>
+            
+            <div class="controls">
+                <button id="prev-btn">Previous</button>
+                <button id="flip-btn">Show Answer</button>
+                <button id="next-btn">Next</button>
+            </div>
+        </div>
+        
+        <div class="tab-content" id="multiple-choice">
+            <div class="filter-controls">
+                <label for="mc-filter">Filter by:</label>
+                <select id="mc-filter">
+                    <option value="all">All Questions</option>
+                    <option value="prerequisites">Prerequisites</option>
+                    <option value="configuration">Configuration</option>
+                    <option value="integration">Integration</option>
+                    <option value="dicom">DICOM</option>
+                    <option value="troubleshooting">Troubleshooting</option>
+                </select>
+                <button id="mc-shuffle-btn">Shuffle Questions</button>
+            </div>
+            
+            <div class="progress">
+                <span id="current-mc">1</span> of <span id="total-mc">50</span>
+            </div>
+            
+            <div class="card">
+                <div class="question" id="mc-question-text">Loading multiple choice questions...</div>
+                <div class="mc-options" id="mc-options"></div>
+                <div class="mc-feedback" id="mc-feedback"></div>
+            </div>
+            
+            <div class="navigation">
+                <button id="mc-prev-btn">Previous</button>
+                <button id="mc-next-btn">Next</button>
+            </div>
+        </div>
+        
+        <div class="tab-content" id="troubleshooting">
+            <div class="filter-controls">
+                <label for="ts-filter">Filter by:</label>
+                <select id="ts-filter">
+                    <option value="all">All Scenarios</option>
+                    <option value="launch">Launch Issues</option>
+                    <option value="export">Export Issues</option>
+                    <option value="connection">Connection Issues</option>
+                    <option value="configuration">Configuration Issues</option>
+                </select>
+                <button id="ts-shuffle-btn">Shuffle Scenarios</button>
+            </div>
+            
+            <div class="progress">
+                <span id="current-ts">1</span> of <span id="total-ts">25</span>
+            </div>
+            
+            <div class="card">
+                <div class="question" id="ts-scenario-text">Loading troubleshooting scenarios...</div>
+                <button id="show-resolution-btn" style="margin-top: 15px;">Show Resolution</button>
+                <div class="answer hidden" id="ts-resolution-text"></div>
+            </div>
+            
+            <div class="navigation">
+                <button id="ts-prev-btn">Previous</button>
+                <button id="ts-next-btn">Next</button>
+            </div>
+        </div>
+        
+        <div class="tab-content" id="quick-tips">
+            <div class="card">
+                <h3 style="margin-top: 0; color: #2c3e50;">Quick Tips for Vitrea External Integration</h3>
+                <div id="quick-tips-list">
+                    <!-- Quick tips will be inserted here by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Flashcard data
+        const flashcards = [
+            {
+                question: "What is assumed to be completed prior to using the Vitrea External Integration Guide?",
+                answer: "The tasks listed in the <strong>Vitrea Installation Prerequisites</strong> section.",
+                category: "prerequisites"
+            },
+            {
+                question: "What is the first prerequisite for a Vitrea Enterprise deployment?",
+                answer: "Completing the procedures within the <strong>Enterprise Deployment Active Directory Planning Guide</strong>.",
+                category: "prerequisites"
+            },
+            {
+                question: "Where do you add integration user groups for access in a Vitrea Enterprise deployment?",
+                answer: "To the <strong>NAS Root Share</strong> and to the <strong>Vitrea application</strong>.",
+                category: "configuration"
+            },
+            {
+                question: "Which guide is used to configure Vitrea Enterprise servers?",
+                answer: "The <strong>Enterprise Deployment Operating System Setup Guide</strong>.",
+                category: "prerequisites"
+            },
+            {
+                question: "What needs to be added to the customer's DNS servers for Vitrea Enterprise systems?",
+                answer: "The Vitrea Enterprise systems (forward and reverse).",
+                category: "configuration"
+            },
+            {
+                question: "Which SQL Server versions can be installed for Vitrea Enterprise?",
+                answer: "<strong>SQL Server 2016/2017/2019</strong>.",
+                category: "prerequisites"
+            },
+            {
+                question: "Which guide details the installation of the Management Server?",
+                answer: "The <strong>Management Server Installation Guide</strong>.",
+                category: "prerequisites"
+            },
+            {
+                question: "Which guide details the installation of Vitrea Thin Client(s)?",
+                answer: "The <strong>Vitrea Thin Client Install Guide</strong>.",
+                category: "prerequisites"
+            },
+            {
+                question: "Where should the client machine be set up in relation to the Management Server for a Vitrea Enterprise deployment?",
+                answer: "In the <strong>same domain</strong> as the Management Server.",
+                category: "configuration"
+            },
+            {
+                question: "What is the first step when setting up a Vitrea Enterprise Single Server deployment?",
+                answer: "<strong>Create the domain system accounts and groups</strong> and provide them access, using the Enterprise Single Server Installation Guide.",
+                category: "prerequisites"
+            },
+            {
+                question: "How do you check if data is being processed on the Vitrea Server before configuration?",
+                answer: "By using the <strong>VIMS Monitor</strong>.",
+                category: "configuration"
+            },
+            {
+                question: "What does a \"sawtoothing\" line on the VIMS Monitor graph indicate?",
+                answer: "That there is <strong>incoming data being processed</strong>.",
+                category: "configuration"
+            },
+            {
+                question: "How do you ensure no users are on the Vitrea system?",
+                answer: "Navigate to the <strong>System Health</strong> section of the Vitrea software from the Applications Home tab.",
+                category: "configuration"
+            },
+            {
+                question: "What is the Storage Archive used for?",
+                answer: "To <strong>send (export) data</strong> to the integrated server (PACS, EMR, etc.).",
+                category: "dicom"
+            },
+            {
+                question: "Which Vitrea system configuration menu do you select to configure the Archive?",
+                answer: "<strong>Archive</strong> in the Subsystem menu.",
+                category: "configuration"
+            },
+            {
+                question: "What information is entered in the Host field when configuring an Archive Properties screen?",
+                answer: "The <strong>Host or IP Address</strong> of the DICOM device.",
+                category: "configuration"
+            },
+            {
+                question: "What information is entered in the AE Title field when configuring an Archive Properties screen for PACS Store Service?",
+                answer: "The <strong>AE Title of the PACS Store Service</strong>.",
+                category: "configuration"
+            },
+            {
+                question: "What service must be selected in the Services area for an export (storage) archive?",
+                answer: "The <strong>Storage</strong> check box.",
+                category: "configuration"
+            },
+            {
+                question: "What button verifies Vitrea can \"ping\" the PACS Storage Query Retrieve?",
+                answer: "The <strong>Test</strong> button.",
+                category: "configuration"
+            },
+            {
+                question: "What feature cannot be used in integrated workflows starting in Vitrea 7.14.3?",
+                answer: "The <strong>Export Reminder</strong> feature.",
+                category: "integration"
+            },
+            {
+                question: "What feature should be used instead of Export Reminder for integrated users to automatically send findings?",
+                answer: "The <strong>Evidence Auto Export</strong> feature.",
+                category: "integration"
+            },
+            {
+                question: "What was Evidence Auto Export previously referred to as?",
+                answer: "<strong>Auto Export</strong>.",
+                category: "integration"
+            },
+            {
+                question: "What types of evidence are automatically exported by default with Evidence Auto Export?",
+                answer: "<strong>Image, batch, and session</strong>.",
+                category: "integration"
+            },
+            {
+                question: "How do you enable the Evidence Auto Export feature?",
+                answer: "Set the <code>performAutoExport</code> row's Value column to <strong>true</strong> in System Configuration > System Settings > EvidenceAutoExporter.",
+                category: "integration"
+            },
+            {
+                question: "How do you add multiple archive keys for Evidence Auto Export?",
+                answer: "<strong>Separate each archive key by a comma</strong>.",
+                category: "integration"
+            },
+            {
+                question: "What happens if you set <code>forceAllEvidenceAsSecondaryCapture</code> to true?",
+                answer: "All evidence will be exported as <strong>secondary capture</strong>, burning arrows and annotations into the image pixel data.",
+                category: "integration"
+            },
+            {
+                question: "What is the consequence of configuring \"report\" as a <code>supportedEvidenceType</code> for auto-export?",
+                answer: "You will <strong>lose the ability to create a draft report</strong>; it is committed and automatically exported once saved or published.",
+                category: "integration"
+            },
+            {
+                question: "What must the PACS have configured for Query Retrieve from the external archive to the Vitrea system?",
+                answer: "It must have the Management Server or Vitrea Enterprise Single Server as the archive and <strong>allow query from the Vitrea server</strong> (often promiscuous); it also needs Vitrea configured as a storage destination (DICOM Storage SCP).",
+                category: "dicom"
+            },
+            {
+                question: "What service must be selected in the Services area for a Query / Retrieve archive?",
+                answer: "The <strong>Query / Receive</strong> check box.",
+                category: "configuration"
+            },
+            {
+                question: "What is the recommended way to test a Query / Retrieve archive connection?",
+                answer: "Click the <strong>Test button</strong> to verify Vitrea software can DICOM echo the PACS Query Retrieve Archive.",
+                category: "configuration"
+            },
+            {
+                question: "What are profiles in Vitrea Conduit integration?",
+                answer: "Sets of <strong>configuration options</strong> for the integration.",
+                category: "integration"
+            },
+            {
+                question: "Where are integration profiles configured?",
+                answer: "Through the <strong>System Configuration application</strong> on the Management Server or the Enterprise Single Server.",
+                category: "integration"
+            },
+            {
+                question: "What is the key for the first Client Profile always?",
+                answer: "<strong>'Default'</strong>.",
+                category: "integration"
+            },
+            {
+                question: "What happens if \"Application Selector\" is chosen for \"Default Clinical Application\" in an integration profile?",
+                answer: "The <strong>+Tab</strong> displays to the user.",
+                category: "integration"
+            },
+            {
+                question: "What is the maximum number of studies that can be launched in a single patient context?",
+                answer: "<strong>5</strong>.",
+                category: "integration"
+            },
+            {
+                question: "What is the Q/R Archive often referred to as in the guide?",
+                answer: "The <strong>Source Archive</strong>.",
+                category: "dicom"
+            },
+            {
+                question: "What does enabling \"Demographics Comparison\" do in an Integration Profile?",
+                answer: "It <strong>enables a check between the patient data</strong> that resides on the Q/R Archive and the patient data stored in the Vitrea database.",
+                category: "integration"
+            },
+            {
+                question: "What is a \"study-based\" launch?",
+                answer: "Any launch that invokes a <strong>search script, or where the launch is by study instance UID</strong>.",
+                category: "integration"
+            },
+            {
+                question: "What happens if \"Require Full Study\" is selected for study launch requirements and Vitrea is missing data?",
+                answer: "Missing Series/Instances are <strong>automatically retrieved before starting the clinical application</strong>.",
+                category: "integration"
+            },
+            {
+                question: "When does the Picklist display for study launch requests if \"Show Picklist\" is selected?",
+                answer: "If <strong>more than one study exists in the launch request</strong> or if Vitrea is missing data that the Source archive contains.",
+                category: "integration"
+            },
+            {
+                question: "What is the behavior if \"Proceed with Partial Data\" is enabled and Vitrea contains any study details?",
+                answer: "The launch <strong>opens the clinical application without retrieving any missing series</strong>.",
+                category: "integration"
+            },
+            {
+                question: "What is the default behavior regarding \"Proceed with Partial Multi Study Data\" after an upgrade?",
+                answer: "This configuration <strong>will not be retained</strong> during an upgrade.",
+                category: "integration"
+            },
+            {
+                question: "What is the default <code>Retrieve Mode</code> for an archive not defined in the <code>ExtendedConfig.json</code> file?",
+                answer: "<strong><code>MultipleSeriesPerAssociation</code></strong>.",
+                category: "integration"
+            },
+            {
+                question: "What happens if DICOM Retrieve Timeouts are too short on a slow network or with large datasets?",
+                answer: "Vitrea Conduit launches may <strong>fail while retrieving patient data</strong> from the Q/R Archive.",
+                category: "troubleshooting"
+            },
+            {
+                question: "Where do you configure DICOM Retrieve Timeouts?",
+                answer: "In <strong>System Configuration > System Settings > DICOMQRSCU</strong>.",
+                category: "configuration"
+            },
+            {
+                question: "What is the purpose of configuring Session Timeout for Enterprise deployments?",
+                answer: "To automatically log off inactive users, <strong>freeing up resources</strong> for other users.",
+                category: "configuration"
+            },
+            {
+                question: "What is the recommended signature hash algorithm and RSA/ECC key size for SSL certificates?",
+                answer: "<strong>SHA256 or better</strong> signature hash algorithm, with either a <strong>2048-bit or greater RSA key</strong> or a <strong>256-bit or greater Elliptic Curve Cryptography (ECC) key</strong>.",
+                category: "configuration"
+            },
+            {
+                question: "What is the \"Common Name\" (CN) for an SSL certificate in a Vitrea context?",
+                answer: "The <strong>fully qualified external hostname</strong> of the server.",
+                category: "configuration"
+            },
+            {
+                question: "What is the preferred method for invoking the ProtocolHandler?",
+                answer: "Via the <strong>registered protocol name \"vitrea://\"</strong>.",
+                category: "integration"
+            },
+            {
+                question: "What is the recommended, most straight-forward launch type (Verb) for the ProtocolHandler?",
+                answer: "<strong><code>launchbasic</code></strong>.",
+                category: "integration"
+            }
+        ];
+
+        // Multiple choice questions
+        const mcQuestions = [
+            {
+                question: "Before configuring an External Integration, which of the following tasks is NOT a prerequisite for a Vitrea Enterprise deployment?",
+                options: [
+                    "Completing Active Directory Planning Guide procedures.",
+                    "Installing Microsoft Office Suite.",
+                    "Configuring Vitrea Enterprise servers per OS Setup Guide.",
+                    "Installing SQL Server 2016/2017/2019."
+                ],
+                answer: 1,
+                category: "prerequisites"
+            },
+            {
+                question: "For a Vitrea Enterprise Single Server deployment, which guide provides the steps for setup?",
+                options: [
+                    "Enterprise Deployment Active Directory Planning Guide",
+                    "Enterprise Single Server Installation Guide",
+                    "Remote SQL Server Setup Instructions",
+                    "Application Server Installation Guide"
+                ],
+                answer: 1,
+                category: "prerequisites"
+            },
+            {
+                question: "To view the current activity of DICOM being processed on the Vitrea Server, you should use:",
+                options: [
+                    "Task Manager",
+                    "VIMS Monitor",
+                    "System Health section",
+                    "Event Viewer"
+                ],
+                answer: 1,
+                category: "configuration"
+            },
+            {
+                question: "When configuring the Storage Archive, which of the following is NOT a required field to enter?",
+                options: [
+                    "Name",
+                    "Key",
+                    "Host",
+                    "Manufacturer"
+                ],
+                answer: 3,
+                category: "configuration"
+            },
+            {
+                question: "What is the primary function of the Storage Archive in Vitrea?",
+                options: [
+                    "To manage user accounts",
+                    "To send data to an integrated server",
+                    "To retrieve data from an external PACS",
+                    "To store application logs"
+                ],
+                answer: 1,
+                category: "dicom"
+            },
+            {
+                question: "The `Export Reminder` feature is ignored in integrated workflows starting from which Vitrea version?",
+                options: [
+                    "7.15.5",
+                    "7.14.3",
+                    "7.15.3",
+                    "7.16.1"
+                ],
+                answer: 1,
+                category: "integration"
+            },
+            {
+                question: "Which of the following is the recommended feature for integrated users to automatically send all findings to one or more servers?",
+                options: [
+                    "Export Reminder",
+                    "Manual Export",
+                    "Evidence Auto Export",
+                    "SessionHelper component"
+                ],
+                answer: 2,
+                category: "integration"
+            },
+            {
+                question: "By default, `Evidence Auto Export` exports which types of evidence?",
+                options: [
+                    "Image and Report",
+                    "Batch and Session",
+                    "Image, Batch, and Session",
+                    "Image, Report, and Session"
+                ],
+                answer: 2,
+                category: "integration"
+            },
+            {
+                question: "If `forceAllEvidenceAsMonochrome` is set to `true`, what is the effect on exported evidence?",
+                options: [
+                    "It will be exported in color format.",
+                    "It will be exported in monochrome format.",
+                    "It will be exported with reduced size.",
+                    "Arrows and annotations will be burned into the image."
+                ],
+                answer: 1,
+                category: "integration"
+            },
+            {
+                question: "If `forceAllEvidenceToReducedSize` is set to `true`, what is the consequence for snapshots?",
+                options: [
+                    "Snapshots will have higher quality.",
+                    "Snapshots will be restorable.",
+                    "Snapshots will not be restorable.",
+                    "Snapshots will include annotations."
+                ],
+                answer: 2,
+                category: "integration"
+            },
+            {
+                question: "When configuring the Integration Query Retrieve Archive, the PACS must allow query from which Vitrea server component?",
+                options: [
+                    "Thin Client",
+                    "Application Server",
+                    "Management Server or Vitrea Enterprise Single Server",
+                    "SQL Server"
+                ],
+                answer: 2,
+                category: "dicom"
+            },
+            {
+                question: "What does the `AE Title` field represent when configuring a PACS Query Retrieve Service?",
+                options: [
+                    "Application Extension Title",
+                    "Archive Entity Title",
+                    "Application Entity Title",
+                    "Automatic Export Title"
+                ],
+                answer: 2,
+                category: "configuration"
+            },
+            {
+                question: "What is the purpose of an Integration Profile in Vitrea Conduit?",
+                options: [
+                    "To define network settings for Vitrea servers.",
+                    "To configure user authentication methods.",
+                    "To set configuration options like demographics comparison and default application launch.",
+                    "To manage DICOM storage locations."
+                ],
+                answer: 2,
+                category: "integration"
+            },
+            {
+                question: "What is the default key for the first Client Profile?",
+                options: [
+                    "Primary",
+                    "Default",
+                    "Main",
+                    "Initial"
+                ],
+                answer: 1,
+                category: "integration"
+            },
+            {
+                question: "If no clinical application is provided in the launch context, and \"Application Selector\" is chosen as the \"Default Clinical Application\" in an integration profile, what displays to the user?",
+                options: [
+                    "A blank screen",
+                    "The System Configuration menu",
+                    "The +Tab",
+                    "An error message"
+                ],
+                answer: 2,
+                category: "integration"
+            },
+            {
+                question: "What happens if you initiate a launch with more than five studies selected?",
+                options: [
+                    "The launch proceeds with the first five studies.",
+                    "An error message states \"Too many studies. Please select no more than 5 studies to proceed.\" and a picklist displays.",
+                    "The system automatically selects the five most recent studies.",
+                    "The launch is immediately canceled."
+                ],
+                answer: 1,
+                category: "integration"
+            },
+            {
+                question: "What is the effect of clearing the `Demographics Comparison` check box in an Integration Profile?",
+                options: [
+                    "It enables a check between patient data on Q/R Archive and Vitrea.",
+                    "It disables the displaying of the Patient Demographics Mismatch screen.",
+                    "It automatically corrects any discrepancies.",
+                    "It is ignored if a Q/R Archive is not specified."
+                ],
+                answer: 1,
+                category: "integration"
+            },
+            {
+                question: "If \"Proceed with Partial Data\" is selected for study launch requirements, and Vitrea contains any study details, what happens?",
+                options: [
+                    "Missing series are automatically retrieved.",
+                    "The clinical application opens without retrieving any missing series.",
+                    "The picklist screen displays.",
+                    "The launch is canceled."
+                ],
+                answer: 1,
+                category: "integration"
+            },
+            {
+                question: "What is the maximum number of items that can be loaded when launching by series instance using `launch-by-series-instance` (launchbasic)?",
+                options: [
+                    "5",
+                    "10",
+                    "33",
+                    "Unlimited"
+                ],
+                answer: 2,
+                category: "integration"
+            },
+            {
+                question: "In Vitrea 7.16.1, what are the configurable options for the Windows close button behavior?",
+                options: [
+                    "Hide, Close",
+                    "Close, Quit",
+                    "Hide, Close, Quit",
+                    "Hide, Quit"
+                ],
+                answer: 2,
+                category: "configuration"
+            },
+            {
+                question: "What is the default behavior for the Windows close button (X) in Vitrea Conduit 7.16.1?",
+                options: [
+                    "Hide",
+                    "Close",
+                    "Quit",
+                    "Minimize"
+                ],
+                answer: 1,
+                category: "configuration"
+            },
+            {
+                question: "Where can you configure the Windows close button behavior globally for all clients?",
+                options: [
+                    "On the client machine via `Vitrea.Conduit.Client.exe.config`.",
+                    "On the Management Server via `Vitrea.Conduit.Service.exe.config`.",
+                    "In the System Health section of Vitrea software.",
+                    "Via the Registry Editor."
+                ],
+                answer: 1,
+                category: "configuration"
+            },
+            {
+                question: "What needs to be restarted after changing the `WindowCloseButtonBehavior` setting in `Vitrea.Conduit.Service.exe.config` on the Management Server?",
+                options: [
+                    "The entire server.",
+                    "The Vitrea.ConduitService windows service.",
+                    "All client machines.",
+                    "The SQL Server."
+                ],
+                answer: 1,
+                category: "configuration"
+            },
+            {
+                question: "What is the `ProtocolHandler`'s primary method of integration for controlling Vitrea?",
+                options: [
+                    "Two-way communication with status updates.",
+                    "Simple URL-like strings converted to JSON blocks.",
+                    "Direct database manipulation.",
+                    "Sending DICOM images."
+                ],
+                answer: 1,
+                category: "integration"
+            },
+            {
+                question: "Which `ProtocolHandler` verb is recommended for the simplest URL launches?",
+                options: [
+                    "`launch`",
+                    "`launchdirect`",
+                    "`launchbasic`",
+                    "`show`"
+                ],
+                answer: 2,
+                category: "integration"
+            },
+            {
+                question: "What happens when the `hide` verb is used with the ProtocolHandler?",
+                options: [
+                    "Vitrea becomes visible.",
+                    "Vitrea fully shuts down.",
+                    "Vitrea becomes hidden but its clinical state is unchanged.",
+                    "The current patient context is destroyed."
+                ],
+                answer: 2,
+                category: "integration"
+            },
+            {
+                question: "Which `ProtocolHandler` verb destroys the current patient context but retains the user session?",
+                options: [
+                    "`quit`",
+                    "`close`",
+                    "`hide`",
+                    "`launchbasic`"
+                ],
+                answer: 1,
+                category: "integration"
+            },
+            {
+                question: "What variable defines the hostname or IP address of the machine the `VitreaConduitClient` should connect to?",
+                options: [
+                    "`profile`",
+                    "`managementHost`",
+                    "`applicationId`",
+                    "`launchContext`"
+                ],
+                answer: 1,
+                category: "integration"
+            },
+            {
+                question: "If the `VitreaConduitClient` is already running, when is the `managementHost` value ignored?",
+                options: [
+                    "Only when using HTTP.",
+                    "Until a `vitrea://quit` (shutdown session) is issued.",
+                    "Only when launching a single study.",
+                    "It is never ignored."
+                ],
+                answer: 1,
+                category: "integration"
+            },
+            {
+                question: "When using `launchbasic` for `launch-by-study-instance`, how do you specify multiple studies?",
+                options: [
+                    "By using a comma-separated list in one `studyInstanceUid` parameter.",
+                    "By specifying `studyInstanceUid` multiple times.",
+                    "By using a JSON object for `launchContext`.",
+                    "`launchbasic` only supports single study launch."
+                ],
+                answer: 1,
+                category: "integration"
+            },
+            {
+                question: "Which of the following is NOT a parameter name for `launch-by-patient` using `launchbasic`?",
+                options: [
+                    "`patientId`",
+                    "`accessionNumber`",
+                    "`applicationId`",
+                    "`accessionNumber` is for `launch-by-accession`."
+                ],
+                answer: 1,
+                category: "integration"
+            },
+            {
+                question: "What is the consequence if you configure the \"report\" `EvidenceType` in `supportedEvidenceTypes`?",
+                options: [
+                    "You gain the ability to create draft reports.",
+                    "You lose the ability to create a draft report; it is committed and exported on save/publish.",
+                    "Reports are no longer exported automatically.",
+                    "Only draft reports are exported."
+                ],
+                answer: 1,
+                category: "integration"
+            },
+            {
+                question: "What is indicated if the VIMS Monitor `Remaining Instances` graph displays with a \"sawtoothing\" line?",
+                options: [
+                    "All data has been processed.",
+                    "There is incoming data currently being processed.",
+                    "The server is idle.",
+                    "The monitor is not functioning correctly."
+                ],
+                answer: 1,
+                category: "configuration"
+            },
+            {
+                question: "When configuring an Integration Profile, what is the maximum number of studies that can be launched at once?",
+                options: [
+                    "1",
+                    "3",
+                    "5",
+                    "10"
+                ],
+                answer: 2,
+                category: "integration"
+            },
+            {
+                question: "What is the case sensitivity requirement for the `AE Title` field?",
+                options: [
+                    "Case insensitive.",
+                    "Case sensitive.",
+                    "Only applies to numbers.",
+                    "Only applies to letters."
+                ],
+                answer: 1,
+                category: "configuration"
+            },
+            {
+                question: "What DICOM retrieve mode is most efficient, allowing multiple series per association?",
+                options: [
+                    "`StudyOnlyPerAssociation`",
+                    "`MultipleSeriesPerAssociation`",
+                    "`SingleSeriesPerAssociation`",
+                    "`BatchRetrieve`"
+                ],
+                answer: 1,
+                category: "dicom"
+            },
+            {
+                question: "If Vitrea Conduit launches are failing while retrieving patient data from the Q/R Archive, what may be necessary?",
+                options: [
+                    "Disabling the Q/R Archive.",
+                    "Extending the Retrieve Timeouts.",
+                    "Reducing the number of simultaneous launches.",
+                    "Changing the AE Title."
+                ],
+                answer: 1,
+                category: "troubleshooting"
+            },
+            {
+                question: "Which component is responsible for creating and connecting to Advanced Sessions and resides on the PACS client workstation?",
+                options: [
+                    "VitreaConduitService",
+                    "Management Server",
+                    "AppShell",
+                    "SQL Server"
+                ],
+                answer: 2,
+                category: "integration"
+            },
+            {
+                question: "Where can the AppShell logs be found?",
+                options: [
+                    "C:\\Program Files\\Vital Images\\VitreaConduitService\\Logs",
+                    "C:\\ProgramData\\Vitrea\\Logs\\AppShell",
+                    "C:\\Program Files\\Vital Images\\VitreaConduitClient\\Logs",
+                    "In the Windows Event Viewer"
+                ],
+                answer: 1,
+                category: "troubleshooting"
+            },
+            {
+                question: "What is a \"study-based\" launch defined as?",
+                options: [
+                    "Any launch by patient name.",
+                    "Any launch that invokes a search script or is by study instance UID.",
+                    "Any launch that retrieves only partial data.",
+                    "Any launch directly from the Vitrea client."
+                ],
+                answer: 1,
+                category: "integration"
+            },
+            {
+                question: "What is the behavior of `ProceedWithPartialMultiStudy` if all studies in a launch request have no data on Vitrea?",
+                options: [
+                    "It proceeds without showing the Picklist.",
+                    "The Picklist will still be shown.",
+                    "The launch will be canceled.",
+                    "It will automatically retrieve all missing data."
+                ],
+                answer: 1,
+                category: "integration"
+            },
+            {
+                question: "What command is used to set the execution policy to UnRestricted when running the `EnableSSL.ps1` script?",
+                options: [
+                    "`Set-Policy -Execution UnRestricted`",
+                    "`Set-ExecutionPolicy Restricted`",
+                    "`Set-ExecutionPolicy UnRestricted`",
+                    "`Enable-Script UnRestricted`"
+                ],
+                answer: 2,
+                category: "configuration"
+            },
+            {
+                question: "What is the meaning of the `Disconnected` status message in Vitrea Conduit?",
+                options: [
+                    "It is actively establishing a user session.",
+                    "It is connected to an Application Server.",
+                    "It is not actively connected to Vitrea or the connection was lost.",
+                    "It is processing a request."
+                ],
+                answer: 2,
+                category: "troubleshooting"
+            },
+            {
+                question: "What does the `Connecting to best session` status mean?",
+                options: [
+                    "Vitrea Conduit is establishing a connection to the best Application Server.",
+                    "Vitrea Conduit is communicating with the Management Server to find the best Application Server.",
+                    "Vitrea Conduit is connected and idle.",
+                    "Vitrea Conduit is encountering an error."
+                ],
+                answer: 1,
+                category: "troubleshooting"
+            },
+            {
+                question: "In what situation does the \"Too many studies\" message and picklist display for a launch request?",
+                options: [
+                    "When launching a single study.",
+                    "When launching exactly five studies.",
+                    "When initiating a launch with more than five studies selected.",
+                    "When the Q/R archive is not configured."
+                ],
+                answer: 2,
+                category: "troubleshooting"
+            },
+            {
+                question: "What type of integration is `ProtocolHandler`?",
+                options: [
+                    "Bi-directional",
+                    "One-way",
+                    "Fully interactive",
+                    "Status-aware"
+                ],
+                answer: 1,
+                category: "integration"
+            },
+            {
+                question: "What does the `sopInstanceUid_X_Y_Z` parameter refer to in `launch-by-sop-or-restore`?",
+                options: [
+                    "A specific study instance.",
+                    "A specific series instance.",
+                    "A specific SOP instance (only one of the snapshot being restored).",
+                    "An application ID."
+                ],
+                answer: 2,
+                category: "integration"
+            },
+            {
+                question: "What needs to be backed up to a secure location after generation for SSL certificates?",
+                options: [
+                    "The Certificate Signing Request (CSR)",
+                    "The server key",
+                    "The public certificate",
+                    "The friendly name"
+                ],
+                answer: 1,
+                category: "configuration"
+            },
+            {
+                question: "What is the maximum number of studies that can be launched in a single patient context, for which the picklist would display a warning if exceeded?",
+                options: [
+                    "3",
+                    "5",
+                    "10",
+                    "33"
+                ],
+                answer: 1,
+                category: "integration"
+            },
+            {
+                question: "What is a recommended action if the \"Authentication error connecting to Vitrea server\" message displays?",
+                options: [
+                    "Reinstall the Vitrea Thin Client.",
+                    "Reboot the entire network infrastructure.",
+                    "Close the integration server software and try again.",
+                    "Disable all firewall settings."
+                ],
+                answer: 2,
+                category: "troubleshooting"
+            }
+        ];
+
+        // Troubleshooting scenarios
+        const troubleshootingScenarios = [
+            {
+                scenario: "Upon an integrated launch, a <strong>blank screen displays</strong>.",
+                resolution: "Verify <strong>Internet Options</strong> are configured correctly and <strong>Vitrea is listed as a trusted site</strong>. Also, ensure your <strong>DNS forward and reverse are working correctly</strong>.",
+                category: "launch"
+            },
+            {
+                scenario: "The message \"<strong>Unable to find studies for the request</strong>\" displays.",
+                resolution: "This occurs if the study is not found on Vitrea and no integration Query/Retrieve archive has been defined. <strong>Push the data to the Vitrea server or define the Integration Query Retrieve archive</strong>.",
+                category: "launch"
+            },
+            {
+                scenario: "The message \"<strong>Neither Vitrea nor the source archive contain the requested studies/series. Please review the configured archives</strong>\" displays.",
+                resolution: "This issue occurs if the study is not found on either the integration archive or on Vitrea. <strong>Ensure the query archive is defined correctly</strong>. This error may also display if the query archive is invalid or not defined.",
+                category: "launch"
+            },
+            {
+                scenario: "The message \"<strong>Unable to process request</strong>\" displays.",
+                resolution: "This occurs when the integration cannot launch the selected study or studies. <strong>Ensure you are not trying to launch with disparate patients</strong> (patient data of differing demographics), ensure you <strong>do not launch using mixed launch modes</strong> in the Picklist, and ensure the <strong>Integration Client Profile is configured correctly</strong>.",
+                category: "launch"
+            },
+            {
+                scenario: "The message \"<strong>Authentication error connecting to Vitrea server. Check logs for further details.</strong>\" displays.",
+                resolution: "<strong>Close the integration server software and try again</strong>.",
+                category: "connection"
+            },
+            {
+                scenario: "The message \"<strong>An unexpected error has occurred, please contact your administrator.</strong>\" displays.",
+                resolution: "<strong>Close the integration server software and try again</strong>.",
+                category: "connection"
+            },
+            {
+                scenario: "The message \"<strong>All Collections full</strong>\" displays on a Remote Client.",
+                resolution: "Click <strong>Cancel</strong> to close the error screen, <strong>close the Vitrea session</strong>, <strong>close the integration server software</strong>, and <strong>contact the system administrator to acquire a session</strong>.",
+                category: "connection"
+            },
+            {
+                scenario: "The message \"<strong>No Collection selected</strong>\" displays.",
+                resolution: "This occurs when you click the Proceed button before you select a Collection. <strong>Select a Collection and then click the Proceed button</strong>.",
+                category: "launch"
+            },
+            {
+                scenario: "An <strong>application failure error occurs</strong> during a launch, and the study data is not viable for the application defined in the Integration Client Profile.",
+                resolution: "Click <strong>OK</strong>. From the +Tab, <strong>select the desired application and its corresponding volumes</strong>. Alternatively, <strong>close the client session and change the application in the Integration Client Profile</strong>.",
+                category: "launch"
+            },
+            {
+                scenario: "<strong>Partial or no study data is successfully retrieved</strong>, and an \"Error during Retrieve\" message displays.",
+                resolution: "Click <strong>Cancel</strong>. <strong>Verify your Integration Query Retrieve archive is correctly defined</strong> in the Vitrea server System Settings. <strong>Verify the Integration server is correctly configured</strong> to allow query by the Vitrea server and is correctly configured to export to the Vitrea server. Also, <strong>verify your network connectivity is functioning correctly</strong>.",
+                category: "connection"
+            },
+            {
+                scenario: "A \"<strong>Windows Security</strong>\" message displays.",
+                resolution: "This displays if <strong>Integrated Windows Authentication was not enabled</strong> during the installation process.",
+                category: "configuration"
+            },
+            {
+                scenario: "An operation fails due to the use of an <strong>SSL certificate with validation errors</strong>, and you need to proceed for debugging purposes.",
+                resolution: "Close the error screen, open <code>regedit</code> and navigate to <code>HKEY_LOCAL_MACHINE\\SOFTWARE\\Vital Images\\Vitrea</code>. <strong>Create a new string registry key called: `HTTPS.IgnoreCertificateErrors` and set its value to `1` or `true`</strong>. (Note: This is only for debugging or if you are certain you can trust the certificate).",
+                category: "configuration"
+            },
+            {
+                scenario: "The VIMS Monitor <code>Remaining Instances</code> graph displays a \"<strong>sawtoothing</strong>\" line when you need to configure Vitrea.",
+                resolution: "<strong>Wait for any incoming data to be processed</strong> until the graph displays with a \"flat line\".",
+                category: "configuration"
+            },
+            {
+                scenario: "You are trying to use the <strong>Export Reminder feature in an integrated workflow</strong>, but it is not working.",
+                resolution: "The Export Reminder feature <strong>cannot be used in integrated workflows</strong> from Vitrea 7.14.3 onwards. <strong>Use the Evidence Auto Export feature instead</strong>.",
+                category: "export"
+            },
+            {
+                scenario: "You configured the \"<strong>report</strong>\" <code>EvidenceType</code> for Evidence Auto Export, but you are <strong>losing the ability to create draft reports</strong>.",
+                resolution: "This is expected behavior. Once you click Save Draft or Publish, the report is <strong>committed and automatically exported</strong> to the configured archive(s).",
+                category: "export"
+            },
+            {
+                scenario: "You set <code>forceAllEvidenceToReducedSize</code> to <code>true</code>, and now your <strong>snapshots are not restorable</strong>.",
+                resolution: "This is a known consequence. Snapshots are <strong>not restorable if this key is set to true</strong>. Consider setting it to <code>false</code> if snapshot restorability is required.",
+                category: "export"
+            },
+            {
+                scenario: "You are configuring a PACS to accept incoming data from Vitrea, but <strong>transfers are failing</strong>.",
+                resolution: "<strong>Consult your PACS documentation</strong>; your PACS may need to be explicitly configured to accept incoming data from Vitrea or other senders.",
+                category: "dicom"
+            },
+            {
+                scenario: "You are configuring a Query Retrieve archive, and the <code>Test</code> button fails, but you suspect the setup is correct.",
+                resolution: "If the customer suppresses ICMP packets, the <code>Test</code> button may fail even if setup is correct. (The source references an \"Open Port via ICMP\" procedure not provided). Also, <strong>ensure the PACS server has the Vitrea Enterprise system configured as a storage destination (DICOM Storage SCP)</strong>.",
+                category: "dicom"
+            },
+            {
+                scenario: "You initiated a launch with <strong>more than five studies</strong>, and now a picklist screen displays with a \"<strong>Too many studies</strong>\" message.",
+                resolution: "<strong>Select the check boxes corresponding to five or fewer studies</strong> you want to launch and click the \"Proceed\" button.",
+                category: "launch"
+            },
+            {
+                scenario: "You want to avoid the <strong>Patient Demographics Mismatch screen</strong> from displaying.",
+                resolution: "<strong>Clear the <code>Demographics Comparison</code> check box</strong> in the Integration Profile. Note: This only applies when a Q/R Archive has been specified.",
+                category: "configuration"
+            },
+            {
+                scenario: "You are performing a multi-study launch where one or more studies have no data on Vitrea, and the <strong>picklist is still shown</strong> even though <code>Proceed with Partial Data</code> is enabled.",
+                resolution: "Enable the <strong><code>ProceedWithPartialMultiStudy</code> configuration option</strong> in addition to <code>Proceed with Partial Data</code> by modifying the <code>Vitrea.Conduit.Service.exe.config</code> file.",
+                category: "configuration"
+            },
+            {
+                scenario: "After an upgrade, your <code>ProceedWithPartialMultiStudy</code> configuration and <code>Advanced Archive Configuration</code> settings are <strong>not retained</strong>.",
+                resolution: "After upgrading, navigate to <code>C:\\ProgramData\\Vitrea\\DeploymentConfiguration</code> and <strong>verify the <code>ProceedWithPartialMultiStudy</code> configuration</strong> in <code>Vitrea.Conduit.Service.exe.config</code>. Also, <strong>verify the <code>Advanced Archive Configuration</code> values</strong> in <code>Vitrea.Conduit.Service.exe.ExtendedConfig.json</code>.",
+                category: "configuration"
+            },
+            {
+                scenario: "User sessions remain in-use even when inactive, potentially <strong>preventing other users from accessing the system</strong>.",
+                resolution: "For Enterprise deployments, configure the <strong>Remote Desktop Services Collection Session Timeout</strong> setting. Adjust the <code>Idle session limit</code> to a desired inactivity timeout, which will automatically log off inactive users.",
+                category: "configuration"
+            },
+            {
+                scenario: "You need to configure a specific client's <strong>Windows close button behavior</strong>, overriding the server's global setting.",
+                resolution: "On the client machine, open the <code>C:\\Program Files\\Vital Images\\VitreaConduitClient\\Vitrea.Conduit.Client.exe.config</code> file. <strong>Uncomment the <code>WindowCloseButtonBehavior</code> option and set its value to \"Close\", \"Hide\", or \"Quit\"</strong> as desired.",
+                category: "configuration"
+            },
+            {
+                scenario: "When processing a launch command, <strong>Vitrea Conduit encounters errors with data</strong>, resulting in a \"Study Errors\" screen with highlighted red text.",
+                resolution: "This indicates illegal or invalid DICOM. The user <strong>may choose to proceed with discretion</strong> as important clinical data could be missing. To resolve, click <strong>Cancel</strong> and move to the next study. For troubleshooting, the <strong>Vitrea DICOM Receive logs must be reviewed</strong> to determine the issue.",
+                category: "troubleshooting"
+            }
+        ];
+
+        // Quick Tips data
+        const quickTips = [
+            "<strong>Prerequisites are Key:</strong> Always ensure all <strong>Vitrea Installation Prerequisites</strong> are completed prior to configuring external integrations, whether for Enterprise or Single Server deployments.",
+            "<strong>Monitor DICOM Activity:</strong> Before configuring the Vitrea Server for export/retrieve, <strong>ensure no data is being processed</strong> by checking the VIMS Monitor for a \"<strong>flat line</strong>\" on the <code>Remaining Instances</code> graph.",
+            "<strong>User Activity Check:</strong> Verify <strong>no users are on the Vitrea system</strong> via the System Health section before making major configurations.",
+            "<strong>PACS Configuration is Crucial:</strong> When setting up archives, your PACS may need to be explicitly configured to <strong>accept incoming data from Vitrea</strong> or to <strong>allow query from the Vitrea server</strong> (often promiscuous). Consult your PACS documentation and administrator.",
+            "<strong>AE Title is Case Sensitive:</strong> When entering the AE Title for PACS Store or Query Retrieve services, remember that <strong>the AE Title is case sensitive</strong>.",
+            "<strong>Export Reminder vs. Evidence Auto Export:</strong> For integrated workflows, <strong>do NOT use the Export Reminder feature</strong>; it is ignored starting Vitrea 7.14.3. Instead, rely on <strong>Evidence Auto Export</strong> to automatically send findings.",
+            "<strong>Report Auto Export Impact:</strong> If you configure \"report\" as a <code>supportedEvidenceType</code> for Evidence Auto Export, <strong>you will lose the ability to create a draft report</strong> as it's committed and exported immediately upon saving/publishing.",
+            "<strong>Reduced Size Export Caveat:</strong> Setting <code>forceAllEvidenceToReducedSize</code> to <code>true</code> will make <strong>snapshots non-restorable</strong>.",
+            "<strong>Integration Profiles are Fundamental:</strong> Configure Integration Profiles through the <strong>System Configuration application</strong> on the Management Server or Enterprise Single Server to define launch behaviors and demographics comparison.",
+            "<strong>Default Profile is \"Default\":</strong> The key for the first Client Profile is always <strong>'Default'</strong> and cannot be changed.",
+            "<strong>Launch Study Limit:</strong> The <strong>maximum number of studies that can be launched</strong> in a single patient context is <strong>five</strong>.",
+            "<strong>Demographics Comparison:</strong> The Patient Demographics Mismatch screen will <strong>not display if Demographics Comparison is disabled</strong> in the profile and ignores spacing/commas in Patient Name. It only applies if a Q/R Archive is specified.",
+            "<strong>Partial Data Launch Nuances:</strong> \"Proceed with Partial Data\" means the clinical application opens <em>without</em> retrieving missing series if <em>any</em> data exists in Vitrea. For multi-study launches with entirely missing studies, <code>ProceedWithPartialMultiStudy</code> may also need to be enabled to avoid the picklist.",
+            "<strong>Upgrade Considerations for Custom Settings:</strong> Configurations like <code>ProceedWithPartialMultiStudy</code> and <code>Advanced Archive Configuration</code> are <strong>NOT retained during an upgrade</strong>; manually verify and reapply them post-upgrade.",
+            "<strong>DICOM Retrieve Timeouts:</strong> If launches fail due to slow networks or large datasets, <strong>extend the Retrieve Timeouts</strong> (retrieveStartPeriod, retrieveUpdatePeriod) in System Settings > DICOMQRSCU.",
+            "<strong>Session Timeout for Resources:</strong> For Enterprise deployments, configure <strong>Remote Desktop Services Collection Session Timeout</strong> to automatically log off inactive users and free up system resources.",
+            "<strong>SSL Certificate Best Practices:</strong> Use <strong>SHA256 or better</strong> signature hash, with <strong>2048-bit+ RSA or 256-bit+ ECC key</strong>. Server must support <strong>TLS 1.2</strong>. The \"Common Name\" (CN) for the SSL certificate should be the <strong>fully qualified external hostname</strong> users will use.",
+            "<strong>ProtocolHandler Preferred Method:</strong> The preferred way to invoke the ProtocolHandler is via the <strong>registered protocol name \"vitrea://\"</strong>. HTTPS is also supported and recommended for security.",
+            "<strong><code>launchbasic</code> for Simplicity:</strong> Use the <strong><code>launchbasic</code> verb</strong> for simple, straightforward launches.",
+            "<strong><code>managementHost</code> Persistence:</strong> If <code>VitreaConduitClient</code> is running, the <code>managementHost</code> value in a URL is ignored until a <code>vitrea://quit</code> command is issued.",
+            "<strong>Troubleshooting Logs:</strong> For errors like \"Unable to connect to Vitrea\" or \"Unable to process request\", <strong>consult the Vitrea Conduit logs</strong>. For DICOM receive/store errors, review <strong>Vitrea DICOM Receive logs</strong>. For <code>AppShell</code> issues, check logs under <code>C:\\ProgramData\\Vitrea\\Logs\\AppShell</code>."
+        ];
+
+        // DOM elements
+        const questionText = document.getElementById('question-text');
+        const answerText = document.getElementById('answer-text');
+        const flipBtn = document.getElementById('flip-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const currentCardSpan = document.getElementById('current-card');
+        const totalCardsSpan = document.getElementById('total-cards');
+        const questionCard = document.getElementById('question');
+        const answerCard = document.getElementById('answer');
+        const cardFilter = document.getElementById('card-filter');
+        const shuffleBtn = document.getElementById('shuffle-btn');
+        
+        // Multiple choice elements
+        const mcQuestionText = document.getElementById('mc-question-text');
+        const mcOptions = document.getElementById('mc-options');
+        const mcFeedback = document.getElementById('mc-feedback');
+        const mcPrevBtn = document.getElementById('mc-prev-btn');
+        const mcNextBtn = document.getElementById('mc-next-btn');
+        const currentMcSpan = document.getElementById('current-mc');
+        const totalMcSpan = document.getElementById('total-mc');
+        const mcFilter = document.getElementById('mc-filter');
+        const mcShuffleBtn = document.getElementById('mc-shuffle-btn');
+        
+        // Troubleshooting elements
+        const tsScenarioText = document.getElementById('ts-scenario-text');
+        const tsResolutionText = document.getElementById('ts-resolution-text');
+        const showResolutionBtn = document.getElementById('show-resolution-btn');
+        const tsPrevBtn = document.getElementById('ts-prev-btn');
+        const tsNextBtn = document.getElementById('ts-next-btn');
+        const currentTsSpan = document.getElementById('current-ts');
+        const totalTsSpan = document.getElementById('total-ts');
+        const tsFilter = document.getElementById('ts-filter');
+        const tsShuffleBtn = document.getElementById('ts-shuffle-btn');
+        
+        // Quick Tips elements
+        const quickTipsList = document.getElementById('quick-tips-list');
+        
+        // Tab elements
+        const tabs = document.querySelectorAll('.tab');
+        const tabContents = document.querySelectorAll('.tab-content');
+        
+        // State variables
+        let currentCardIndex = 0;
+        let filteredFlashcards = [...flashcards];
+        let currentMcIndex = 0;
+        let filteredMcQuestions = [...mcQuestions];
+        let currentTsIndex = 0;
+        let filteredTroubleshooting = [...troubleshootingScenarios];
+        
+        // Initialize
+        totalCardsSpan.textContent = flashcards.length;
+        totalMcSpan.textContent = mcQuestions.length;
+        totalTsSpan.textContent = troubleshootingScenarios.length;
+        
+        // Functions
+        function showCard(index) {
+            if (filteredFlashcards.length === 0) return;
+            
+            index = (index + filteredFlashcards.length) % filteredFlashcards.length;
+            currentCardIndex = index;
+            
+            questionText.innerHTML = filteredFlashcards[index].question;
+            answerText.innerHTML = filteredFlashcards[index].answer;
+            currentCardSpan.textContent = filteredFlashcards.indexOf(filteredFlashcards[index]) + 1;
+            
+            questionCard.classList.add('active');
+            answerCard.classList.remove('active');
+            flipBtn.textContent = 'Show Answer';
+        }
+        
+        function flipCard() {
+            if (questionCard.classList.contains('active')) {
+                questionCard.classList.remove('active');
+                answerCard.classList.add('active');
+                flipBtn.textContent = 'Show Question';
+            } else {
+                questionCard.classList.add('active');
+                answerCard.classList.remove('active');
+                flipBtn.textContent = 'Show Answer';
+            }
+        }
+        
+        function filterCards() {
+            const filterValue = cardFilter.value;
+            if (filterValue === 'all') {
+                filteredFlashcards = [...flashcards];
+            } else {
+                filteredFlashcards = flashcards.filter(card => card.category === filterValue);
+            }
+            currentCardIndex = 0;
+            showCard(0);
+            totalCardsSpan.textContent = filteredFlashcards.length;
+        }
+        
+        function shuffleCards() {
+            for (let i = filteredFlashcards.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [filteredFlashcards[i], filteredFlashcards[j]] = [filteredFlashcards[j], filteredFlashcards[i]];
+            }
+            currentCardIndex = 0;
+            showCard(0);
+        }
+        
+        function showMcQuestion(index) {
+            if (filteredMcQuestions.length === 0) return;
+            
+            index = (index + filteredMcQuestions.length) % filteredMcQuestions.length;
+            currentMcIndex = index;
+            
+            const question = filteredMcQuestions[index];
+            mcQuestionText.innerHTML = question.question;
+            
+            // Clear previous options
+            mcOptions.innerHTML = '';
+            mcFeedback.innerHTML = '';
+            
+            // Create new options
+            question.options.forEach((option, i) => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'mc-option';
+                optionDiv.innerHTML = `<input type="radio" name="mc-option" id="option-${i}" value="${i}">
+                                      <label for="option-${i}">${option}</label>`;
+                mcOptions.appendChild(optionDiv);
+                
+                // Add event listener to check answer when option is selected
+                const radio = optionDiv.querySelector('input');
+                radio.addEventListener('change', () => {
+                    checkAnswer(i, question.answer);
+                });
+            });
+            
+            currentMcSpan.textContent = filteredMcQuestions.indexOf(filteredMcQuestions[index]) + 1;
+        }
+        
+        function checkAnswer(selectedIndex, correctIndex) {
+            const options = document.querySelectorAll('.mc-option input');
+            const feedback = document.getElementById('mc-feedback');
+            
+            options.forEach((option, i) => {
+                option.disabled = true;
+                if (i === correctIndex) {
+                    option.parentElement.style.color = 'green';
+                    option.parentElement.style.fontWeight = 'bold';
+                } else if (i === selectedIndex && i !== correctIndex) {
+                    option.parentElement.style.color = 'red';
+                }
+            });
+            
+            if (selectedIndex === correctIndex) {
+                feedback.innerHTML = '<strong>Correct!</strong>';
+                feedback.style.color = 'green';
+            } else {
+                feedback.innerHTML = '<strong>Incorrect. The correct answer is highlighted in green.</strong>';
+                feedback.style.color = 'red';
+            }
+        }
+        
+        function filterMcQuestions() {
+            const filterValue = mcFilter.value;
+            if (filterValue === 'all') {
+                filteredMcQuestions = [...mcQuestions];
+            } else {
+                filteredMcQuestions = mcQuestions.filter(question => question.category === filterValue);
+            }
+            currentMcIndex = 0;
+            showMcQuestion(0);
+            totalMcSpan.textContent = filteredMcQuestions.length;
+        }
+        
+        function shuffleMcQuestions() {
+            for (let i = filteredMcQuestions.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [filteredMcQuestions[i], filteredMcQuestions[j]] = [filteredMcQuestions[j], filteredMcQuestions[i]];
+            }
+            currentMcIndex = 0;
+            showMcQuestion(0);
+        }
+        
+        function showTroubleshooting(index) {
+            if (filteredTroubleshooting.length === 0) return;
+            
+            index = (index + filteredTroubleshooting.length) % filteredTroubleshooting.length;
+            currentTsIndex = index;
+            
+            const scenario = filteredTroubleshooting[index];
+            tsScenarioText.innerHTML = scenario.scenario;
+            tsResolutionText.innerHTML = scenario.resolution;
+            tsResolutionText.classList.add('hidden');
+            showResolutionBtn.style.display = 'block';
+            
+            currentTsSpan.textContent = filteredTroubleshooting.indexOf(filteredTroubleshooting[index]) + 1;
+        }
+        
+        function showResolution() {
+            tsResolutionText.classList.remove('hidden');
+            showResolutionBtn.style.display = 'none';
+        }
+        
+        function filterTroubleshooting() {
+            const filterValue = tsFilter.value;
+            if (filterValue === 'all') {
+                filteredTroubleshooting = [...troubleshootingScenarios];
+            } else {
+                filteredTroubleshooting = troubleshootingScenarios.filter(scenario => scenario.category === filterValue);
+            }
+            currentTsIndex = 0;
+            showTroubleshooting(0);
+            totalTsSpan.textContent = filteredTroubleshooting.length;
+        }
+        
+        function shuffleTroubleshooting() {
+            for (let i = filteredTroubleshooting.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [filteredTroubleshooting[i], filteredTroubleshooting[j]] = [filteredTroubleshooting[j], filteredTroubleshooting[i]];
+            }
+            currentTsIndex = 0;
+            showTroubleshooting(0);
+        }
+        
+        function displayQuickTips() {
+            quickTipsList.innerHTML = '';
+            quickTips.forEach(tip => {
+                const tipElement = document.createElement('div');
+                tipElement.className = 'quick-tip';
+                tipElement.innerHTML = tip;
+                quickTipsList.appendChild(tipElement);
+            });
+        }
+        
+        function switchTab(tabName) {
+            // Hide all tab contents
+            tabContents.forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Deactivate all tabs
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Activate selected tab and content
+            const selectedTab = document.querySelector(`.tab[data-tab="${tabName}"]`);
+            const selectedContent = document.getElementById(tabName);
+            
+            selectedTab.classList.add('active');
+            selectedContent.classList.add('active');
+            
+            // If switching to Quick Tips tab, display the tips
+            if (tabName === 'quick-tips') {
+                displayQuickTips();
+            }
+        }
+        
+        // Event listeners
+        flipBtn.addEventListener('click', flipCard);
+        nextBtn.addEventListener('click', () => showCard(currentCardIndex + 1));
+        prevBtn.addEventListener('click', () => showCard(currentCardIndex - 1));
+        cardFilter.addEventListener('change', filterCards);
+        shuffleBtn.addEventListener('click', shuffleCards);
+        
+        mcNextBtn.addEventListener('click', () => showMcQuestion(currentMcIndex + 1));
+        mcPrevBtn.addEventListener('click', () => showMcQuestion(currentMcIndex - 1));
+        mcFilter.addEventListener('change', filterMcQuestions);
+        mcShuffleBtn.addEventListener('click', shuffleMcQuestions);
+        
+        tsNextBtn.addEventListener('click', () => showTroubleshooting(currentTsIndex + 1));
+        tsPrevBtn.addEventListener('click', () => showTroubleshooting(currentTsIndex - 1));
+        tsFilter.addEventListener('change', filterTroubleshooting);
+        tsShuffleBtn.addEventListener('click', shuffleTroubleshooting);
+        showResolutionBtn.addEventListener('click', showResolution);
+        
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                switchTab(tab.dataset.tab);
+            });
+        });
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            const activeTab = document.querySelector('.tab-content.active').id;
+            
+            if (activeTab === 'flashcards') {
+                if (e.key === 'ArrowRight') {
+                    showCard(currentCardIndex + 1);
+                } else if (e.key === 'ArrowLeft') {
+                    showCard(currentCardIndex - 1);
+                } else if (e.key === ' ' || e.key === 'Enter') {
+                    flipCard();
+                }
+            } else if (activeTab === 'multiple-choice') {
+                if (e.key === 'ArrowRight') {
+                    showMcQuestion(currentMcIndex + 1);
+                } else if (e.key === 'ArrowLeft') {
+                    showMcQuestion(currentMcIndex - 1);
+                }
+            } else if (activeTab === 'troubleshooting') {
+                if (e.key === 'ArrowRight') {
+                    showTroubleshooting(currentTsIndex + 1);
+                } else if (e.key === 'ArrowLeft') {
+                    showTroubleshooting(currentTsIndex - 1);
+                } else if (e.key === ' ' || e.key === 'Enter') {
+                    if (tsResolutionText.classList.contains('hidden')) {
+                        showResolution();
+                    } else {
+                        showTroubleshooting(currentTsIndex + 1);
+                    }
+                }
+            }
+        });
+        
+        // Initialize
+        showCard(0);
+        showMcQuestion(0);
+        showTroubleshooting(0);
+    </script>
+</body>
+</html>
