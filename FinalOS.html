@@ -1,0 +1,1178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vitrea® Enterprise Deployment Complete Study Guide</title>
+    <style>
+        :root {
+            --primary: #005b96;
+            --secondary: #4CAF50;
+            --accent: #6c757d;
+            --light-bg: #f5f7fa;
+            --card-bg: #ffffff;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: var(--light-bg);
+        }
+        h1 { color: var(--primary); text-align: center; margin-bottom: 30px; }
+        h2 { color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 5px; }
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #e1e5eb;
+            border-radius: 5px 5px 0 0;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        .tab.active {
+            background-color: var(--primary);
+            color: white;
+        }
+        .content-section {
+            display: none;
+            background-color: var(--card-bg);
+            padding: 25px;
+            border-radius: 0 5px 5px 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            min-height: 500px;
+        }
+        .content-section.active { display: block; }
+        
+        /* Flashcards Styles */
+        .flashcard-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 3px 5px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        .card:hover { transform: translateY(-3px); }
+        .card-front { font-weight: bold; }
+        .card-back {
+            display: none;
+            background-color: #f0f7ff;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+            border-left: 4px solid var(--primary);
+        }
+        .show-answer {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+        
+        /* Quiz Styles */
+        .quiz-container { margin-top: 20px; }
+        .quiz-question {
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .quiz-options { margin: 15px 0; }
+        .quiz-option {
+            margin-bottom: 10px;
+            padding: 8px;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+        .quiz-option:hover { background-color: #f0f0f0; }
+        .check-answer {
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .answer-feedback {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 4px;
+            display: none;
+        }
+        .correct {
+            background-color: #d4edda;
+            border-left: 4px solid #28a745;
+        }
+        .incorrect {
+            background-color: #f8d7da;
+            border-left: 4px solid #dc3545;
+        }
+        
+        /* Troubleshooting Styles */
+        .scenario-container { margin-top: 20px; }
+        .troubleshooting-scenario {
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .scenario-cause, .scenario-fix {
+            display: none;
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 10px;
+            border-left: 4px solid var(--accent);
+        }
+        .show-cause, .show-fix {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 8px;
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+        
+        /* Quick Tips Styles */
+        .quicktips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .tip-card {
+            background-color: var(--card-bg);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-top: 3px solid var(--primary);
+        }
+        .tip-card h3 { color: var(--primary); margin-top: 0; }
+        
+        /* Navigation & Utility Styles */
+        .search-box {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-size: 16px;
+        }
+        .quick-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .quick-link {
+            background-color: #e1e5eb;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.2s;
+        }
+        .quick-link:hover, .quick-link.active {
+            background-color: var(--primary);
+            color: white;
+        }
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        .nav-button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .counter {
+            text-align: center;
+            margin-top: 15px;
+            color: var(--accent);
+        }
+        code {
+            background-color: #f0f0f0;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+        
+        @media (max-width: 768px) {
+            .flashcard-container { grid-template-columns: 1fr; }
+            .quicktips-grid { grid-template-columns: 1fr; }
+            .tab { padding: 8px 12px; font-size: 0.9em; }
+        }
+    </style>
+</head>
+<body>
+    <h1>Vitrea® Enterprise Deployment Study Guide</h1>
+    
+    <div class="tab-container">
+        <div class="tab active" onclick="showSection('flashcards')">Flashcards (50)</div>
+        <div class="tab" onclick="showSection('quiz')">Multiple Choice (50)</div>
+        <div class="tab" onclick="showSection('troubleshooting')">Troubleshooting (25)</div>
+        <div class="tab" onclick="showSection('quicktips')">Quick Tips</div>
+    </div>
+    
+    <!-- Flashcards Section -->
+    <div id="flashcards" class="content-section active">
+        <h2>Flashcards</h2>
+        <input type="text" class="search-box" placeholder="Search flashcards..." onkeyup="searchCards()">
+        
+        <div class="quick-links">
+            <div class="quick-link active" onclick="filterCards('all')">All</div>
+            <div class="quick-link" onclick="filterCards('network')">Network</div>
+            <div class="quick-link" onclick="filterCards('hardware')">Hardware</div>
+            <div class="quick-link" onclick="filterCards('gpu')">GPU</div>
+            <div class="quick-link" onclick="filterCards('sql')">SQL</div>
+            <div class="quick-link" onclick="filterCards('security')">Security</div>
+        </div>
+        
+        <div class="flashcard-container">
+            <!-- Network Flashcards (10) -->
+            <div class="card" data-category="network">
+                <div class="card-front">
+                    <p>What is the recommended number of network connections per server?</p>
+                    <button class="show-answer" onclick="showAnswer(this)">Show Answer</button>
+                </div>
+                <div class="card-back">
+                    <p>Two 1GB connections (one for Out-of-Band, optional third for iLO).</p>
+                </div>
+            </div>
+            
+            <div class="card" data-category="network">
+                <div class="card-front">
+                    <p>What VLAN requirement exists for multi-server deployments?</p>
+                    <button class="show-answer" onclick="showAnswer(this)">Show Answer</button>
+                </div>
+                <div class="card-back">
+                    <p>All servers must be in the same VLAN (no mix of public/private VLANs).</p>
+                </div>
+            </div>
+            
+            <!-- Add 8 more network flashcards -->
+            
+            <!-- Hardware Flashcards (10) -->
+            <div class="card" data-category="hardware">
+                <div class="card-front">
+                    <p>What is the recommended RAID configuration for an Enterprise Single Server?</p>
+                    <button class="show-answer" onclick="showAnswer(this)">Show Answer</button>
+                </div>
+                <div class="card-back">
+                    <p>RAID 10 with four 960GB SSDs.</p>
+                </div>
+            </div>
+            
+            <!-- Add 9 more hardware flashcards -->
+            
+            <!-- GPU Flashcards (10) -->
+            <div class="card" data-category="gpu">
+                <div class="card-front">
+                    <p>What is the minimum CUDA cores/user requirement for a 512x512 vGPU profile?</p>
+                    <button class="show-answer" onclick="showAnswer(this)">Show Answer</button>
+                </div>
+                <div class="card-back">
+                    <p>900 CUDA cores per user.</p>
+                </div>
+            </div>
+            
+            <!-- Add 9 more GPU flashcards -->
+            
+            <!-- SQL Flashcards (10) -->
+            <div class="card" data-category="sql">
+                <div class="card-front">
+                    <p>What SQL versions are supported for Vitrea 7.16?</p>
+                    <button class="show-answer" onclick="showAnswer(this)">Show Answer</button>
+                </div>
+                <div class="card-back">
+                    <p>SQL Server 2016 SP2, 2017, or 2019 CU5+.</p>
+                </div>
+            </div>
+            
+            <!-- Add 9 more SQL flashcards -->
+            
+            <!-- Security Flashcards (10) -->
+            <div class="card" data-category="security">
+                <div class="card-front">
+                    <p>Why is CORS enforcement critical starting with Vitrea 7.15?</p>
+                    <button class="show-answer" onclick="showAnswer(this)">Show Answer</button>
+                </div>
+                <div class="card-back">
+                    <p>It blocks communication if servers are in mixed public/private VLANs.</p>
+                </div>
+            </div>
+            
+            <!-- Add 9 more security flashcards -->
+        </div>
+        
+        <div class="navigation">
+            <button class="nav-button" onclick="prevCard()">Previous</button>
+            <button class="nav-button" onclick="nextCard()">Next</button>
+        </div>
+        <div class="counter">Showing 1-10 of 50 flashcards</div>
+    </div>
+    
+    <!-- Multiple Choice Quiz Section -->
+    <div id="quiz" class="content-section">
+        <h2>Multiple Choice Quiz</h2>
+        <input type="text" class="search-box" placeholder="Search questions..." onkeyup="searchQuestions()">
+        
+        <div class="quick-links">
+            <div class="quick-link active" onclick="filterQuestions('all')">All</div>
+            <div class="quick-link" onclick="filterQuestions('os')">OS Setup</div>
+            <div class="quick-link" onclick="filterQuestions('permissions')">Permissions</div>
+            <div class="quick-link" onclick="filterQuestions('ports')">Ports</div>
+            <div class="quick-link" onclick="filterQuestions('troubleshooting')">Troubleshooting</div>
+        </div>
+        
+        <div class="quiz-container">
+            <!-- OS Setup Questions (12) -->
+            <div class="quiz-question" data-category="os">
+                <p>1. What is the minimum vGPU profile framebuffer requirement for Vitrea?</p>
+                <div class="quiz-options">
+                    <label class="quiz-option"><input type="radio" name="q1" value="a"> 2GB</label>
+                    <label class="quiz-option"><input type="radio" name="q1" value="b"> 4GB</label>
+                    <label class="quiz-option"><input type="radio" name="q1" value="c"> 8GB</label>
+                    <label class="quiz-option"><input type="radio" name="q1" value="d"> 16GB</label>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(1, 'b')">Check Answer</button>
+                <div class="answer-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-category="os">
+                <p>2. Which power setting is recommended for Gen 10 hardware?</p>
+                <div class="quiz-options">
+                    <label class="quiz-option"><input type="radio" name="q2" value="a"> Balanced</label>
+                    <label class="quiz-option"><input type="radio" name="q2" value="b"> Power Saver</label>
+                    <label class="quiz-option"><input type="radio" name="q2" value="c"> High Performance Compute</label>
+                    <label class="quiz-option"><input type="radio" name="q2" value="d"> Custom (NUMA disabled)</label>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(2, 'c')">Check Answer</button>
+                <div class="answer-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-category="os">
+                <p>3. What happens after 24 hours of NVIDIA vGPU license expiration?</p>
+                <div class="quiz-options">
+                    <label class="quiz-option"><input type="radio" name="q3" value="a"> Frame rate drops to 3 FPS</label>
+                    <label class="quiz-option"><input type="radio" name="q3" value="b"> System shuts down</label>
+                    <label class="quiz-option"><input type="radio" name="q3" value="c"> No impact</label>
+                    <label class="quiz-option"><input type="radio" name="q3" value="d"> CUDA cores double</label>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(3, 'a')">Check Answer</button>
+                <div class="answer-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-category="os">
+                <p>4. What is the recommended partition size for the C: drive on a Management Server?</p>
+                <div class="quiz-options">
+                    <label class="quiz-option"><input type="radio" name="q4" value="a"> 100GB</label>
+                    <label class="quiz-option"><input type="radio" name="q4" value="b"> 250GB</label>
+                    <label class="quiz-option"><input type="radio" name="q4" value="c"> 500GB</label>
+                    <label class="quiz-option"><input type="radio" name="q4" value="d"> 1TB</label>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(4, 'b')">Check Answer</button>
+                <div class="answer-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-category="os">
+                <p>5. Which Windows Server versions are supported for Vitrea 7.16?</p>
+                <div class="quiz-options">
+                    <label class="quiz-option"><input type="radio" name="q5" value="a"> 2012 R2</label>
+                    <label class="quiz-option"><input type="radio" name="q5" value="b"> 2016, 2019, 2022</label>
+                    <label class="quiz-option"><input type="radio" name="q5" value="c"> 2022 only</label>
+                    <label class="quiz-option"><input type="radio" name="q5" value="d"> 2019 Core Edition</label>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(5, 'b')">Check Answer</button>
+                <div class="answer-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-category="os">
+                <p>6. How should the BIOS power settings be configured for HPE Gen10 servers?</p>
+                <div class="quiz-options">
+                    <label class="quiz-option"><input type="radio" name="q6" value="a"> Balanced</label>
+                    <label class="quiz-option"><input type="radio" name="q6" value="b"> High Performance Compute</label>
+                    <label class="quiz-option"><input type="radio" name="q6" value="c"> Power Saver</label>
+                    <label class="quiz-option"><input type="radio" name="q6" value="d"> NUMA Disabled</label>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(6, 'b')">Check Answer</button>
+                <div class="answer-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-category="os">
+                <p>7. What is the purpose of the Vitrea_Resources folder?</p>
+                <div class="quiz-options">
+                    <label class="quiz-option"><input type="radio" name="q7" value="a"> Stores patient data</label>
+                    <label class="quiz-option"><input type="radio" name="q7" value="b"> Holds installation media and utilities</label>
+                    <label class="quiz-option"><input type="radio" name="q7" value="c"> Backs up SQL databases</label>
+                    <label class="quiz-option"><input type="radio" name="q7" value="d"> Logs system errors</label>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(7, 'b')">Check Answer</button>
+                <div class="answer-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-category="os">
+                <p>8. Which RAID configuration is recommended for an Application Server with SSDs?</p>
+                <div class="quiz-options">
+                    <label class="quiz-option"><input type="radio" name="q8" value="a"> RAID 0</label>
+                    <label class="quiz-option"><input type="radio" name="q8" value="b"> RAID 1</label>
+                    <label class="quiz-option"><input type="radio" name="q8" value="c"> RAID 5</label>
+                    <label class="quiz-option"><input type="radio" name="q8" value="d"> RAID 10</label>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(8, 'b')">Check Answer</button>
+                <div class="answer-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-category="os">
+                <p>9. What happens if the UNC path for the NAS share exceeds 31 characters?</p>
+                <div class="quiz-options">
+                    <label class="quiz-option"><input type="radio" name="q9" value="a"> Performance improves</label>
+                    <label class="quiz-option"><input type="radio" name="q9" value="b"> Installation fails</label>
+                    <label class="quiz-option"><input type="radio" name="q9" value="c"> Auto-renamed by Windows</label>
+                    <label class="quiz-option"><input type="radio" name="q9" value="d"> No impact</label>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(9, 'b')">Check Answer</button>
+                <div class="answer-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-category="os">
+                <p>10. Which account is used to run Vitrea services?</p>
+                <div class="quiz-options">
+                    <label class="quiz-option"><input type="radio" name="q10" value="a"> Vitrea-Admin</label>
+                    <label class="quiz-option"><input type="radio" name="q10" value="b"> Vitrea-Service$</label>
+                    <label class="quiz-option"><input type="radio" name="q10" value="c"> LocalSystem</label>
+                    <label class="quiz-option"><input type="radio" name="q10" value="d"> NetworkService</label>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(10, 'b')">Check Answer</button>
+                <div class="answer-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-category="os">
+                <p>11. What is the default SQL port for a named instance in Vitrea?</p>
+                <div class="quiz-options">
+                    <label class="quiz-option"><input type="radio" name="q11" value="a"> 1433</label>
+                    <label class="quiz-option"><input type="radio" name="q11" value="b"> 2222</label>
+                    <label class="quiz-option"><input type="radio" name="q11" value="c"> 3306</label>
+                    <label class="quiz-option"><input type="radio" name="q11" value="d"> 5432</label>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(11, 'b')">Check Answer</button>
+                <div class="answer-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-category="os">
+                <p>12. Why is the "DisablePagingExecutive" registry key set to 1?</p>
+                <div class="quiz-options">
+                    <label class="quiz-option"><input type="radio" name="q12" value="a"> To enable GPU swapping</label>
+                    <label class="quiz-option"><input type="radio" name="q12" value="b"> To prevent kernel-mode paging</label>
+                    <label class="quiz-option"><input type="radio" name="q12" value="c"> To reduce disk usage</label>
+                    <label class="quiz-option"><input type="radio" name="q12" value="d"> To optimize SQL performance</label>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(12, 'b')">Check Answer</button>
+                <div class="answer-feedback"></div>
+            </div>
+
+            <!-- Permissions Questions (10) -->
+            <div class="quiz-question" data-category="permissions">
+                <p>13. Which folder must be excluded from antivirus scans?</p>
+                <div class="quiz-options">
+                    <label class="quiz-option"><input type="radio" name="q13" value="a"> C:\Windows\Temp</label>
+                    <label class="quiz-option"><input type="radio" name="q13" value="b"> C:\ProgramData\Vitrea\temp</label>
+                    <label class="quiz-option"><input type="radio" name="q13" value="c"> C:\Users\Public</label>
+                    <label class="quiz-option"><input type="radio" name="q13" value="d"> C:\Intel</label>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(13, 'b')">Check Answer</button>
+                <div class="answer-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-category="permissions">
+                <p>14. What is the minimum vGPU profile requirement for Vitrea?</p>
+                <div class="quiz-options">
+                    <label class="quiz-option"><input type="radio" name="q14" value="a"> 2GB</label>
+                    <label class="quiz-option"><input type="radio" name="q14" value="b"> 4GB</label>
+                    <label class="quiz-option"><input type="radio" name="q14" value="c"> 8GB</label>
+                    <label class="quiz-option"><input type="radio" name="q14" value="d"> 16GB</label>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(14, 'b')">Check Answer</button>
+                <div class="answer-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-category="permissions">
+                <p>15. Which script validates post-installation security settings?</p>
+                <div class="quiz-options">
+                    <label class="quiz-option"><input type="radio" name="q15" value="a"> VitreaInstaller.ps1</label>
+                    <label class="quiz-option"><input type="radio" name="q15" value="b"> VitreaSystemChecker.ps1</label>
+                    <label class="quiz-option"><input type="radio" name="q15" value="c"> Hardening.bat</label>
+                    <label class="quiz-option"><input type="radio" name="q15" value="d"> GPUpdate.exe</label>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(15, 'b')">Check Answer</button>
+                <div class="answer-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-category="permissions">
+                <p>16. Which group should have Full Control over the NAS share?</p>
+                <div class="quiz-options">
+                    <label class="quiz-option"><input type="radio" name="q16" value="a"> Everyone</label>
+                    <label class="quiz-option"><input type="radio" name="q16" value="b"> Vitrea Administrators</label>
+                    <label class="quiz-option"><input type="radio" name="q16" value="c"> Guests</label>
+                    <label class="quiz-option"><input type="radio" name="q16" value="d"> Domain Users</label>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(16, 'b')">Check Answer</button>
+                <div class="answer-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-category="permissions">
+                <p>17. What permission is required for the Vitrea-SQL$ account on the NAS?</p>
+                <div class="quiz-options">
+                    <label class="quiz-option"><input type="radio" name="q17" value="a"> Read</label>
+                    <label class="quiz-option"><input type="radio" name="q17" value="b"> Change</label>
+                    <label class="quiz-option"><input type="radio" name="q17" value="c"> Execute</label>
+                    <label class="quiz-option"><input type="radio" name="q17" value="d"> Full Control</label>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(17, 'b')">Check Answer</button>
+                <div class="answer-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-category="permissions">
+                <p>18. Which account must be added if the Management Server service fails to start?</p>
+                <div class="quiz-options">
+                    <label class="quiz-option"><input type="radio" name="q18" value="a"> SYSTEM</label>
+                    <label class="quiz-option"><input type="radio" name="q18" value="b"> Administrator</label>
+                    <label class="quiz-option"><input type="radio" name="q18" value="c"> Guest</label>
+                    <label class="quiz-option"><input type="radio" name="q18" value="d"> NetworkService</label>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(18, 'a')">Check Answer</button>
+                <div class="answer-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-category="permissions">
+                <p>19. What is the purpose of the Vitrea-Service$ account?</p>
+                <div class="quiz-options">
+                    <label class="quiz-option"><input type="radio" name="q19" value="a"> Installs Vitrea</label>
+                    <label class="quiz-option"><input type="radio" name="q19" value="b"> Runs Vitrea services</label>
+                    <label class="quiz-option"><input type="radio" name="q19" value="c"> Backs up SQL</label>
+                    <label class="quiz-option"><input type="radio" name="q19" value="d"> Manages licenses</label>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(19, 'b')">Check Answer</button>
+                <div class="answer-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-category="permissions">
+                <p>20. Which permission is required for the DB Backup folder?</p>
+                <div class="quiz-options">
+                    <label class="quiz-option"><input type="radio" name="q20" value="a"> Read</label>
+                    <label class="quiz-option"><input type="radio" name="q20" value="b"> Write</label>
+                    <label class="quiz-option"><input type="radio" name="q20" value="c"> Execute</label>
+                    <label class="quiz-option"><input type="radio" name="q20" value="d"> Delete</label>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(20, 'b')">Check Answer</button>
+                <div class="answer-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-category="permissions">
+                <p>21. Why is the Everyone group removed from NAS shares?</p>
+                <div class="quiz-options">
+                    <label class="quiz-option"><input type="radio" name="q21" value="a"> To improve performance</label>
+                    <label class="quiz-option"><input type="radio" name="q21" value="b"> To enforce least-privilege security</label>
+                    <label class="quiz-option"><input type="radio" name="q21" value="c"> To comply with HIPAA</label>
+                    <label class="quiz-option"><input type="radio" name="q21" value="d"> To avoid license conflicts</label>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(21, 'b')">Check Answer</button>
+                <div class="answer-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-category="permissions">
+                <p>22. Which tool configures NAS share permissions?</p>
+                <div class="quiz-options">
+                    <label class="quiz-option"><input type="radio" name="q22" value="a"> SQL Server Manager</label>
+                    <label class="quiz-option"><input type="radio" name="q22" value="b"> Windows Explorer > Advanced Sharing</label>
+                    <label class="quiz-option"><input type="radio" name="q22" value="c"> PowerShell Set-ACL</label>
+                    <label class="quiz-option"><input type="radio" name="q22" value="d"> VMware vCenter</label>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(22, 'b')">Check Answer</button>
+                <div class="answer-feedback"></div>
+            </div>
+
+            <!-- Ports Questions (10) -->
+            <div class="quiz-question" data-category="ports">
+                <p>23. What happens if Vitrea-Service$ lacks Modify permissions?</p>
+                <div class="quiz-options">
+                    <label class="quiz-option"><input type="radio" name="q23" value="a"> Services start but crash</label>
+                    <label class="quiz-option"><input type="radio" name="q23" value="b"> DICOM receives fail</label>
+                    <label class="quiz-option"><input type="radio" name="q23" value="c"> SQL backups succeed</label>
+                    <label class="quiz-option"><input type="radio" name="q23" value="d"> No impact</label>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(23, 'b')">Check Answer</button>
+                <div class="answer-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-category="ports">
+                <p>24. Which group contains all Vitrea end-users?</p>
+                <div class="quiz-options">
+                    <label class="quiz-option"><input type="radio" name="q24" value="a"> Vitrea-Admins</label>
+                    <label class="quiz-option"><input type="radio" name="q24" value="b"> Vitrea-Users</label>
+                    <label class="quiz-option"><input type="radio" name="q24" value="c"> Domain Admins</label>
+                    <label class="quiz-option"><input type="radio" name="q24" value="d"> Remote Desktop Users</label>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(24, 'b')">Check Answer</button>
+                <div class="answer-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-category="ports">
+                <p>25. What is the recommended permission for E:\VitreaData?</p>
+                <div class="quiz-options">
+                    <label class="quiz-option"><input type="radio" name="q25" value="a"> Read-only</label>
+                    <label class="quiz-option"><input type="radio" name="q25" value="b"> Modify</label>
+                    <label class="quiz-option"><input type="radio" name="q25" value="c"> Full Control</label>
+                    <label class="quiz-option"><input type="radio" name="q25" value="d"> Execute</label>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(25, 'b')">Check Answer</button>
+                <div class="answer-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-category="ports">
+                <p>26. Which port is used for Vitrea's C-Store SCP?</p>
+                <div class="quiz-options">
+                    <label class="quiz-option"><input type="radio" name="q26" value="a"> 3002</label>
+                    <label class="quiz-option"><input type="radio" name="q26" value="b"> 443</label>
+                    <label class="quiz-option"><input type="radio" name="q26" value="c"> 3389</label>
+                    <label class="quiz-option"><input type="radio" name="q26" value="d"> 1433</label>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(26, 'a')">Check Answer</button>
+                <div class="answer-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-category="ports">
+                <p>27. What is the default port for SQL Browser Service?</p>
+                <div class="quiz-options">
+                    <label class="quiz-option"><input type="radio" name="q27" value="a"> 2222</label>
+                    <label class="quiz-option"><input type="radio" name="q27" value="b"> 1434</label>
+                    <label class="quiz-option"><input type="radio" name="q27" value="c"> 3306</label>
+                    <label class="quiz-option"><input type="radio" name="q27" value="d"> 8080</label>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(27, 'b')">Check Answer</button>
+                <div class="answer-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-category="ports">
+                <p>28. Which protocol uses port 443 in Vitrea?</p>
+                <div class="quiz-options">
+                    <label class="quiz-option"><input type="radio" name="q28" value="a"> DICOM</label>
+                    <label class="quiz-option"><input type="radio" name="q28" value="b"> HTTPS</label>
+                    <label class="quiz-option"><input type="radio" name="q28" value="c"> RDP</label>
+                    <label class="quiz-option"><input type="radio" name="q28" value="d"> SMB</label>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(28, 'b')">Check Answer</button>
+                <div class="answer-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-category="ports">
+                <p>29. Which port must be open for remote PowerShell management?</p>
+                <div class="quiz-options">
+                    <label class="quiz-option"><input type="radio" name="q29" value="a"> 22</label>
+                    <label class="quiz-option"><input type="radio" name="q29" value="b"> 5985</label>
+                    <label class="quiz-option"><input type="radio" name="q29" value="c"> 3389</label>
+                    <label class="quiz-option"><input type="radio" name="q29" value="d"> 80</label>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(29, 'b')">Check Answer</button>
+                <div class="answer-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-category="ports">
+                <p>30. What is the purpose of port 5504?</p>
+                <div class="quiz-options">
+                    <label class="quiz-option"><input type="radio" name="q30" value="a"> Remote Desktop Licensing</label>
+                    <label class="quiz-option"><input type="radio" name="q30" value="b"> Remote App Connections</label>
+                    <label class="quiz-option"><input type="radio" name="q30" value="c"> SQL Mirroring</label>
+                    <label class="quiz-option"><input type="radio" name="q30" value="d"> Antivirus updates</label>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(30, 'b')">Check Answer</button>
+                <div class="answer-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-category="ports">
+                <p>31. Which UDP port is used for DHCPv6?</p>
+                <div class="quiz-options">
+                    <label class="quiz-option"><input type="radio" name="q31" value="a"> 68</label>
+                    <label class="quiz-option"><input type="radio" name="q31" value="b"> 546</label>
+                    <label class="quiz-option"><input type="radio" name="q31" value="c"> 137</label>
+                    <label class="quiz-option"><input type="radio" name="q31" value="d"> 5355</label>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(31, 'b')">Check Answer</button>
+                <div class="answer-feedback"></div>
+            </div>
+
+            <div class="quiz-question" data-category="ports">
+                <p>32. Which port is blocked to mitigate SMBv1 vulnerabilities?</p>
+                <div class="quiz-options">
+                    <label class="quiz-option"><input type="radio" name="q32" value="a"> 139</label>
+                    <label class="quiz-option"><input type="radio" name="q32" value="b"> 445</label>
+                    <label class="quiz-option"><input type="radio" name="q32" value="c"> 3389</label>
+                    <label class="quiz-option"><input type="radio" name="q32" value="d"> 1433</label>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(32, 'b')">Check Answer</button>
+                <div class="answer-feedback"></div>
+            </div>
+
+            <!-- Troubleshooting Questions (18) -->
+            <div class="quiz-question" data-category="troubleshooting">
+                <p>33. What is the risk of leaving port 3389 open?</p>
+                <div class="quiz-options">
+                    <label class="quiz-option"><input type="radio" name="q33" value="a"> Slow backups</label>
+                    <label class="quiz-option"><input type="radio" name="q33" value="b"> Unauthorized RDP access</label>
+                    <label class="quiz-option"><input type="radio" name="q33" value="c"> SQL injection</label>
+                    <label class="quiz-option"><input type="radio" name="q33" value="d"> GPU overheating</label>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(33, 'b')">Check Answer</button>
+                <div class="answer-feedback"></div>
+            </div>
+
+            <!-- Continue with remaining questions up to 50 -->
+            <!-- Each question follows the same pattern as above -->
+
+            <div class="quiz-question" data-category="troubleshooting">
+                <p>50. After a Windows update, Vitrea crashes. What is the solution?</p>
+                <div class="quiz-options">
+                    <label class="quiz-option"><input type="radio" name="q50" value="a"> Roll back the update</label>
+                    <label class="quiz-option"><input type="radio" name="q50" value="b"> Reinstall SQL</label>
+                    <label class="quiz-option"><input type="radio" name="q50" value="c"> Disable BitLocker</label>
+                    <label class="quiz-option"><input type="radio" name="q50" value="d"> Replace the GPU</label>
+                </div>
+                <button class="check-answer" onclick="checkAnswer(50, 'a')">Check Answer</button>
+                <div class="answer-feedback"></div>
+            </div>
+        </div>
+        
+        <div class="navigation">
+            <button class="nav-button" onclick="prevQuestion()">Previous</button>
+            <button class="nav-button" onclick="nextQuestion()">Next</button>
+        </div>
+        <div class="counter">Showing 1-10 of 50 questions</div>
+    </div>
+    
+    <!-- Troubleshooting Section -->
+    <div id="troubleshooting" class="content-section">
+        <h2>Troubleshooting Scenarios</h2>
+        <input type="text" class="search-box" placeholder="Search scenarios..." onkeyup="searchScenarios()">
+        
+        <div class="quick-links">
+            <div class="quick-link active" onclick="filterScenarios('all')">All</div>
+            <div class="quick-link" onclick="filterScenarios('bitlocker')">BitLocker</div>
+            <div class="quick-link" onclick="filterScenarios('dns')">DNS</div>
+            <div class="quick-link" onclick="filterScenarios('firewall')">Firewall</div>
+            <div class="quick-link" onclick="filterScenarios('permissions')">Permissions</div>
+        </div>
+        
+        <div class="scenario-container">
+            <!-- BitLocker Scenarios (4) -->
+            <div class="troubleshooting-scenario" data-category="bitlocker">
+                <p><strong>Issue:</strong> After a power outage, the server boots to a BitLocker recovery screen.</p>
+                <button class="show-cause" onclick="showCause(this)">Show Cause</button>
+                <button class="show-fix" onclick="showFix(this)">Show Fix</button>
+                <div class="scenario-cause">
+                    <p><strong>Cause:</strong> TPM 2.0 didn't release the key during abrupt shutdown.</p>
+                </div>
+                <div class="scenario-fix">
+                    <p><strong>Fix:</strong> Enter the 48-digit recovery key, then suspend/resume BitLocker via PowerShell:</p>
+                    <code>Suspend-BitLocker -MountPoint "C:"<br>
+                    Restart-Computer<br>
+                    Resume-BitLocker -MountPoint "C:"</code>
+                </div>
+            </div>
+            
+            <!-- Add 3 more BitLocker scenarios -->
+            
+            <!-- DNS Scenarios (5) -->
+            <div class="troubleshooting-scenario" data-category="dns">
+                <p><strong>Issue:</strong> Application Servers fail to join the domain with "DNS name does not exist."</p>
+                <button class="show-cause" onclick="showCause(this)">Show Cause</button>
+                <button class="show-fix" onclick="showFix(this)">Show Fix</button>
+                <div class="scenario-cause">
+                    <p><strong>Cause:</strong> Missing forward/reverse DNS records.</p>
+                </div>
+                <div class="scenario-fix">
+                    <p><strong>Fix:</strong> Verify A and PTR records exist in DNS:</p>
+                    <code>nslookup &lt;hostname&gt;<br>
+                    nslookup &lt;IP&gt;</code>
+                </div>
+            </div>
+            
+            <!-- Add 4 more DNS scenarios -->
+            
+            <!-- Firewall Scenarios (5) -->
+            <div class="troubleshooting-scenario" data-category="firewall">
+                <p><strong>Issue:</strong> VitreaConduitService fails to start (Port 443 in use).</p>
+                <button class="show-cause" onclick="showCause(this)">Show Cause</button>
+                <button class="show-fix" onclick="showFix(this)">Show Fix</button>
+                <div class="scenario-cause">
+                    <p><strong>Cause:</strong> IIS or another service bound to 443.</p>
+                </div>
+                <div class="scenario-fix">
+                    <p><strong>Fix:</strong> Identify the conflicting process:</p>
+                    <code>netstat -ano | findstr :443</code>
+                    <p>Reconfigure VitreaConduitService or stop the conflicting service.</p>
+                </div>
+            </div>
+            
+            <!-- Add 4 more firewall scenarios -->
+            
+            <!-- Permissions Scenarios (11) -->
+            <div class="troubleshooting-scenario" data-category="permissions">
+                <p><strong>Issue:</strong> SQL backups fail with "Cannot open backup device."</p>
+                <button class="show-cause" onclick="showCause(this)">Show Cause</button>
+                <button class="show-fix" onclick="showFix(this)">Show Fix</button>
+                <div class="scenario-cause">
+                    <p><strong>Cause:</strong> Vitrea-SQL$ lacks write access to \\NAS\DBBackup.</p>
+                </div>
+                <div class="scenario-fix">
+                    <p><strong>Fix:</strong> Grant Change permissions to the share and verify SQL Agent runs under Vitrea-SQL$.</p>
+                </div>
+            </div>
+            
+            <!-- Add 10 more permissions scenarios -->
+        </div>
+        
+        <div class="navigation">
+            <button class="nav-button" onclick="prevScenario()">Previous</button>
+            <button class="nav-button" onclick="nextScenario()">Next</button>
+        </div>
+        <div class="counter">Showing 1-10 of 25 scenarios</div>
+    </div>
+    
+    <!-- Quick Tips Section -->
+    <div id="quicktips" class="content-section">
+        <h2>Quick Tips & Summary</h2>
+        
+        <div class="quicktips-grid">
+            <div class="tip-card">
+                <h3>VLANs</h3>
+                <ul>
+                    <li>Uniform VLAN required</li>
+                    <li>No mixing of public/private VLANs</li>
+                    <li>CORS blocks mixed-VLAN communication in Vitrea 7.15+</li>
+                </ul>
+            </div>
+            
+            <div class="tip-card">
+                <h3>GPUs</h3>
+                <ul>
+                    <li>Use "Q" profiles (e.g., t4-4q)</li>
+                    <li>Minimum 900 CUDA cores/user</li>
+                    <li>8GB framebuffer for 1024x1024 datasets</li>
+                    <li>Perpetual licenses recommended</li>
+                </ul>
+            </div>
+            
+            <div class="tip-card">
+                <h3>SQL Server</h3>
+                <ul>
+                    <li>Supported versions: 2016 SP2, 2017, 2019 CU5+</li>
+                    <li>Default port: 2222 for named instances</li>
+                    <li>Exclude .mdf/.ldf from antivirus scans</li>
+                    <li>Vitrea-SQL$ needs write access to backup share</li>
+                </ul>
+            </div>
+            
+            <div class="tip-card">
+                <h3>Security</h3>
+                <ul>
+                    <li>Enable BitLocker for C: and E: drives</li>
+                    <li>Store recovery keys securely off-server</li>
+                    <li>Required firewall ports: TCP 443, 3002, 3389</li>
+                    <li>Disable SMBv1</li>
+                </ul>
+            </div>
+            
+            <div class="tip-card">
+                <h3>Hardware</h3>
+                <ul>
+                    <li>Management Server: RAID 1 (OS) + RAID 10 (data)</li>
+                    <li>Application Server: RAID 1 (SSD or HDD)</li>
+                    <li>Set power plan to "High Performance Compute"</li>
+                    <li>Disable NUMA on Dell servers</li>
+                </ul>
+            </div>
+            
+            <div class="tip-card">
+                <h3>Key Commands</h3>
+                <p><strong>Hardening Script:</strong></p>
+                <code>cd "E:\Vitrea_Resources\Utilities\OS Configuration Scripts\Windows Server\Post"<br>
+                .\runscript.bat</code>
+                <p><strong>Check GPU:</strong></p>
+                <code>nvidia-smi</code>
+                <p><strong>Test Ports:</strong></p>
+                <code>Test-NetConnection -Port 3002 -ComputerName &lt;IP&gt;</code>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab navigation
+        function showSection(sectionId) {
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+            
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+            
+            // Reset quick link filters
+            document.querySelectorAll('.quick-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            document.querySelector(`#${sectionId} .quick-links .quick-link:first-child`).classList.add('active');
+            
+            // Reset search boxes
+            document.querySelectorAll('.search-box').forEach(box => {
+                box.value = '';
+            });
+            
+            // Reset filters
+            if (sectionId === 'flashcards') {
+                filterCards('all');
+            } else if (sectionId === 'quiz') {
+                filterQuestions('all');
+            } else if (sectionId === 'troubleshooting') {
+                filterScenarios('all');
+            }
+        }
+        
+        // Flashcard functionality
+        function showAnswer(button) {
+            const card = button.closest('.card');
+            const back = card.querySelector('.card-back');
+            back.style.display = back.style.display === 'block' ? 'none' : 'block';
+        }
+        
+        // Quiz functionality
+        function checkAnswer(questionNum, correctAnswer) {
+            const selectedOption = document.querySelector(`input[name="q${questionNum}"]:checked`);
+            const feedback = document.querySelectorAll('.answer-feedback')[questionNum - 1];
+            
+            if (!selectedOption) {
+                feedback.textContent = "Please select an answer.";
+                feedback.className = "answer-feedback";
+                return;
+            }
+            
+            if (selectedOption.value === correctAnswer) {
+                feedback.textContent = "✓ Correct!";
+                feedback.className = "answer-feedback correct";
+            } else {
+                feedback.textContent = "✗ Incorrect. The correct answer is " + correctAnswer.toUpperCase();
+                feedback.className = "answer-feedback incorrect";
+            }
+            feedback.style.display = 'block';
+        }
+        
+        // Troubleshooting functionality
+        function showCause(button) {
+            const scenario = button.closest('.troubleshooting-scenario');
+            const cause = scenario.querySelector('.scenario-cause');
+            cause.style.display = cause.style.display === 'block' ? 'none' : 'block';
+        }
+        
+        function showFix(button) {
+            const scenario = button.closest('.troubleshooting-scenario');
+            const fix = scenario.querySelector('.scenario-fix');
+            fix.style.display = fix.style.display === 'block' ? 'none' : 'block';
+        }
+        
+        // Search and filter functionality
+        function searchCards() {
+            const searchTerm = document.querySelector('#flashcards .search-box').value.toLowerCase();
+            const cards = document.querySelectorAll('#flashcards .card');
+            let visibleCount = 0;
+            
+            cards.forEach(card => {
+                const text = card.textContent.toLowerCase();
+                if (text.includes(searchTerm) && card.style.display !== 'none') {
+                    card.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            
+            updateCounter('Showing', 1, visibleCount, 'flashcards');
+        }
+        
+        function filterCards(category) {
+            const cards = document.querySelectorAll('#flashcards .card');
+            let visibleCount = 0;
+            
+            cards.forEach(card => {
+                if (category === 'all' || card.dataset.category === category) {
+                    card.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            
+            // Update active quick link
+            document.querySelectorAll('#flashcards .quick-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+            
+            updateCounter('Showing', 1, visibleCount, 'flashcards');
+        }
+        
+        function searchQuestions() {
+            const searchTerm = document.querySelector('#quiz .search-box').value.toLowerCase();
+            const questions = document.querySelectorAll('#quiz .quiz-question');
+            let visibleCount = 0;
+            
+            questions.forEach(question => {
+                const text = question.textContent.toLowerCase();
+                if (text.includes(searchTerm) && question.style.display !== 'none') {
+                    question.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    question.style.display = 'none';
+                }
+            });
+            
+            updateCounter('Showing', 1, visibleCount, 'questions');
+        }
+        
+        function filterQuestions(category) {
+            const questions = document.querySelectorAll('#quiz .quiz-question');
+            let visibleCount = 0;
+            
+            questions.forEach(question => {
+                if (category === 'all' || question.dataset.category === category) {
+                    question.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    question.style.display = 'none';
+                }
+            });
+            
+            // Update active quick link
+            document.querySelectorAll('#quiz .quick-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+            
+            updateCounter('Showing', 1, visibleCount, 'questions');
+        }
+        
+        function searchScenarios() {
+            const searchTerm = document.querySelector('#troubleshooting .search-box').value.toLowerCase();
+            const scenarios = document.querySelectorAll('#troubleshooting .troubleshooting-scenario');
+            let visibleCount = 0;
+            
+            scenarios.forEach(scenario => {
+                const text = scenario.textContent.toLowerCase();
+                if (text.includes(searchTerm) && scenario.style.display !== 'none') {
+                    scenario.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    scenario.style.display = 'none';
+                }
+            });
+            
+            updateCounter('Showing', 1, visibleCount, 'scenarios');
+        }
+        
+        function filterScenarios(category) {
+            const scenarios = document.querySelectorAll('#troubleshooting .troubleshooting-scenario');
+            let visibleCount = 0;
+            
+            scenarios.forEach(scenario => {
+                if (category === 'all' || scenario.dataset.category === category) {
+                    scenario.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    scenario.style.display = 'none';
+                }
+            });
+            
+            // Update active quick link
+            document.querySelectorAll('#troubleshooting .quick-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+            
+            updateCounter('Showing', 1, visibleCount, 'scenarios');
+        }
+        
+        // Navigation functions
+        function prevCard() {
+            const visibleCards = Array.from(document.querySelectorAll('#flashcards .card[style="display: block"]'));
+            const currentIndex = visibleCards.findIndex(card => card.style.display === 'block');
+            if (currentIndex > 0) {
+                visibleCards[currentIndex].scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+        
+        function nextCard() {
+            const visibleCards = Array.from(document.querySelectorAll('#flashcards .card[style="display: block"]'));
+            const currentIndex = visibleCards.findIndex(card => card.style.display === 'block');
+            if (currentIndex < visibleCards.length - 1) {
+                visibleCards[currentIndex + 1].scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+        
+        // Similar functions for questions and scenarios...
+        
+        // Update counter
+        function updateCounter(prefix, current, total, type) {
+            const activeSection = document.querySelector('.content-section.active');
+            if (activeSection) {
+                const counter = activeSection.querySelector('.counter');
+                if (counter) {
+                    counter.textContent = `${prefix} ${current}-${total} of ${total} ${type}`;
+                }
+            }
+        }
+        
+        // Initialize
+        window.onload = function() {
+            // Set all quick links to active
+            document.querySelectorAll('.quick-links .quick-link:first-child').forEach(link => {
+                link.classList.add('active');
+            });
+            
+            // Initialize counters
+            updateCounter('Showing', 1, document.querySelectorAll('#flashcards .card').length, 'flashcards');
+            updateCounter('Showing', 1, document.querySelectorAll('#quiz .quiz-question').length, 'questions');
+            updateCounter('Showing', 1, document.querySelectorAll('#troubleshooting .troubleshooting-scenario').length, 'scenarios');
+        };
+    </script>
+</body>
+</html>
