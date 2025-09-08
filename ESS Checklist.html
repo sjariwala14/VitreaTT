@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vitrea Enterprise Installation Checklist</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        .checklist-section {
+            margin-bottom: 30px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 15px;
+            background-color: #f9f9f9;
+        }
+        .checklist-item {
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: white;
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+        }
+        .checklist-item:hover {
+            background-color: #f0f0f0;
+        }
+        input[type="checkbox"] {
+            margin-right: 15px;
+            transform: scale(1.3);
+        }
+        label {
+            flex-grow: 1;
+            cursor: pointer;
+        }
+        .page-ref {
+            font-size: 0.8em;
+            color: #7f8c8d;
+            margin-left: 10px;
+        }
+        .completed {
+            text-decoration: line-through;
+            color: #7f8c8d;
+        }
+        .section-toggle {
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .section-toggle::after {
+            content: "▼";
+            font-size: 0.8em;
+        }
+        .collapsed .section-toggle::after {
+            content: "►";
+        }
+        .collapsed .checklist-items {
+            display: none;
+        }
+        .progress-container {
+            margin-bottom: 20px;
+            background-color: #ecf0f1;
+            border-radius: 5px;
+            height: 20px;
+        }
+        .progress-bar {
+            background-color: #3498db;
+            height: 100%;
+            border-radius: 5px;
+            width: 0%;
+            transition: width 0.3s;
+        }
+        .progress-text {
+            text-align: center;
+            margin-top: 5px;
+            font-weight: bold;
+        }
+        .search-container {
+            margin-bottom: 20px;
+        }
+        #search {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .hidden {
+            display: none;
+        }
+        .filter-buttons {
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 5px 10px;
+            margin-right: 5px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        button.active {
+            background-color: #2c3e50;
+        }
+        .notes {
+            background-color: #fffde7;
+            padding: 10px;
+            border-left: 3px solid #ffd600;
+            margin: 10px 0;
+        }
+        .troubleshoot-details {
+            margin-left: 30px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-left: 3px solid #6c757d;
+            display: none;
+        }
+        .show-details {
+            color: #3498db;
+            cursor: pointer;
+            font-size: 0.9em;
+            margin-left: 10px;
+        }
+        .show-details::after {
+            content: "▶ Show details";
+        }
+        .details-visible .show-details::after {
+            content: "▼ Hide details";
+        }
+    </style>
+</head>
+<body>
+    <h1>Vitrea Enterprise Single Server Installation Checklist</h1>
+    
+    <div class="search-container">
+        <input type="text" id="search" placeholder="Search checklist items...">
+    </div>
+    
+    <div class="filter-buttons">
+        <button id="show-all">Show All</button>
+        <button id="show-completed">Show Completed</button>
+        <button id="show-pending">Show Pending</button>
+    </div>
+    
+    <div class="progress-container">
+        <div class="progress-bar" id="progress-bar"></div>
+    </div>
+    <div class="progress-text" id="progress-text">0% Complete</div>
+    
+    <div class="notes">
+        <strong>Important Notes:</strong>
+        <ul>
+            <li>Ensure all monitors have identical resolution, DPI, and orientation settings</li>
+            <li>Only English operating systems are supported</li>
+            <li>Virtual Machine deployments are not recommended</li>
+        </ul>
+    </div>
+    
+    <div class="checklist-section">
+        <h2 class="section-toggle">Pre-Installation Requirements</h2>
+        <div class="checklist-items">
+            <div class="checklist-item">
+                <input type="checkbox" id="item1">
+                <label for="item1">Verify CPU supports Advanced Vector Extensions 2 (AVX2) <span class="page-ref">(Page 117-123)</span></label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="item2">
+                <label for="item2">Ensure three NVIDIA Quadro P4000 8GB graphics cards or NVIDIA RTX 4000 Ada 20GB for 1K support <span class="page-ref">(Page 117-123)</span></label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="item3">
+                <label for="item3">Verify supported OS: Windows Server 2016/2019/2022 Standard with Desktop Experience <span class="page-ref">(Page 117-123)</span></label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="item4">
+                <label for="item4">Confirm network: 1.0 Gbps connection, dual 1000W power supply, iLO Advanced License <span class="page-ref">(Page 117-123)</span></label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="item5">
+                <label for="item5">Ensure monitor resolutions: 1280x1024 (minimum), 1920x1200 (recommended), 3840x2160 (maximum for VSTP apps) <span class="page-ref">(Page 117-123)</span></label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="item6">
+                <label for="item6">Prepare Vitrea_Resources Folder (Copy product download contents to E:\Vitrea_Resources\Vitrea-7.xx.xx) <span class="page-ref">(Page 21)</span></label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="item7">
+                <label for="item7">Run Vitrea System Checker Script (Navigate to E:\Vitrea_Resources\Utilities\Scripts\SystemChecker and run VitreaSystemChecker.ps1) <span class="page-ref">(Page 149)</span></label>
+            </div>
+        </div>
+    </div>
+    
+    <div class="checklist-section">
+        <h2 class="section-toggle">System Hardening and Security</h2>
+        <div class="checklist-items">
+            <div class="checklist-item">
+                <input type="checkbox" id="item8">
+                <label for="item8">Run System Hardening Script (Select [S] EnterpriseSingleServer profile) <span class="page-ref">(Page 143-144)</span></label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="item9">
+                <label for="item9">Enable BitLocker (Save recovery key to secure external location) <span class="page-ref">(Page 22-24)</span></label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="item10">
+                <label for="item10">Configure Windows Firewall (Add inbound rules for ports 3002 and 3003) <span class="page-ref">(Page 58-60, 69-70)</span></label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="item11">
+                <label for="item11">Enable SSL/TLS (Verify TLS 1.2 is enabled for secure communication) <span class="page-ref">(Page 71-73)</span></label>
+            </div>
+        </div>
+    </div>
+    
+    <div class="checklist-section">
+        <h2 class="section-toggle">Installation Process</h2>
+        <div class="checklist-items">
+            <div class="checklist-item">
+                <input type="checkbox" id="item12">
+                <label for="item12">Install NVIDIA Drivers (Use version 475.14 for Server 2016 or 553.62 for Server 2019/2022) <span class="page-ref">(Page 27-29, 122)</span></label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="item13">
+                <label for="item13">Install Vitrea Software (Run InstallVitrea.exe as administrator) <span class="page-ref">(Page 36-39)</span></label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="item14">
+                <label for="item14">Install Monthly Windows Updates <span class="page-ref">(Page 34, 58)</span></label>
+            </div>
+        </div>
+    </div>
+    
+    <div class="checklist-section">
+        <h2 class="section-toggle">Post-Installation Configuration</h2>
+        <div class="checklist-items">
+            <div class="checklist-item">
+                <input type="checkbox" id="item15">
+                <label for="item15">Set Up Accounts and Assign Groups (Create Vitrea-Admin and Vitrea-User accounts) <span class="page-ref">(Page 16-18, 20)</span></label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="item16">
+                <label for="item16">Configure SQL Server Permissions (Add Vitrea Administrators group to SQL Server logins) <span class="page-ref">(Page 48-52)</span></label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="item17">
+                <label for="item17">Activate Vitrea License (Use the Host Information Tool to verify system ID) <span class="page-ref">(Page 45-46)</span></label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="item18">
+                <label for="item18">Configure Archive and DICOM Settings (Test C-ECHO and click Apply) <span class="page-ref">(Page 46-47, 168)</span></label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="item19">
+                <label for="item19">Configure AutoDelete (Set rule-based or disk-based marking options) <span class="page-ref">(Page 53-56)</span></label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="item20">
+                <label for="item20">Enable Save to Media (Map the desired drive for export in Media Manager) <span class="page-ref">(Page 93-96)</span></label>
+            </div>
+        </div>
+    </div>
+    
+    <div class="checklist-section">
+        <h2 class="section-toggle">Optional Configurations</h2>
+        <div class="checklist-items">
+            <div class="checklist-item">
+                <input type="checkbox" id="item21">
+                <label for="item21">Configure Visia CT Lung CAD (Ensure software version is 5.1.1 or newer) <span class="page-ref">(Page 100-108)</span></label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="item22">
+                <label for="item22">Configure Cedars Applications and License Server (Install cedarsinstaller-combined.msi) <span class="page-ref">(Page 159-161)</span></label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="item23">
+                <label for="item23">Configure Snapshot Converter, Angio Viewer, CT Dental, and Filming <span class="page-ref">(Page 164-171)</span></label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="item24">
+                <label for="item24">Add 1K Support for DL380 Gen10 Plus/Gen11 (Ensure 120GB free space on E: drive) <span class="page-ref">(Page 180-182)</span></label>
+            </div>
+        </div>
+    </div>
+    
+    <div class="checklist-section">
+        <h2 class="section-toggle">Post-Installation Verification</h2>
+        <div class="checklist-items">
+            <div class="checklist-item">
+                <input type="checkbox" id="item25">
+                <label for="item25">Verify Remote Desktop Configuration (Resolve RDP blurring on Barco monitors) <span class="page-ref">(Page 62-66, 91-92)</span></label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="item26">
+                <label for="item26">Restrict IP Addresses in IIS (Add allowed IP addresses to Vital folder) <span class="page-ref">(Page 175-179)</span></label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="item27">
+                <label for="item27">Verify Session Stats (Confirm Available: 2 / Capacity: 3 / Passive: 0) <span class="page-ref">(Page 182)</span></label>
+            </div>
+        </div>
+    </div>
+    
+    <div class="checklist-section">
+        <h2 class="section-toggle">Troubleshooting</h2>
+        <div class="checklist-items">
+            <div class="checklist-item">
+                <input type="checkbox" id="trouble1">
+                <label for="trouble1">Installation fails due to script execution errors <span class="page-ref">(Page 35)</span>
+                    <span class="show-details"></span>
+                </label>
+                <div class="troubleshoot-details">
+                    <strong>Resolution:</strong>
+                    <ul>
+                        <li>Run <code>InstallVitrea.exe</code> as an administrator</li>
+                        <li>Verify <code>E:\Vitrea_Resources</code> contains correct product download contents</li>
+                        <li>Ensure system meets hardware/software requirements</li>
+                        <li>Reboot if a pending reboot is detected</li>
+                        <li>Review <code>log.txt</code> for specific error messages</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" id="trouble2">
+                <label for="trouble2">"Pending reboot" message appears during installation <span class="page-ref">(Page 38)</span>
+                    <span class="show-details"></span>
+                </label>
+                <div class="troubleshoot-details">
+                    <strong>Resolution:</strong>
+                    <ul>
+                        <li>Reboot the system and retry installation</li>
+                        <li>Close all other applications/processes that may interfere</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" id="trouble3">
+                <label for="trouble3">System Hardening Script fails or displays security warning <span class="page-ref">(Page 143-144)</span>
+                    <span class="show-details"></span>
+                </label>
+                <div class="troubleshoot-details">
+                    <strong>Resolution:</strong>
+                    <ul>
+                        <li>Open PowerShell as administrator, navigate to <code>E:\Vitrea_Resources\&lt;media contents&gt;\Utilities\Scripts</code></li>
+                        <li>Execute <code>.\runscript.bat</code> and select <code>[S] EnterpriseSingleServer</code> profile</li>
+                        <li>If security warning appears, type <code>Y</code> and press Enter</li>
+                        <li>If script still fails, temporarily set PowerShell ExecutionPolicy to Unrestricted:
+                            <pre>Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Unrestricted</pre>
+                            Revert to Restricted after execution
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" id="trouble4">
+                <label for="trouble4">C-ECHO test fails for DICOM Archive configuration <span class="page-ref">(Page 46, 69)</span>
+                    <span class="show-details"></span>
+                </label>
+                <div class="troubleshoot-details">
+                    <strong>Resolution:</strong>
+                    <ul>
+                        <li>Verify inbound firewall rules for ports 3002 (VitreaReceive) and 3003 (VitreaR)</li>
+                        <li>Enable ICMPv4-In for Echo Request in Windows Firewall:
+                            <ul>
+                                <li>Open Control Panel > Windows Firewall > Advanced Settings > Inbound Rules</li>
+                                <li>Enable "File and Printer Sharing (Echo Request - ICMPv4-In)"</li>
+                            </ul>
+                        </li>
+                        <li>Confirm correct IP address and port in Archive configuration</li>
+                        <li>Ensure querying device's IP is within allowed scope for port 3003</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" id="trouble5">
+                <label for="trouble5">RDP displays image blurring or artifacting (especially on Barco monitors) <span class="page-ref">(Page 113, 174)</span>
+                    <span class="show-details"></span>
+                </label>
+                <div class="troubleshoot-details">
+                    <strong>Resolution:</strong>
+                    <ul>
+                        <li>Disable hardware-accelerated decoding:
+                            <ul>
+                                <li>Open Remote Desktop Connection > Experience tab</li>
+                                <li>Uncheck "Enable hardware-accelerated decoding"</li>
+                            </ul>
+                        </li>
+                        <li>Ensure all monitors have identical settings:
+                            <ul>
+                                <li>Resolution: Minimum 1280x1024, Recommended 1920x1200, Maximum 3840x2160 for VSTP apps</li>
+                                <li>DPI: Match across all monitors</li>
+                                <li>Orientation: Consistent (all landscape or portrait)</li>
+                            </ul>
+                        </li>
+                        <li>Verify Remote Desktop license server and mode configuration</li>
+                        <li>Confirm Drives and Clipboard are enabled in RD Session Host settings</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" id="trouble6">
+                <label for="trouble6">License activation fails or is not recognized <span class="page-ref">(Page 45-46)</span>
+                    <span class="show-details"></span>
+                </label>
+                <div class="troubleshoot-details">
+                    <strong>Resolution:</strong>
+                    <ul>
+                        <li>Verify license details from Canon Medical</li>
+                        <li>Use the StartVitrea icon to access Licensing on the Applications Home screen</li>
+                        <li>Confirm system ID matches the Host Information Tool output</li>
+                        <li>For Cedars applications:
+                            <ul>
+                                <li>Send CSMC system identifier to <code>support@miradamedical.com</code></li>
+                                <li>Import the license file and verify at <code>http://&lt;servername&gt;:6433</code></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" id="trouble7">
+                <label for="trouble7">System does not support 1K matrix datasets or exhibits poor performance <span class="page-ref">(Page 180-182)</span>
+                    <span class="show-details"></span>
+                </label>
+                <div class="troubleshoot-details">
+                    <strong>Resolution:</strong>
+                    <ul>
+                        <li>Ensure 120GB free space on E: drive (100GB for page file, 20GB for AutoDelete)</li>
+                        <li>Set virtual memory to 1000000 MB for both Initial and Maximum size on E: drive</li>
+                        <li>Configure in Regedit:
+                            <ul>
+                                <li><code>HKEY_LOCAL_MACHINE\SOFTWARE\Vital Images\Vitrea\VitreaAvSlotSize</code> to <code>"large"</code></li>
+                                <li><code>HKEY_LOCAL_MACHINE\SOFTWARE\Vital Images\VIMS\ProductDCM</code> to <code>"false"</code></li>
+                            </ul>
+                        </li>
+                        <li>Reboot and verify Session Stats (Available: 2 / Capacity: 3 / Passive: 0)</li>
+                        <li>Use NVIDIA RTX 4000 Ada 20GB graphics cards for 1K support</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" id="trouble8">
+                <label for="trouble8">Persistent issues that cannot be resolved
+                    <span class="show-details"></span>
+                </label>
+                <div class="troubleshoot-details">
+                    <strong>Resolution:</strong>
+                    <ul>
+                        <li>Contact Canon Medical Support at 1-800-208-3005 (U.S.) or <code>support@mi.medical.canon</code></li>
+                        <li>Provide system ID, installation logs, and specific error messages</li>
+                        <li>For Cedars applications, email <code>support@miradamedical.com</code> with:
+                            <ul>
+                                <li>CSMC system identifier</li>
+                                <li>Location</li>
+                                <li>Purpose</li>
+                                <li>Computer tag</li>
+                                <li>Duration</li>
+                                <li>Type (Floating/Fixed)</li>
+                                <li>User details</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="checklist-item">
+                <input type="checkbox" id="item28">
+                <label for="item28">Review installation logs (log.txt) and Event Viewer for detailed error messages</label>
+            </div>
+            <div class="checklist-item">
+                <input type="checkbox" id="item29">
+                <label for="item29">For persistent issues, contact Canon Medical Support at 1-800-208-3005 or support@mi.medical.canon</label>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Toggle section collapse/expand
+            const sectionToggles = document.querySelectorAll('.section-toggle');
+            sectionToggles.forEach(toggle => {
+                toggle.addEventListener('click', function() {
+                    this.parentElement.classList.toggle('collapsed');
+                });
+            });
+            
+            // Initialize all sections as collapsed except the first one
+            const sections = document.querySelectorAll('.checklist-section');
+            sections.forEach((section, index) => {
+                if (index !== 0) {
+                    section.classList.add('collapsed');
+                }
+            });
+            
+            // Update progress bar
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            const progressBar = document.getElementById('progress-bar');
+            const progressText = document.getElementById('progress-text');
+            
+            function updateProgress() {
+                const checked = document.querySelectorAll('input[type="checkbox"]:checked').length;
+                const total = checkboxes.length;
+                const percentage = Math.round((checked / total) * 100);
+                
+                progressBar.style.width = percentage + '%';
+                progressText.textContent = percentage + '% Complete';
+                
+                // Update label styling
+                checkboxes.forEach(checkbox => {
+                    const label = checkbox.nextElementSibling;
+                    if (checkbox.checked) {
+                        label.classList.add('completed');
+                    } else {
+                        label.classList.remove('completed');
+                    }
+                });
+            }
+            
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updateProgress);
+            });
+            
+            // Search functionality
+            const searchInput = document.getElementById('search');
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                const items = document.querySelectorAll('.checklist-item');
+                
+                items.forEach(item => {
+                    const text = item.textContent.toLowerCase();
+                    if (text.includes(searchTerm)) {
+                        item.classList.remove('hidden');
+                    } else {
+                        item.classList.add('hidden');
+                    }
+                });
+            });
+            
+            // Filter buttons
+            document.getElementById('show-all').addEventListener('click', function() {
+                document.querySelectorAll('.checklist-item').forEach(item => {
+                    item.classList.remove('hidden');
+                });
+                this.classList.add('active');
+                document.getElementById('show-completed').classList.remove('active');
+                document.getElementById('show-pending').classList.remove('active');
+            });
+            
+            document.getElementById('show-completed').addEventListener('click', function() {
+                document.querySelectorAll('.checklist-item').forEach(item => {
+                    const checkbox = item.querySelector('input[type="checkbox"]');
+                    if (checkbox.checked) {
+                        item.classList.remove('hidden');
+                    } else {
+                        item.classList.add('hidden');
+                    }
+                });
+                this.classList.add('active');
+                document.getElementById('show-all').classList.remove('active');
+                document.getElementById('show-pending').classList.remove('active');
+            });
+            
+            document.getElementById('show-pending').addEventListener('click', function() {
+                document.querySelectorAll('.checklist-item').forEach(item => {
+                    const checkbox = item.querySelector('input[type="checkbox"]');
+                    if (!checkbox.checked) {
+                        item.classList.remove('hidden');
+                    } else {
+                        item.classList.add('hidden');
+                    }
+                });
+                this.classList.add('active');
+                document.getElementById('show-all').classList.remove('active');
+                document.getElementById('show-completed').classList.remove('active');
+            });
+            
+            // Troubleshooting details toggles
+            const detailToggles = document.querySelectorAll('.show-details');
+            detailToggles.forEach(toggle => {
+                toggle.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const item = this.closest('.checklist-item');
+                    const details = item.querySelector('.troubleshoot-details');
+                    
+                    item.classList.toggle('details-visible');
+                    if (details.style.display === 'block') {
+                        details.style.display = 'none';
+                    } else {
+                        details.style.display = 'block';
+                    }
+                });
+            });
+            
+            // Initialize progress
+            updateProgress();
+        });
+    </script>
+</body>
+</html>

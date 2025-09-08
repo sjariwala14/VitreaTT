@@ -1,0 +1,2055 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vitrea Enterprise Deployment Interactive Guide</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #c41017;
+            --secondary: #e6f2f8;
+            --success: #28a745;
+            --danger: #dc3545;
+            --warning: #ffc107;
+            --info: #17a2b8;
+            --light: #f8f9fa;
+            --dark: #343a40;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: var(--primary);
+			background: linear-gradient(135deg, var(--primary), #0066cc);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        h1, h2, h3 {
+            color: var(--primary);
+        }
+        
+        .nav-tabs {
+            display: flex;
+            list-style: none;
+            padding: 0;
+            margin: 0 0 20px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .nav-tabs li {
+            margin-right: 10px;
+        }
+        
+        .nav-tabs a {
+            display: block;
+            padding: 10px 15px;
+            text-decoration: none;
+            color: var(--primary);
+            border: 1px solid transparent;
+            border-bottom: none;
+            border-radius: 4px 4px 0 0;
+            transition: all 0.3s;
+        }
+        
+        .nav-tabs a.active {
+            background-color: white;
+            border-color: #ddd #ddd white;
+            color: var(--dark);
+            font-weight: bold;
+        }
+        
+        .tab-content {
+            display: none;
+            background: white;
+            padding: 20px;
+            border-radius: 0 4px 4px 4px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 4px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .card-header {
+            background-color: var(--secondary);
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .card-header h3 {
+            margin: 0;
+            color: var(--primary);
+        }
+        
+        .card-body {
+            padding: 15px;
+            display: none;
+        }
+        
+        .card.active .card-body {
+            display: block;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 3px 7px;
+            font-size: 12px;
+            font-weight: bold;
+            line-height: 1;
+            color: white;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            border-radius: 10px;
+        }
+        
+        .badge-simple { background-color: var(--success); }
+        .badge-medium { background-color: var(--info); }
+        .badge-hard { background-color: var(--warning); }
+        .badge-aggressive { background-color: var(--danger); }
+        
+        .btn {
+            display: inline-block;
+            padding: 6px 12px;
+            font-size: 14px;
+            font-weight: 400;
+            line-height: 1.42857143;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            cursor: pointer;
+            background-image: none;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            text-decoration: none;
+            color: white;
+            background-color: var(--primary);
+        }
+        
+        .btn:hover {
+            background-color: #004b6b;
+        }
+        
+        .answer {
+            background-color: var(--secondary);
+            padding: 15px;
+            border-left: 4px solid var(--primary);
+            margin-top: 15px;
+            display: none;
+        }
+        
+        .answer.show {
+            display: block;
+        }
+        
+        .command {
+            background-color: #f5f5f5;
+            border-left: 3px solid var(--primary);
+            padding: 10px;
+            font-family: monospace;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+        
+        .search-container {
+            margin-bottom: 20px;
+        }
+        
+        #searchInput {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        .subsystem-filter, .difficulty-filter {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .subsystem-btn, .difficulty-btn {
+            padding: 8px 15px;
+            background-color: var(--light);
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .subsystem-btn.active, .difficulty-btn.active {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .flowchart {
+            background-color: white;
+            padding: 20px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .priority-matrix {
+            margin: 20px 0;
+        }
+        
+        canvas {
+            max-width: 100%;
+            height: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: var(--secondary);
+        }
+        
+        @media (max-width: 768px) {
+            .nav-tabs {
+                flex-direction: column;
+            }
+            
+            .nav-tabs li {
+                margin-right: 0;
+                margin-bottom: 5px;
+            }
+            
+            .nav-tabs a {
+                border-radius: 4px;
+                border: 1px solid #ddd;
+            }
+            
+            .nav-tabs a.active {
+                border-radius: 4px;
+                border: 1px solid #ddd;
+            }
+            
+            .tab-content {
+                border-radius: 4px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+       	<img src="https://global.canon/en/corporate/logo/img/logo_01.png" alt="Canon Medical Logo" class="logo" text-align:right >
+     	<div class="container">
+            <h1>Vitrea Enterprise Single Server Deployment</h1>
+            <p>Interactive Troubleshooting Guide & Knowledge Base</p>
+            <p>Generated on: 03:05 AM +08, Sunday, July 13, 2025</p>
+        </div>
+	
+	<button id="darkModeToggle">🌓</button>
+	<script>
+	document.getElementById('darkModeToggle').addEventListener('click', function(){document.body.classList.toggle('dark-mode');});
+	</script>
+	<style>
+	.dark-mode { background: #222; color: #eee; }
+	.dark-mode .card { background: #333; }
+	</style>
+	
+	<button onclick="window.print()">Save as PDF</button>
+	
+    </header>
+    
+    <div class="container">
+        <ul class="nav-tabs">
+            <li><a href="#flashcards" class="active">Flashcards</a></li>
+            <li><a href="#troubleshooting">Troubleshooting</a></li>
+            <li><a href="#commands">Command Reference</a></li>
+            <li><a href="#flowcharts">Flowcharts</a></li>
+            <li><a href="#priority-matrix">Priority Matrix</a></li>
+            <li><a href="#resources">Resources</a></li>
+        </ul>
+        
+        <div id="flashcards" class="tab-content active">
+            <h2>Deployment Flashcards</h2>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Question 1: What is the Vitrea Enterprise Single Server deployment?</h3>
+                </div>
+                <div class="card-body">
+                    <p>A) A physical server with unlimited user sessions.</p>
+                    <p>B) Software allowing remote access to Vitrea applications via a host server.</p>
+                    <p>C) A cloud-based solution for Vitrea applications.</p>
+                    <p>D) A backup system for Vitrea data.</p>
+                    <button class="btn show-answer">Show Answer</button>
+                    <div class="answer">
+                        <p><strong>Answer:</strong> B) Software allowing remote access to Vitrea applications via a host server.</p>
+                        <p><strong>Reference:</strong> Deployment Guide, Slide 2</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Question 2: How many concurrent sessions does Vitrea allow?</h3>
+                </div>
+                <div class="card-body">
+                    <p>A) 2</p>
+                    <p>B) 4</p>
+                    <p>C) 6</p>
+                    <p>D) 8</p>
+                    <button class="btn show-answer">Show Answer</button>
+                    <div class="answer">
+                        <p><strong>Answer:</strong> C) 6</p>
+                        <p><strong>Reference:</strong> Deployment Guide, Slide 3</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Question 3: Which authentication method is recommended for domain deployments?</h3>
+                </div>
+                <div class="card-body">
+                    <p>A) Basic Authentication</p>
+                    <p>B) Integrated Windows Authentication (IWA)</p>
+                    <p>C) Anonymous Authentication</p>
+                    <p>D) Certificate-based Authentication</p>
+                    <button class="btn show-answer">Show Answer</button>
+                    <div class="answer">
+                        <p><strong>Answer:</strong> B) Integrated Windows Authentication (IWA)</p>
+                        <p><strong>Reference:</strong> Deployment Guide, Slide 4</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Question 4: What is the default port for DICOM STORE operations?</h3>
+                </div>
+                <div class="card-body">
+                    <p>A) 3002</p>
+                    <p>B) 3003</p>
+                    <p>C) 3389</p>
+                    <p>D) 1433</p>
+                    <button class="btn show-answer">Show Answer</button>
+                    <div class="answer">
+                        <p><strong>Answer:</strong> A) 3002 :  The default DICOM STORE AE title is VIMS_AE, and the default port is 3002.</p>
+                        <p><strong>Reference:</strong> Page 47</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Question 5: Which group must be created in Active Directory for Vitrea users?</h3>
+                </div>
+                <div class="card-body">
+                    <p>A) Vitrea_Admins</p>
+                    <p>B) Vitrea_Users</p>
+                    <p>C) Remote_Desktop_Users</p>
+                    <p>D) Both A and B</p>
+                    <button class="btn show-answer">Show Answer</button>
+                    <div class="answer">
+                        <p><strong>Answer:</strong> D) Both A and B</p>
+                        <p><strong>Reference:</strong> Page 14</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Question 6: What is the minimum disk space for AutoDelete?</h3>
+                </div>
+                <div class="card-body">
+                    <p>A) 10GB</p>
+                    <p>B) 20GB</p>
+                    <p>C) 50GB</p>
+                    <p>D) 100GB</p>
+                    <button class="btn show-answer">Show Answer</button>
+                    <div class="answer">
+                        <p><strong>Answer:</strong> B) 20GB</p>
+                        <p><strong>Reference:</strong> Page 54</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Question 7: What is the default port for DICOM QUERY/RETRIEVE?</h3>
+                </div>
+                <div class="card-body">
+                    <p>A) 3002</p>
+                    <p>B) 3003</p>
+                    <p>C) 3389</p>
+                    <p>D) 1433</p>
+                    <button class="btn show-answer">Show Answer</button>
+                    <div class="answer">
+                        <p><strong>Answer:</strong> B) 3003</p>
+                        <p><strong>Reference:</strong> Table 3.1, Page 47</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Question 8: What is the purpose of the Host Information Tool?</h3>
+                </div>
+                <div class="card-body">
+                    <p>A) Configures DICOM AE titles</p>
+                    <p>B) Generates license host files</p>
+                    <p>C) Monitors disk performance</p>
+                    <p>D) Manages Active Directory groups</p>
+                    <button class="btn show-answer">Show Answer</button>
+                    <div class="answer">
+                        <p><strong>Answer:</strong> B) Generates license host files</p>
+                        <p><strong>Reference:</strong> Page 47</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Question 9: What is the minimum page file size for 1K datasets?</h3>
+                </div>
+                <div class="card-body">
+                    <p>A) 10GB</p>
+                    <p>B) 50GB</p>
+                    <p>C) 100GB</p>
+                    <p>D) 200GB</p>
+                    <button class="btn show-answer">Show Answer</button>
+                    <div class="answer">
+                        <p><strong>Answer:</strong> C) 100GB</p>
+                        <p><strong>Reference:</strong> Page 180</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Question 10: What is the default SQL database name for Vitrea?</h3>
+                </div>
+                <div class="card-body">
+                    <p>A) VitreaDB</p>
+                    <p>B) VIDicom</p>
+                    <p>C) VIMS_Data</p>
+                    <p>D) EnterpriseDB</p>
+                    <button class="btn show-answer">Show Answer</button>
+                    <div class="answer">
+                        <p><strong>Answer:</strong> B) VIDicom</p>
+                        <p><strong>Reference:</strong> Page 49</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Question 11: Components of Vitrea Deployment (Select 2)</h3>
+                </div>
+                <div class="card-body">
+                    <p>A) Vitrea Host System (Windows OS services)</p>
+                    <p>B) Citrix Virtual Desktop</p>
+                    <p>C) Vitrea Applications (remote session software)</p>
+                    <p>D) VMware ESXi Hypervisor</p>
+                    <button class="btn show-answer">Show Answer</button>
+                    <div class="answer">
+                        <p><strong>Answer:</strong> A, C</p>
+                        <p><strong>Explanation:</strong> Host System manages background processes; Vitrea Applications enable remote access.</p>
+                        <p><strong>Reference:</strong> Advanced Flashcard Set, Question 1</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Question 12: PACS Integration Limitations</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Statement:</strong> Vitrea supports domain and workgroup deployments, but PACS integrations are only for domain deployments.</p>
+                    <p>A) True</p>
+                    <p>B) False</p>
+                    <button class="btn show-answer">Show Answer</button>
+                    <div class="answer">
+                        <p><strong>Answer:</strong> True</p>
+                        <p><strong>Justification:</strong> Page 14: "Enterprise Single Server PACS integrations are only supported for Domain deployments."</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Question 13: Match Vitrea Features to Descriptions</h3>
+                </div>
+                <div class="card-body">
+                    <table>
+                        <tr><th>Feature</th><th>Description</th></tr>
+                        <tr><td>AutoDelete</td><td>A) Configures DICOM AE titles and ports</td></tr>
+                        <tr><td>IWA</td><td>B) Automatically removes old studies</td></tr>
+                        <tr><td>Host Information Tool</td><td>C) Enables single sign-on with Active Directory</td></tr>
+                        <tr><td>DICOM Receive</td><td>D) Generates license host files</td></tr>
+                    </table>
+                    <button class="btn show-answer">Show Answer</button>
+                    <div class="answer">
+                        <p><strong>Answer:</strong> 1→B, 2→C, 3→D, 4→A</p>
+                        <p><strong>Reference:</strong> Advanced Flashcard Set, Question 3</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Question 14: Workgroup Deployment Scenario</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Scenario:</strong> Hospital deploys Vitrea for 6 radiologists in a workgroup, needing AutoDelete.</p>
+                    <p><strong>Question:</strong> Which actions are required? (Select all)</p>
+                    <p>A) Configure IWA</p>
+                    <p>B) Set up AutoDelete disk-based rules</p>
+                    <p>C) Create local user accounts</p>
+                    <p>D) Join Active Directory domain</p>
+                    <button class="btn show-answer">Show Answer</button>
+                    <div class="answer">
+                        <p><strong>Answer:</strong> B, C</p>
+                        <p><strong>Explanation:</strong> Workgroups use local accounts (C); AutoDelete manages disk space (B). IWA/AD are domain-specific (A, D).</p>
+                        <p><strong>Reference:</strong> Advanced Flashcard Set, Question 4</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Question 15: Domain Deployment Scenario</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Scenario:</strong> Hospital deploys Vitrea in a domain with PACS integration.</p>
+                    <p><strong>Question:</strong> Which configuration is required?</p>
+                    <p>A) Configure local accounts</p>
+                    <p>B) Set IWA in Vitrea Administration Tool</p>
+                    <p>C) Disable Active Directory</p>
+                    <p>D) Use default AE Title only</p>
+                    <button class="btn show-answer">Show Answer</button>
+                    <div class="answer">
+                        <p><strong>Answer:</strong> B) Set IWA in Vitrea Administration Tool</p>
+                        <p><strong>Explanation:</strong> Domain deployments require IWA for single sign-on (Page 14).</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Question 16: DICOM Configuration Defaults</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Question:</strong> The default DICOM STORE AE title is ______, and the default port is ______.</p>
+                    <button class="btn show-answer">Show Answer</button>
+                    <div class="answer">
+                        <p><strong>Answer:</strong> VIMS_AE, 3002</p>
+                        <p><strong>Reference:</strong> Page 47</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Question 17: Administrator - Session Management</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Question:</strong> What command lists active sessions on the Vitrea server?</p>
+                    <p>A) <code>netstat -an</code></p>
+                    <p>B) <code>qwinsta /server:localhost</code></p>
+                    <p>C) <code>Get-Service</code></p>
+                    <p>D) <code>tasklist</code></p>
+                    <button class="btn show-answer">Show Answer</button>
+                    <div class="answer">
+                        <p><strong>Answer:</strong> B) <code>qwinsta /server:localhost</code></p>
+                        <p><strong>Reference:</strong> Page 66</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Question 18: Installer - Firewall Configuration</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Question:</strong> Which port must be open for DICOM QUERY/RETRIEVE?</p>
+                    <p>A) 3002</p>
+                    <p>B) 3003</p>
+                    <p>C) 3389</p>
+                    <p>D) 1433</p>
+                    <button class="btn show-answer">Show Answer</button>
+                    <div class="answer">
+                        <p><strong>Answer:</strong> B) 3003</p>
+                        <p><strong>Reference:</strong> Page 150</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Question 19: Architect - High-Availability Requirement</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Question:</strong> What is a single point of failure in a Vitrea Single Server deployment?</p>
+                    <p>A) Active Directory</p>
+                    <p>B) The server itself</p>
+                    <p>C) PACS integration</p>
+                    <p>D) AutoDelete</p>
+                    <button class="btn show-answer">Show Answer</button>
+                    <div class="answer">
+                        <p><strong>Answer:</strong> B) The server itself</p>
+                        <p><strong>Reference:</strong> For Architects, Question 5</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Question 20: Common End-Users</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Question:</strong> _____ are one of the most common end-users you will work with.</p>
+                    <p>A) IT Professionals</p>
+                    <p>B) Physicians</p>
+                    <p>C) PACS Administrators</p>
+                    <p>D) Nuclear Medicine Technologists</p>
+                    <button class="btn show-answer">Show Answer</button>
+                    <div class="answer">
+                        <p><strong>Answer:</strong> B) Physicians</p>
+                        <p><strong>Reference:</strong> Questions.docx</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Question 21: Most Common Physician</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Question:</strong> The most common physician you will work with is a _____, who has gone through Medical School and additional training in Radiology.</p>
+                    <p>A) Cardiologist</p>
+                    <p>B) Oncologist</p>
+                    <p>C) Radiologist</p>
+                    <p>D) Pediatrician</p>
+                    <button class="btn show-answer">Show Answer</button>
+                    <div class="answer">
+                        <p><strong>Answer:</strong> C) Radiologist</p>
+                        <p><strong>Reference:</strong> Questions.docx</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Question 22: Remote Desktop Connection Broker</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Question:</strong> Balancing, system allocations, and access control are handled by the _____.</p>
+                    <p>A) Microsoft Hyper-V</p>
+                    <p>B) Microsoft Remote Desktop Connection Broker (RDCB)</p>
+                    <p>C) System Provision Allocator</p>
+                    <p>D) Vitrea Administration Tool</p>
+                    <button class="btn show-answer">Show Answer</button>
+                    <div class="answer">
+                        <p><strong>Answer:</strong> B) Microsoft Remote Desktop Connection Broker (RDCB)</p>
+                        <p><strong>Reference:</strong> Questions.docx</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Question 23: Vitrea Installer Permissions</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Statement:</strong> In Windows deployments, the Vitrea installer correctly sets permissions to all files, folders, and registry keys deployed by Canon Medical Informatics.</p>
+                    <p>A) True</p>
+                    <p>B) False</p>
+                    <button class="btn show-answer">Show Answer</button>
+                    <div class="answer">
+                        <p><strong>Answer:</strong> A) True</p>
+                        <p><strong>Reference:</strong> Questions.docx</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Question 24: ACLs and Permissions</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Statement:</strong> ACLs are adjusted to provide read/write/execute access to local Users and Administrators using Windows Installer’s native LockPermissions table.</p>
+                    <p>A) True</p>
+                    <p>B) False</p>
+                    <button class="btn show-answer">Show Answer</button>
+                    <div class="answer">
+                        <p><strong>Answer:</strong> B) False :Explanation: While the Vitrea installer does set permissions correctly (as stated in Flashcard 23), it does not use Windows Installer's native LockPermissions table for this purpose. Instead, it uses custom scripts to manage ACLs.</p>
+                        <p><strong>Reference:</strong> Vitrea Installation Documentation, Security Configuration Section</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Question 25: Resource Limits</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Question:</strong> Resource limits are established in the _____ configuration tools and enforced by the OS.</p>
+                    <p>A) Microsoft Hyper-V</p>
+                    <p>B) Vitrea Administration Tool</p>
+                    <p>C) System Provision Allocator</p>
+                    <p>D) Windows Firewall</p>
+                    <button class="btn show-answer">Show Answer</button>
+                    <div class="answer">
+                        <p><strong>Answer:</strong> A) Microsoft Hyper-V</p>
+                        <p><strong>Reference:</strong> Questions.docx</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Question 26: Remote Access Method</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Question:</strong> One simple method for accessing Vitrea remotely is by using _____.</p>
+                    <p>A) Citrix Virtual Desktop</p>
+                    <p>B) Microsoft’s Remote Desktop client</p>
+                    <p>C) VMware Horizon</p>
+                    <p>D) Thin Client</p>
+                    <button class="btn show-answer">Show Answer</button>
+                    <div class="answer">
+                        <p><strong>Answer:</strong> B) Microsoft’s Remote Desktop client</p>
+                        <p><strong>Reference:</strong> Questions.docx</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Question 27: PACS Integration Component</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Question:</strong> In a PACS environment, an integration component bundled with the _____ is leveraged.</p>
+                    <p>A) Thin Client</p>
+                    <p>B) Microsoft Hyper-V</p>
+                    <p>C) Vitrea Host System</p>
+                    <p>D) Remote Desktop Services</p>
+                    <button class="btn show-answer">Show Answer</button>
+                    <div class="answer">
+                        <p><strong>Answer:</strong> A) Thin Client</p>
+                        <p><strong>Reference:</strong> Vitrea Enterprise Architecture Documentation, Page 32</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Question 28: Thin Client Capabilities</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Question:</strong> The _____ software includes the ability to connect to a Vitrea system and run web and desktop apps, plus import and archive files locally.</p>
+                    <p>A) Vitrea Administration Tool</p>
+                    <p>B) Thin Client</p>
+                    <p>C) Multi-Modality Viewer</p>
+                    <p>D) ESS</p>
+                    <button class="btn show-answer">Show Answer</button>
+                    <div class="answer">
+                        <p><strong>Answer:</strong> B) Thin Client</p>
+                        <p><strong>Reference:</strong> Questions.docx</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Question 29: All-in-One Server Requirements</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Question:</strong> The All-in-One server requires _____ and may be deployed in a Domain or Workgroup.</p>
+                    <p>A) SQL Express</p>
+                    <p>B) SQL Server Enterprise</p>
+                    <p>C) IIS</p>
+                    <p>D) Active Directory</p>
+                    <button class="btn show-answer">Show Answer</button>
+                    <div class="answer">
+                        <p><strong>Answer:</strong> A) SQL Express</p>
+                        <p><strong>Reference:</strong> Questions.docx</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Question 30: Enterprise Single Server Description</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Question:</strong> The _____ is a simple one-server Vitrea Advanced Visualization configuration for six concurrent users.</p>
+                    <p>A) Single User PowerStation</p>
+                    <p>B) Enterprise Single Server</p>
+                    <p>C) All-in-One Server</p>
+                    <p>D) ESS</p>
+                    <button class="btn show-answer">Show Answer</button>
+                    <div class="answer">
+                        <p><strong>Answer:</strong> B) Enterprise Single Server</p>
+                        <p><strong>Reference:</strong> Questions.docx</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Question 31: Vascular Runoff CT Application</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Question:</strong> The _____ application is used to analyze vessels in the legs or arms, including measurements and 3D batches.</p>
+                    <p>A) Breast MR</p>
+                    <p>B) Musculoskeletal MR</p>
+                    <p>C) Vascular: Runoff CT</p>
+                    <p>D) Multi-Modality Viewer</p>
+                    <button class="btn show-answer">Show Answer</button>
+                    <div class="answer">
+                        <p><strong>Answer:</strong> C) Vascular: Runoff CT</p>
+                        <p><strong>Reference:</strong> Questions.docx</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Question 32: Breast MR Application</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Question:</strong> The _____ application allows segmentation of breast tumors for pre-surgical planning.</p>
+                    <p>A) Vascular: Runoff CT</p>
+                    <p>B) Breast MR</p>
+                    <p>C) Musculoskeletal MR</p>
+                    <p>D) Multi-Modality Viewer</p>
+                    <button class="btn show-answer">Show Answer</button>
+                    <div class="answer">
+                        <p><strong>Answer:</strong> B) Breast MR</p>
+                        <p><strong>Reference:</strong> Questions.docx</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Question 33: Musculoskeletal MR Application</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Question:</strong> The _____ application allows segmentation and measurements of joints or bones.</p>
+                    <p>A) Vascular: Runoff CT</p>
+                    <p>B) Breast MR</p>
+                    <p>C) Musculoskeletal MR</p>
+                    <p>D) Multi-Modality Viewer</p>
+                    <button class="btn show-answer">Show Answer</button>
+                    <div class="answer">
+                        <p><strong>Answer:</strong> C) Musculoskeletal MR</p>
+                        <p><strong>Reference:</strong> Questions.docx</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Question 34: Multi-Modality Viewer Capabilities</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Question:</strong> The _____ is a 2D DICOM viewing application that supports viewing _____.</p>
+                    <p>A) Multi-Modality Viewer, Structured Reports (SR)</p>
+                    <p>B) Thin Client, 3D images</p>
+                    <p>C) ESS, MPR images</p>
+                    <p>D) Vitrea Administration Tool, DICOM archives</p>
+                    <button class="btn show-answer">Show Answer</button>
+                    <div class="answer">
+                        <p><strong>Answer:</strong> A) Multi-Modality Viewer, Structured Reports (SR)</p>
+                        <p><strong>Reference:</strong> Questions.docx</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Question 35: System Hardening Script</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Statement:</strong> The Vitrea system hardening script is disabled by default and must be enabled during installation.</p>
+                    <p>A) True</p>
+                    <p>B) False</p>
+                    <button class="btn show-answer">Show Answer</button>
+                    <div class="answer">
+                        <p><strong>Answer:</strong> A) True</p>
+                        <p><strong>Reference:</strong> Questions.docx</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Question 36: All-in-One Server Hypervisor</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Question:</strong> The All-in-One server is well-suited to configuration with _____ to allow self-contained deployment of other software products.</p>
+                    <p>A) Microsoft’s Hypervisor technology</p>
+                    <p>B) VMware ESXi</p>
+                    <p>C) Citrix Hypervisor</p>
+                    <p>D) Oracle VirtualBox</p>
+                    <button class="btn show-answer">Show Answer</button>
+                    <div class="answer">
+                        <p><strong>Answer:</strong> A) Microsoft’s Hypervisor technology</p>
+                        <p><strong>Reference:</strong> Questions.docx</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Question 37: Remote Desktop Technologies</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Question:</strong> Vitrea applications are installed on a system that allows remote access via _____.</p>
+                    <p>A) Citrix Virtual Apps</p>
+                    <p>B) Microsoft Remote Desktop technologies</p>
+                    <p>C) VMware Horizon</p>
+                    <p>D) Thin Client APIs</p>
+                    <button class="btn show-answer">Show Answer</button>
+                    <div class="answer">
+                        <p><strong>Answer:</strong> B) Microsoft Remote Desktop technologies</p>
+                        <p><strong>Reference:</strong> Questions.docx</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Question 38: Single User PowerStation</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Question:</strong> The _____ is similar to a single-user workstation and does not require _____ on the system.</p>
+                    <p>A) Enterprise Single Server, SQL Express</p>
+                    <p>B) Single User PowerStation, IIS and SQL Server</p>
+                    <p>C) All-in-One Server, Active Directory</p>
+                    <p>D) Thin Client, Hyper-V</p>
+                    <button class="btn show-answer">Show Answer</button>
+                    <div class="answer">
+                        <p><strong>Answer:</strong> B) Single User PowerStation, IIS and SQL Server</p>
+                        <p><strong>Reference:</strong> Questions.docx</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Question 39: Software Architecture Model</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Question:</strong> The Software Architecture Structure of Vitrea is presented in a _____ model.</p>
+                    <p>A) 3+1</p>
+                    <p>B) 4+1</p>
+                    <p>C) 5+1</p>
+                    <p>D) Layered</p>
+                    <button class="btn show-answer">Show Answer</button>
+                    <div class="answer">
+                        <p><strong>Answer:</strong> B) 4+1</p>
+                        <p><strong>Reference:</strong> Questions.docx</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Question 40: VSP Management Service</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Question:</strong> The VSP Management Service is called the _____ of the VSP Central Hub, used for Web Services and API.</p>
+                    <p>A) Core</p>
+                    <p>B) Heart</p>
+                    <p>C) Brain</p>
+                    <p>D) Engine</p>
+                    <button class="btn show-answer">Show Answer</button>
+                    <div class="answer">
+                        <p><strong>Answer:</strong> B) Heart</p>
+                        <p><strong>Reference:</strong> Questions.docx</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Question 41: User Account Management</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Question:</strong> User accounts and their group memberships are created and managed using _____.</p>
+                    <p>A) Vitrea Administration Tool</p>
+                    <p>B) Microsoft Windows</p>
+                    <p>C) Active Directory only</p>
+                    <p>D) System Provision Allocator</p>
+                    <button class="btn show-answer">Show Answer</button>
+                    <div class="answer">
+                        <p><strong>Answer:</strong> B) Microsoft Windows</p>
+                        <p><strong>Reference:</strong> Questions.docx</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Question 42: System Provision Allocator</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Question:</strong> Vitrea apps are launched under the control of the _____ to ensure resource assignment and isolation.</p>
+                    <p>A) Microsoft Hyper-V</p>
+                    <p>B) System Provision Allocator</p>
+                    <p>C) Remote Desktop Connection Broker</p>
+                    <p>D) Vitrea Host System</p>
+                    <button class="btn show-answer">Show Answer</button>
+                    <div class="answer">
+                        <p><strong>Answer:</strong> B) System Provision Allocator</p>
+                        <p><strong>Reference:</strong> Questions.docx</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Question 43: Analytics Engine</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Question:</strong> Vitrea Systems Health and information is managed by the _____.</p>
+                    <p>A) Analytics Eng</p>
+                    <p>B) VSP Central Hub</p>
+                    <p>C) DICOM Archive</p>
+                    <p>D) Vitrea Administration Tool</p>
+                    <button class="btn show-answer">Show Answer</button>
+                    <div class="answer">
+                        <p><strong>Answer:</strong> A) Analytics Eng</p>
+                        <p><strong>Reference:</strong> Questions.docx</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Question 44: DICOM Archive Format</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Question:</strong> Data stored in VIMS is converted into a proprietary DICOM Archive format known as _____.</p>
+                    <p>A) VIMS</p>
+                    <p>B) DAR</p>
+                    <p>C) ESS</p>
+                    <p>D) MPR</p>
+                    <button class="btn show-answer">Show Answer</button>
+                    <div class="answer">
+                        <p><strong>Answer:</strong> B) DAR</p>
+                        <p><strong>Reference:</strong> Questions.docx</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Question 45: Chromium Embedded Framework</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Question:</strong> The _____ Framework (CEF) browser is included as part of the Vitrea shell.</p>
+                    <p>A) Chromium Embedded</p>
+                    <p>B) Webkit</p>
+                    <p>C) Gecko</p>
+                    <p>D) EdgeHTML</p>
+                    <button class="btn show-answer">Show Answer</button>
+                    <div class="answer">
+                        <p><strong>Answer:</strong> A) Chromium Embedded</p>
+                        <p><strong>Reference:</strong> Questions.docx</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Question 46: Enterprise Storage Server</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Question:</strong> Vitrea _____ is a centralized server that enables access to images across the enterprise.</p>
+                    <p>A) VIMS</p>
+                    <p>B) ESS</p>
+                    <p>C) DAR</p>
+                    <p>D) Thin Client</p>
+                    <button class="btn show-answer">Show Answer</button>
+                    <div class="answer">
+                        <p><strong>Answer:</strong> B) ESS</p>
+                        <p><strong>Reference:</strong> Questions.docx</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Question 47: Uniform Device Identifier</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Question:</strong> The single FDA-required _____ per release is tied to the Bootstrapper build number.</p>
+                    <p>A) Uniform Device Identifier (UDI)</p>
+                    <p>B) Device Serial Number</p>
+                    <p>C) Software Version Tag</p>
+                    <p>D) Product Key</p>
+                    <button class="btn show-answer">Show Answer</button>
+                    <div class="answer">
+                        <p><strong>Answer:</strong> A) Uniform Device Identifier (UDI)</p>
+                        <p><strong>Reference:</strong> Questions.docx</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Question 48: DICOM Standard Compliance</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Question:</strong> The Vitrea solution conforms to the _____ for receiving, sending, and creating medical images.</p>
+                    <p>A) HL7 standard</p>
+                    <p>B) DICOM standard</p>
+                    <p>C) FHIR standard</p>
+                    <p>D) ISO 27001</p>
+                    <button class="btn show-answer">Show Answer</button>
+                    <div class="answer">
+                        <p><strong>Answer:</strong> B) DICOM standard</p>
+                        <p><strong>Reference:</strong> Questions.docx</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Question 49: EMR Definition</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Question:</strong> An _____ contains the electronic record of health-related information on an individual, aiming to replace paper medical records.</p>
+                    <p>A) PHR</p>
+                    <p>B) EMR</p>
+                    <p>C) DICOM</p>
+                    <p>D) MPR</p>
+                    <button class="btn show-answer">Show Answer</button>
+                    <div class="answer">
+                        <p><strong>Answer:</strong> B) EMR</p>
+                        <p><strong>Reference:</strong> Questions.docx</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Question 50: PHR Definition</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Question:</strong> A _____ enables patients to maintain their own health records, accessible online with credentials.</p>
+                    <p>A) EMR</p>
+                    <p>B) PHR</p>
+                    <p>C) DICOM</p>
+                    <p>D) MPR</p>
+                    <button class="btn show-answer">Show Answer</button>
+                    <div class="answer">
+                        <p><strong>Answer:</strong> B) PHR</p>
+                        <p><strong>Reference:</strong> Questions.docx</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Question 51: DICOM Standard Definition</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Question:</strong> The _____ is the primary standard for medical imaging, ensuring interoperability since 1985.</p>
+                    <p>A) HL7</p>
+                    <p>B) FHIR</p>
+                    <p>C) DICOM</p>
+                    <p>D) ISO 27001</p>
+                    <button class="btn show-answer">Show Answer</button>
+                    <div class="answer">
+                        <p><strong>Answer:</strong> C) DICOM</p>
+                        <p><strong>Reference:</strong> Questions.docx</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Question 52: SCU and SCP Roles</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Question:</strong> In DICOM communication, SCU is the _____ side, and SCP is the _____ side.</p>
+                    <p>A) Service, Request</p>
+                    <p>B) Request, Service</p>
+                    <p>C) Client, Server</p>
+                    <p>D) Server, Client</p>
+                    <button class="btn show-answer">Show Answer</button>
+                    <div class="answer">
+                        <p><strong>Answer:</strong> B) Request, Service</p>
+                        <p><strong>Reference:</strong> Questions.docx</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Question 53: MPR Definition</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Question:</strong> _____ images (axial, coronal, sagittal) are reconstructed from a single-plane study in Vitrea AV.</p>
+                    <p>A) DAR</p>
+                    <p>B) MPR</p>
+                    <p>C) ESS</p>
+                    <p>D) Structured Reports</p>
+                    <button class="btn show-answer">Show Answer</button>
+                    <div class="answer">
+                        <p><strong>Answer:</strong> B) MPR</p>
+                        <p><strong>Reference:</strong> Questions.docx</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Question 54: Cardiologist Role</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Question:</strong> A _____ has advanced schooling related to the heart.</p>
+                    <p>A) Cardiologist</p>
+                    <p>B) Oncologist</p>
+                    <p>C) Orthopedic Surgeon</p>
+                    <p>D) Pediatrician</p>
+                    <button class="btn show-answer">Show Answer</button>
+                    <div class="answer">
+                        <p><strong>Answer:</strong> A) Cardiologist</p>
+                        <p><strong>Reference:</strong> Questions.docx</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Question 55: Oncologist Role</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Question:</strong> An _____ has advanced schooling related to cancer.</p>
+                    <p>A) Cardiologist</p>
+                    <p>B) Oncologist</p>
+                    <p>C) Orthopedic Surgeon</p>
+                    <p>D) Pediatrician</p>
+                    <button class="btn show-answer">Show Answer</button>
+                    <div class="answer">
+                        <p><strong>Answer:</strong> B) Oncologist</p>
+                        <p><strong>Reference:</strong> Questions.docx</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Question 56: Orthopedic Surgeon Role</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Question:</strong> An _____ has advanced schooling related to muscles, bones, joints, and the spine.</p>
+                    <p>A) Cardiologist</p>
+                    <p>B) Oncologist</p>
+                    <p>C) Orthopedic Surgeon</p>
+                    <p>D) Pediatrician</p>
+                    <button class="btn show-answer">Show Answer</button>
+                    <div class="answer">
+                        <p><strong>Answer:</strong> C) Orthopedic Surgeon</p>
+                        <p><strong>Reference:</strong> Questions.docx</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Question 57: Pediatrician Role</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Question:</strong> A _____ has advanced schooling in children and their diseases.</p>
+                    <p>A) Cardiologist</p>
+                    <p>B) Oncologist</p>
+                    <p>C) Orthopedic Surgeon</p>
+                    <p>D) Pediatrician</p>
+                    <button class="btn show-answer">Show Answer</button>
+                    <div class="answer">
+                        <p><strong>Answer:</strong> D) Pediatrician</p>
+                        <p><strong>Reference:</strong> Questions.docx</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Question 58: Technical Roles</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Question:</strong> Match the technical role to its description:</p>
+                    <table>
+                        <tr><th>Role</th><th>Description</th></tr>
+                        <tr><td>Radiologic Technologist</td><td>A) Monitors PACS images</td></tr>
+                        <tr><td>Nuclear Medicine Technologist</td><td>B) Acquires CT/MRI/XA studies</td></tr>
+                        <tr><td>PACS Administrator</td><td>C) Acquires PET/Nuclear Medicine studies</td></tr>
+                        <tr><td>IT Professional</td><td>D) Has networking/computer science background</td></tr>
+                    </table>
+                    <button class="btn show-answer">Show Answer</button>
+                    <div class="answer">
+                        <p><strong>Answer:</strong> 1→B, 2→C, 3→A, 4→D</p>
+                        <p><strong>Reference:</strong> Questions.docx</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="troubleshooting" class="tab-content">
+            <h2>Troubleshooting Guide</h2>
+            
+            <div class="search-container">
+                <input type="text" id="searchInput" placeholder="Search symptoms, error messages...">
+            </div>
+            
+            <div class="subsystem-filter">
+                <button class="subsystem-btn active" data-subsystem="all">All Subsystems</button>
+                <button class="subsystem-btn" data-subsystem="dicom">DICOM</button>
+                <button class="subsystem-btn" data-subsystem="sql">SQL Server</button>
+                <button class="subsystem-btn" data-subsystem="rds">Remote Desktop</button>
+                <button class="subsystem-btn" data-subsystem="storage">Storage</button>
+                <button class="subsystem-btn" data-subsystem="security">Security</button>
+				<button class="subsystem-btn" data-subsystem="network">Network</button>
+                <button class="subsystem-btn" data-subsystem="auth">Authentication</button>
+            </div>
+            
+            <div class="difficulty-filter">
+                <button class="difficulty-btn badge-simple active" data-difficulty="simple">Simple</button>
+                <button class="difficulty-btn badge-medium active" data-difficulty="medium">Medium</button>
+                <button class="difficulty-btn badge-hard active" data-difficulty="hard">Hard</button>
+                <button class="difficulty-btn badge-aggressive active" data-difficulty="aggressive">Aggressive</button>
+            </div>
+            
+            <div class="card" data-subsystem="rds" data-difficulty="simple">
+                <div class="card-header">
+                    <h3>Users get "No sessions available" with 4 connections</h3>
+                    <span class="badge badge-simple">Simple</span>
+                </div>
+                <div class="card-body">
+                    <p><strong>Root Cause:</strong> Exhausted RDS CALs or service crash</p>
+                    <p><strong>Steps:</strong></p>
+                    <ol>
+                        <li>Check sessions: <code>qwinsta /server:localhost</code></li>
+                        <li>Verify RDS CALs in Remote Desktop Licensing Manager</li>
+                        <li>Restart <code>VitreaRemoteDesktopServices</code> service</li>
+                    </ol>
+                    <p><strong>Reference:</strong> Page 66</p>
+                </div>
+            </div>
+            
+            <div class="card" data-subsystem="dicom" data-difficulty="medium">
+                <div class="card-header">
+                    <h3>DICOM Transfer Failure: "Association Rejected"</h3>
+                    <span class="badge badge-medium">Medium</span>
+                </div>
+                <div class="card-body">
+                    <p><strong>Root Cause:</strong> AE Title mismatch or firewall issue</p>
+                    <p><strong>Steps:</strong></p>
+                    <ol>
+                        <li>Confirm AE Title/Port in <code>Vitrea Administration Tool → DICOM Receive</code></li>
+                        <li>Test connection: <code>.\echoscu.exe -aet VIMS_AE -aec PACS_AE 192.168.1.100 104</code></li>
+                        <li>Check firewall for port 3002</li>
+                    </ol>
+                    <p><strong>Fix:</strong> Update AE Title in <code>DICOMReceive.xml</code> and restart <code>VI.Enterprise.Servers.Acceptor</code></p>
+                    <p><strong>Reference:</strong> Page 150</p>
+                </div>
+            </div>
+            
+            <div class="card" data-subsystem="sql" data-difficulty="hard">
+                <div class="card-header">
+                    <h3>SQL Deadlocks During Peak Hours</h3>
+                    <span class="badge badge-hard">Hard</span>
+                </div>
+                <div class="card-body">
+                    <p><strong>Root Cause:</strong> Lock contention</p>
+                    <p><strong>Diagnostic Command:</strong></p>
+                    <div class="command">SELECT * FROM sys.dm_tran_locks WHERE request_status='WAIT'</div>
+                    <p><strong>Solution:</strong> Set isolation level to <code>READ UNCOMMITTED</code> or add NOLOCK hints (Page 49)</p>
+                </div>
+            </div>
+            
+            <div class="card" data-subsystem="storage" data-difficulty="hard">
+                <div class="card-header">
+                    <h3>Slow Rendering with 1K Datasets</h3>
+                    <span class="badge badge-hard">Hard</span>
+                </div>
+                <div class="card-body">
+                    <p><strong>Symptoms:</strong> Lagging volume rendering with 1024x1024 matrices; GPU at 100%.</p>
+                    <p><strong>Steps:</strong></p>
+                    <ol>
+                        <li>Verify NVIDIA driver (553.62, Page 27)</li>
+                        <li>Check <code>VitreaAvSlotSize</code> registry: <code>HKEY_LOCAL_MACHINE\SOFTWARE\Vital Images\Vitrea</code></li>
+                        <li>Confirm page file at 100GB on E: drive (Page 180)</li>
+                    </ol>
+                    <p><strong>Fix:</strong>
+					<ul>
+                        <li>Downgrade to 512x512 datasets or</li>
+                        <li>Upgrade to current-generation GPU (e.g., NVIDIA RTX 5000 Ada or equivalent)</li>
+                        <li>Consider distributed rendering for large datasets</li>
+                    </ul>
+                    <p><strong>Reference:</strong> Page 180</p>
+                </div>
+            </div>
+            
+            <div class="card" data-subsystem="storage" data-difficulty="aggressive">
+                <div class="card-header">
+                    <h3>AutoDelete Purges Active Studies</h3>
+                    <span class="badge badge-aggressive">Aggressive</span>
+                </div>
+                <div class="card-body">
+                    <p><strong>Root Cause:</strong> Misconfigured disk-based marking (Page 56)</p>
+                    <p><strong>Steps:</strong></p>
+                    <ol>
+                        <li>Stop AutoDelete: <code>Stop-Service -Name "VI.VIMS.Services.AutoDelete"</code></li>
+                        <li>Recover from <code>E:\DICOMReceive\DICOMInstanceData</code></li>
+                        <li>Set <code>MinimumDiskLimit</code> to 50GB</li>
+                    </ol>
+                    <p><strong>Reference:</strong> Page 54</p>
+                </div>
+            </div>
+            
+            <div class="card" data-subsystem="security" data-difficulty="aggressive">
+                <div class="card-header">
+                    <h3>Ransomware Encrypts E:\VitreaData</h3>
+                    <span class="badge badge-aggressive">Aggressive</span>
+                </div>
+                <div class="card-body">
+                    <p><strong>Root Cause:</strong> Exploited vulnerability (e.g., CVE-2024-1234) or phishing attack</p>
+                    <p><strong>Immediate Action:</strong></p>
+                    <div class="command">Set-SmbServerConfiguration -EnableSMB1Protocol $false<br>
+                    Disable-NetFirewallRule -DisplayGroup "SMBv1"</div>
+                    <p><strong>Recovery:</strong></p>
+                    <ol>
+                        <li>Isolate server from network immediately</li>
+                        <li>Identify patient data impact through logs</li>
+                        <li>Restore from offline backups (maintained separately from network)</li>
+                        <li>Apply all current security patches before bringing back online</li>
+                    </ol>
+                    <p><strong>Prevention:</strong></p>
+                    <ul>
+                        <li>Enable system hardening script during installation</li>
+                        <li>Implement regular offline backups</li>
+                        <li>Keep all systems updated with latest security patches</li>
+                    </ul>
+                    <p><strong>Reference:</strong> Vitrea Security Best Practices, 2025 Edition</p>
+                </div>
+            </div>
+            
+            <div class="card" data-subsystem="rds" data-difficulty="simple">
+                <div class="card-header">
+                    <h3>Administrator: Session Capacity Issues</h3>
+                    <span class="badge badge-simple">Simple</span>
+                </div>
+                <div class="card-body">
+                    <p><strong>Scenario:</strong> Users can’t connect with only 4 sessions active.</p>
+                    <p><strong>Possible Causes:</strong></p>
+                    <ul>
+                        <li>Exhausted RDS CALs (Page 66)</li>
+                        <li><code>VitreaAvSlotSize</code> set to "large" (Appendix J)</li>
+                    </ul>
+                    <p><strong>Steps:</strong></p>
+                    <ol>
+                        <li>Check CALs: <code>Remote Desktop Licensing Manager</code></li>
+                        <li>Verify registry: <code>reg query HKEY_LOCAL_MACHINE\SOFTWARE\Vital Images\Vitrea</code></li>
+                    </ol>
+                </div>
+            </div>
+            
+            <div class="card" data-subsystem="dicom" data-difficulty="medium">
+                <div class="card-header">
+                    <h3>Installer: Workgroup Deployment Failure</h3>
+                    <span class="badge badge-medium">Medium</span>
+                </div>
+                <div class="card-body">
+                    <p><strong>Scenario:</strong> PACS integration fails in workgroup environment.</p>
+                    <p><strong>Fix:</strong> Join the domain (Page 14).</p>
+                    <p><strong>Steps:</strong></p>
+                    <ol>
+                        <li>Run: <code>systempropertiescomputername</code></li>
+                        <li>Verify trust in <code>Active Directory Domains and Trusts</code></li>
+                    </ol>
+                </div>
+            </div>
+            
+            <div class="card" data-subsystem="dicom" data-difficulty="hard">
+                <div class="card-header">
+                    <h3>Architect: High-Availability Design</h3>
+                    <span class="badge badge-hard">Hard</span>
+                </div>
+                <div class="card-body">
+                    <p><strong>Requirement:</strong> Ensure uptime during Windows Updates.</p>
+                    <p><strong>Solution:</strong> Deploy two Enterprise Single Servers with load balancing.</p>
+                    <p><strong>Steps:</strong></p>
+                    <ol>
+                        <li>Configure Network Load Balancing (NLB)</li>
+                        <li>Schedule rolling updates</li>
+                    </ol>
+                </div>
+            </div>
+            
+            <div class="card" data-subsystem="security" data-difficulty="medium">
+                <div class="card-header">
+                    <h3>System Hardening Script Not Running</h3>
+                    <span class="badge badge-medium">Medium</span>
+                </div>
+                <div class="card-body">
+                    <p><strong>Root Cause:</strong> System hardening script disabled by default.</p>
+                    <p><strong>Steps:</strong></p>
+                    <ol>
+                        <li>Check installation settings: <code>Vitrea Administration Tool → Installation Options</code></li>
+                        <li>Enable script: Run <code>Enable-VitreaHardeningScript.ps1</code></li>
+                        <li>Verify security settings applied</li>
+                    </ol>
+                    <p><strong>Reference:</strong> Installation Guide</p>
+                </div>
+            </div>
+        
+        
+	<!-- New troubleshooting scenario: IWA Authentication Issues -->
+            <div class="card" data-subsystem="auth" data-difficulty="medium">
+                <div class="card-header">
+                    <h3>Integrated Windows Authentication (IWA) Failure</h3>
+                    <span class="badge badge-medium">Medium</span>
+                </div>
+                <div class="card-body">
+                    <p><strong>Symptoms:</strong> Users cannot log in despite correct AD credentials; authentication prompts repeatedly appear.</p>
+                    <p><strong>Possible Causes:</strong></p>
+                    <ul>
+                        <li>SPN (Service Principal Name) not configured properly</li>
+                        <li>Kerberos ticket issues</li>
+                        <li>IWA not enabled in Vitrea Administration Tool</li>
+                    </ul>
+                    <p><strong>Troubleshooting Steps:</strong></p>
+                    <ol>
+                        <li>Verify IWA is enabled in <code>Vitrea Administration Tool → Authentication</code></li>
+                        <li>Check SPN configuration: <code>setspn -L VITREA-SERVER$</code></li>
+                        <li>Test Kerberos ticket generation: <code>klist get HTTP/vitrea-server.domain.com</code></li>
+                        <li>Verify time synchronization between Vitrea server and domain controllers</li>
+                    </ol>
+                    <p><strong>Reference:</strong> Vitrea Domain Deployment Guide, Chapter 5</p>
+                </div>
+            </div>
+            
+            <div class="back-to-top">
+                <a href="#" class="btn">Back to Top</a>
+            </div>
+        </div>
+			
+        <div id="commands" class="tab-content">
+            <h2>Command Reference</h2>
+            
+            <h3>DICOM Subsystem</h3>
+            <div class="card">
+                <div class="card-header">
+                    <h3>Test PACS Connectivity</h3>
+                </div>
+                <div class="card-body">
+                    <div class="command">Test-NetConnection PACS_IP -Port 3003</div>
+                    <p><strong>Purpose:</strong> Verify DICOM QUERY/RETRIEVE port (Page 150)</p>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Test DICOM Connection</h3>
+                </div>
+                <div class="card-body">
+                    <div class="command">.\echoscu.exe -aet VIMS_AE -aec PACS_AE 192.168.1.100 104</div>
+                    <p><strong>Purpose:</strong> Test DICOM association (Page 150)</p>
+                </div>
+            </div>
+            
+            <h3>SQL Server</h3>
+            <div class="card">
+                <div class="card-header">
+                    <h3>Check Database Integrity</h3>
+                </div>
+                <div class="card-body">
+                    <div class="command">DBCC CHECKDB('VIDicom') WITH PHYSICAL_ONLY</div>
+                    <p><strong>Purpose:</strong> Detect corruption after power failure (Page 49)</p>
+                </div>
+            </div>
+            
+            <h3>System Monitoring</h3>
+            <div class="card">
+                <div class="card-header">
+                    <h3>Check Disk Performance</h3>
+                </div>
+                <div class="card-body">
+                    <div class="command">Get-Counter "\PhysicalDisk(*)\Avg. Disk Queue Length"</div>
+                    <p><strong>Purpose:</strong> Identify storage bottlenecks (values >2 indicate issues)</p>
+                </div>
+            </div>
+            
+            <h3>Security</h3>
+            <div class="card">
+                <div class="card-header">
+                    <h3>Disable SMBv1</h3>
+                </div>
+                <div class="card-body">
+                    <div class="command">Set-SmbServerConfiguration -EnableSMB1Protocol $false</div>
+                    <p><strong>Purpose:</strong> Mitigate ransomware risks (Page 144)</p>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Enable System Hardening Script</h3>
+                </div>
+                <div class="card-body">
+                    <div class="command">Enable-VitreaHardeningScript.ps1</div>
+                    <p><strong>Purpose:</strong> Enable system hardening during installation</p>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Check RDCB Status</h3>
+                </div>
+                <div class="card-body">
+                    <div class="command">Get-RDSessionHost -ConnectionBroker "VitreaRDCB"</div>
+                    <p><strong>Purpose:</strong> Verify Remote Desktop Connection Broker status</p>
+                </div>
+            </div>
+        </div>
+        
+        <div id="flowcharts" class="tab-content">
+            <h2>Troubleshooting Flowcharts</h2>
+            
+            <div class="flowchart">
+                <h3>DICOM Transfer Failures</h3>
+                <img src="https://via.placeholder.com/800x400?text=DICOM+Transfer+Failure+Flowchart" alt="Flowchart for troubleshooting DICOM transfer failures showing steps from verifying AE Title to checking firewall rules">
+                <p><strong>Key Steps:</strong></p>
+                <ol>
+					<li>Verify AE Title and port configuration in Vitrea Administration Tool</li>
+                    <li>Test connectivity: <code>Test-NetConnection PACS_IP -Port 3002</code></li>
+                    <li>Check firewall rules for ports 3002 (STORE) and 3003 (QUERY/RETRIEVE)</li>
+                    <li>Restart <code>VI.Enterprise.Servers.Acceptor</code> service</li>
+                    <li>Verify PACS is configured to accept connections from Vitrea AE Title</li>
+                </ol>
+                <p><strong>Reference:</strong> Vitrea DICOM Configuration Guide, Page 150</p>
+            </div>
+            
+            <div class="flowchart">
+                <h3>SQL Deadlock Resolution</h3>
+                <img src="https://via.placeholder.com/800x400?text=SQL+Deadlock+Flowchart" alt="SQL Deadlock Flowchart">
+                <p><strong>Key Steps:</strong></p>
+                <ol>
+                    <li>Detect deadlock</li>
+                    <li>Check isolation level (Read Committed or Repeatable Read)</li>
+                    <li>Optimize queries or add NOLOCK hints</li>
+                    <li>Verify: <code>SELECT * FROM sys.dm_tran_locks WHERE request_status='WAIT'</code></li>
+                </ol>
+                <p><strong>Reference:</strong> Page 49</p>
+            </div>
+            
+            <div class="flowchart">
+                <h3>Ransomware Response</h3>
+                <img src="https://via.placeholder.com/800x400?text=Ransomware+Response+Flowchart" alt="Ransomware Response Flowchart">
+                <p><strong>Immediate Actions:</strong></p>
+                <ol>
+                    <li>Isolate affected server from network</li>
+                    <li>Disable SMBv1: <code>Set-SmbServerConfiguration -EnableSMB1Protocol $false</code></li>
+                    <li>Identify patient data impact</li>
+                    <li>Restore from clean backups</li>
+                </ol>
+                <p><strong>Reference:</strong> Page 144</p>
+            </div>
+        </div>
+        
+        <div id="priority-matrix" class="tab-content">
+            <h2>Priority Matrix</h2>
+            <div class="priority-matrix">
+                <canvas id="priorityChart" width="600" height="400"></canvas>
+                <p><strong>Explanation:</strong> Prioritize issues based on impact and urgency. High-impact, high-urgency issues (e.g., ransomware) require immediate action. Prioritize issues based on impact and urgency. High-impact, high-urgency issues (e.g., ransomware, complete system outage) require immediate action. Medium-impact issues (e.g., slow performance) should be scheduled for resolution. Low-impact issues (e.g., cosmetic UI problems) can be addressed during regular maintenance.</p>
+            </div>
+        </div>
+        
+        <div id="resources" class="tab-content">
+            <h2>Additional Resources</h2>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Collaboration</h3>
+                </div>
+                <div class="card-body">
+                    <ul>
+                        <li><a href="https://forms.office.com/r/7G3X4DBdbG" class="btn">Microsoft Teams Collaboration</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Downloadable References</h3>
+                </div>
+                <div class="card-body">
+                    <ul>
+                        <li><a href="#" class="btn">Full Troubleshooting Guide (PDF)</a></li>
+                        <li><a href="#" class="btn">Command Cheat Sheet</a></li>
+                        <li><a href="#" class="btn">Deployment Checklist</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+			<div class="card">
+                <div class="card-header">
+                    <h3>Documentation References</h3>
+                </div>
+                <div class="card-body">
+                    <ul>
+                        <li><a href="#" class="btn">Vitrea Enterprise Deployment Guide (2025 Edition)</a></li>
+                        <li><a href="#" class="btn">Vitrea Security Hardening Guide</a></li>
+                        <li><a href="#" class="btn">DICOM Configuration Reference</a></li>
+                        <li><a href="#" class="btn">Performance Tuning Manual</a></li>
+                    </ul>
+                </div>
+            </div>
+			
+			
+            <div class="card">
+                <div class="card-header">
+                    <h3>Training Materials</h3>
+                </div>
+                <div class="card-body">
+                    <ul>
+                        <li><a href="#" class="btn">Interactive Video Tutorials</a></li>
+                        <li><a href="#" class="btn">Virtual Lab Environment</a></li>
+                        <li><a href="#" class="btn">Certification Exam Guide</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Bonus: 1K Support Requirements</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Question:</strong> How do Appendix J (1K Support) and Appendix A (Hardware Requirements) relate?</p>
+                    <p><strong>Answer:</strong></p>
+                    <ul>
+                        <li>Appendix J: Sets <code>VitreaAvSlotSize</code> registry for 1K datasets.</li>
+                        <li>Appendix A: Specifies minimum GPU (e.g., NVIDIA RTX A4000).</li>
+                    </ul>
+                    <p><strong>Key Takeaway:</strong> 1K support requires both hardware and software tweaks.</p>
+                    <p><strong>Reference:</strong> Bonus Cross-Appendix Challenge</p>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <h3>Study Tips and Definitions</h3>
+                </div>
+                <div class="card-body">
+                    <p><strong>Key Takeaways:</strong></p>
+                    <ul>
+                        <li>Supports 6 concurrent sessions (Page 12).</li>
+                        <li>IWA for domain deployments (Page 14).</li>
+                        <li>DICOM: 3002 (STORE), 3003 (QUERY/RETRIEVE).</li>
+                        <li>AutoDelete needs 20GB minimum (Page 54).</li>
+                    </ul>
+                    <p><strong>Study Tips:</strong></p>
+                    <ul>
+                        <li>Review <strong>Table 3.1 (Ports)</strong> and <strong>Section 5.2 (Authentication)</strong>.</li>
+                        <li>Use <strong>Host Information Tool</strong> flowchart (Appendix A).</li>
+                        <li>Practice with <strong>Anki flashcards</strong> or <strong>troubleshooting drills</strong>.</li>
+                    </ul>
+                    <p><strong>Definitions:</strong></p>
+                    <ul>
+                        <li><strong>EMR (Electronic Medical Record):</strong> Electronic record of health-related information on an individual, aiming to replace paper medical records.</li>
+                        <li><strong>PHR (Personal Health Record):</strong> Patient-maintained health records, providing a complete summary accessible online with credentials.</li>
+                        <li><strong>DICOM (Digital Imaging and Communications in Medicine):</strong> Primary standard for medical imaging, ensuring interoperability since 1985.</li>
+                        <li><strong>SCU/SCP:</strong> Service Class User (request side) and Service Class Provider (service side) in DICOM communication.</li>
+                        <li><strong>MPR (Multi-Planar Reformat):</strong> Axial, coronal, sagittal images reconstructed from a single-plane study in Vitrea AV.</li>
+                    </ul>
+                    <p><strong>User Roles:</strong></p>
+                    <ul>
+                        <li><strong>Cardiologist:</strong> Physician with advanced schooling in heart-related conditions.</li>
+                        <li><strong>Oncologist:</strong> Physician with advanced schooling in cancer.</li>
+                        <li><strong>Orthopedic Surgeon:</strong> Physician with advanced schooling in muscles, bones, joints, and spine.</li>
+                        <li><strong>Pediatrician:</strong> Physician with advanced schooling in children’s diseases.</li>
+                        <li><strong>Radiologic Technologist:</strong> Acquires CT, MRI, or XA studies.</li>
+                        <li><strong>Nuclear Medicine Technologist:</strong> Acquires PET scans or Nuclear Medicine studies.</li>
+                        <li><strong>PACS Administrator:</strong> Monitors images in/out of PACS, often with IT or technologist background.</li>
+                        <li><strong>IT Professional:</strong> Has networking or computer science background, sometimes also a PACS Administrator.</li>
+                    </ul>
+                    <p><strong>Reference:</strong> Deployment Guide, Summary Slide</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Tab switching
+        document.querySelectorAll('.nav-tabs a').forEach(tab => {
+            tab.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelectorAll('.nav-tabs a').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                document.querySelector(this.getAttribute('href')).classList.add('active');
+            });
+        });
+        
+        // Card toggle
+        document.querySelectorAll('.card-header').forEach(header => {
+            header.addEventListener('click', function() {
+                this.parentElement.classList.toggle('active');
+            });
+        });
+        
+        // Show answer buttons
+        document.querySelectorAll('.show-answer').forEach(button => {
+            button.addEventListener('click', function() {
+                const answer = this.nextElementSibling;
+                answer.classList.toggle('show');
+                this.textContent = answer.classList.contains('show') ? 'Hide Answer' : 'Show Answer';
+            });
+        });
+        
+        // Search Functionality
+        document.getElementById('searchInput').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            document.querySelectorAll('#troubleshooting .card').forEach(card => {
+                const text = card.textContent.toLowerCase();
+                card.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        });
+        
+        // Subsystem filter
+        document.querySelectorAll('.subsystem-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.subsystem-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                const subsystem = this.dataset.subsystem;
+                document.querySelectorAll('#troubleshooting .card').forEach(card => {
+                    if (subsystem === 'all' || card.getAttribute('data-subsystem') === subsystem) {
+                        card.style.display = '';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+        
+        // Difficulty Filter
+        document.querySelectorAll('.difficulty-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                this.classList.toggle('active');
+                
+                const activeDifficulties = Array.from(document.querySelectorAll('.difficulty-btn.active'))
+                    .map(btn => btn.getAttribute('data-difficulty'));
+                
+                document.querySelectorAll('#troubleshooting .card').forEach(card => {
+                    const cardDifficulty = card.getAttribute('data-difficulty');
+                    card.style.display = activeDifficulties.includes(cardDifficulty) ? '' : 'none';
+                });
+            });
+        });
+        
+        // Chart.js Integration (Placeholder for Flowcharts)
+			const charts = {
+            domainDeploymentChart: {
+               type: 'scatter',
+                data: {
+                    datasets: []
+                },
+                options: {}
+            },
+            dicomTroubleshootingChart: {
+                type: 'scatter',
+                data: {
+                    datasets: []
+                },
+                options: {}
+            },
+            priorityMatrixChart: {
+                type: 'scatter',
+                data: {
+                    datasets: [
+                        {
+                            label: 'Critical',
+                            data: [
+                                {x: 8, y: 9, r: 10, description: 'Server Down'},
+                                {x: 9, y: 8, r: 10, description: 'Ransomware Attack'}
+                            ],
+                            backgroundColor: '#dc3545',
+                            borderColor: '#dc3545'
+                        },
+                        {
+                            label: 'High',
+                            data: [
+                                {x: 6, y: 7, r: 8, description: 'DICOM Transfer Failure'},
+                                {x: 7, y: 6, r: 8, description: 'SQL Deadlocks'}
+                            ],
+                            backgroundColor: '#ffc107',
+                            borderColor: '#ffc107'
+                        },
+                        {
+                            label: 'Medium',
+                            data: [
+                                {x: 4, y: 5, r: 6, description: 'Slow Rendering'},
+                                {x: 5, y: 4, r: 6, description: 'Session Capacity Issues'}
+                            ],
+                            backgroundColor: '#17a2b8',
+                            borderColor: '#17a2b8'
+                        },
+                        {
+                            label: 'Low',
+                            data: [
+                                {x: 2, y: 3, r: 5, description: 'System Hardening Script Not Running'},
+                                {x: 3, y: 2, r: 5, description: 'Workgroup Deployment Failure'}
+                            ],
+                            backgroundColor: '#28a745',
+                            borderColor: '#28a745'
+                        }
+                    ]
+                },
+                options: {
+                    scales: {
+                        x: {
+                            title: { display: true, text: 'Impact' },
+                            min: 0,
+                            max: 10
+                        },
+                        y: {
+                            title: { display: true, text: 'Urgency' },
+                            min: 0,
+                            max: 10
+                        }
+                    },
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + context.raw.description;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        };
+        
+        Object.keys(charts).forEach(chartId => {
+            const ctx = document.getElementById(chartId).getContext('2d');
+            new Chart(ctx, charts[chartId]);
+        });
+    
+	 // Priority Matrix Chart
+        const ctx = document.getElementById('priorityChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'scatter',
+            data: {
+                datasets: [
+                    {
+                        label: 'Critical',
+                        data: [
+                            {x: 8, y: 9, r: 15, description: 'Server Down/Ransomware'},
+                            {x: 9, y: 8, r: 15, description: 'Data Corruption'}
+                        ],
+                        backgroundColor: '#dc3545',
+                        borderColor: '#dc3545'
+                    },
+                    {
+                        label: 'High',
+                        data: [
+                            {x: 6, y: 7, r: 12, description: 'DICOM Transfer Failure'},
+                            {x: 7, y: 6, r: 12, description: 'SQL Deadlocks'}
+                        ],
+                        backgroundColor: '#ffc107',
+                        borderColor: '#ffc107'
+                    },
+                    {
+                        label: 'Medium',
+                        data: [
+                            {x: 4, y: 5, r: 10, description: 'Slow Rendering'},
+                            {x: 5, y: 4, r: 10, description: 'Authentication Issues'}
+                        ],
+                        backgroundColor: '#17a2b8',
+                        borderColor: '#17a2b8'
+                    },
+                    {
+                        label: 'Low',
+                        data: [
+                            {x: 2, y: 3, r: 8, description: 'UI Cosmetic Issues'},
+                            {x: 3, y: 2, r: 8, description: 'Minor Log Warnings'}
+                        ],
+                        backgroundColor: '#28a745',
+                        borderColor: '#28a745'
+                    }
+                ]
+            },
+            options: {
+                scales: {
+                    x: {
+                        title: { display: true, text: 'Impact (1-10)' },
+                        min: 0,
+                        max: 10
+                    },
+                    y: {
+                        title: { display: true, text: 'Urgency (1-10)' },
+                        min: 0,
+                        max: 10
+                    }
+                },
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.dataset.label + ': ' + context.raw.description;
+                            }
+                        }
+                    },
+                    legend: {
+                        position: 'top'
+                    }
+                }
+            }
+        });
+	</script>
+</body>
+</html>
