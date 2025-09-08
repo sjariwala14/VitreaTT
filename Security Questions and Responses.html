@@ -1,0 +1,1222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canon Medical - Vitrea® Security Questionnaire</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --canon-red: #E30613;
+            --canon-light-red: #F9D7DA;
+            --canon-dark-red: #B30C15;
+            --canon-gray: #6e7c87;
+            --canon-light-gray: #f5f7f9;
+            --canon-white: #ffffff;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+        
+        body {
+            background-color: var(--canon-light-gray);
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, var(--canon-red) 0%, var(--canon-dark-red) 100%);
+            color: white;
+            padding: 25px 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo img {
+            height: 40px;
+            margin-right: 10px;
+        }
+        
+        .logo-text {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .header-text {
+            flex: 2;
+            min-width: 300px;
+        }
+        
+        .header-image {
+            flex: 1;
+            min-width: 250px;
+            text-align: right;
+        }
+        
+        .header-image i {
+            font-size: 100px;
+            color: rgba(255, 255, 255, 0.15);
+        }
+        
+        h1 {
+            font-size: 32px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .subtitle {
+            font-size: 18px;
+            opacity: 0.9;
+            margin-bottom: 20px;
+            font-weight: 300;
+        }
+        
+        /* Navigation */
+        .nav-tabs {
+            display: flex;
+            background: var(--canon-white);
+            border-radius: 8px;
+            margin-bottom: 25px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            flex-wrap: wrap;
+        }
+        
+        .nav-tab {
+            padding: 15px 25px;
+            cursor: pointer;
+            text-align: center;
+            flex: 1;
+            transition: background 0.3s ease;
+            border-bottom: 3px solid transparent;
+            min-width: 150px;
+        }
+        
+        .nav-tab:hover {
+            background: var(--canon-light-red);
+        }
+        
+        .nav-tab.active {
+            border-bottom: 3px solid var(--canon-red);
+            background: var(--canon-light-red);
+            font-weight: 500;
+        }
+        
+        .nav-tab i {
+            margin-right: 8px;
+            color: var(--canon-red);
+        }
+        
+        /* Search Box */
+        .search-box {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 4px;
+            padding: 8px 15px;
+            display: inline-flex;
+            align-items: center;
+            margin-top: 10px;
+            width: 100%;
+            max-width: 350px;
+        }
+        
+        .search-box input {
+            background: transparent;
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            width: 100%;
+            outline: none;
+        }
+        
+        .search-box input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        /* Question Container */
+        .question-container {
+            background-color: var(--canon-white);
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+        
+        .question-container:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .question-header {
+            padding: 20px;
+            background-color: var(--canon-light-red);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 5px solid var(--canon-red);
+        }
+        
+        .question-header h3 {
+            font-size: 18px;
+            color: var(--canon-dark-red);
+            margin-right: 15px;
+            font-weight: 500;
+        }
+        
+        .question-header i {
+            font-size: 20px;
+            color: var(--canon-red);
+            transition: transform 0.3s ease;
+        }
+        
+        .question-content {
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+        }
+        
+        .question-content.active {
+            padding: 25px;
+            max-height: 10000px;
+        }
+        
+        .answer {
+            margin-bottom: 20px;
+        }
+        
+        .answer p {
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+        
+        .references {
+            background-color: var(--canon-light-gray);
+            padding: 15px;
+            border-radius: 6px;
+            font-size: 14px;
+            border-left: 3px solid var(--canon-gray);
+            margin-top: 20px;
+        }
+        
+        .references h4 {
+            margin-bottom: 10px;
+            color: var(--canon-dark-red);
+            font-weight: 500;
+        }
+        
+        .expand-details {
+            margin-top: 15px;
+            background: none;
+            border: none;
+            color: var(--canon-red);
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            padding: 5px 0;
+            font-weight: 500;
+        }
+        
+        .expand-details i {
+            margin-right: 5px;
+        }
+        
+        .detailed-content {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: var(--canon-light-gray);
+            border-radius: 6px;
+            display: none;
+        }
+        
+        .detailed-content.active {
+            display: block;
+        }
+        
+        .detailed-content ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .detailed-content li {
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+        
+        /* Footer */
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 30px;
+            color: var(--canon-gray);
+            font-size: 14px;
+            background: var(--canon-white);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .footer-link {
+            margin: 0 15px;
+            color: var(--canon-red);
+            text-decoration: none;
+        }
+        
+        .footer-link:hover {
+            text-decoration: underline;
+        }
+        
+        /* Controls */
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .btn {
+            background-color: var(--canon-red);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+        }
+        
+        .btn i {
+            margin-right: 8px;
+        }
+        
+        .btn:hover {
+            background-color: var(--canon-dark-red);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--canon-red);
+            color: var(--canon-red);
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--canon-light-red);
+        }
+        
+        /* Status indicators */
+        .status {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-left: 10px;
+        }
+        
+        .status-yes {
+            background-color: #e6f7ee;
+            color: #00a65c;
+        }
+        
+        .status-no {
+            background-color: #feeceb;
+            color: #f44336;
+        }
+        
+        /* Responsive styles */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .header-image {
+                margin-top: 20px;
+                text-align: center;
+            }
+            
+            .search-box {
+                width: 100%;
+                max-width: none;
+            }
+            
+            .controls {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .nav-tabs {
+                flex-direction: column;
+            }
+            
+            .question-header h3 {
+                font-size: 16px;
+            }
+        }
+
+        .section-divider {
+            height: 2px;
+            background: linear-gradient(to right, transparent, var(--canon-red), transparent);
+            margin: 30px 0;
+            width: 100%;
+        }
+
+        .section-title {
+            color: var(--canon-dark-red);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--canon-light-red);
+        }
+
+        /* Print styles */
+        @media print {
+            body {
+                background-color: white;
+                color: black;
+            }
+            
+            header, .nav-tabs, .controls, footer {
+                display: none;
+            }
+            
+            .question-container {
+                box-shadow: none;
+                border: 1px solid #ddd;
+                page-break-inside: avoid;
+            }
+            
+            .question-content {
+                max-height: none;
+                display: block;
+                padding: 25px;
+            }
+            
+            .question-header {
+                cursor: default;
+            }
+            
+            .question-header i {
+                display: none;
+            }
+            
+            .container {
+                max-width: 100%;
+                padding: 0;
+                margin: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo-container">
+                <div class="logo">
+                    <!-- Canon logo placeholder -->
+                    <svg width="40" height="40" viewBox="0 0 40 40">
+                        <rect width="40" height="40" fill="white" rx="8" />
+                        <text x="20" y="26" text-anchor="middle" fill="#E30613" font-weight="bold" font-size="18">CM</text>
+                    </svg>
+                    <div class="logo-text">Canon Medical</div>
+                </div>
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search questions...">
+                </div>
+            </div>
+            <div class="header-content">
+                <div class="header-text">
+                    <h1>Vitrea® Advanced Visualization</h1>
+                    <div class="subtitle">Security Questionnaire & Responses</div>
+                    <p>Comprehensive security information for IT and cybersecurity professionals</p>
+                </div>
+                <div class="header-image">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+            </div>
+        </header>
+        
+        <div class="nav-tabs">
+            <div class="nav-tab active">
+                <i class="fas fa-list-alt"></i> Questionnaire
+            </div>
+            <div class="nav-tab">
+                <i class="fas fa-clipboard-check"></i> Auditing
+            </div>
+            <div class="nav-tab">
+                <i class="fas fa-lock"></i> Software Assurance
+            </div>
+            <div class="nav-tab">
+                <i class="fas fa-download"></i> Export PDF
+            </div>
+            <div class="nav-tab">
+                <i class="fas fa-headset"></i> Support
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button class="btn" id="expand-all">
+                <i class="fas fa-plus-circle"></i> Expand All
+            </button>
+            <button class="btn btn-outline" id="collapse-all">
+                <i class="fas fa-minus-circle"></i> Collapse All
+            </button>
+            <button class="btn btn-outline" id="print-btn">
+                <i class="fas fa-print"></i> Print
+            </button>
+        </div>
+
+        <h2 class="section-title">Security Questionnaire</h2>
+        
+        <!-- Question 1 -->
+        <div class="question-container">
+            <div class="question-header">
+                <h3>1. What Data is stored on and generated by the device?</h3>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="question-content">
+                <div class="answer">
+                    <p>The device stores and generates the following data:</p>
+                    <ul>
+                        <li><strong>Patient DICOM data</strong>: Received from modalities (CT, MR, etc.), including images and associated metadata.</li>
+                        <li><strong>Processed Data</strong>: Results generated by advanced visualization applications.</li>
+                        <li><strong>Evidence Objects</strong>: Snapshots, reports, and other non-DICOM evidence.</li>
+                        <li><strong>Temporary Files</strong>: Files containing patient information that must be manually deleted after application failure.</li>
+                        <li><strong>System and Audit Logs</strong>: Operational, error, and audit logs for troubleshooting and compliance.</li>
+                    </ul>
+                </div>
+                <div class="references">
+                    <h4>References:</h4>
+                    <p>Sections: "Safety and Regulatory Considerations", "Configure AutoDelete", "Troubleshooting image fidelity issues"</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Question 2 -->
+        <div class="question-container">
+            <div class="question-header">
+                <h3>2. Can all data stored on the device be easily deleted when the device is decommissioned?</h3>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="question-content">
+                <div class="answer">
+                    <p><span class="status status-yes">Yes</span></p>
+                    <p>Data can be comprehensively deleted, but the process is multi-faceted:</p>
+                    <ul>
+                        <li><strong>Patient Studies & Evidence</strong>: AutoDelete service can be configured with rules.</li>
+                        <li><strong>Temporary Files</strong>: Must be manually deleted after application failure.</li>
+                        <li><strong>Complete Data Sanitization</strong>: Recommended method leverages Microsoft BitLocker encryption.</li>
+                    </ul>
+                </div>
+                <div class="references">
+                    <h4>References:</h4>
+                    <p>Sections: "Enable the BitLocker Windows feature", "Configure AutoDelete", "Safety and Regulatory Considerations"</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Question 3 -->
+        <div class="question-container">
+            <div class="question-header">
+                <h3>3. Can PHI/PII stored on the device be identified?</h3>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="question-content">
+                <div class="answer">
+                    <p><span class="status status-yes">Yes, explicitly</span></p>
+                    <p>The device is designed to store and display Protected Health Information (PHI) and Personally Identifiable Information (PII).</p>
+                    <p>All stored DICOM data contains PHI/PII in its headers (e.g., Patient Name, ID, Birth Date).</p>
+                </div>
+                <div class="references">
+                    <h4>References:</h4>
+                    <p>Sections: "Safety and Regulatory Considerations - All users with permission..."</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Question 4 -->
+        <div class="question-container">
+            <div class="question-header">
+                <h3>4. Does the device contain any USB Ports?</h3>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="question-content">
+                <div class="answer">
+                    <p>The Vitrea software installation itself does not require USB ports to be enabled on the host server.</p>
+                    <p>However, the system's functionality includes "Save to Media" for exporting to USB drives via Remote Desktop Services environment.</p>
+                </div>
+                <div class="references">
+                    <h4>References:</h4>
+                    <p>Appendix D: "Configure Save to Media functionality (Optional Procedure)"</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Question 5 -->
+        <div class="question-container">
+            <div class="question-header">
+                <h3>5. What methods of encryption are available for data privacy during transmission?</h3>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="question-content">
+                <div class="answer">
+                    <p>The system specifies encryption for data in transit in several areas:</p>
+                    <ul>
+                        <li><strong>DICOM Transmission</strong>: Standard DICOM TLS encryption</li>
+                        <li><strong>Remote Desktop Sessions</strong>: Microsoft RDP encryption</li>
+                        <li><strong>Web Services (HTTPS)</strong>: SSL/TLS certificates for integration</li>
+                    </ul>
+                </div>
+                <div class="references">
+                    <h4>References:</h4>
+                    <p>Appendix D: "Set Up SSL on the PowerScribe Server", "Configure PowerScribe Server Integration"</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Question 6 -->
+        <div class="question-container">
+            <div class="question-header">
+                <h3>6. Is it possible to encrypt data at rest?</h3>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="question-content">
+                <div class="answer">
+                    <p><span class="status status-yes">Yes</span></p>
+                    <p>The system includes a mandatory procedure to enable Microsoft Windows BitLocker drive encryption for both OS and data drives during installation.</p>
+                    <p>This provides full-disk encryption (FDE) for all data stored at rest on the system.</p>
+                </div>
+                <div class="references">
+                    <h4>References:</h4>
+                    <p>Section: "Enable the BitLocker Windows feature"</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Question 7 -->
+        <div class="question-container">
+            <div class="question-header">
+                <h3>7. What methods of authentication are available and actively used?</h3>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="question-content">
+                <div class="answer">
+                    <p>The primary and recommended method is:</p>
+                    <ul>
+                        <li><strong>Integrated Windows Authentication (IWA)</strong>: Provides single sign-on (SSO) support</li>
+                    </ul>
+                    <p>A secondary method is:</p>
+                    <ul>
+                        <li><strong>Vitrea Local User Database</strong>: For cases where IWA is not possible</li>
+                    </ul>
+                </div>
+                <div class="references">
+                    <h4>References:</h4>
+                    <p>Sections: "Determine method of user configuration", "Create accounts and assign groups"</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Question 8 -->
+        <div class="question-container">
+            <div class="question-header">
+                <h3>8. What are the different network interface card options?</h3>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="question-content">
+                <div class="answer">
+                    <p>It requires standard 1.0 Gigabit network connection.</p>
+                    <p>For mission-critical systems, HP-branded or HP-qualified SKUs are highly recommended for:</p>
+                    <ul>
+                        <li>Compatibility with HP Z8 G5's motherboard</li>
+                        <li>Driver & Firmware Support through HP's tools</li>
+                        <li>Reliability & Performance with quality components</li>
+                        <li>Warranty & Support coverage</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Question 9 -->
+        <div class="question-container">
+            <div class="question-header">
+                <h3>9. Do the device networking features support your current network infrastructure?</h3>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="question-content">
+                <div class="answer">
+                    <p><span class="status status-yes">Yes</span></p>
+                    <p>Vitrea uses standard, ubiquitous networking protocols found in any modern healthcare IT environment.</p>
+                    <p>Key Protocols: TCP/IP, HTTP/HTTPS, DICOM, HL7, and Microsoft RDP.</p>
+                    <p>The guide provides a comprehensive list of all required ports and protocols for communication.</p>
+                </div>
+                <div class="references">
+                    <h4>References:</h4>
+                    <p>Page 265; Section: "List of Required Ports"</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Question 10 -->
+        <div class="question-container">
+            <div class="question-header">
+                <h3>10. Does the server require remote access for manufacturer support?</h3>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="question-content">
+                <div class="answer">
+                    <p><span class="status status-yes">Yes</span></p>
+                    <p>Remote access by Canon Medical support personnel is a standard method for providing efficient maintenance, troubleshooting, and upgrade assistance.</p>
+                    <p>This access is strictly controlled and typically established on a per-case basis with the facility's explicit permission.</p>
+                </div>
+                <div class="references">
+                    <h4>References:</h4>
+                    <p>Page 5; Section: "Contact Us" provides support contact information.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Question 11 -->
+        <div class="question-container">
+            <div class="question-header">
+                <h3>11. Does the server transmit information to entities outside the facility or utilize cloud services?</h3>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="question-content">
+                <div class="answer">
+                    <p><span class="status status-no">No</span></p>
+                    <p>The Vitrea system is a fully on-premises solution.</p>
+                    <p>All data transmission occurs within the facility's network between the Vitrea servers, modalities, PACS, and client workstations.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Question 12 -->
+        <div class="question-container">
+            <div class="question-header">
+                <h3>12. Are logs kept of device or server access?</h3>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="question-content">
+                <div class="answer">
+                    <p><span class="status status-yes">Yes</span></p>
+                    <p>The system maintains extensive logs:</p>
+                    <ul>
+                        <li><strong>Audit Logging</strong>: Uses Integrated Windows Authentication with Microsoft security audit policy</li>
+                        <li><strong>System Logs</strong>: Detailed operational and error logs generated by all Vitrea services</li>
+                    </ul>
+                </div>
+                <div class="references">
+                    <h4>References:</h4>
+                    <p>Pages 19, 266-270; Sections: "Audit Logging", "Log File Locations for Enterprise deployment"</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Question 13 -->
+        <div class="question-container">
+            <div class="question-header">
+                <h3>13. Are all device passwords permanently set to default value?</h3>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="question-content">
+                <div class="answer">
+                    <p><span class="status status-no">No</span></p>
+                    <p>Passwords are not set to default values and are fully configurable.</p>
+                    <p>The installation process requires the creation of unique, complex passwords for key service accounts.</p>
+                    <p>Integration with Active Directory means password policies are controlled by the facility's existing Group Policy.</p>
+                </div>
+                <div class="references">
+                    <h4>References:</h4>
+                    <p>Pre-requisite installation guides; Sections on creating service accounts</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Question 14 -->
+        <div class="question-container">
+            <div class="question-header">
+                <h3>14. Does the system support active user-based access management?</h3>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="question-content">
+                <div class="answer">
+                    <p><span class="status status-yes">Yes</span></p>
+                    <p>Integrated Windows Authentication (IWA) using Active Directory is the primary, recommended method of user authentication and access management.</p>
+                    <p>The guide details procedures for mapping Active Directory security groups to specific application roles within Vitrea.</p>
+                </div>
+                <div class="references">
+                    <h4>References:</h4>
+                    <p>Pages 19, 75-82; Sections: "Audit Logging", "Configure External Groups", "Groups, Users, Roles, and Permissions Overview"</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Question 15 -->
+        <div class="question-container">
+            <div class="question-header">
+                <h3>15. How is remote server access controlled?</h3>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="question-content">
+                <div class="answer">
+                    <p>Remote access to the Vitrea application for users is strictly controlled via Microsoft Remote Desktop Services.</p>
+                    <p>User authentication is handled through Active Directory (IWA). Access is granted only to users who are members of specific Windows groups.</p>
+                    <p>Remote administrative access to the server OS is controlled by the facility's standard policies for Windows Server management.</p>
+                </div>
+                <div class="references">
+                    <h4>References:</h4>
+                    <p>Pages 106, 132-134, 148-149; Sections: "Configure Remote Desktop Sessions...", "Configure Vitrea software for a Single User Remote Access Deployment"</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Question 16 -->
+        <div class="question-container">
+            <div class="question-header">
+                <h3>16. Does the device contain software with known vulnerabilities?</h3>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="question-content">
+                <div class="answer">
+                    <p>Like all modern medical devices, Vitrea incorporates third-party components that are subject to vulnerabilities.</p>
+                    <p>Canon Medical has a defined process for managing cybersecurity risks:</p>
+                    <ul>
+                        <li>Monitoring and Assessment of security feeds</li>
+                        <li>Risk Assessment of vulnerabilities</li>
+                        <li>Providing Remediation through software upgrades</li>
+                    </ul>
+                    <p>Customers are responsible for applying Microsoft security patches on a regular monthly cycle.</p>
+                </div>
+                <div class="references">
+                    <h4>References:</h4>
+                    <p>The "Revision History" on pages 13-16 shows a history of updates and changes, which includes security remediation.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-divider"></div>
+        <h2 class="section-title">Auditing Questions</h2>
+
+        <!-- Auditing Question 1 -->
+        <div class="question-container">
+            <div class="question-header">
+                <h3>Audit Q1. What information is captured in system logs?</h3>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="question-content">
+                <div class="answer">
+                    <p>Per VPMC-17216F (Vitrea Install Guide for Workstation Deployment) and Windows/SQL Server standards, Vitrea logs the following:</p>
+                    
+                    <h4>1. Application Logs</h4>
+                    <ul>
+                        <li>Startup/Shutdown Events</li>
+                        <li>Errors/Warnings including DICOM communication failures and license validation issues</li>
+                        <li>User Activity including login attempts and post-processing jobs</li>
+                    </ul>
+                    
+                    <h4>2. DICOM Logs</h4>
+                    <ul>
+                        <li>Send/Receive Transactions</li>
+                        <li>Failed Retrievals/Storage Commitments</li>
+                    </ul>
+                    
+                    <h4>3. Database Logs (SQL Server Express)</h4>
+                    <ul>
+                        <li>Connection Attempts/Timeouts</li>
+                        <li>Backup/Restore Operations</li>
+                    </ul>
+                    
+                    <h4>4. Security Logs</h4>
+                    <ul>
+                        <li>Authentication Successes/Failures</li>
+                        <li>Permission Changes and role assignments</li>
+                    </ul>
+                    
+                    <h4>5. System-Level Logs (Windows Event Viewer)</h4>
+                    <ul>
+                        <li>Service Crashes/Resource Issues</li>
+                        <li>Network Connectivity issues</li>
+                    </ul>
+                    
+                    <h4>6. Log Retention</h4>
+                    <p>Configurable with default 30–90 days, with archiving options.</p>
+                </div>
+                <div class="references">
+                    <h4>References:</h4>
+                    <p>VPMC-17216F, Section 7.3: Troubleshooting; Microsoft SQL Server Documentation; Windows Security Event IDs</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Auditing Question 2 -->
+        <div class="question-container">
+            <div class="question-header">
+                <h3>Audit Q2. Are regular customer user login failures logged? Are administrative customer user login failures logged?</h3>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="question-content">
+                <div class="answer">
+                    <p><span class="status status-yes">Yes</span></p>
+                    <p>Both regular and administrative user login failures are logged, as documented in:</p>
+                    
+                    <h4>1. VPMC-17216F (Vitrea Install Guide for Workstation Deployment)</h4>
+                    <ul>
+                        <li>Section 6.2: User Access Control explicitly states that Vitrea logs all authentication attempts (success/failure) for audit trails</li>
+                        <li>Distinguishes between local database logins and Windows-integrated authentication</li>
+                    </ul>
+                    
+                    <h4>2. Windows Security Event Logging</h4>
+                    <ul>
+                        <li>Event ID 4625 (Failed login) captures timestamp, username, source IP address, and failure reason</li>
+                        <li>Event ID 4740 (Account lockout) triggers after threshold breaches</li>
+                    </ul>
+                    
+                    <h4>Security Policies</h4>
+                    <ul>
+                        <li>Account Lockout Thresholds configured via Vitrea Admin Console or Windows Group Policy</li>
+                        <li>High-Priority Alerts for Admin Failures may trigger email/SMS alerts</li>
+                    </ul>
+                </div>
+                <div class="references">
+                    <h4>References:</h4>
+                    <p>VPMC-17216F: Section 6.2, Section 7.4; Microsoft Docs: Windows Security Event IDs</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-divider"></div>
+        <h2 class="section-title">Software Assurance Questions</h2>
+
+        <!-- Software Assurance Question -->
+        <div class="question-container">
+            <div class="question-header">
+                <h3>Software Assurance Q1. What practices are followed to keep the applications safe?</h3>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="question-content">
+                <div class="answer">
+                    <p>Vitrea employs Windows OS and application-level protections to mitigate vulnerabilities such as buffer overflows and memory corruption attacks. Key measures include:</p>
+                    
+                    <h4>1. Memory Protection Mechanisms (Exploit Mitigations)</h4>
+                    
+                    <h5>A. Data Execution Prevention (DEP)</h5>
+                    <p>Purpose: Prevents code execution in memory regions marked as non-executable (e.g., stack/heap).</p>
+                    <p>Configuration: System-wide DEP enabled by default on modern Windows systems.</p>
+                    
+                    <h5>B. Address Space Layout Randomization (ASLR)</h5>
+                    <p>Purpose: Randomizes memory addresses of executables/DLLs to thwart memory-corruption exploits.</p>
+                    <p>Implementation: System-wide ASLR enabled by default in Windows 10/11 and Server 2016+.</p>
+                    
+                    <h5>C. NX (No-Execute) / Execute Disable (XD) Bit</h5>
+                    <p>Purpose: CPU-level protection to block execution in data-only memory pages.</p>
+                    <p>Requirements: Hardware support must be enabled in BIOS/UEFI.</p>
+                    
+                    <h5>D. Stack Guard (Stack Canaries)</h5>
+                    <p>Purpose: Detects stack buffer overflows by placing "canary" values before return addresses.</p>
+                    <p>Implementation: Compiler Flag: /GS in Microsoft Visual Studio (enabled by default in release builds).</p>
+                    
+                    <h4>2. Windows-Specific Hardening</h4>
+                    <ul>
+                        <li>User Account Control (UAC) limits administrative privilege escalation</li>
+                        <li>Windows Defender / Antivirus Exclusion Rules for critical Vitrea directories</li>
+                        <li>Firewall Rules with DICOM ports restricted to trusted IPs</li>
+                    </ul>
+                    
+                    <h4>3. Secure Deployment & Compliance</h4>
+                    <ul>
+                        <li>Least Privilege Principle for user roles</li>
+                        <li>Windows Event Logging for security events</li>
+                        <li>Regular Patching of Windows Updates + Vital Images-supplied patches</li>
+                    </ul>
+                </div>
+                <div class="references">
+                    <h4>References:</h4>
+                    <p>VPMC-17216F: Section 3.2 (System Requirements), Section 5.1 (Network Configuration), Section 7.3 (Troubleshooting); Microsoft Docs: DEP Overview, ASLR Technical Deep Dive, NX Compatibility, /GS Documentation</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Additional Admin Question -->
+        <div class="question-container">
+            <div class="question-header">
+                <h3>Admin Q1. What functions will be performed by users in the Vitrea-Admin group?</h3>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="question-content">
+                <div class="answer">
+                    <p>The Vitrea-Admin group is granted elevated privileges to manage critical aspects of the Vitrea Advanced Visualization (AV) application across three key areas:</p>
+                    
+                    <h4>A. Vitrea AV Application</h4>
+                    <ul>
+                        <li><strong>System Configuration</strong>: DICOM Archive Management, Post-Processing Workflow Setup, License Management</li>
+                        <li><strong>User Management</strong>: Local Database User Configuration, Role & Permission Assignment</li>
+                        <li><strong>Advanced Settings</strong>: DICOM & Network Adjustments, Security Policies, Feature Toggles</li>
+                    </ul>
+                    
+                    <h4>B. SQL Database (Local SQL Express)</h4>
+                    <ul>
+                        <li><strong>Full Database Control</strong>: Creating/modifying databases, SQL Login & Permission Management</li>
+                        <li><strong>Database Maintenance & Troubleshooting</strong>: SQL Service Management, Corruption Recovery, Diagnostics & Performance Tuning</li>
+                    </ul>
+                    
+                    <h4>C. Operating System (Workstation)</h4>
+                    <ul>
+                        <li><strong>Installation/Upgrades</strong>: Running installer executables, applying OS patches or driver updates</li>
+                        <li><strong>System-Level Configuration</strong>: IIS & Network Settings, BitLocker Management, Performance Tuning</li>
+                        <li><strong>Troubleshooting</strong>: Log File Access, Service Management, Emergency Recovery</li>
+                    </ul>
+                    
+                    <h4>Cyber Security Considerations</h4>
+                    <p>The guide emphasizes security best practices, but the local admin requirement is non-negotiable for:</p>
+                    <ul>
+                        <li>Installation/Upgrades: Silent installs require admin rights</li>
+                        <li>SQL Server Management: Sysadmin access is needed for database operations</li>
+                    </ul>
+                </div>
+                <div class="references">
+                    <h4>References:</h4>
+                    <p>VPMC-17216F: Section 6.2 (User Access Control), Section 4.1 (Software Updates), Section 3.2 (System Requirements)</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section-divider"></div>
+        <h2 class="section-title">Windows Server Compatibility & Security</h2>
+        
+        <!-- Windows Server Question -->
+        <div class="question-container">
+            <div class="question-header">
+                <h3>Windows Server Q1. What is the recommended Windows Server version for Vitrea deployment?</h3>
+                <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="question-content">
+                <div class="answer">
+                    <p><span class="status status-yes">Recommended: Windows Server 2025</span></p>
+                    <p>The proposed solution of purchasing Windows Server 2022 + Windows Server 2025 RDS CALs is fully compatible and will work perfectly. The 2025 CALs are backwards compatible, granting access to both the new 2025 OS and previous versions like 2022.</p>
+                    
+                    <h4>Licensing Considerations:</h4>
+                    <ul>
+                        <li>Windows Server 2022 (the OS) is still available for purchase as a perpetual license.</li>
+                        <li>Windows Server 2022 RDS CALs are no longer sold as perpetual licenses; only subscription-based CALs are available for new purchases.</li>
+                    </ul>
+                    
+                    <h4>Critical Strategic Recommendation:</h4>
+                    <p>While the licensing for 2022 is viable, we strongly emphasize a critical strategic recommendation: We are planning not for Windows Server 2022, but for a direct deployment or rapid migration to Windows Server 2025. The security advantages are not merely incremental; they are transformative and essential for modern threat protection.</p>
+                    
+                    <p>You are absolutely correct: Microsoft will provide security patches for Windows Server 2022 until its end-of-life in 2031. However, this is the most dangerous misconception in cybersecurity today: "Supported" does not mean "Secure." It only means "Vulnerabilities will be patched after they are discovered and exploited."</p>
+                    
+                    <h4>The Critical Security Imperative for Windows Server 2025</h4>
+                    <p>Deploying Server 2022 today means immediately falling behind the security curve. Windows Server 2025 introduces groundbreaking security features that are not available in 2022 and will not be backported.</p>
+                    
+                    <h4>Key Security Advantages of Windows Server 2025:</h4>
+                    <ul>
+                        <li><strong>Hotpatching</strong>: This is a game-changer for operational security. WS2025 allows us to install the most critical security updates without rebooting the server. This means we can protect against vulnerabilities immediately, with zero downtime, dramatically reducing our exposure window and maintaining business continuity.</li>
+                        <li><strong>Sudo for Windows</strong>: This enforces a fundamental security best practice. It allows administrators to run elevated commands without logging in with a full Administrator account. This drastically reduces the attack surface by minimizing the use of powerful credentials that could be stolen by malware or phishing attacks.</li>
+                        <li><strong>Next-Generation Cryptography</strong>: WS2025 moves to stronger AES-256 encryption by default and includes built-in Post-Quantum Cryptography. This future-proofs our data against emerging threats, including the future risk of attacks from quantum computers, which could break current encryption standards.</li>
+                        <li><strong>A Hardened Default State</strong>: The server arrives pre-configured with more stringent security baselines, meaning it is secure from the moment it is installed. This reduces human error and the significant manual effort required to "harden" a Windows Server 2022 installation.</li>
+                    </ul>
+                    
+                    <h4>The Paradigm Shift: Proactive Prevention vs. Reactive Patching</h4>
+                    <p>Think of it as the difference between a medieval castle and a modern fortress:</p>
+                    <ul>
+                        <li><strong>Windows Server 2022 (The Medieval Castle)</strong>: It has strong walls (firewalls). When the enemy drills a hole in the wall (a vulnerability is found), the king (Microsoft) sends workers to patch the hole (issues a patch). You must then open the gates (reboot) to let the workers in, disrupting everything. You are always one unpatched hole away from a breach.</li>
+                        <li><strong>Windows Server 2025 (The Modern Fortress)</strong>: It has the strong walls plus seismic sensors, drone surveillance, and automated countermeasures. It detects and stops threats before they even touch the wall. Most importantly, it can be upgraded without ever opening the gates (Hotpatching).</li>
+                    </ul>
+                    
+                    <h4>The Three Unavoidable Risks of Choosing "Supported" 2022 Over "Secure" 2025</h4>
+                    
+                    <h5>1. The "Zero-Day" Risk & The Reboot Tax</h5>
+                    <p>Yes, Microsoft will patch 2022. But there is always a dangerous gap between when a vulnerability is discovered and when a patch is applied and installed. This is called the "patch gap." During this window, systems are exposed.</p>
+                    <ul>
+                        <li>With WS2022: When a critical patch is released, we must schedule an emergency reboot. This means unplanned downtime, rushed testing, and business disruption. The cost of this "reboot tax" is immense in terms of operational overhead and risk.</li>
+                        <li>With WS2025: Hotpatching eliminates this. Critical vulnerabilities are fixed immediately with no downtime. We are protected in real-time without operational disruption. This alone is a reason to move.</li>
+                    </ul>
+                    
+                    <h5>2. The Architectural Advantage: Features That Cannot Be Backported</h5>
+                    <p>Microsoft does not backport major security architectures to old operating systems. The following are physical, structural improvements in WS2025 that 2022 will never, ever have:</p>
+                    <ul>
+                        <li><strong>Sudo for Windows</strong>: This is not a patch; it's a new way of administering the OS that drastically reduces credential theft and lateral movement by attackers. Without it, we rely on outdated, risky admin practices.</li>
+                        <li><strong>Enhanced Hardware-based Security</strong>: WS2025 has deeper integration with modern CPU security features (like Intel TDX) to create isolated environments that are invisible even to the host OS. This level of isolation against sophisticated attacks is impossible on 2022.</li>
+                        <li><strong>Post-Quantum Cryptography (PQC)</strong>: This is a defense against a future threat that is already being prepared for by nation-state actors. Data encrypted today could be harvested and decrypted in 5-10 years when quantum computers become viable. WS2025 is preparing for this now. WS2022 is not. By the time this is a current threat, it will be too late to protect data we have today.</li>
+                    </ul>
+                    
+                    <h5>3. The Economic Argument: Total Cost of Ownership (TCO) of a Breach</h5>
+                    <p>The question isn't "Can we save money by using 2022?" The real question is "What is the potential cost of a breach that 2025 could have prevented?"</p>
+                    <ul>
+                        <li>The cost of investigating a breach, regulatory fines, reputational damage, and business loss dwarfs the marginal difference in licensing between 2022 and 2025.</li>
+                        <li>The operational cost of constant, disruptive reboots for patching over the next 7 years will be far higher than the investment in a modern, automated platform.</li>
+                    </ul>
+                    
+                    <h4>Conclusion: A Strategic Investment, Not a Technical Upgrade</h4>
+                    <p>Choosing Windows Server 2025 is not a technical decision; it is a risk management and business continuity decision.</p>
+                    <p>Sticking with Windows Server 2022 means consciously accepting:</p>
+                    <ul>
+                        <li>A higher risk profile during patch gaps.</li>
+                        <li>Significant operational overhead and downtime for patching.</li>
+                        <li>The lack of modern security architectures that are becoming the standard.</li>
+                        <li>An infrastructure that is less prepared for future threats.</li>
+                    </ul>
+                    <p>We have a limited window to build our new environment on the most secure foundation possible. Let's not build our future on an operating system that was designed for the threats of yesterday.</p>
+                </div>
+                <div class="references">
+                    <h4>References:</h4>
+                    <p>Microsoft Windows Server 2025 Documentation, Security Best Practices for Medical Devices</p>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <div class="footer-links">
+                <a href="#" class="footer-link">Privacy Policy</a>
+                <a href="#" class="footer-link">Terms of Use</a>
+                <a href="#" class="footer-link">Contact Support</a>
+                <a href="#" class="footer-link">Documentation</a>
+            </div>
+            <p>© 2023 Canon Medical Systems Corporation. All rights reserved.</p>
+            <p>Vitrea® is a registered trademark of Canon Medical Systems Corporation.</p>
+            <p>For support, contact: support@mi.medical.canon</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Toggle question content
+            const questionHeaders = document.querySelectorAll('.question-header');
+            questionHeaders.forEach(header => {
+                header.addEventListener('click', () => {
+                    const content = header.nextElementSibling;
+                    const icon = header.querySelector('i');
+                    
+                    content.classList.toggle('active');
+                    
+                    if (content.classList.contains('active')) {
+                        icon.classList.remove('fa-chevron-down');
+                        icon.classList.add('fa-chevron-up');
+                    } else {
+                        icon.classList.remove('fa-chevron-up');
+                        icon.classList.add('fa-chevron-down');
+                    }
+                });
+            });
+            
+            // Expand/Collapse all buttons
+            const expandAllBtn = document.getElementById('expand-all');
+            const collapseAllBtn = document.getElementById('collapse-all');
+            
+            expandAllBtn.addEventListener('click', () => {
+                document.querySelectorAll('.question-content').forEach(content => {
+                    content.classList.add('active');
+                    const header = content.previousElementSibling;
+                    const icon = header.querySelector('i');
+                    icon.classList.remove('fa-chevron-down');
+                    icon.classList.add('fa-chevron-up');
+                });
+            });
+            
+            collapseAllBtn.addEventListener('click', () => {
+                document.querySelectorAll('.question-content').forEach(content => {
+                    content.classList.remove('active');
+                    const header = content.previousElementSibling;
+                    const icon = header.querySelector('i');
+                    icon.classList.remove('fa-chevron-up');
+                    icon.classList.add('fa-chevron-down');
+                });
+            });
+            
+            // Print functionality
+            const printBtn = document.getElementById('print-btn');
+            printBtn.addEventListener('click', () => {
+                window.print();
+            });
+            
+            // Search functionality
+            const searchInput = document.querySelector('.search-box input');
+            searchInput.addEventListener('keyup', () => {
+                const searchTerm = searchInput.value.toLowerCase();
+                
+                document.querySelectorAll('.question-container').forEach(container => {
+                    const questionText = container.querySelector('.question-header h3').textContent.toLowerCase();
+                    const answerText = container.querySelector('.question-content').textContent.toLowerCase();
+                    
+                    if (questionText.includes(searchTerm) || answerText.includes(searchTerm)) {
+                        container.style.display = 'block';
+                    } else {
+                        container.style.display = 'none';
+                    }
+                });
+            });
+            
+            // Tab functionality
+            const tabs = document.querySelectorAll('.nav-tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    
+                    // Scroll to appropriate section
+                    if (tab.textContent.includes('Auditing')) {
+                        document.querySelector('.section-title:nth-of-type(2)').scrollIntoView({behavior: 'smooth'});
+                    } else if (tab.textContent.includes('Software')) {
+                        document.querySelector('.section-title:nth-of-type(3)').scrollIntoView({behavior: 'smooth'});
+                    } else if (tab.textContent.includes('Export')) {
+                        window.print();
+                    } else {
+                        window.scrollTo({top: 0, behavior: 'smooth'});
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

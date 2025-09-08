@@ -1,0 +1,1720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vitrea Advanced Visualization Case Study</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+        }
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .main-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .slide {
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .slide.active {
+            display: block;
+        }
+        .slide-title {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        .nav-item {
+            padding: 10px;
+            cursor: pointer;
+            border-bottom: 1px solid #34495e;
+        }
+        .nav-item:hover {
+            background-color: #34495e;
+        }
+        .nav-item.active {
+            background-color: #3498db;
+        }
+        .section-title {
+            font-weight: bold;
+            margin-top: 15px;
+            color: #3498db;
+        }
+        .architecture-diagram {
+            max-width: 100%;
+            height: auto;
+            border: 1px solid #ddd;
+            margin: 10px 0;
+        }
+        .btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        .btn:hover {
+            background-color: #2980b9;
+        }
+        .tab-container {
+            margin-top: 20px;
+        }
+        .tab-buttons {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+        }
+        .tab-btn {
+            padding: 10px 20px;
+            background: #f1f1f1;
+            border: none;
+            cursor: pointer;
+            margin-right: 5px;
+            border-radius: 5px 5px 0 0;
+        }
+        .tab-btn.active {
+            background: #3498db;
+            color: white;
+        }
+        .tab-content {
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-top: none;
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .solution-option {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-left: 4px solid #3498db;
+            background-color: #f9f9f9;
+        }
+        .solution-title {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .pros-cons {
+            margin-top: 10px;
+        }
+        .pros {
+            color: #27ae60;
+        }
+        .cons {
+            color: #e74c3c;
+        }
+        .qr-code {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .contact-info {
+            margin-top: 20px;
+            font-size: 0.9em;
+        }
+        .tech-specs {
+            background-color: #f0f8ff;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #3498db;
+        }
+        .timeline {
+            background-color: #fffaf0;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #ffa500;
+        }
+        .timeline-item {
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed #ddd;
+        }
+        .network-config {
+            background-color: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #4CAF50;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar" id="sidebar">
+            <div class="qr-code">
+                <h3>Shailendrakumar S. Jariwala</h3>
+                <p>Senior Global Technical Services Manager - Healthcare IT</p>
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://qr-codes.io/29EJxp93jKH" alt="QR Code">
+            </div>
+            
+            <div class="section-title">Case Studies</div>
+            <div class="nav-item" data-slide="singhealth">SingHealth Post Processing</div>
+            <div class="nav-item" data-slide="ihh">IHH Project</div>
+            <div class="nav-item" data-slide="kpj">KPJ Project</div>
+            <div class="nav-item" data-slide="nicaragua">Nicaragua Hospital</div>
+            <div class="nav-item" data-slide="lhsc">London Health Science Centre</div>
+            <div class="nav-item" data-slide="apollo">Apollo Hospitals</div>
+            <div class="nav-item" data-slide="nawaloka">Nawaloka Hospitals</div>
+            
+            <div class="section-title">Solution Options</div>
+            <div class="nav-item" data-slide="option1">Option 1: Centralized DB</div>
+            <div class="nav-item" data-slide="option2">Option 2: Decentralized ESS</div>
+            <div class="nav-item" data-slide="option3">Option 3: Decentralized VES</div>
+            <div class="nav-item" data-slide="option4">Option 4: Hybrid Approach</div>
+            
+            <div class="contact-info">
+                <p><strong>Company Confidential</strong></p>
+                <p>Do Not Distribute</p>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <!-- Title Slide -->
+            <div class="slide active" id="title">
+                <h1 class="slide-title">Vitrea Advanced Visualization Technical Training V7.16.x</h1>
+                <p>Case Study Discussion</p>
+                <p>Presented by: Shailendrakumar S. Jariwala</p>
+                <p>Senior Global Technical Services Manager - Healthcare IT</p>
+                <div class="qr-code">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://qr-codes.io/29EJxp93jKH" alt="QR Code">
+                    <p>Scan for contact information</p>
+                </div>
+                <p><em>Company Confidential - Do Not Distribute</em></p>
+            </div>
+            
+            <!-- SingHealth Case Study -->
+            <div class="slide" id="singhealth">
+                <h2 class="slide-title">SingHealth Post Processing Advanced Viewer System</h2>
+                <h3>Project Background</h3>
+                <ul>
+                    <li>Existing Vitrea solution reached End-of-Life/End-of-Support (EOL/EOS)</li>
+                    <li>Initial deployment in 2011 with V6.7.4 (separate instances)</li>
+                    <li>Current solution across SGH and CGH V6.7.4 (separate instances)</li>
+                </ul>
+                
+                <h3>Scope of Work</h3>
+                <ul>
+                    <li>Implement enterprise-wide multi-modality 3D/4D advanced visualization solution</li>
+                    <li>Key focus on cybersecurity</li>
+                    <li>Upgrade from v6.7.4 to latest version v7.15.3</li>
+                    <li>Consolidation of all applications across 35 SingHealth concurrent licenses</li>
+                    <li>Deploy new clinical solutions</li>
+                    <li>Integrate with multiple "best in breed" thin slice archiving solutions and existing PACS</li>
+                    <li>Adhere to evolving cybersecurity guidelines (Synapxe secure Vitrea architecture)</li>
+                    <li>Design to cater for institutional expansion</li>
+                </ul>
+                
+                <div class="tech-specs">
+                    <h4>Technical Specifications</h4>
+                    <ul>
+                        <li><strong>Ports Used:</strong> 
+                            <ul>
+                                <li>HTTPS (TCP 443) for web client access</li>
+                                <li>RDP (TCP 3389) for remote desktop sessions</li>
+                                <li>DICOM (TCP 104, 11112) for PACS integration</li>
+                                <li>SQL Server (TCP 1433) for database communication</li>
+                            </ul>
+                        </li>
+                        <li><strong>Network Requirements:</strong> 
+                            <ul>
+                                <li>Minimum 1Gbps network backbone</li>
+                                <li>Separate VLAN for Vitrea components (VLAN ID: 210)</li>
+                                <li>Jumbo frames (MTU 9000) enabled for NAS communication</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="timeline">
+                    <h4>Implementation Timeline</h4>
+                    <div class="timeline-item">
+                        <strong>Phase 1 (Q1 2023):</strong> NHC, NCC and SGH deployment
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Phase 2 (Q2 2023):</strong> CGH deployment
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Phase 3 (Q3 2023):</strong> KKH deployment and system-wide integration
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Ongoing:</strong> Monthly security audits and quarterly performance tuning
+                    </div>
+                </div>
+                
+                <h3>Proposed Solution Summary</h3>
+                <ul>
+                    <li>Consolidated delivery across three separate sites</li>
+                    <li>Separately installed for three institutions at their local data center</li>
+                    <li>Integrated with 'Thin Slice Life Cycle Management system'</li>
+                    <li>Deployed on hospital network on separate VLAN</li>
+                    <li>Management Server broken into multiple parts for security</li>
+                    <li>Phased deployment starting from NHC, NCC and SGH, followed by CGH and KKH</li>
+                    <li>All HTTPS/TLS based Vitrea client delivery using HTML5 of RDP sessions</li>
+                </ul>
+                
+                <div class="tab-container">
+                    <div class="tab-buttons">
+                        <button class="tab-btn active" data-tab="singhealth-architecture">Architecture</button>
+                        <button class="tab-btn" data-tab="singhealth-workflow">Workflow</button>
+                        <button class="tab-btn" data-tab="singhealth-components">Components</button>
+                        <button class="tab-btn" data-tab="singhealth-network">Network Config</button>
+                    </div>
+                    
+                    <div class="tab-content active" id="singhealth-architecture">
+                        <h4>Architecture Breakdown - Phased Across SingHealth</h4>
+                        <p>Components deployed within three different datacenters:</p>
+                        <ul>
+                            <li>SGH Campus (including SGH, NCCS (Cancer center) and NHCS (Heart Center))</li>
+                            <li>CGH</li>
+                            <li>KKH</li>
+                        </ul>
+                        <p>Primarily integrated with 'Thin Slice Life Cycle Management system' to retrieve images for post processing.</p>
+                    </div>
+                    
+                    <div class="tab-content" id="singhealth-workflow">
+                        <h4>End-to-End Viewing Workflow</h4>
+                        <ol>
+                            <li>Client (via HTTPS web port) communicates with the RDP broker</li>
+                            <li>RDP broker communicates with the Management server</li>
+                            <li>Management server communicates with Vitrea Application server (1:n) and also with MS SQL Server on separate instance</li>
+                            <li>SQL Server identifies the studies on the NAS</li>
+                            <li>NAS returns the studies information to the Application server</li>
+                            <li>Application server provides session information to Management server and RDP broker</li>
+                            <li>RDP broker then returns the study to client for display</li>
+                        </ol>
+                    </div>
+                    
+                    <div class="tab-content" id="singhealth-components">
+                        <h4>Component Breakdown</h4>
+                        <p><strong>Management Server:</strong> Heart of the system, all DICOM interactivity with outside entities goes through the Management node.</p>
+                        <p><strong>MS SQL Database Server:</strong> Microsoft SQL Standard used to index information about hosted studies and track interactions.</p>
+                        <p><strong>RDP Broker Server:</strong> Installed on a separate server on a separate VLAN, communicates directly with Application server.</p>
+                        <p>All DICOM images from Thin Slice Server C-store DICOM objects to Management node of Vitrea Advanced.</p>
+                        <p>DICOM updates occurring in Vitrea Advanced are C-stored back to Thin slice server for permanent archiving.</p>
+                    </div>
+                    
+                    <div class="tab-content" id="singhealth-network">
+                        <h4>Network Configuration Details</h4>
+                        <div class="network-config">
+                            <p><strong>VLAN Configuration:</strong></p>
+                            <ul>
+                                <li>VLAN 210: Primary Vitrea network (10.210.0.0/24)</li>
+                                <li>VLAN 211: RDP Broker isolation (10.211.0.0/24)</li>
+                                <li>VLAN 212: Database network (10.212.0.0/24)</li>
+                            </ul>
+                            
+                            <p><strong>Firewall Rules:</strong></p>
+                            <ul>
+                                <li>Allow TCP 443 from clinical workstations to RDP Broker</li>
+                                <li>Allow TCP 3389 from RDP Broker to Application Servers</li>
+                                <li>Allow TCP 1433 from Management Server to SQL Server</li>
+                                <li>Allow TCP 104,11112 from PACS to Management Server</li>
+                                <li>Deny all other traffic between VLANs</li>
+                            </ul>
+                            
+                            <p><strong>QoS Configuration:</strong></p>
+                            <ul>
+                                <li>Priority 1: RDP traffic (DSCP 46)</li>
+                                <li>Priority 2: DICOM transfers (DSCP 34)</li>
+                                <li>Priority 3: Database replication (DSCP 18)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- IHH Project -->
+            <div class="slide" id="ihh">
+                <h2 class="slide-title">IHH Project Overview</h2>
+                <h3>Tender Request and Requirements</h3>
+                <ul>
+                    <li>Majority of the 11 hospitals have Canon's CT scanner with AV WS/Extend</li>
+                    <li>Philips dominates the Angio modality, while Siemens the MR</li>
+                    <li>Siemens has installed Syngo for MR modality in Kuala Lumpur Pantai Hospital</li>
+                </ul>
+                
+                <div class="tech-specs">
+                    <h4>Technical Specifications</h4>
+                    <ul>
+                        <li><strong>Ports Used:</strong> 
+                            <ul>
+                                <li>HTTPS (TCP 443) for web access</li>
+                                <li>DICOM (TCP 104, 11112) for modality integration</li>
+                                <li>SQL Server (TCP 1433) for database replication</li>
+                                <li>SMB (TCP 445) for NAS connectivity</li>
+                            </ul>
+                        </li>
+                        <li><strong>Network Requirements:</strong> 
+                            <ul>
+                                <li>Minimum 100Mbps between hospitals</li>
+                                <li>1Gbps preferred for sites with >3 CCUs</li>
+                                <li>MPLS network with QoS prioritization</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="timeline">
+                    <h4>Implementation Timeline</h4>
+                    <div class="timeline-item">
+                        <strong>Phase 1 (Month 1-2):</strong> Core infrastructure setup at main DC
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Phase 2 (Month 3-4):</strong> Deployment to 4 high-volume hospitals
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Phase 3 (Month 5-6):</strong> Deployment to remaining 7 hospitals
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Ongoing:</strong> Weekly performance monitoring and tuning
+                    </div>
+                </div>
+                
+                <h3>Standard Configuration Questions</h3>
+                <ul>
+                    <li>How to deploy the license to 16 hospitals at various locations?</li>
+                    <li>One application node can handle how many CCU (6 max?)</li>
+                    <li>Application Node server site at where? Data Centre / local hospital?</li>
+                    <li>What kind of bandwidth needed?</li>
+                    <li>Will Vitrea apps cache into local PC?</li>
+                    <li>Can user workstation and Vitrea workstation access local dataset?</li>
+                </ul>
+                
+                <h3>Pantai Group Advance Virtualization Requirement</h3>
+                <p>PACS Configuration for IHH (per hospital):</p>
+                <ul>
+                    <li>Local PACS</li>
+                    <li>Local DATA Server</li>
+                    <li>Master DATA Server @ Data center</li>
+                </ul>
+                
+                <div class="tab-container">
+                    <div class="tab-buttons">
+                        <button class="tab-btn active" data-tab="ihh-config">Configuration</button>
+                        <button class="tab-btn" data-tab="ihh-questions">Open Questions</button>
+                        <button class="tab-btn" data-tab="ihh-network">Network Details</button>
+                    </div>
+                    
+                    <div class="tab-content active" id="ihh-config">
+                        <h4>Hardware Configuration</h4>
+                        <p>For 16 hospitals:</p>
+                        <ul>
+                            <li>4 Hospitals: Enterprise Single Server 6:1 CCU at each</li>
+                            <li>2 Hospitals: Enterprise Single Server 6:1 CCU at each</li>
+                            <li>6 Hospitals: Enterprise Single Server 6:1 CCU at each</li>
+                            <li>3 Hospitals: Enterprise Single Server 6:1 CCU at each</li>
+                            <li>1 Hospital: Enterprise Single Server 6:1 CCU</li>
+                        </ul>
+                        <p>Domain Controller and Vitrea Management Server (Physical/Virtual)</p>
+                        <p>Scalable to include additional Application servers (1/4/6 users) as required</p>
+                    </div>
+                    
+                    <div class="tab-content" id="ihh-questions">
+                        <h4>Open Questions</h4>
+                        <ul>
+                            <li>Storage and Data migration: What is the existing storage consisting of - thick slices or both thick and thin slices?</li>
+                            <li>Bandwidth: What is the current bandwidth between the hospitals?</li>
+                            <li>Network type between hospitals: LAN or WAN?</li>
+                            <li>Existing PACS-RIS Workflow for both hospitals?</li>
+                            <li>Will RIS be considered or only PACS solution?</li>
+                            <li>Are RIS and PACS databases integrated?</li>
+                        </ul>
+                        <p><strong>Note:</strong> PACS integration must be considered with the proposed solution.</p>
+                    </div>
+                    
+                    <div class="tab-content" id="ihh-network">
+                        <h4>Network Configuration Details</h4>
+                        <div class="network-config">
+                            <p><strong>Core Network Design:</strong></p>
+                            <ul>
+                                <li>MPLS backbone with 1Gbps links between major sites</li>
+                                <li>100Mbps links to smaller hospitals</li>
+                                <li>QoS configured to prioritize DICOM and RDP traffic</li>
+                            </ul>
+                            
+                            <p><strong>Site-Specific VLANs:</strong></p>
+                            <ul>
+                                <li>Each hospital has dedicated VLAN (VLAN 200-215)</li>
+                                <li>Subnet scheme: 10.x.y.0/24 where x=site ID, y=function</li>
+                                <li>VLAN 216 reserved for inter-site replication</li>
+                            </ul>
+                            
+                            <p><strong>Security Configuration:</strong></p>
+                            <ul>
+                                <li>IPSEC VPN tunnels between sites</li>
+                                <li>Firewall rules restrict cross-site traffic to required ports only</li>
+                                <li>Network segmentation between clinical and administrative networks</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- KPJ Project -->
+            <div class="slide" id="kpj">
+                <h2 class="slide-title">KPJ Post Processing Advanced Viewer System</h2>
+                
+                <h3>Project Overview</h3>
+                <ul>
+                    <li>30 hospitals in KPJ network</li>
+                    <li>Requirement: 2 CCU per hospital (total 60 CCU)</li>
+                    <li>3D Reconstruction must be on cloud as per tender requirement</li>
+                    <li>PACS integration required with desktop & database integration</li>
+                </ul>
+                
+                <div class="tech-specs">
+                    <h4>Technical Specifications</h4>
+                    <ul>
+                        <li><strong>Ports Used:</strong> 
+                            <ul>
+                                <li>HTTPS (TCP 443) for web portal</li>
+                                <li>RDP (TCP 3389) for remote sessions</li>
+                                <li>DICOM (TCP 11112) for PACS integration</li>
+                                <li>SQL Server (TCP 1433) for database</li>
+                            </ul>
+                        </li>
+                        <li><strong>Cloud Requirements:</strong> 
+                            <ul>
+                                <li>Azure VM size: Standard_D8s_v3 (8 vCPUs, 32GB RAM)</li>
+                                <li>Premium SSD storage for performance</li>
+                                <li>ExpressRoute for hospital connectivity</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="timeline">
+                    <h4>Implementation Timeline</h4>
+                    <div class="timeline-item">
+                        <strong>Phase 1 (Month 1-3):</strong> Core cloud infrastructure setup
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Phase 2 (Month 4-6):</strong> Deployment to 10 high-volume hospitals
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Phase 3 (Month 7-9):</strong> Deployment to remaining 20 hospitals
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Ongoing:</strong> Cloud cost optimization and performance tuning
+                    </div>
+                </div>
+                
+                <div class="tab-container">
+                    <div class="tab-buttons">
+                        <button class="tab-btn active" data-tab="kpj-optiona">Option A</button>
+                        <button class="tab-btn" data-tab="kpj-optionb">Option B</button>
+                        <button class="tab-btn" data-tab="kpj-optionc">Option C</button>
+                        <button class="tab-btn" data-tab="kpj-network">Network Config</button>
+                    </div>
+                    
+                    <div class="tab-content active" id="kpj-optiona">
+                        <h4>Option A: 30 Local ESS Instances (Recommended)</h4>
+                        <ul>
+                            <li>30 ESS instances (one per hospital)</li>
+                            <li>WAN connection: 30 MBPS</li>
+                            <li>Sync between local and global PACS</li>
+                            <li>Radiologist workflow:
+                                <ol>
+                                    <li>Select study in local PACS worklist</li>
+                                    <li>Global Vitrea instance executed via hyperlink (SSO)</li>
+                                    <li>Thin client required on local system for RDP</li>
+                                </ol>
+                            </li>
+                        </ul>
+                        <p><strong>Pros:</strong> Better performance, local processing</p>
+                        <p><strong>Cons:</strong> Higher deployment complexity</p>
+                    </div>
+                    
+                    <div class="tab-content" id="kpj-optionb">
+                        <h4>Option B: One Enterprise Instance (Not Recommended)</h4>
+                        <ul>
+                            <li>Single global Vitrea Management Server (Virtual)</li>
+                            <li>5 x 6-User Application Servers (30 CCU total)</li>
+                            <li>WAN connection to all hospitals</li>
+                            <li>Risk: Bandwidth constraints and performance issues</li>
+                        </ul>
+                        <p><strong>Note:</strong> CMSM team aware of concerns but prefers this option</p>
+                    </div>
+                    
+                    <div class="tab-content" id="kpj-optionc">
+                        <h4>Option C: Grouped Enterprise Instance</h4>
+                        <ul>
+                            <li>Geographically group hospitals (North, South, Center, East, West)</li>
+                            <li>Each group gets:
+                                <ul>
+                                    <li>1 ESS + PACS integration + Domain controller (6 CCU)</li>
+                                    <li>Or 1 Management server + 2x6 User Application servers (12 CCU)</li>
+                                </ul>
+                            </li>
+                            <li>Real-time sync with global PACS</li>
+                        </ul>
+                        <p><strong>Advantage:</strong> Balanced approach between Options A and B</p>
+                    </div>
+                    
+                    <div class="tab-content" id="kpj-network">
+                        <h4>Network Configuration Details</h4>
+                        <div class="network-config">
+                            <p><strong>Cloud Network Architecture:</strong></p>
+                            <ul>
+                                <li>Azure Virtual Network with subnets for each component</li>
+                                <li>ExpressRoute connections to each hospital</li>
+                                <li>Network Security Groups restricting access to required ports only</li>
+                            </ul>
+                            
+                            <p><strong>Site Connectivity:</strong></p>
+                            <ul>
+                                <li>Minimum 50Mbps dedicated connection per hospital</li>
+                                <li>QoS configured to prioritize medical imaging traffic</li>
+                                <li>Site-to-site VPN as backup for ExpressRoute</li>
+                            </ul>
+                            
+                            <p><strong>Security Configuration:</strong></p>
+                            <ul>
+                                <li>Azure Firewall with application rules for Vitrea</li>
+                                <li>Network Watcher for monitoring and diagnostics</li>
+                                <li>Private endpoints for database access</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <h3>Key Requirements</h3>
+                <ul>
+                    <li>Minimum 1GBPS network recommended</li>
+                    <li>PACS as primary storage for thick/thin slices</li>
+                    <li>RDS CALS and SQL database responsibility of hospital</li>
+                    <li>Workflow:
+                        <ol>
+                            <li>Modality sends studies to local PACS cache</li>
+                            <li>Sync with global PACS (frequency unknown)</li>
+                            <li>Reporting done from PACS (PACS-driven workflow)</li>
+                            <li>Vitrea for post-processing, measurements, key images</li>
+                        </ol>
+                    </li>
+                </ul>
+            </div>
+            
+            <!-- Nicaragua Hospital -->
+            <div class="slide" id="nicaragua">
+                <h2 class="slide-title">Nuevo Hospital Militar Managua, Nicaragua</h2>
+                
+                <h3>Current Deployment</h3>
+                <ul>
+                    <li>VES V7.15.6 with 6CCU</li>
+                    <li>Enterprise Single Server (ESS) not connected to NAS</li>
+                    <li>No integration with CMR PACS</li>
+                    <li>Modalities:
+                        <ul>
+                            <li>Aquilion One, Aquilion CXL</li>
+                            <li>MR 1.5 Elan, MR 3.0 Galan</li>
+                            <li>VL Infinix 8000 (soon Alphenix Biplane)</li>
+                        </ul>
+                    </li>
+                </ul>
+                
+                <div class="tech-specs">
+                    <h4>Technical Specifications</h4>
+                    <ul>
+                        <li><strong>Ports Used:</strong> 
+                            <ul>
+                                <li>DICOM (TCP 104, 11112) for modality integration</li>
+                                <li>SMB (TCP 445) for NAS connectivity</li>
+                                <li>SQL Server (TCP 1433) for database</li>
+                                <li>RDP (TCP 3389) for administration</li>
+                            </ul>
+                        </li>
+                        <li><strong>Storage Requirements:</strong> 
+                            <ul>
+                                <li>Minimum 10TB usable storage</li>
+                                <li>RAID-10 configuration recommended</li>
+                                <li>SSD cache for performance</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="timeline">
+                    <h4>Implementation Timeline</h4>
+                    <div class="timeline-item">
+                        <strong>Phase 1 (Week 1-2):</strong> Infrastructure assessment and planning
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Phase 2 (Week 3-4):</strong> Primary datacenter deployment
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Phase 3 (Week 5-6):</strong> Secondary datacenter deployment
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Phase 4 (Week 7-8):</strong> PACS integration and testing
+                    </div>
+                </div>
+                
+                <h3>Redundancy Requirements</h3>
+                <ul>
+                    <li>Need redundancy for whole IT deployment</li>
+                    <li>Options considered:
+                        <ol>
+                            <li>Same software configuration in secondary datacenter</li>
+                            <li>Alternative redundancy solutions from Canon</li>
+                        </ol>
+                    </li>
+                </ul>
+                
+                <h3>Proposed Solution</h3>
+                <ol>
+                    <li>Convert ESS to VES with Management server + 6 User application server + NAS</li>
+                    <li>Virtualize Management server (cost saving ~24k USD)</li>
+                    <li>Leverage existing PACS/VNA 100TB storage</li>
+                    <li>Implement dual datacenter architecture:
+                        <ul>
+                            <li>Primary and secondary datacenters</li>
+                            <li>Shared SQL database (virtual)</li>
+                            <li>Shared NAS between datacenters</li>
+                            <li>Licensing shared between DCs</li>
+                        </ul>
+                    </li>
+                </ol>
+                
+                <div class="network-config">
+                    <h4>Network Configuration Details</h4>
+                    <p><strong>Primary Datacenter:</strong></p>
+                    <ul>
+                        <li>VLAN 10: Management network (10.10.10.0/24)</li>
+                        <li>VLAN 20: Storage network (10.10.20.0/24)</li>
+                        <li>VLAN 30: Application network (10.10.30.0/24)</li>
+                    </ul>
+                    
+                    <p><strong>Secondary Datacenter:</strong></p>
+                    <ul>
+                        <li>VLAN 110: Management network (10.10.110.0/24)</li>
+                        <li>VLAN 120: Storage network (10.10.120.0/24)</li>
+                        <li>VLAN 130: Application network (10.10.130.0/24)</li>
+                    </ul>
+                    
+                    <p><strong>Replication:</strong></p>
+                    <ul>
+                        <li>10Gbps dark fiber between datacenters</li>
+                        <li>SQL Always On Availability Groups</li>
+                        <li>Storage replication at 5 minute intervals</li>
+                    </ul>
+                </div>
+                
+                <h3>Implementation Notes</h3>
+                <ul>
+                    <li>Expected storage growth: ~100k studies in 10 years</li>
+                    <li>4 radiologists reporting at any given time</li>
+                    <li>Professional services required for implementation</li>
+                    <li>Consider Automation Platform - CT/MR Stroke package</li>
+                </ul>
+            </div>
+            
+            <!-- London Health Science Centre -->
+            <div class="slide" id="lhsc">
+                <h2 class="slide-title">London Health Science Centre</h2>
+                
+                <h3>Network Overview</h3>
+                <ul>
+                    <li>6 CT scanners across 4 locations on same network</li>
+                    <li>Locations:
+                        <ul>
+                            <li>St. Joseph's Hospital (1 PRISM with Spectral Imaging)</li>
+                            <li>Victoria General Hospital (2 GENESIS upgraded to Spectral)</li>
+                            <li>University Hospital (2 PRISM)</li>
+                            <li>Robarts Research institute (1 PRISM)</li>
+                        </ul>
+                    </li>
+                    <li>Current PACS: AGFA</li>
+                </ul>
+                
+                <div class="tech-specs">
+                    <h4>Technical Specifications</h4>
+                    <ul>
+                        <li><strong>Ports Used:</strong> 
+                            <ul>
+                                <li>HTTPS (TCP 443) for web access</li>
+                                <li>DICOM (TCP 11112) for PACS integration</li>
+                                <li>SQL Server (TCP 1433) for database</li>
+                                <li>RDP (TCP 3389) for remote administration</li>
+                            </ul>
+                        </li>
+                        <li><strong>Hardware Requirements:</strong> 
+                            <ul>
+                                <li>Dual Xeon Gold CPUs (16 cores minimum)</li>
+                                <li>192GB RAM for application servers</li>
+                                <li>NVIDIA RTX 4000 or better GPUs</li>
+                                <li>SSD storage for performance</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="timeline">
+                    <h4>Implementation Timeline</h4>
+                    <div class="timeline-item">
+                        <strong>Phase 1 (Month 1):</strong> Core infrastructure deployment at University Hospital
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Phase 2 (Month 2):</strong> Deployment to St. Joseph's and Victoria General
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Phase 3 (Month 3):</strong> Robarts Research institute deployment
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Ongoing:</strong> Performance monitoring and optimization
+                    </div>
+                </div>
+                
+                <div class="tab-container">
+                    <div class="tab-buttons">
+                        <button class="tab-btn active" data-tab="lhsc-option1">Option 1</button>
+                        <button class="tab-btn" data-tab="lhsc-option2">Option 2</button>
+                        <button class="tab-btn" data-tab="lhsc-option3">Option 3</button>
+                        <button class="tab-btn" data-tab="lhsc-network">Network Config</button>
+                    </div>
+                    
+                    <div class="tab-content active" id="lhsc-option1">
+                        <h4>Option 1: ESS + PACS Integration (6 CCU)</h4>
+                        <ul>
+                            <li>Hardware:
+                                <ul>
+                                    <li>HPE DL380 Gen10 or Dell PowerEdge R740 server</li>
+                                    <li>2x Intel Xeon Gold 6242 CPUs</li>
+                                    <li>192GB RAM</li>
+                                    <li>4x 960GB SSDs in RAID-10</li>
+                                    <li>3x NVIDIA Quadro RTX 4000 or P4000 GPUs</li>
+                                </ul>
+                            </li>
+                            <li>Domain Controller</li>
+                            <li>Network Switch (8/16/24 port)</li>
+                            <li>UPS 5KVA:10Min</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="tab-content" id="lhsc-option2">
+                        <h4>Option 2: ESS Upgrade to Enterprise VA (10 CCU)</h4>
+                        <ul>
+                            <li>Management Server</li>
+                            <li>4x Application servers (1:4 CCU each)</li>
+                            <li>Domain Controller</li>
+                            <li>Network infrastructure</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="tab-content" id="lhsc-option3">
+                        <h4>Option 3: Enterprise VA (12 CCU)</h4>
+                        <ul>
+                            <li>Management Server</li>
+                            <li>3x Four-User Application servers (1:4 CCU each)</li>
+                            <li>Domain Controller</li>
+                            <li>Full network infrastructure</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="tab-content" id="lhsc-network">
+                        <h4>Network Configuration Details</h4>
+                        <div class="network-config">
+                            <p><strong>Core Network:</strong></p>
+                            <ul>
+                                <li>10Gbps backbone between hospitals</li>
+                                <li>1Gbps to desktop</li>
+                                <li>MPLS with QoS for DICOM priority</li>
+                            </ul>
+                            
+                            <p><strong>VLAN Configuration:</strong></p>
+                            <ul>
+                                <li>VLAN 100: Clinical imaging (10.100.0.0/16)</li>
+                                <li>VLAN 200: Management (10.200.0.0/16)</li>
+                                <li>VLAN 300: Storage (10.300.0.0/16)</li>
+                            </ul>
+                            
+                            <p><strong>Security Configuration:</strong></p>
+                            <ul>
+                                <li>Firewall between VLANs</li>
+                                <li>Port-based access control</li>
+                                <li>Network segmentation for security</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Apollo Hospitals -->
+            <div class="slide" id="apollo">
+                <h2 class="slide-title">Apollo Hospitals, India</h2>
+                
+                <h3>Current Configuration</h3>
+                <ul>
+                    <li>Two hospitals with isolated databases:
+                        <ul>
+                            <li>Apollo Heart Hospital:
+                                <ul>
+                                    <li>Vitrea Enterprise V6.8: 2 CCU (VA) + 1:8 (VC)</li>
+                                    <li>Vitrea Extend V7.11.6: 3 CCU</li>
+                                    <li>7 Vitrea users + 2 Vitrea Core users</li>
+                                </ul>
+                            </li>
+                            <li>Apollo Main Hospital:
+                                <ul>
+                                    <li>Vitrea Workstation V6.7.3: 2 users</li>
+                                    <li>Vitrea2: 1 user</li>
+                                    <li>Vitrea Fx: 1 user</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li>Total: 4 different databases with different versions</li>
+                    <li>1GBPS connection between hospitals</li>
+                </ul>
+                
+                <div class="tech-specs">
+                    <h4>Technical Specifications</h4>
+                    <ul>
+                        <li><strong>Ports Used:</strong> 
+                            <ul>
+                                <li>DICOM (TCP 104, 11112) for modality integration</li>
+                                <li>HL7 (TCP 5000) for RIS-PACS integration</li>
+                                <li>SQL Server (TCP 1433) for database</li>
+                                <li>RDP (TCP 3389) for administration</li>
+                            </ul>
+                        </li>
+                        <li><strong>Storage Requirements:</strong> 
+                            <ul>
+                                <li>Minimum 10TB usable storage</li>
+                                <li>RAID-10 configuration recommended</li>
+                                <li>SSD cache for performance</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="timeline">
+                    <h4>Implementation Timeline</h4>
+                    <div class="timeline-item">
+                        <strong>Phase 1 (Week 1-2):</strong> Assessment and planning
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Phase 2 (Week 3-4):</strong> Heart Hospital upgrade
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Phase 3 (Week 5-6):</strong> Main Hospital upgrade
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Phase 4 (Week 7-8):</strong> Integration and testing
+                    </div>
+                </div>
+                
+                <h3>Current Issues</h3>
+                <ol>
+                    <li><strong>Isolated Databases:</strong>
+                        <ul>
+                            <li>Cannot share patient images across hospitals</li>
+                            <li>Different versions cause compatibility issues</li>
+                        </ul>
+                    </li>
+                    <li><strong>Post-Process Images:</strong>
+                        <ul>
+                            <li>V6.8 images can't be restored on V7.11.6 properly</li>
+                            <li>V7.11.6 images can be restored on V6.8 (backward compatible)</li>
+                        </ul>
+                    </li>
+                    <li><strong>RIS-PACS Integration:</strong>
+                        <ul>
+                            <li>Two separate RIS-PACS domains connected via HL7</li>
+                            <li>No integration with Vitrea causes workflow inefficiencies</li>
+                        </ul>
+                    </li>
+                </ol>
+                
+                <div class="network-config">
+                    <h4>Network Configuration Details</h4>
+                    <p><strong>Heart Hospital:</strong></p>
+                    <ul>
+                        <li>VLAN 10: Clinical network (192.168.10.0/24)</li>
+                        <li>VLAN 20: Management network (192.168.20.0/24)</li>
+                    </ul>
+                    
+                    <p><strong>Main Hospital:</strong></p>
+                    <ul>
+                        <li>VLAN 110: Clinical network (192.168.110.0/24)</li>
+                        <li>VLAN 120: Management network (192.168.120.0/24)</li>
+                    </ul>
+                    
+                    <p><strong>Interconnect:</strong></p>
+                    <ul>
+                        <li>1Gbps dedicated fiber between sites</li>
+                        <li>QoS configured for DICOM priority</li>
+                        <li>Firewall rules restrict traffic to required ports only</li>
+                    </ul>
+                </div>
+                
+                <h3>Proposed Solution</h3>
+                <div class="tab-container">
+                    <div class="tab-buttons">
+                        <button class="tab-btn active" data-tab="apollo-option1">Option 1</button>
+                        <button class="tab-btn" data-tab="apollo-option2">Option 2</button>
+                    </div>
+                    
+                    <div class="tab-content active" id="apollo-option1">
+                        <h4>Option 1: 6 CCU VA Users</h4>
+                        <ul>
+                            <li>Reuse existing:
+                                <ul>
+                                    <li>Management Server (upgraded)</li>
+                                    <li>3-User Application Server (3 CCU)</li>
+                                    <li>3x PowerStations (3 CCU)</li>
+                                </ul>
+                            </li>
+                            <li>New:
+                                <ul>
+                                    <li>Domain Controller</li>
+                                    <li>PACS Integration + 10TB Storage</li>
+                                </ul>
+                            </li>
+                            <li>Software:
+                                <ul>
+                                    <li>Upgrade kit for Enterprise</li>
+                                    <li>Olea license (for MRI Cardiac Functional Analysis)</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="tab-content" id="apollo-option2">
+                        <h4>Option 2: 8/10 CCU VA Users</h4>
+                        <ul>
+                            <li>Reuse existing:
+                                <ul>
+                                    <li>Management Server</li>
+                                    <li>3-User Application Server</li>
+                                    <li>3x PowerStations</li>
+                                </ul>
+                            </li>
+                            <li>New:
+                                <ul>
+                                    <li>Domain Controller</li>
+                                    <li>1x Four-User Application Server (4 CCU)</li>
+                                    <li>PACS Integration + 10TB Storage</li>
+                                </ul>
+                            </li>
+                            <li>Software:
+                                <ul>
+                                    <li>Upgrade kit for Enterprise</li>
+                                    <li>Olea license</li>
+                                    <li>Potential Oncology Package</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <h3>Workflow Improvements</h3>
+                <ul>
+                    <li>Single integrated database across both hospitals</li>
+                    <li>PACS integration with Medsynaptic PACS</li>
+                    <li>Seamless image sharing regardless of acquisition point</li>
+                    <li>Remote access via VPN for home users</li>
+                </ul>
+            </div>
+            
+            <!-- Nawaloka Hospitals -->
+            <div class="slide" id="nawaloka">
+                <h2 class="slide-title">Nawaloka Hospitals PLC, Sri Lanka</h2>
+                
+                <h3>Current Configuration</h3>
+                <ul>
+                    <li>Vitrea Enterprise V6.7: 1 CCU (VA) + 1:8 (VC)</li>
+                    <li>Single database</li>
+                    <li>Connected to:
+                        <ul>
+                            <li>Canon Aquilion ONE CT</li>
+                            <li>Siemens Somatom MRI 3T</li>
+                            <li>Soon: Philips MRI 1.5T</li>
+                        </ul>
+                    </li>
+                    <li>NAS: 9TB</li>
+                    <li>Domain Controller</li>
+                    <li>1GBPS internal bandwidth</li>
+                    <li>Workload:
+                        <ul>
+                            <li>CT: 35-40 studies/day</li>
+                            <li>MRI: 15-20 studies/day</li>
+                        </ul>
+                    </li>
+                </ul>
+                
+                <div class="tech-specs">
+                    <h4>Technical Specifications</h4>
+                    <ul>
+                        <li><strong>Ports Used:</strong> 
+                            <ul>
+                                <li>DICOM (TCP 104, 11112) for modality integration</li>
+                                <li>SQL Server (TCP 1433) for database</li>
+                                <li>HTTPS (TCP 443) for remote access</li>
+                                <li>RDP (TCP 3389) for administration</li>
+                            </ul>
+                        </li>
+                        <li><strong>Storage Requirements:</strong> 
+                            <ul>
+                                <li>16-20TB NAS recommended</li>
+                                <li>RAID-6 configuration for redundancy</li>
+                                <li>SSD cache for performance</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="timeline">
+                    <h4>Implementation Timeline</h4>
+                    <div class="timeline-item">
+                        <strong>Phase 1 (Week 1):</strong> Assessment and planning
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Phase 2 (Week 2):</strong> Hardware upgrade
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Phase 3 (Week 3):</strong> Software upgrade
+                    </div>
+                    <div class="timeline-item">
+                        <strong>Phase 4 (Week 4):</strong> PACS integration and testing
+                    </div>
+                </div>
+                
+                <h3>Upgrade Requirements</h3>
+                <ul>
+                    <li>Upgrade from V6.7 to V7.15.x</li>
+                    <li>Increase to 4 CCU Advanced users (from current 1)</li>
+                    <li>PACS integration with iFlexNet</li>
+                    <li>Medis license for MR Cardiac images</li>
+                    <li>Upgrade NAS (from 9TB)</li>
+                    <li>Remote access for home users</li>
+                </ul>
+                
+                <div class="network-config">
+                    <h4>Network Configuration Details</h4>
+                    <p><strong>Core Network:</strong></p>
+                    <ul>
+                        <li>VLAN 10: Clinical network (192.168.10.0/24)</li>
+                        <li>VLAN 20: Management network (192.168.20.0/24)</li>
+                        <li>VLAN 30: Storage network (192.168.30.0/24)</li>
+                    </ul>
+                    
+                    <p><strong>Remote Access:</strong></p>
+                    <ul>
+                        <li>SSL VPN on TCP 443</li>
+                        <li>Two-factor authentication required</li>
+                        <li>Bandwidth throttling for remote sessions</li>
+                    </ul>
+                    
+                    <p><strong>Security Configuration:</strong></p>
+                    <ul>
+                        <li>Firewall between VLANs</li>
+                        <li>Port-based access control</li>
+                        <li>Regular vulnerability scans</li>
+                    </ul>
+                </div>
+                
+                <h3>Proposed Solution</h3>
+                <ul>
+                    <li>Reuse existing:
+                        <ul>
+                            <li>Management Server (with OS/SQL 2019 upgrade)</li>
+                            <li>Domain Controller (managed by hospital)</li>
+                        </ul>
+                    </li>
+                    <li>New:
+                        <ul>
+                            <li>Four-User Application Server (4 CCU)</li>
+                            <li>NAS upgrade (16-20TB recommended)</li>
+                        </ul>
+                    </li>
+                    <li>Software:
+                        <ul>
+                            <li>Upgrade to latest Vitrea version</li>
+                            <li>Medis license</li>
+                        </ul>
+                    </li>
+                    <li>Services:
+                        <ul>
+                            <li>PACS integration</li>
+                            <li>No data migration required</li>
+                            <li>No separate MMV server needed</li>
+                        </ul>
+                    </li>
+                </ul>
+                
+                <h3>Workflow</h3>
+                <ol>
+                    <li>Modalities auto-push to PACS and Vitrea</li>
+                    <li>Post-processing on Vitrea</li>
+                    <li>Manual push to PACS (current) - to be automated</li>
+                    <li>Reporting from PACS</li>
+                </ol>
+            </div>
+            
+            <!-- Option 1: Centralized Database -->
+            <div class="slide" id="option1">
+                <h2 class="slide-title">Option 1: AV Centralized Database and License</h2>
+                
+                <div class="solution-option">
+                    <div class="solution-title">Management Server setup within the Data Centre</div>
+                    <p>Master DATA Server @ Data centre with Domain Controller and Vitrea Management Server (Physical/Virtual)</p>
+                    
+                    <div class="tech-specs">
+                        <h4>Technical Specifications</h4>
+                        <ul>
+                            <li><strong>Ports Used:</strong> 
+                                <ul>
+                                    <li>HTTPS (TCP 443) for web access</li>
+                                    <li>RDP (TCP 3389) for remote sessions</li>
+                                    <li>SQL Server (TCP 1433) for database</li>
+                                    <li>DICOM (TCP 104, 11112) for PACS integration</li>
+                                </ul>
+                            </li>
+                            <li><strong>Network Requirements:</strong> 
+                                <ul>
+                                    <li>Minimum 1Gbps to each hospital</li>
+                                    <li>Latency <50ms for acceptable performance</li>
+                                    <li>QoS configured for medical imaging priority</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="timeline">
+                        <h4>Implementation Timeline</h4>
+                        <div class="timeline-item">
+                            <strong>Phase 1 (Week 1-2):</strong> Core infrastructure setup at DC
+                        </div>
+                        <div class="timeline-item">
+                            <strong>Phase 2 (Week 3-4):</strong> Network optimization
+                        </div>
+                        <div class="timeline-item">
+                            <strong>Phase 3 (Week 5-6):</strong> Hospital connectivity testing
+                        </div>
+                        <div class="timeline-item">
+                            <strong>Phase 4 (Week 7-8):</strong> Full deployment
+                        </div>
+                    </div>
+                    
+                    <div class="pros-cons">
+                        <p class="pros"><strong>Pros:</strong></p>
+                        <ul>
+                            <li>Centralized Database and Vitrea license</li>
+                            <li>Studies could be viewed from either hospitals</li>
+                        </ul>
+                        
+                        <p class="cons"><strong>Cons:</strong></p>
+                        <ul>
+                            <li>Efficiency impact on performance and image delivery</li>
+                            <li>Required minimum 1GBPS network</li>
+                        </ul>
+                    </div>
+                    
+                    <h3>Important Assumptions and Comments</h3>
+                    <ul>
+                        <li><strong>Bandwidth:</strong> Need to know physical distance and Network layout between sites</li>
+                        <li><strong>Storage:</strong> PACS should be primary storage solution for thick and thin slice volumetric data</li>
+                        <li><strong>Concurrent users:</strong> Details on number of CCU required</li>
+                    </ul>
+                    
+                    <h3>Implementation Details</h3>
+                    <p>Placement of Management Server at the Data Centre located centrally (e.g., Kuala Lumpur)</p>
+                    <p>Split hospitals into 4/6/8 groups geographically within Malaysia</p>
+                    <p>Equip each group with either an 1,4 or 6 Application server, based on CCUs required</p>
+                    
+                    <div class="network-config">
+                        <h4>Network Configuration Details</h4>
+                        <p><strong>Central Datacenter:</strong></p>
+                        <ul>
+                            <li>VLAN 10: Management network (10.10.10.0/24)</li>
+                            <li>VLAN 20: Application network (10.10.20.0/24)</li>
+                            <li>VLAN 30: Database network (10.10.30.0/24)</li>
+                        </ul>
+                        
+                        <p><strong>Site Connectivity:</strong></p>
+                        <ul>
+                            <li>MPLS network with 1Gbps links</li>
+                            <li>QoS configured for medical imaging priority</li>
+                            <li>Site-to-site VPN as backup</li>
+                        </ul>
+                        
+                        <p><strong>Security Configuration:</strong></p>
+                        <ul>
+                            <li>Firewall between datacenter and hospitals</li>
+                            <li>Port-based access control</li>
+                            <li>Network segmentation for security</li>
+                        </ul>
+                    </div>
+                    
+                    <h4>Software Configuration:</h4>
+                    <ul>
+                        <li>1 Management Server (up to 30 CCUs)</li>
+                        <li>4 (1:6 Application servers)</li>
+                        <li>One basic Clinical Package for CT, MR and Angio</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Option 2: Decentralized ESS -->
+            <div class="slide" id="option2">
+                <h2 class="slide-title">Option 2: AV Decentralized Database - ESS Server Setup</h2>
+                
+                <div class="solution-option">
+                    <div class="solution-title">Enterprise Single Server (ESS) setup at each site</div>
+                    <p>Placement of ESS at each local Data Centre</p>
+                    
+                    <div class="tech-specs">
+                        <h4>Technical Specifications</h4>
+                        <ul>
+                            <li><strong>Ports Used:</strong> 
+                                <ul>
+                                    <li>DICOM (TCP 104, 11112) for modality integration</li>
+                                    <li>SQL Server (TCP 1433) for local database</li>
+                                    <li>SMB (TCP 445) for NAS connectivity</li>
+                                    <li>RDP (TCP 3389) for administration</li>
+                                </ul>
+                            </li>
+                            <li><strong>Server Requirements:</strong> 
+                                <ul>
+                                    <li>Dual Xeon Silver CPUs (8 cores minimum)</li>
+                                    <li>64GB RAM</li>
+                                    <li>NVIDIA RTX 4000 GPU</li>
+                                    <li>1.8TB local storage (RAID-1)</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="timeline">
+                        <h4>Implementation Timeline</h4>
+                        <div class="timeline-item">
+                            <strong>Phase 1 (Month 1):</strong> Core site deployment
+                        </div>
+                        <div class="timeline-item">
+                            <strong>Phase 2 (Month 2-3):</strong> High-volume hospital deployment
+                        </div>
+                        <div class="timeline-item">
+                            <strong>Phase 3 (Month 4-5):</strong> Remaining hospital deployment
+                        </div>
+                        <div class="timeline-item">
+                            <strong>Ongoing:</strong> Local support and maintenance
+                        </div>
+                    </div>
+                    
+                    <div class="pros-cons">
+                        <p class="pros"><strong>Pros:</strong></p>
+                        <ul>
+                            <li>Better performance and image delivery compared to Option 1</li>
+                            <li>Study doesn't have to travel from local to global Data center</li>
+                            <li>Radiologists can still view studies through PACS which stores in Master Data center</li>
+                        </ul>
+                        
+                        <p class="cons"><strong>Cons:</strong></p>
+                        <ul>
+                            <li>Decentralized Database</li>
+                            <li>Vitrea license cannot be tied to specific hospitals nor grouped</li>
+                            <li>Not much data can be stored on ESS system (max-1.8TB)</li>
+                        </ul>
+                    </div>
+                    
+                    <h3>Important Assumptions and Comments</h3>
+                    <ul>
+                        <li><strong>Bandwidth:</strong> Need to know physical distance and Network layout between sites</li>
+                        <li><strong>Storage:</strong> PACS should be primary storage solution for thick and thin slice volumetric data</li>
+                        <li><strong>Concurrent users:</strong> Details on number of CCU required</li>
+                    </ul>
+                    
+                    <div class="network-config">
+                        <h4>Network Configuration Details</h4>
+                        <p><strong>Site Configuration:</strong></p>
+                        <ul>
+                            <li>Each site has independent network</li>
+                            <li>VLAN 100: Clinical network (10.x.100.0/24)</li>
+                            <li>VLAN 200: Management network (10.x.200.0/24)</li>
+                            <li>Where x = site identifier</li>
+                        </ul>
+                        
+                        <p><strong>Inter-Site Connectivity:</strong></p>
+                        <ul>
+                            <li>Minimum 100Mbps between sites</li>
+                            <li>VPN tunnels for secure communication</li>
+                            <li>Limited to PACS synchronization only</li>
+                        </ul>
+                        
+                        <p><strong>Security Configuration:</strong></p>
+                        <ul>
+                            <li>Local firewalls at each site</li>
+                            <li>Port-based access control</li>
+                            <li>Regular security updates</li>
+                        </ul>
+                    </div>
+                    
+                    <h3>Implementation Details</h3>
+                    <p>Split hospitals into groups geographically within Malaysia (e.g., North, East, South and West)</p>
+                    
+                    <h4>Software Configuration:</h4>
+                    <ul>
+                        <li>ESS Server (up to 06 CCUs)</li>
+                        <li>One basic Clinical Package for CT, MR and Angio</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Option 3: Decentralized VES -->
+            <div class="slide" id="option3">
+                <h2 class="slide-title">Option 3: AV Decentralized Database - Management Server and ESS</h2>
+                
+                <div class="solution-option">
+                    <div class="solution-title">Management server and Enterprise Single Server (ESS) setup at each site</div>
+                    <p>Placement of Management Server and Application Servers at each local Data Centre</p>
+                    
+                    <div class="tech-specs">
+                        <h4>Technical Specifications</h4>
+                        <ul>
+                            <li><strong>Ports Used:</strong> 
+                                <ul>
+                                    <li>HTTPS (TCP 443) for web access</li>
+                                    <li>RDP (TCP 3389) for remote sessions</li>
+                                    <li>SQL Server (TCP 1433) for database</li>
+                                    <li>DICOM (TCP 104, 11112) for PACS integration</li>
+                                </ul>
+                            </li>
+                            <li><strong>Server Requirements:</strong> 
+                                <ul>
+                                    <li>Management Server: Dual Xeon Gold CPUs, 64GB RAM</li>
+                                    <li>Application Servers: Dual Xeon Silver CPUs, 128GB RAM, NVIDIA GPUs</li>
+                                    <li>10TB NAS per site</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="timeline">
+                        <h4>Implementation Timeline</h4>
+                        <div class="timeline-item">
+                            <strong>Phase 1 (Month 1-2):</strong> Core site deployment
+                        </div>
+                        <div class="timeline-item">
+                            <strong>Phase 2 (Month 3-4):</strong> Regional hub deployment
+                        </div>
+                        <div class="timeline-item">
+                            <strong>Phase 3 (Month 5-6):</strong> Remaining site deployment
+                        </div>
+                        <div class="timeline-item">
+                            <strong>Ongoing:</strong> Regional support and maintenance
+                        </div>
+                    </div>
+                    
+                    <div class="pros-cons">
+                        <p class="pros"><strong>Pros:</strong></p>
+                        <ul>
+                            <li>Better performance and image delivery compared to Option 1</li>
+                            <li>Study doesn't have to travel from local to global Data center</li>
+                            <li>Radiologists can still view studies through PACS which stores in Master Data center</li>
+                            <li>Vitrea license can be split into specific hospitals based on physical Application server</li>
+                        </ul>
+                        
+                        <p class="cons"><strong>Cons:</strong></p>
+                        <ul>
+                            <li>Decentralized Database</li>
+                            <li>Efficiency impact on performance and image delivery</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="network-config">
+                        <h4>Network Configuration Details</h4>
+                        <p><strong>Regional Hub Configuration:</strong></p>
+                        <ul>
+                            <li>Each regional hub has complete Vitrea stack</li>
+                            <li>VLAN 100: Management network (10.x.100.0/24)</li>
+                            <li>VLAN 200: Application network (10.x.200.0/24)</li>
+                            <li>VLAN 300: Storage network (10.x.300.0/24)</li>
+                            <li>Where x = region identifier</li>
+                        </ul>
+                        
+                        <p><strong>Inter-Hub Connectivity:</strong></p>
+                        <ul>
+                            <li>1Gbps between regional hubs</li>
+                            <li>MPLS with QoS for medical imaging priority</li>
+                            <li>Limited database synchronization</li>
+                        </ul>
+                        
+                        <p><strong>Security Configuration:</strong></p>
+                        <ul>
+                            <li>Firewall between regional networks</li>
+                            <li>Port-based access control</li>
+                            <li>Centralized security monitoring</li>
+                        </ul>
+                    </div>
+                    
+                    <h3>Implementation Details</h3>
+                    <p>Split hospitals into 4/6/8 groups geographically within Malaysia</p>
+                    
+                    <h4>Software Configuration:</h4>
+                    <ul>
+                        <li>Management Server + ESS Server (up to 30 CCUs) at each site scalable</li>
+                        <li>One basic Clinical Package for CT, MR and Angio</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Option 4: Hybrid Approach -->
+            <div class="slide" id="option4">
+                <h2 class="slide-title">Option 4: AV Decentralized Database - Hybrid Approach</h2>
+                
+                <div class="solution-option">
+                    <div class="solution-title">Combination of VES Management Server + Application Server setup and ESS at each local site</div>
+                    <p>Phase-wise implementation with 10 ESS (DC) + 1X Management Server(DC) + Application Server (1/4/6:1 Ccu)</p>
+                    
+                    <div class="tech-specs">
+                        <h4>Technical Specifications</h4>
+                        <ul>
+                            <li><strong>Ports Used:</strong> 
+                                <ul>
+                                    <li>HTTPS (TCP 443) for web access</li>
+                                    <li>RDP (TCP 3389) for remote sessions</li>
+                                    <li>SQL Server (TCP 1433) for database replication</li>
+                                    <li>DICOM (TCP 104, 11112) for PACS integration</li>
+                                </ul>
+                            </li>
+                            <li><strong>Network Requirements:</strong> 
+                                <ul>
+                                    <li>1Gbps between major sites</li>
+                                    <li>100Mbps to smaller sites</li>
+                                    <li>QoS configured for medical imaging priority</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div class="timeline">
+                        <h4>Implementation Timeline</h4>
+                        <div class="timeline-item">
+                            <strong>Phase 1 (Month 1-3):</strong> Core infrastructure and high-volume sites
+                        </div>
+                        <div class="timeline-item">
+                            <strong>Phase 2 (Month 4-6):</strong> Medium-volume site deployment
+                        </div>
+                        <div class="timeline-item">
+                            <strong>Phase 3 (Month 7-9):</strong> Low-volume site deployment
+                        </div>
+                        <div class="timeline-item">
+                            <strong>Ongoing:</strong> Performance optimization and tuning
+                        </div>
+                    </div>
+                    
+                    <h3>Requirements</h3>
+                    <ul>
+                        <li>Need 1GBPS network bandwidth between Modalities and local DC</li>
+                        <li>Centralized Licenses</li>
+                    </ul>
+                    
+                    <h3>Important Assumptions and Comments</h3>
+                    <ul>
+                        <li><strong>Bandwidth:</strong> High-speed internet bandwidth required (minimum 1GBPS)</li>
+                        <li><strong>Network:</strong> Physical distance and Network layout details are critical for performance</li>
+                        <li><strong>Storage:</strong> PACS should be primary storage solution</li>
+                        <li><strong>Concurrent users:</strong> Details on number of CCU required</li>
+                    </ul>
+                    
+                    <div class="network-config">
+                        <h4>Network Configuration Details</h4>
+                        <p><strong>Core Datacenter:</strong></p>
+                        <ul>
+                            <li>VLAN 10: Management network (10.10.10.0/24)</li>
+                            <li>VLAN 20: Application network (10.10.20.0/24)</li>
+                            <li>VLAN 30: Database network (10.10.30.0/24)</li>
+                        </ul>
+                        
+                        <p><strong>Regional Sites:</strong></p>
+                        <ul>
+                            <li>VLAN 100: Clinical network (10.x.100.0/24)</li>
+                            <li>VLAN 200: Management network (10.x.200.0/24)</li>
+                            <li>Where x = site identifier</li>
+                        </ul>
+                        
+                        <p><strong>Connectivity:</strong></p>
+                        <ul>
+                            <li>1Gbps to regional hubs</li>
+                            <li>100Mbps to smaller sites</li>
+                            <li>MPLS with QoS for medical imaging priority</li>
+                            <li>VPN backup for critical sites</li>
+                        </ul>
+                    </div>
+                    
+                    <h3>Implementation Strategy</h3>
+                    <p>Placement of Management Server+ Application server and/or ESS at each local PACS Data Centre</p>
+                    <p>Split hospitals into 4/6/8 groups geographically within Malaysia</p>
+                    
+                    <div class="tab-container">
+                        <div class="tab-buttons">
+                            <button class="tab-btn active" data-tab="option4-phase1">Phase 1</button>
+                            <button class="tab-btn" data-tab="option4-phase2">Phase 2</button>
+                            <button class="tab-btn" data-tab="option4-network">Network Config</button>
+                        </div>
+                        
+                        <div class="tab-content active" id="option4-phase1">
+                            <h4>Phase 1 Implementation</h4>
+                            <ul>
+                                <li>Deploy ESS at 4 sites</li>
+                                <li>Domain Controller and Vitrea Management Server (Physical/Virtual)</li>
+                                <li>Application Server 6:1 CCU</li>
+                                <li>3X Enterprise Single Server 6:1 CCU</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="tab-content" id="option4-phase2">
+                            <h4>Phase 2 Implementation</h4>
+                            <ul>
+                                <li>Centralized license server in Main DC</li>
+                                <li>1X Management Server + Application Server</li>
+                                <li>4x Enterprise Single Server 6:1 CCU</li>
+                                <li>Domain Controller and Vitrea Management Server (Physical/Virtual)</li>
+                                <li>Application Server 6:1 CCU</li>
+                                <li>Enterprise Single Server 6:1 CCU</li>
+                            </ul>
+                            <p><strong>Note:</strong> Licenses are shared across VA solution - Need special deviation from executive team members.</p>
+                        </div>
+                        
+                        <div class="tab-content" id="option4-network">
+                            <h4>Network Configuration Details</h4>
+                            <div class="network-config">
+                                <p><strong>Core Network:</strong></p>
+                                <ul>
+                                    <li>10Gbps backbone between datacenters</li>
+                                    <li>1Gbps to regional hubs</li>
+                                    <li>100Mbps to smaller sites</li>
+                                </ul>
+                                
+                                <p><strong>VLAN Configuration:</strong></p>
+                                <ul>
+                                    <li>VLAN 10: Core management (10.10.10.0/24)</li>
+                                    <li>VLAN 20: Regional management (10.20.0.0/16)</li>
+                                    <li>VLAN 30: Site-specific networks (10.30.x.0/24)</li>
+                                </ul>
+                                
+                                <p><strong>Security Configuration:</strong></p>
+                                <ul>
+                                    <li>Firewall between all network segments</li>
+                                    <li>Port-based access control</li>
+                                    <li>Centralized logging and monitoring</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="navigation">
+                <button class="btn" id="prev-btn">Previous</button>
+                <button class="btn" id="next-btn">Next</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Navigation functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const slides = document.querySelectorAll('.slide');
+            const navItems = document.querySelectorAll('.nav-item');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            let currentSlide = 0;
+            
+            // Show initial slide
+            showSlide(currentSlide);
+            
+            // Navigation items click event
+            navItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const slideId = this.getAttribute('data-slide');
+                    const slideIndex = Array.from(slides).findIndex(slide => slide.id === slideId);
+                    if (slideIndex !== -1) {
+                        currentSlide = slideIndex;
+                        showSlide(currentSlide);
+                    }
+                });
+            });
+            
+            // Previous button click event
+            prevBtn.addEventListener('click', function() {
+                if (currentSlide > 0) {
+                    currentSlide--;
+                    showSlide(currentSlide);
+                }
+            });
+            
+            // Next button click event
+            nextBtn.addEventListener('click', function() {
+                if (currentSlide < slides.length - 1) {
+                    currentSlide++;
+                    showSlide(currentSlide);
+                }
+            });
+            
+            // Tab functionality
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    const tabContainer = this.closest('.tab-container');
+                    
+                    // Remove active class from all buttons and contents
+                    tabContainer.querySelectorAll('.tab-btn').forEach(tb => tb.classList.remove('active'));
+                    tabContainer.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+                    
+                    // Add active class to clicked button and corresponding content
+                    this.classList.add('active');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
+            // Function to show slide
+            function showSlide(index) {
+                // Hide all slides
+                slides.forEach(slide => slide.classList.remove('active'));
+                
+                // Show current slide
+                slides[index].classList.add('active');
+                
+                // Update active nav item
+                navItems.forEach(item => item.classList.remove('active'));
+                if (index > 0) {
+                    const currentSlideId = slides[index].id;
+                    const correspondingNavItem = document.querySelector(`.nav-item[data-slide="${currentSlideId}"]`);
+                    if (correspondingNavItem) {
+                        correspondingNavItem.classList.add('active');
+                    }
+                }
+                
+                // Scroll to top of main content
+                document.querySelector('.main-content').scrollTop = 0;
+            }
+        });
+    </script>
+</body>
+</html>
