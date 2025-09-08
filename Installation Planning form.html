@@ -1,0 +1,1744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOP-307.200.F007 Installation Planning Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
+        }
+        .tab-container {
+            margin-bottom: 20px;
+        }
+        .tab-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+        .tab-button {
+            padding: 8px 15px;
+            background-color: #ddd;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px 5px 0 0;
+        }
+        .tab-button.active {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .tab-content {
+            display: none;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 0 5px 5px 5px;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .red-bg {
+            background-color: #ffcccc;
+        }
+        .blue-bg {
+            background-color: #cce5ff;
+        }
+        .notes {
+            font-style: italic;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        .search-container {
+            margin-bottom: 20px;
+        }
+        #searchInput {
+            padding: 8px;
+            width: 300px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        .action-buttons {
+            margin: 20px 0;
+            display: flex;
+            gap: 10px;
+        }
+        .action-buttons button {
+            padding: 8px 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .action-buttons button:hover {
+            background-color: #45a049;
+        }
+        input[type="text"], input[type="email"], input[type="tel"], input[type="number"] {
+            width: 100%;
+            padding: 5px;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+        select {
+            width: 100%;
+            padding: 5px;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+        @media print {
+            .no-print, .tab-buttons, .search-container, .action-buttons {
+                display: none !important;
+            }
+            .tab-content {
+                display: block !important;
+                border: none;
+                padding: 0;
+            }
+            body {
+                background-color: white;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+                padding: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>SOP-307.200.F007 Installation Planning Form</h1>
+        <div class="action-buttons no-print">
+            <button onclick="window.print()">Print Form</button>
+            <button onclick="saveForm()">Save Form</button>
+            <button onclick="loadForm()">Load Form</button>
+        </div>
+        <div class="search-container no-print">
+            <input type="text" id="searchInput" placeholder="Search across all sheets...">
+            <button onclick="searchSheets()">Search</button>
+        </div>
+        <div class="tab-container">
+            <div class="tab-buttons no-print" id="tabButtons"></div>
+            <div id="tabContents"></div>
+        </div>
+    </div>
+
+    <script>
+        // Sheet data
+        const sheets = [
+            {
+                name: "Project Overview",
+                content: `
+                    <table>
+                        <tr>
+                            <th colspan="15">Installation Planning Form</th>
+                        </tr>
+                        <tr>
+                            <th colspan="15">Vitrea© Advanced Visualization Enterprise Deployment v7.15.x</th>
+                        </tr>
+                        <tr class="red-bg">
+                            <td colspan="15">Canon Medical Informatics (CMI) to complete all red sections.</td>
+                        </tr>
+                        <tr class="blue-bg">
+                            <td colspan="15">Customer to complete all blue sections.</td>
+                        </tr>
+                        <tr>
+                            <th colspan="6">Customer and Order Information</th>
+                            <th colspan="3">CMI Contact Information</th>
+                            <th colspan="6"></th>
+                        </tr>
+                        <tr>
+                            <td>Customer Name</td>
+                            <td colspan="5"><input type="text"></td>
+                            <td>Role</td>
+                            <td colspan="2"></td>
+                            <td>Name</td>
+                            <td><input type="text"></td>
+                            <td>Phone</td>
+                            <td><input type="tel"></td>
+                            <td>Email</td>
+                        </tr>
+                        <tr>
+                            <td>Site Address</td>
+                            <td colspan="5"><input type="text"></td>
+                            <td>Project Manager</td>
+                            <td colspan="2"></td>
+                            <td><input type="text"></td>
+                            <td></td>
+                            <td><input type="tel"></td>
+                            <td></td>
+                            <td><input type="email"></td>
+                        </tr>
+                        <tr>
+                            <td>Customer ID#</td>
+                            <td colspan="2"><input type="text"></td>
+                            <td>Order #</td>
+                            <td colspan="2"><input type="text"></td>
+                            <td>Implementation Engineer</td>
+                            <td colspan="2"></td>
+                            <td><input type="text"></td>
+                            <td></td>
+                            <td><input type="tel"></td>
+                            <td></td>
+                            <td><input type="email"></td>
+                        </tr>
+                        <tr>
+                            <th colspan="6">Customer Representative Information</th>
+                            <th colspan="3"></th>
+                            <th colspan="6"></th>
+                        </tr>
+                        <tr>
+                            <td>Role</td>
+                            <td>Name</td>
+                            <td>Phone</td>
+                            <td>Email</td>
+                            <td colspan="2"></td>
+                            <td>Role</td>
+                            <td colspan="2"></td>
+                            <td>Name</td>
+                            <td></td>
+                            <td>Phone</td>
+                            <td></td>
+                            <td>Email</td>
+                        </tr>
+                        <tr>
+                            <td>Primary</td>
+                            <td><input type="text"></td>
+                            <td><input type="tel"></td>
+                            <td><input type="email"></td>
+                            <td colspan="2"></td>
+                            <td>Active Directory Team</td>
+                            <td colspan="2"></td>
+                            <td><input type="text"></td>
+                            <td></td>
+                            <td><input type="tel"></td>
+                            <td></td>
+                            <td><input type="email"></td>
+                        </tr>
+                        <tr>
+                            <td>Data Center Team</td>
+                            <td><input type="text"></td>
+                            <td><input type="tel"></td>
+                            <td><input type="email"></td>
+                            <td colspan="2"></td>
+                            <td>Server Team</td>
+                            <td colspan="2"></td>
+                            <td><input type="text"></td>
+                            <td></td>
+                            <td><input type="tel"></td>
+                            <td></td>
+                            <td><input type="email"></td>
+                        </tr>
+                        <tr>
+                            <td>VMware Team</td>
+                            <td><input type="text"></td>
+                            <td><input type="tel"></td>
+                            <td><input type="email"></td>
+                            <td colspan="2"></td>
+                            <td>Networking/Infrastructure Team</td>
+                            <td colspan="2"></td>
+                            <td><input type="text"></td>
+                            <td></td>
+                            <td><input type="tel"></td>
+                            <td></td>
+                            <td><input type="email"></td>
+                        </tr>
+                        <tr>
+                            <td>Security Team</td>
+                            <td><input type="text"></td>
+                            <td><input type="tel"></td>
+                            <td><input type="email"></td>
+                            <td colspan="2"></td>
+                            <td>Database/SQL Team</td>
+                            <td colspan="2"></td>
+                            <td><input type="text"></td>
+                            <td></td>
+                            <td><input type="tel"></td>
+                            <td></td>
+                            <td><input type="email"></td>
+                        </tr>
+                        <tr>
+                            <td>IT Other</td>
+                            <td><input type="text"></td>
+                            <td><input type="tel"></td>
+                            <td><input type="email"></td>
+                            <td colspan="2"></td>
+                            <td>Desktop Team</td>
+                            <td colspan="2"></td>
+                            <td><input type="text"></td>
+                            <td></td>
+                            <td><input type="tel"></td>
+                            <td></td>
+                            <td><input type="email"></td>
+                        </tr>
+                        <tr>
+                            <td>Software Packaging Team</td>
+                            <td><input type="text"></td>
+                            <td><input type="tel"></td>
+                            <td><input type="email"></td>
+                            <td colspan="2"></td>
+                            <td>PACS Administrator/Team</td>
+                            <td colspan="2"></td>
+                            <td><input type="text"></td>
+                            <td></td>
+                            <td><input type="tel"></td>
+                            <td></td>
+                            <td><input type="email"></td>
+                        </tr>
+                        <tr>
+                            <td>Software Licensing</td>
+                            <td><input type="text"></td>
+                            <td><input type="tel"></td>
+                            <td><input type="email"></td>
+                            <td colspan="9"></td>
+                        </tr>
+                        <tr>
+                            <th colspan="4">System Overview</th>
+                            <th colspan="2">(Duplicate for additional deployments)</th>
+                            <th colspan="3"></th>
+                            <th colspan="6">Critical Details</th>
+                        </tr>
+                        <tr>
+                            <td>System Type</td>
+                            <td><input type="text" value="Production"></td>
+                            <td>Architecture</td>
+                            <td><input type="text"></td>
+                            <td>Architecture</td>
+                            <td><input type="text"></td>
+                            <td colspan="3"></td>
+                            <td># of Vitrea licenses</td>
+                            <td colspan="5"><input type="number"></td>
+                        </tr>
+                        <tr>
+                            <th colspan="15">Vitrea Server Info</th>
+                        </tr>
+                        <tr>
+                            <td>Management</td>
+                            <td colspan="4"><input type="text"></td>
+                            <td></td>
+                            <td colspan="3"></td>
+                            <td><input type="checkbox"> Physical</td>
+                            <td><input type="checkbox"> VM</td>
+                            <td colspan="5"></td>
+                        </tr>
+                        <tr>
+                            <td>Application Servers: Virtual</td>
+                            <td colspan="14"><input type="text"></td>
+                        </tr>
+                        <tr>
+                            <td>Application Servers: Single Rendering</td>
+                            <td colspan="14"><input type="text"></td>
+                        </tr>
+                        <tr>
+                            <td>Application Servers: 3-in-1 Multi-User Rendering</td>
+                            <td colspan="14"><input type="text"></td>
+                        </tr>
+                        <tr>
+                            <td>Application Servers: 4-in-1 Multi-User Rendering</td>
+                            <td colspan="14"><input type="text"></td>
+                        </tr>
+                        <tr>
+                            <td>Application Servers: 6-in-1 Multi-User Rendering</td>
+                            <td colspan="14"><input type="text"></td>
+                        </tr>
+                        <tr>
+                            <td>Application Servers: Other (future use - please note server type)</td>
+                            <td colspan="14"><input type="text"></td>
+                        </tr>
+                        <tr>
+                            <td>PACS Integration1: PACS Vendor</td>
+                            <td colspan="14"><input type="text"></td>
+                        </tr>
+                        <tr>
+                            <td>PACS Integration2: PACS Vendor</td>
+                            <td colspan="14"><input type="text"></td>
+                        </tr>
+                        <tr>
+                            <td>Data Migration</td>
+                            <td colspan="3">Amount of data to migrate <input type="text"></td>
+                            <td colspan="11"></td>
+                        </tr>
+                        <tr>
+                            <th colspan="15">Vitrea Partner applications included on order</th>
+                        </tr>
+                        <tr>
+                            <td>Corridor 4DM - Invia</td>
+                            <td colspan="3"><input type="checkbox"></td>
+                            <td>OleaSphere</td>
+                            <td colspan="10"><input type="checkbox"></td>
+                        </tr>
+                        <tr>
+                            <td>Cedars Cardiac Suite</td>
+                            <td colspan="3"><input type="checkbox"></td>
+                            <td>Olea fMRI</td>
+                            <td colspan="10"><input type="checkbox"></td>
+                        </tr>
+                        <tr>
+                            <td>iCAD VeraLook CT Colon CAD</td>
+                            <td colspan="3"><input type="checkbox"></td>
+                            <td>Syntermed NeuroQ</td>
+                            <td colspan="10"><input type="checkbox"></td>
+                        </tr>
+                        <tr>
+                            <td>Medis Suite MR</td>
+                            <td colspan="3"><input type="checkbox"></td>
+                            <td>TomTec</td>
+                            <td colspan="10"><input type="checkbox"></td>
+                        </tr>
+                        <tr>
+                            <td>Mirada</td>
+                            <td colspan="3"><input type="checkbox"></td>
+                            <td>Visia CT Lung CAD</td>
+                            <td colspan="10"><input type="checkbox"></td>
+                        </tr>
+                        <tr>
+                            <th colspan="15">Installation Notes for CMI Engineer</th>
+                        </tr>
+                        <tr>
+                            <td colspan="15"><textarea style="width:100%; height:100px;"></textarea></td>
+                        </tr>
+                        <tr>
+                            <td colspan="15">SOP-307.200.F007 H</td>
+                        </tr>
+                    </table>
+                `
+            },
+            {
+                name: "Remote Access",
+                content: `
+                    <table>
+                        <tr>
+                            <th colspan="8">Remote Access</th>
+                        </tr>
+                        <tr>
+                            <td colspan="2">CMI preferred</td>
+                            <td colspan="6">
+                                <select>
+                                    <option value="">Select...</option>
+                                    <option value="Bomgar">Bomgar</option>
+                                    <option value="SecureLink/Imprivata">SecureLink/Imprivata</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                                <input type="text" placeholder="If Other, specify">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="8">Remote access details - please provide credentials securely</td>
+                        </tr>
+                        <tr>
+                            <td colspan="8"><textarea style="width:100%; height:100px;"></textarea></td>
+                        </tr>
+                    </table>
+                `
+            },
+            {
+                name: "SQL",
+                content: `
+                    <table>
+                        <tr>
+                            <th colspan="9">PM Instructions</th>
+                        </tr>
+                        <tr>
+                            <td colspan="9">1. Delete the table below that is not relevant.</td>
+                        </tr>
+                        <tr>
+                            <td colspan="9">2. Delete these instructions.</td>
+                        </tr>
+                        <tr>
+                            <th colspan="8">SQL Database (Local to Management Server)</th>
+                            <th>Critical Details</th>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Where will SQL reside?</td>
+                            <td><input type="text" value="Management Server"></td>
+                            <td colspan="2">SQL Version</td>
+                            <td colspan="2"><input type="text"></td>
+                            <td>SQL Edition</td>
+                            <td><input type="text"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Instance Type</td>
+                            <td><input type="text" value="Named"></td>
+                            <td>Instance Name</td>
+                            <td><input type="text"></td>
+                            <td>Port</td>
+                            <td><input type="text"></td>
+                            <td>SQL Encryption</td>
+                            <td><input type="text" value="Encryption is required"></td>
+                        </tr>
+                        <tr>
+                            <th colspan="8">SQL Database (Remote)</th>
+                            <th>Critical Details</th>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Where will SQL reside?</td>
+                            <td colspan="2"><input type="text"></td>
+                            <td>SQL Version</td>
+                            <td colspan="2"><input type="text"></td>
+                            <td>SQL Edition</td>
+                            <td><input type="text"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Instance Details</td>
+                            <td colspan="2"><input type="text"></td>
+                            <td>Instance Name<br>(if named instance)</td>
+                            <td colspan="2"><input type="text"></td>
+                            <td>Port</td>
+                            <td><input type="text"></td>
+                        </tr>
+                        <tr>
+                            <th colspan="9">SQL Encryption</th>
+                        </tr>
+                        <tr>
+                            <td colspan="2"></td>
+                            <td>If No, please state reason</td>
+                            <td colspan="6"><input type="text" value="There are multiple DB's on same Default or Named instance that would be affected by SQL encryption"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="9">Remote SQL Server Setup Instructions.pdf sent to DB Team <input type="checkbox"></td>
+                        </tr>
+                    </table>
+                `
+            },
+            {
+                name: "RDS CALs",
+                content: `
+                    <table>
+                        <tr>
+                            <th colspan="7">Microsoft Remote Desktop Services Client Access Licenses (CAL's)</th>
+                        </tr>
+                        <tr>
+                            <td colspan="2">RD License Server location</td>
+                            <td colspan="5"><input type="text"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">CAL Type</td>
+                            <td colspan="5"><input type="text"></td>
+                        </tr>
+                    </table>
+                `
+            },
+            {
+                name: "Storage",
+                content: `
+                    <table>
+                        <tr>
+                            <th colspan="5">PM Instructions</th>
+                        </tr>
+                        <tr>
+                            <td colspan="5">1. Delete either Local or Remote Storage table, as appropriate.</td>
+                        </tr>
+                        <tr>
+                            <td colspan="5">2. Delete these instructions.</td>
+                        </tr>
+                        <tr>
+                            <th colspan="3">Vitrea DICOM image cache storage location</th>
+                            <th>Critical Details</th>
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <td colspan="3">Where will images be stored?</td>
+                            <td colspan="2"><input type="text"></td>
+                        </tr>
+                        <tr>
+                            <th colspan="3">Local Storage (Drive on Management Server as a UNC share)</th>
+                            <th>Critical Details</th>
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <td colspan="3">Storage size (GB)</td>
+                            <td colspan="2"><input type="number"></td>
+                        </tr>
+                        <tr>
+                            <th colspan="3">Remote Storage (NAS share via a UNC path)</th>
+                            <th>Critical Details</th>
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Storage Type</td>
+                            <td><input type="text" placeholder="Please list if other"></td>
+                            <td colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">Network Storage Path (31 char or less)</td>
+                            <td colspan="2"><input type="text"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">Storage size (GB)</td>
+                            <td colspan="2"><input type="number"></td>
+                        </tr>
+                    </table>
+                `
+            },
+            {
+                name: "AD Accounts, Groups",
+                content: `
+                    <table>
+                        <tr>
+                            <th colspan="5">PM Instructions</th>
+                        </tr>
+                        <tr>
+                            <td colspan="5">1. Delete 'Vitrea-SQL' row in Account definitions table if SQL is remote.</td>
+                        </tr>
+                        <tr>
+                            <td colspan="5">2. Edit Note in Critical Details to remove either SQL on Management Server or SQL Remote, as needed.</td>
+                        </tr>
+                        <tr>
+                            <td colspan="5">3. Delete these instructions.</td>
+                        </tr>
+                        <tr>
+                            <th colspan="4">Account Definitions</th>
+                            <th>Critical Details</th>
+                        </tr>
+                        <tr>
+                            <th colspan="2">Account Name/Type</th>
+                            <th colspan="2">Description</th>
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Vitrea-Admin role</td>
+                            <td colspan="2">Logon to servers, configure OS, and run Vitrea installers. CMI support will use this account. This role may be assigned to an individual, such as the Implementation Engineer who will be performing the installation.</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Vitrea-Service$ (gMSA) or Vitrea-Service (typical AD account)</td>
+                            <td colspan="2">Vitrea product and installers require a service account; it is used to run Vitrea/CMI services. The Service account must have the logon as batch rights in order for the application to function.</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Vitrea-User</td>
+                            <td colspan="2">User-level account that is used for testing Vitrea application.</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Vitrea-SQL$ (gMSA) or Vitrea-SQL (typical AD account)</td>
+                            <td colspan="2">Run SQL services; only on systems where SQL resides on the Management server.</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <th colspan="5">Environment Details</th>
+                        </tr>
+                        <tr>
+                            <td colspan="5">Vitrea Enterprise requires individual AD credentials. Generic AD or Local computer accounts are not supported. Please verify individual AD credentials will be used to access Vitrea.</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">How many domains are relevant to this deployment?</td>
+                            <td colspan="2"><input type="number"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">List all domains for this deployment: Vitrea servers, client workstations, users, etc.)</td>
+                            <td colspan="2"><input type="text"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">Do users access Vitrea from outside the hospital network?</td>
+                            <td colspan="2"><input type="checkbox"> Yes</td>
+                        </tr>
+                        <tr>
+                            <th colspan="5">Security Groups</th>
+                        </tr>
+                        <tr>
+                            <th colspan="2">Names of groups created</th>
+                            <th colspan="3">Please select a role for each group.</th>
+                        </tr>
+                        <tr>
+                            <td colspan="2">(Vitrea Users, Vitrea Administrators, Vitrea Services)</td>
+                            <td colspan="3"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Example1: Vitrea Users</td>
+                            <td colspan="3"><input type="text" value="User"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Example2: APP-Ent-Radiology006-Vitrea Admins</td>
+                            <td colspan="3"><input type="text" value="Administrator"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><input type="text"></td>
+                            <td colspan="3"><input type="text" value="Administrator"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><input type="text"></td>
+                            <td colspan="3"><input type="text" value="Service"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><input type="text"></td>
+                            <td colspan="3"><input type="text" value="User"></td>
+                        </tr>
+                    </table>
+                `
+            },
+            {
+                name: "Group Policy",
+                content: `
+                    <table>
+                        <tr>
+                            <th colspan="2">PM Instructions</th>
+                        </tr>
+                        <tr>
+                            <td colspan="2">1. Provide customer with copy of either Domain User and Group Setup Guide.pdf (<7.16.0) or Enterprise Deployment Active Directory Planning Guide.pdf (7.16.0>).</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">2. Delete these instructions.</td>
+                        </tr>
+                        <tr>
+                            <th colspan="2">Group Policy</th>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Versions 7.15.5-7.15.7: There are 3 distinct places that will require policy settings to be applied. The settings for each will be unique:</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">1. Management Server</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">2. Application and/or Dedicated MMV Server(s)</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">3. Client Workstations</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Versions 7.15.8>: There are 2 distinct places that will require policy settings to be applied. The settings for each will be unique:</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">1. Application and/or Dedicated MMV Server(s)</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">2. Client Workstations</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">We do have the option to configure the first 2 using local group policy (gpedit.msc) if this is preferable.</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Please refer to the Domain User and Group Setup Guide.pdf (<7.16.0) or Enterprise Deployment Active Directory Planning Guide.pdf (7.16.0>) for the version being deployed for details.</td>
+                        </tr>
+                        <tr>
+                            <th colspan="2">Log on as batch job, Log on as service</th>
+                        </tr>
+                        <tr>
+                            <td colspan="2">The service account must be given the Log on as batch job and Log on as a service permission on the application servers:</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Computer Configuration | Windows Settings | Security Settings | Local Policies | User Rights Assignment</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><input type="checkbox"> Completed</td>
+                        </tr>
+                    </table>
+                `
+            },
+            {
+                name: "Security",
+                content: `
+                    <table>
+                        <tr>
+                            <th colspan="5">SSL Certificates</th>
+                        </tr>
+                        <tr>
+                            <th>Vitrea Version</th>
+                            <th>Server(s) where cert req'd</th>
+                            <th>Critical Details</th>
+                            <th></th>
+                        </tr>
+                        <tr>
+                            <td>All versions up to and including 7.15.6</td>
+                            <td>Management only</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>7.15.7 and forward<br></td>
+                            <td>Each Vitrea Server + SQL (if SQL is remote, a separate cert is required)</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Certificate Issuer</td>
+                            <td><input type="text"></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Certificate Type</td>
+                            <td><input type="text"></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Notes</td>
+                            <td><input type="text"></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <th colspan="5">Windows Security Banner</th>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Does your organization use a Windows Security Banner?*</td>
+                            <td colspan="3"><input type="checkbox"> Yes</td>
+                        </tr>
+                        <tr>
+                            <td colspan="5">*A Windows Security Banner is a message that appears when users log into a server to alert them that they are logging into your organization's network:</td>
+                        </tr>
+                        <tr>
+                            <td colspan="5">It is strongly advised that any Windows Security Banners be disabled on the Application and/or Dedicated MMV servers due to the following conditions:<br>-User will be forced to click 'OK' to proceed on each session launch.<br>-Session launches will be noticably slower.<br>-Contextual launch of Vitrea through PACS will not function.</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Can an exception be made to disable for the Vitrea application, MMV servers?</td>
+                            <td colspan="3"><input type="checkbox"> Yes</td>
+                        </tr>
+                        <tr>
+                            <th colspan="5">Security Scanning</th>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Security scan, penetration test, etc. required after install? If yes, provide details.</td>
+                            <td colspan="3"><input type="checkbox"> Yes <input type="text" placeholder="Details"></td>
+                        </tr>
+                        <tr>
+                            <td>Description</td>
+                            <td colspan="4"><input type="text"></td>
+                        </tr>
+                        <tr>
+                            <th colspan="5">Antivirus</th>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Please list antivirus, antimalware products in use on Vitrea servers</td>
+                            <td colspan="3"><input type="text"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">RT scan Antivirus/ Antimalware exclusions sent (Enterprise Deployment Operating System Setup Guide.pdf)</td>
+                            <td colspan="3"><input type="checkbox"> Yes</td>
+                        </tr>
+                        <tr>
+                            <th colspan="5">Firewalls</th>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Firewalls may affect this deployment</td>
+                            <td colspan="3"><input type="checkbox"> Yes</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Firewalls are applied based on user permissions</td>
+                            <td colspan="3"><input type="checkbox"> Yes</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Windows Firewall enabled on Vitrea servers</td>
+                            <td colspan="3"><input type="checkbox"> Yes</td>
+                        </tr>
+                        <tr>
+                            <td>Clients ↔ Vitrea servers</td>
+                            <td><input type="checkbox"></td>
+                            <td>Modalities ↔ Management Server</td>
+                            <td colspan="2"><input type="checkbox"></td>
+                        </tr>
+                        <tr>
+                            <td>Physical site ↔ physical site</td>
+                            <td><input type="checkbox"></td>
+                            <td>PACS ↔ Management Server</td>
+                            <td colspan="2"><input type="checkbox"></td>
+                        </tr>
+                        <tr>
+                            <td>Remote SQL ↔ Vitrea Servers</td>
+                            <td><input type="checkbox"></td>
+                            <td>RD License Server ↔ Vitrea servers</td>
+                            <td colspan="2"><input type="checkbox"></td>
+                        </tr>
+                    </table>
+                `
+            },
+            {
+                name: "PACS, Integration",
+                content: `
+                    <table>
+                        <tr>
+                            <th colspan="8">PM Instructions</th>
+                        </tr>
+                        <tr>
+                            <td colspan="8">1. Delete the PACS Integration table if there is no integration on the deployment(s).</td>
+                        </tr>
+                        <tr>
+                            <td colspan="8">2. Delete these instructions.</td>
+                        </tr>
+                        <tr>
+                            <th colspan="8">PACS Integration</th>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Is Vitrea currently integrated with PACS?</td>
+                            <td colspan="6"><input type="checkbox"> Yes</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">PACS Manufacturer</td>
+                            <td colspan="2"><input type="text"></td>
+                            <td colspan="4"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">PACS Version</td>
+                            <td colspan="2"><input type="text"></td>
+                            <td colspan="4"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"># of integrated workstations</td>
+                            <td colspan="2"><input type="number"></td>
+                            <td colspan="4"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">PACS Vendor Contact Name</td>
+                            <td colspan="2"><input type="text"></td>
+                            <td colspan="4"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Verify PACS vendor is engaged/aware</td>
+                            <td colspan="2"><input type="checkbox"> Yes</td>
+                            <td colspan="4"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">PACS Vendor Phone, Email</td>
+                            <td colspan="2"><input type="text"></td>
+                            <td colspan="4"></td>
+                        </tr>
+                        <tr>
+                            <th colspan="8">PACS, Archives</th>
+                        </tr>
+                        <tr>
+                            <td colspan="8">Please list all PACS/Archive system(s) for use with Vitrea below and ensure these systems are configured to use the AE Title assigned to the Vitrea Management server in the Server Details tab. All DICOM communication takes place with the Management server which is DICOM promiscuous.</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Existing Deployment - Integration Engineer will obtain from current system</td>
+                            <td colspan="6"><input type="checkbox"> Yes</td>
+                        </tr>
+                        <tr>
+                            <th>Display Name in Vitrea</th>
+                            <th>IP Address</th>
+                            <th>Port</th>
+                            <th>AE Title</th>
+                            <th colspan="4">Verify that PACS is configured for the following:</th>
+                        </tr>
+                        <tr>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td><input type="checkbox"> Mgmt - Q/R from PACS</td>
+                            <td><input type="checkbox"> Mgmt - store to PACS</td>
+                            <td><input type="checkbox"> PACS - store to Mgmt</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <th colspan="8">DICOM Router (optional)</th>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Does your organization use a DICOM router to move imges between devices?</td>
+                            <td colspan="6"><input type="checkbox"> Yes</td>
+                        </tr>
+                    </table>
+                `
+            },
+            {
+                name: "Server Details-P",
+                content: `
+                    <table>
+                        <tr>
+                            <th colspan="6">PM Instructions</th>
+                        </tr>
+                        <tr>
+                            <td colspan="6">1. Does the deployment have Physical (P)/Virtual (V) servers, or both? Hide or delete Physical or Virtual Server Details tab, unless system is Hybrid.</td>
+                        </tr>
+                        <tr>
+                            <td colspan="6">2. Duplicate Application server tables as per # App servers.</td>
+                        </tr>
+                        <tr>
+                            <td colspan="6">3. Are there Dedicated MMV servers? If not, delete this table.</td>
+                        </tr>
+                        <tr>
+                            <td colspan="6">4. Is there >1 system on this project? Duplicate tables as needed for additional systems.</td>
+                        </tr>
+                        <tr>
+                            <td colspan="6">5. Delete these instructions.</td>
+                        </tr>
+                        <tr>
+                            <th colspan="5">Physical Servers Details</th>
+                            <th>Critical Details</th>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Which servers are physical?</td>
+                            <td colspan="4">
+                                <select>
+                                    <option value="">Select...</option>
+                                    <option value="All">All</option>
+                                    <option value="Standalone SQL">Standalone SQL</option>
+                                    <option value="Management">Management</option>
+                                    <option value="Application">Application</option>
+                                    <option value="Dedicated MMV">Dedicated MMV</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Customer provided hardware (If yes, specs must be verified)</td>
+                            <td colspan="4"><input type="checkbox"> Yes</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Verify vGPU drivers will be installed on App servers & licenses are available</td>
+                            <td colspan="3"><input type="checkbox"> Verified</td>
+                            <td>GPU licensing required?</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"></td>
+                            <td colspan="3"></td>
+                            <td>WDDM mode available on each GPU?</td>
+                        </tr>
+                        <tr>
+                            <th colspan="5">Management-Physical (Duplicate for >1 deployment)</th>
+                            <th>Critical Details</th>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Assign AE Title or use default</td>
+                            <td colspan="3"><input type="text" value="Default: VIMS_AE"></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Port</td>
+                            <td colspan="3"><input type="text" value="Default: 3002"></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Host Name</td>
+                            <td colspan="4"><input type="text"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">OS Version</td>
+                            <td colspan="4"><input type="text"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Server Model</td>
+                            <td colspan="4"><input type="text"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Will the IP address of the existing VIMS or Management server be applied to the new Management server at cutover?*</td>
+                            <td colspan="4"><input type="checkbox"> Yes</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Temp. IP Address during installation</td>
+                            <td colspan="4"><input type="text"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Permanent IP Address after cutover</td>
+                            <td colspan="4"><input type="text"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Subnet Mask</td>
+                            <td colspan="4"><input type="text"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Default Gateway</td>
+                            <td colspan="4"><input type="text"></td>
+                        </tr>
+                        <tr>
+                            <th colspan="6">Application-Physical (Duplicate for more servers, or >1 deployment)</th>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>App1</td>
+                            <td>App2</td>
+                            <td>App3</td>
+                            <td colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <td>Host Name</td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <td>OS Version</td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <td>Server Model</td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <td>Serial Number</td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <td>IP Address</td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <td>Subnet Mask</td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <td>Default Gateway</td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <td>DNS1 / DNS2</td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <td>GPU Model</td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <th colspan="6">Ded. MMV-Physical (Duplicate for more servers, >1 deployment)</th>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>MMV1</td>
+                            <td>MMV2</td>
+                            <td colspan="3"></td>
+                        </tr>
+                        <tr>
+                            <td>Host Name</td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td colspan="3"></td>
+                        </tr>
+                        <tr>
+                            <td>OS Version</td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td colspan="3"></td>
+                        </tr>
+                        <tr>
+                            <td>Server Model</td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td colspan="3"></td>
+                        </tr>
+                        <tr>
+                            <td>Serial Number</td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td colspan="3"></td>
+                        </tr>
+                        <tr>
+                            <td>IP Address</td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td colspan="3"></td>
+                        </tr>
+                        <tr>
+                            <td>Subnet Mask</td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td colspan="3"></td>
+                        </tr>
+                        <tr>
+                            <td>Default Gateway</td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td colspan="3"></td>
+                        </tr>
+                        <tr>
+                            <td>DNS1 / DNS2</td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td colspan="3"></td>
+                        </tr>
+                        <tr>
+                            <td>GPU Model</td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td colspan="3"></td>
+                        </tr>
+                    </table>
+                `
+            },
+            {
+                name: "Server Details-VM",
+                content: `
+                    <table>
+                        <tr>
+                            <th colspan="6">PM Instructions</th>
+                        </tr>
+                        <tr>
+                            <td colspan="6">1. Does the deployment have Physical (P)/Virtual (V) servers, or both? Hide or delete either Physical or Virtual Server Details tab, unless system is Hybrid.</td>
+                        </tr>
+                        <tr>
+                            <td colspan="6">2. Duplicate Application server tables as per # App servers.</td>
+                        </tr>
+                        <tr>
+                            <td colspan="6">3. Are there Dedicated MMV servers? If not, delete this table.</td>
+                        </tr>
+                        <tr>
+                            <td colspan="6">4. Is there >1 system on this project? Duplicate tables as needed for additional systems.</td>
+                        </tr>
+                        <tr>
+                            <td colspan="6">5. Delete these instructions.</td>
+                        </tr>
+                        <tr>
+                            <th colspan="5">Virtual Servers Details</th>
+                            <th>Critical Details</th>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Which servers will be virtualized?</td>
+                            <td colspan="4">
+                                <select>
+                                    <option value="">Select...</option>
+                                    <option value="All">All</option>
+                                    <option value="Standalone SQL">Standalone SQL</option>
+                                    <option value="Management">Management</option>
+                                    <option value="Application">Application</option>
+                                    <option value="Dedicated MMV">Dedicated MMV</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">vCPU version is Haswell or newer</td>
+                            <td colspan="4"><input type="checkbox"> Yes (SSE 4.2 & AVX2 instruction sets are enabled)</td>
+                        </tr>
+                        <tr>
+                            <th colspan="6">Virtual Application/Rendering Servers</th>
+                        </tr>
+                        <tr>
+                            <td colspan="2">How will GPU be provided to virtual application server(s)?</td>
+                            <td colspan="4"><input type="checkbox"> Verify vGPU software will be installed, licenses available</td>
+                        </tr>
+                        <tr>
+                            <th colspan="5">Management-Physical (Duplicate for >1 deployment)</th>
+                            <th>Critical Details</th>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Assign AE Title or use default</td>
+                            <td colspan="3"><input type="text" value="Default: VIMS_AE"></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Port</td>
+                            <td colspan="3"><input type="text" value="Default: 3002"></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Host Name</td>
+                            <td colspan="4"><input type="text"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">OS Version</td>
+                            <td colspan="4"><input type="text"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Will the IP address of the existing VIMS or Management server be applied to the new Management server at cutover?*</td>
+                            <td colspan="4"><input type="checkbox"> Yes</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Temp. IP Address during installation</td>
+                            <td colspan="4"><input type="text"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Permanent IP Address after cutover</td>
+                            <td colspan="4"><input type="text"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Subnet Mask</td>
+                            <td colspan="4"><input type="text"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Default Gateway</td>
+                            <td colspan="4"><input type="text"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">DNS1 / DNS2</td>
+                            <td colspan="4"><input type="text"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Total vCPU MHz allocated</td>
+                            <td colspan="4"><input type="text"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">vRAM Allocated</td>
+                            <td colspan="4"><input type="text"></td>
+                        </tr>
+                        <tr>
+                            <th colspan="6">Application-Virtual (Duplicate for more servers, >1 deployment)</th>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>App1</td>
+                            <td>App2</td>
+                            <td>App3</td>
+                            <td colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <td>Host Name</td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <td>OS Version</td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <td>IP Address</td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <td>Subnet Mask</td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <td>Default Gateway</td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <td>DNS1 / DNS2</td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <td>Graphics Card Model</td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <td>GPU: vGPU</td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <td>Total vCPU MHz allocated</td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <td>vRAM Allocated</td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td colspan="2"></td>
+                        </tr>
+                        <tr>
+                            <th colspan="6">Ded. MMV-Virtual (Duplicate for more servers, >1 deployment)</th>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>MMV1</td>
+                            <td>MMV2</td>
+                            <td colspan="3"></td>
+                        </tr>
+                        <tr>
+                            <td>Host Name</td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td colspan="3"></td>
+                        </tr>
+                        <tr>
+                            <td>OS Version</td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td colspan="3"></td>
+                        </tr>
+                        <tr>
+                            <td>IP Address</td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td colspan="3"></td>
+                        </tr>
+                        <tr>
+                            <td>Subnet Mask</td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td colspan="3"></td>
+                        </tr>
+                        <tr>
+                            <td>Default Gateway</td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td colspan="3"></td>
+                        </tr>
+                        <tr>
+                            <td>DNS1 / DNS2</td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td colspan="3"></td>
+                        </tr>
+                        <tr>
+                            <td>Graphics Card Model</td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td colspan="3"></td>
+                        </tr>
+                        <tr>
+                            <td>GPU: vGPU</td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td colspan="3"></td>
+                        </tr>
+                        <tr>
+                            <td>Total vCPU MHz allocated</td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td colspan="3"></td>
+                        </tr>
+                        <tr>
+                            <td>vRAM Allocated</td>
+                            <td><input type="text"></td>
+                            <td><input type="text"></td>
+                            <td colspan="3"></td>
+                        </tr>
+                    </table>
+                `
+            },
+            {
+                name: "Client Details",
+                content: `
+                    <table>
+                        <tr>
+                            <th colspan="9">Client Workstation Group Policies (Please see Domain User and Group Setup Guide.pdf (<7.16.0) or Enterprise Deployment Active Directory Planning Guide.pdf (7.16.0>).</th>
+                        </tr>
+                        <tr>
+                            <th>Policy</th>
+                            <th colspan="7">Setting/Requirement</th>
+                            <th>Critical Details</th>
+                        </tr>
+                        <tr>
+                            <td>Trusted Zone Assignment (Local Intranet)</td>
+                            <td colspan="7">Control Panel | Internet Options | Security tab | Local Intranet | Sites | Advanced | Add *.domain.suffix to Websites list</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>(7.15.5-7.15.7 only)<br>Site to Zone Assignment</td>
+                            <td colspan="7">Computer Configuration | Administrative Templates | Windows Components | Internet Explorer | Internet Control Panel | Security Page | Site to Zone Assignment List<br>Set to Enabled | Value Name: *.domain.suffix | Value: 1</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Credential Delegation</td>
+                            <td colspan="7">*May be required based on site security settings. Always required if client machines are part of a different domain than the Vitrea servers*<br><br>Computer Configuration | Administrative Templates | System | Credentials Delegation | Allow Delegating Default Credentials<br>Set to Enabled | Value=TERMSRV/*.domain.suffix of client domain</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <th colspan="9">Vitrea Thin Client - Packaging, Deployment</th>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Will you deploy the thin client via a software deployment system?</td>
+                            <td colspan="7"><input type="checkbox"> Yes</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">How long is your packaging process (estimated)?</td>
+                            <td colspan="7"><input type="text"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">How many client systems will need VTC (estimated)?</td>
+                            <td colspan="7"><input type="number"></td>
+                        </tr>
+                    </table>
+                `
+            },
+            {
+                name: "Partner Apps, Printing",
+                content: `
+                    <table>
+                        <tr>
+                            <th colspan="5">PM Instructions</th>
+                        </tr>
+                        <tr>
+                            <td colspan="5">1. Delete uneeded tables below as necessary.</td>
+                        </tr>
+                        <tr>
+                            <td colspan="5">2. Hide entire tab if no printing or partner apps are required.</td>
+                        </tr>
+                        <tr>
+                            <td colspan="5">3. Delete these instructions.</td>
+                        </tr>
+                        <tr>
+                            <th colspan="4">Special Applications, Routing, Printing</th>
+                            <th>Critical Details</th>
+                        </tr>
+                        <tr>
+                            <td colspan="2">Will users print to network/paper printers from Vitrea?*</td>
+                            <td colspan="2"><input type="checkbox"> Yes</td>
+                            <td>Can printers be added to App servers via GPO? <input type="checkbox"></td>
+                        </tr>
+                        <tr>
+                            <td>Printer Model</td>
+                            <td colspan="3"><input type="text"></td>
+                            <td>IP Address <input type="text"></td>
+                        </tr>
+                        <tr>
+                            <th colspan="5">Visia CT Lung CAD</th>
+                        </tr>
+                        <tr>
+                            <td>Location</td>
+                            <td colspan="4"><input type="text"></td>
+                        </tr>
+                        <tr>
+                            <td>Default DICOM Values</td>
+                            <td colspan="3"><input type="text" value="AE Title: Visia, Port: 11121"></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>Partition</td>
+                            <td colspan="4">Visia requires a separate 100 GB partition. The CMI Implementation Engineer will create on CMI provided hardware.</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td colspan="4">For customer provided VM or hardware, the customer will need to create this partition. <input type="checkbox"> Completed</td>
+                        </tr>
+                        <tr>
+                            <td>Key Words</td>
+                            <td colspan="4">Vitrea identifies key words (see defaults below) based on DICOM Study/Series Description, Body Parts Examined or Protocol Name fields (& modality is CT). Once identified the study is processed for Visia & CAD results created. These key words may be customized.</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td colspan="4">Default Key Words: BRONCH | CHEST | LUNG | PULMONARY</td>
+                        </tr>
+                        <tr>
+                            <td>Add'l Visia partition created/available</td>
+                            <td colspan="4"><input type="checkbox"> Yes</td>
+                        </tr>
+                        <tr>
+                            <td>Visia custom key words will be acquired from legacy system</td>
+                            <td colspan="4"><input type="checkbox"> Yes</td>
+                        </tr>
+                        <tr>
+                            <td>Visia custom key words (List them)</td>
+                            <td colspan="4"><input type="text"></td>
+                        </tr>
+                        <tr>
+                            <th colspan="5">Cedars SPECT Floating License Server</th>
+                        </tr>
+                        <tr>
+                            <td colspan="5">Port opened: vm.csaim.com on port 80 <input type="checkbox"> Confirmed</td>
+                        </tr>
+                        <tr>
+                            <th colspan="5">Olea</th>
+                        </tr>
+                        <tr>
+                            <td colspan="5">Data will be sent to Vitrea in the supported compression types <input type="checkbox"> Confirmed</td>
+                        </tr>
+                    </table>
+                `
+            },
+            {
+                name: "Sheet2",
+                content: `
+                    <table>
+                        <tr>
+                            <th colspan="9">SQL Database (Local to Management Server)</th>
+                        </tr>
+                        <tr>
+                            <td colspan="3">Where will SQL reside?</td>
+                            <td><input type="text" value="Management Server"></td>
+                            <td>SQL Version</td>
+                            <td><input type="text" value="2019"></td>
+                            <td>SQL Type</td>
+                            <td><input type="text" value="Standard"></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">Instance Type</td>
+                            <td><input type="text" value="Named"></td>
+                            <td>Instance Name</td>
+                            <td><input type="text" value="VitalSQL123"></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3"></td>
+                            <td></td>
+                            <td>if named instance</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">Server Name</td>
+                            <td><input type="text" value="VitalMgmt1"></td>
+                            <td>Port</td>
+                            <td><input type="text" value="2222"></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </table>
+                `
+            }
+        ];
+
+        // Initialize tabs
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabButtonsContainer = document.getElementById('tabButtons');
+            const tabContentsContainer = document.getElementById('tabContents');
+
+            sheets.forEach((sheet, index) => {
+                // Create tab button
+                const tabButton = document.createElement('button');
+                tabButton.className = 'tab-button' + (index === 0 ? ' active' : '');
+                tabButton.textContent = sheet.name;
+                tabButton.onclick = () => switchTab(index);
+                tabButtonsContainer.appendChild(tabButton);
+
+                // Create tab content
+                const tabContent = document.createElement('div');
+                tabContent.className = 'tab-content' + (index === 0 ? ' active' : '');
+                tabContent.innerHTML = sheet.content;
+                tabContentsContainer.appendChild(tabContent);
+            });
+        });
+
+        function switchTab(index) {
+            // Hide all tab contents
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+
+            // Deactivate all tab buttons
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('active');
+            });
+
+            // Show selected tab content and activate its button
+            document.querySelectorAll('.tab-content')[index].classList.add('active');
+            document.querySelectorAll('.tab-button')[index].classList.add('active');
+        }
+
+        function searchSheets() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            if (!searchTerm) return;
+
+            let found = false;
+            
+            // Search through all sheets
+            sheets.forEach((sheet, index) => {
+                const content = sheet.content.toLowerCase();
+                if (content.includes(searchTerm)) {
+                    // Switch to the tab where the term was found
+                    switchTab(index);
+                    found = true;
+                    
+                    // Highlight the search term in the content (simple approach)
+                    const tabContent = document.querySelectorAll('.tab-content')[index];
+                    const html = sheet.content.replace(new RegExp(searchTerm, 'gi'), match => 
+                        `<span style="background-color: yellow;">${match}</span>`
+                    );
+                    tabContent.innerHTML = html;
+                }
+            });
+
+            if (!found) {
+                alert('Search term not found in any sheet.');
+            }
+        }
+
+        function saveForm() {
+            const formData = {};
+            
+            // Collect all input values
+            document.querySelectorAll('input, select, textarea').forEach(input => {
+                const name = input.name || input.id || input.placeholder || input.type;
+                let value;
+                
+                if (input.type === 'checkbox') {
+                    value = input.checked;
+                } else {
+                    value = input.value;
+                }
+                
+                formData[name] = value;
+            });
+            
+            // Convert to JSON and save to localStorage
+            localStorage.setItem('vitreaFormData', JSON.stringify(formData));
+            alert('Form data saved successfully!');
+        }
+
+        function loadForm() {
+            const savedData = localStorage.getItem('vitreaFormData');
+            if (!savedData) {
+                alert('No saved data found.');
+                return;
+            }
+            
+            const formData = JSON.parse(savedData);
+            
+            // Restore all input values
+            document.querySelectorAll('input, select, textarea').forEach(input => {
+                const name = input.name || input.id || input.placeholder || input.type;
+                
+                if (formData.hasOwnProperty(name)) {
+                    if (input.type === 'checkbox') {
+                        input.checked = formData[name];
+                    } else {
+                        input.value = formData[name];
+                    }
+                }
+            });
+            
+            alert('Form data loaded successfully!');
+        }
+    </script>
+</body>
+</html>

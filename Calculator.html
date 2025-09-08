@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vitrea® Advanced Visualization 7.16 - Performance Calculators</title>
+    <style>
+        :root {
+            /* Color Variables */
+            --primary-color: #c41017; /* Canon Dark Red */
+            --accent-color: #ed1c24; /* Canon Red */
+            --medical-blue: #004080;
+            --background-color: #f5f7fa;
+            --card-background: #ffffff;
+            --text-color: #1a1a1a;
+            --secondary-text: #4a4a4a;
+            --border-color: #e0e0e0;
+            --highlight-color: #e6f2ff;
+            --warning-color: #d32f2f;
+            --warning-bg: #ffebee;
+            --canon-light-gray: #f0f2f5;
+            --canon-black: #000000;
+            --canon-gray: #5a6d80;
+            --canon-white: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--canon-light-gray);
+        }
+
+        /* Canon Header */
+        .canon-header {
+            background: linear-gradient(135deg, var(--accent-color), var(--primary-color),#0066cc);
+            color: white;
+            padding: 1.5rem 2rem;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            position: relative;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .canon-logo {
+            height: 50px;
+            width: auto;
+            filter: brightness(0) invert(1);
+        }
+        
+        .medical-brand {
+            font-family: 'Segoe UI', sans-serif;
+            font-weight: 700;
+            font-size: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .page-title {
+            margin: 0;
+            flex-grow: 1;
+            text-align: center;
+            font-weight: 500;
+            font-size: 1.8rem;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1.5rem;
+        }
+        
+        /* Calculator Tabs */
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid var(--medical-blue);
+            margin-bottom: 1.5rem;
+            overflow-x: auto;
+        }
+        
+        .tab {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            font-weight: 500;
+            background: var(--canon-light-gray);
+            border: 1px solid var(--border-color);
+            border-bottom: none;
+            border-radius: 4px 4px 0 0;
+            margin-right: 0.5rem;
+            white-space: nowrap;
+            transition: all 0.3s ease;
+        }
+        
+        .tab:hover {
+            background: #e0e8f0;
+        }
+        
+        .tab.active {
+            background: var(--medical-blue);
+            color: white;
+            border-color: var(--medical-blue);
+        }
+        
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease-in;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Calculator Styles */
+        .calculator-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            background: var(--card-background);
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .input-group {
+            margin-bottom: 1rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--medical-blue);
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--medical-blue);
+            box-shadow: 0 0 0 2px rgba(0,64,128,0.1);
+        }
+        
+        .btn-canon {
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+            grid-column: 1 / -1;
+            font-size: 1rem;
+        }
+        
+        .btn-canon:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .results-container {
+            grid-column: 1 / -1;
+            background: var(--canon-light-gray);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--medical-blue);
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px dashed var(--border-color);
+        }
+        
+        .result-value {
+            font-weight: 700;
+            color: var(--medical-blue);
+        }
+        
+        /* HPE Server Config Styles */
+        .server-model-toggle {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .model-btn {
+            padding: 0.75rem 1.5rem;
+            background: var(--canon-light-gray);
+            border: 1px solid var(--medical-blue);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        .model-btn:hover {
+            background: #e0e8f0;
+        }
+        
+        .model-btn.active {
+            background: var(--medical-blue);
+            color: white;
+            border-color: var(--medical-blue);
+        }
+        
+        .server-config {
+            display: none;
+        }
+        
+        .server-config.active {
+            display: block;
+        }
+
+        /* Additional UI Elements */
+        .note, .warning {
+            padding: 1rem;
+            border-radius: 4px;
+            margin: 1rem 0;
+            font-size: 0.95rem;
+        }
+
+        .note {
+            background-color: var(--highlight-color);
+            border-left: 4px solid var(--medical-blue);
+        }
+
+        .warning {
+            background-color: var(--warning-bg);
+            border-left: 4px solid var(--warning-color);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .canon-header {
+                flex-direction: column;
+                text-align: center;
+                padding: 1.5rem 1rem;
+            }
+            
+            .logo-container {
+                margin-bottom: 0.75rem;
+            }
+            
+            .medical-brand {
+                font-size: 1.6rem;
+            }
+            
+            .page-title {
+                font-size: 1.4rem;
+            }
+            
+            .tabs {
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                padding-bottom: 4px;
+            }
+            
+            .tab {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+            
+            .calculator-grid {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+            }
+            
+            .server-model-toggle {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .model-btn {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .canon-header {
+                padding: 1rem 0.5rem;
+            }
+            
+            .canon-logo {
+                height: 40px;
+            }
+            
+            .medical-brand {
+                font-size: 1.3rem;
+            }
+            
+            .page-title {
+                font-size: 1.2rem;
+            }
+            
+            .container {
+                padding: 0 1rem;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Condensed:wght@700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Canon Header -->
+    <header class="canon-header">
+        <div class="logo-container">
+            <img src="https://global.canon/en/corporate/logo/img/logo_01.png" alt="Canon Medical Logo" class="canon-logo">
+            <!--span class="medical-brand">Medical</span-->
+        </div>
+        <h1 class="page-title">Vitrea® Advanced Visualization- Performance Calculators</h1>
+    </header>
+    
+    <div class="container">
+        <!-- Calculator Tabs -->
+        <div class="tabs">
+            <div class="tab active" onclick="openTab('dicom')">DICOM Estimator</div>
+            <div class="tab" onclick="openTab('server')">Server Load</div>
+            <div class="tab" onclick="openTab('network')">Bandwidth</div>
+            <div class="tab" onclick="openTab('raid')">RAID Storage</div>
+            <div class="tab" onclick="openTab('hpe-servers')">HPE Server Configs</div>
+        </div>
+        
+        <!-- DICOM Study Size Calculator -->
+        <div id="dicom" class="tab-content active">
+            <div class="calculator-grid">
+                <div class="input-group">
+                    <label for="modality">Modality:</label>
+                    <select id="modality" class="canon-select">
+                        <option value="ct">CT</option>
+                        <option value="mr">MRI</option>
+                        <option value="xray">X-Ray</option>
+                        <option value="us">Ultrasound</option>
+                        <option value="pet">PET</option>
+                        <option value="custom">Custom</option>
+                    </select>
+                </div>
+                
+                <div class="input-group">
+                    <label for="slice-count">Number of Slices/Images:</label>
+                    <input type="number" id="slice-count" min="1" value="100">
+                </div>
+                
+                <div class="input-group">
+                    <label for="image-size">Average Image Size (MB):</label>
+                    <input type="number" id="image-size" min="0.1" step="0.1" value="0.5">
+                    <small class="note">Typical CT: 0.5-1.5 MB, MRI: 0.3-1.0 MB</small>
+                </div>
+                
+                <div class="input-group">
+                    <label for="compression">Compression:</label>
+                    <select id="compression">
+                        <option value="1">None (Uncompressed)</option>
+                        <option value="0.5">Lossless (50% size)</option>
+                        <option value="0.2" selected>Lossy (20% size)</option>
+                    </select>
+                </div>
+                
+                <div class="input-group">
+                    <label for="network-speed-dicom">Network Speed (Mbps):</label>
+                    <input type="number" id="network-speed-dicom" min="10" value="1000">
+                </div>
+                
+                <button class="btn-canon" onclick="calculateDICOM()">Calculate</button>
+                
+                <div id="dicom-results" class="results-container hidden">
+                    <h3>DICOM Study Estimates</h3>
+                    <div class="result-item">
+                        <span>Uncompressed Size:</span>
+                        <span class="result-value" id="uncompressed-size">0 MB</span>
+                    </div>
+                    <div class="result-item">
+                        <span>Compressed Size:</span>
+                        <span class="result-value" id="compressed-size">0 MB</span>
+                    </div>
+                    <div class="result-item">
+                        <span>Transfer Time:</span>
+                        <span class="result-value" id="transfer-time">0 seconds</span>
+                    </div>
+                    <div class="note">
+                        Note: Actual transfer times may vary based on network conditions and overhead.
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Server Load Predictor -->
+        <div id="server" class="tab-content">
+            <div class="calculator-grid">
+                <div class="input-group">
+                    <label for="study-size-server">Study Size (MB):</label>
+                    <input type="number" id="study-size-server" min="1" value="50">
+                </div>
+                
+                <div class="input-group">
+                    <label for="server-type">Server Tier:</label>
+                    <select id="server-type">
+                        <option value="entry">Entry-Level (2 cores, 8GB RAM)</option>
+                        <option value="mid" selected>Mid-Range (4 cores, 16GB RAM)</option>
+                        <option value="high">High-End (8 cores, 32GB RAM)</option>
+                        <option value="cluster">Cluster (16+ cores, 64GB+ RAM)</option>
+                    </select>
+                </div>
+                
+                <div class="input-group">
+                    <label for="concurrent-studies">Concurrent Studies:</label>
+                    <input type="number" id="concurrent-studies" min="1" value="5">
+                </div>
+                
+                <div class="input-group">
+                    <label for="network-speed-server">Network Speed (Mbps):</label>
+                    <input type="number" id="network-speed-server" min="10" value="1000">
+                </div>
+                
+                <button class="btn-canon" onclick="calculateServerLoad()">Calculate</button>
+                
+                <div id="server-results" class="results-container hidden">
+                    <h3>Server Performance Prediction</h3>
+                    <div class="result-item">
+                        <span>Network Transfer Time:</span>
+                        <span class="result-value" id="network-time">0 seconds</span>
+                    </div>
+                    <div class="result-item">
+                        <span>Processing Time:</span>
+                        <span class="result-value" id="processing-time">0 seconds</span>
+                    </div>
+                    <div class="result-item">
+                        <span>Total Estimated Time:</span>
+                        <span class="result-value" id="total-time">0 seconds</span>
+                    </div>
+                    <div class="warning">
+                        Warning: These are estimates only. Actual performance may vary based on system load and configuration.
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Network Bandwidth Calculator -->
+        <div id="network" class="tab-content">
+            <div class="calculator-grid">
+                <div class="input-group">
+                    <label for="study-size-network">Average Study Size (MB):</label>
+                    <input type="number" id="study-size-network" min="1" value="50">
+                </div>
+                
+                <div class="input-group">
+                    <label for="studies-per-hour">Studies per Hour:</label>
+                    <input type="number" id="studies-per-hour" min="1" value="30">
+                </div>
+                
+                <div class="input-group">
+                    <label for="concurrent-users">Concurrent Users:</label>
+                    <input type="number" id="concurrent-users" min="1" value="5">
+                </div>
+                
+                <div class="input-group">
+                    <label for="safety-factor">Safety Factor (%):</label>
+                    <input type="number" id="safety-factor" min="10" max="200" value="30">
+                </div>
+                
+                <button class="btn-canon" onclick="calculateBandwidth()">Calculate</button>
+                
+                <div id="network-results" class="results-container hidden">
+                    <h3>Bandwidth Requirements</h3>
+                    <div class="result-item">
+                        <span>Minimum Bandwidth:</span>
+                        <span class="result-value" id="min-bandwidth">0 Mbps</span>
+                    </div>
+                    <div class="result-item">
+                        <span>Recommended Bandwidth:</span>
+                        <span class="result-value" id="rec-bandwidth">0 Mbps</span>
+                    </div>
+                    <div class="note">
+                        Note: For optimal performance, consider upgrading to the next available bandwidth tier.
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- RAID Calculator -->
+        <div id="raid" class="tab-content">
+            <div class="calculator-grid">
+                <div class="input-group">
+                    <label for="raid-level">RAID Level:</label>
+                    <select id="raid-level">
+                        <option value="0">RAID 0 (Striping)</option>
+                        <option value="1">RAID 1 (Mirroring)</option>
+                        <option value="5">RAID 5</option>
+                        <option value="6">RAID 6</option>
+                        <option value="10">RAID 10</option>
+                    </select>
+                </div>
+                
+                <div class="input-group">
+                    <label for="drive-size">Drive Size (GB):</label>
+                    <input type="number" id="drive-size" min="1" value="1000">
+                </div>
+                
+                <div class="input-group">
+                    <label for="drive-count">Number of Drives:</label>
+                    <input type="number" id="drive-count" min="2" value="4">
+                </div>
+                
+                <button class="btn-canon" onclick="calculateRAID()">Calculate</button>
+                
+                <div id="raid-results" class="results-container hidden">
+                    <h3>RAID Configuration</h3>
+                    <div class="result-item">
+                        <span>Total Raw Capacity:</span>
+                        <span class="result-value" id="raw-capacity">0 GB</span>
+                    </div>
+                    <div class="result-item">
+                        <span>Usable Capacity:</span>
+                        <span class="result-value" id="usable-capacity">0 GB</span>
+                    </div>
+                    <div class="result-item">
+                        <span>Storage Efficiency:</span>
+                        <span class="result-value" id="efficiency">0%</span>
+                    </div>
+                    <div class="warning">
+                        Warning: RAID 0 provides no redundancy. RAID 5/6 recommended for critical medical data.
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- HPE Server Configurations Calculator -->
+        <div id="hpe-servers" class="tab-content">
+            <div class="server-model-toggle">
+                <button class="model-btn active" onclick="showServerModel('dl380')">DL380 Gen11</button>
+                <button class="model-btn" onclick="showServerModel('ml350')">ML350 Gen11</button>
+                <button class="model-btn" onclick="showServerModel('dl360')">DL360 Gen11</button>
+            </div>
+
+            <!-- DL380 Gen11 Calculator -->
+            <div id="dl380-config" class="server-config active">
+                <h3>HPE ProLiant DL380 Gen11 Configuration</h3>
+                <div class="calculator-grid">
+                    <div class="input-group">
+                        <label>Drive Type:</label>
+                        <select id="dl380-drive-type">
+                            <option value="sas-hdd">SAS HDD</option>
+                            <option value="sata-hdd">SATA HDD</option>
+                            <option value="sas-ssd">SAS SSD</option>
+                            <option value="sata-ssd">SATA SSD</option>
+                            <option value="nvme">NVMe SSD</option>
+                        </select>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Drive Capacity:</label>
+                        <select id="dl380-drive-capacity">
+                            <option value="0.48">480GB</option>
+                            <option value="0.96">960GB</option>
+                            <option value="1.92">1.92TB</option>
+                            <option value="3.84">3.84TB</option>
+                            <option value="7.68">7.68TB</option>
+                            <option value="15.36">15.36TB</option>
+                        </select>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Number of Drives (1-8):</label>
+                        <input type="number" id="dl380-drive-count" min="1" max="8" value="8">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>RAID Level:</label>
+                        <select id="dl380-raid-level">
+                            <option value="0">RAID 0 (Striping)</option>
+                            <option value="1">RAID 1 (Mirroring)</option>
+                            <option value="5">RAID 5</option>
+                            <option value="6">RAID 6</option>
+                            <option value="10">RAID 10</option>
+                        </select>
+                    </div>
+                    
+                    <button class="btn-canon" onclick="calculateDL380Storage()">Calculate Storage</button>
+                    
+                    <div class="input-group">
+                        <label>DIMM Size:</label>
+                        <select id="dl380-dimm-size">
+                            <option value="16">16GB</option>
+                            <option value="32">32GB</option>
+                            <option value="64">64GB</option>
+                            <option value="128">128GB</option>
+                            <option value="256">256GB</option>
+                        </select>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Number of DIMMs (1-32):</label>
+                        <input type="number" id="dl380-dimm-count" min="1" max="32" value="16">
+                    </div>
+                    
+                    <button class="btn-canon" onclick="calculateDL380Memory()">Calculate Memory</button>
+                    
+                    <div id="dl380-results" class="results-container hidden">
+                        <h3>DL380 Gen11 Configuration Results</h3>
+                        <div class="result-item">
+                            <span>Total Raw Storage:</span>
+                            <span class="result-value" id="dl380-raw-storage">0 TB</span>
+                        </div>
+                        <div class="result-item">
+                            <span>Usable Storage:</span>
+                            <span class="result-value" id="dl380-usable-storage">0 TB</span>
+                        </div>
+                        <div class="result-item">
+                            <span>Storage Efficiency:</span>
+                            <span class="result-value" id="dl380-storage-eff">0%</span>
+                        </div>
+                        <div class="result-item">
+                            <span>Total Memory:</span>
+                            <span class="result-value" id="dl380-total-memory">0 GB</span>
+                        </div>
+                        <div class="result-item">
+                            <span>Memory Channels:</span>
+                            <span class="result-value" id="dl380-memory-channels">8-channel</span>
+                        </div>
+                        <div class="note">
+                            Note: DL380 Gen11 supports up to 8TB memory with 256GB DIMMs in 32 slots.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ML350 Gen11 Calculator -->
+            <div id="ml350-config" class="server-config">
+                <h3>HPE ProLiant ML350 Gen11 Configuration</h3>
+                <div class="calculator-grid">
+                    <div class="input-group">
+                        <label>Drive Type:</label>
+                        <select id="ml350-drive-type">
+                            <option value="sas-hdd">SAS HDD</option>
+                            <option value="sata-hdd">SATA HDD</option>
+                            <option value="sas-ssd">SAS SSD</option>
+                            <option value="sata-ssd">SATA SSD</option>
+                            <option value="nvme">NVMe SSD</option>
+                        </select>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Drive Capacity:</label>
+                        <select id="ml350-drive-capacity">
+                            <option value="0.48">480GB</option>
+                            <option value="0.96">960GB</option>
+                            <option value="1.92">1.92TB</option>
+                            <option value="3.84">3.84TB</option>
+                            <option value="7.68">7.68TB</option>
+                            <option value="15.36">15.36TB</option>
+                        </select>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Number of Drives (1-12):</label>
+                        <input type="number" id="ml350-drive-count" min="1" max="12" value="8">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>RAID Level:</label>
+                        <select id="ml350-raid-level">
+                            <option value="0">RAID 0 (Striping)</option>
+                            <option value="1">RAID 1 (Mirroring)</option>
+                            <option value="5">RAID 5</option>
+                            <option value="6">RAID 6</option>
+                            <option value="10">RAID 10</option>
+                        </select>
+                    </div>
+                    
+                    <button class="btn-canon" onclick="calculateML350Storage()">Calculate Storage</button>
+                    
+                    <div class="input-group">
+                        <label>DIMM Size:</label>
+                        <select id="ml350-dimm-size">
+                            <option value="16">16GB</option>
+                            <option value="32">32GB</option>
+                            <option value="64">64GB</option>
+                            <option value="128">128GB</option>
+                            <option value="256">256GB</option>
+                        </select>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Number of DIMMs (1-16):</label>
+                        <input type="number" id="ml350-dimm-count" min="1" max="16" value="8">
+                    </div>
+                    
+                    <button class="btn-canon" onclick="calculateML350Memory()">Calculate Memory</button>
+                    
+                    <div id="ml350-results" class="results-container hidden">
+                        <h3>ML350 Gen11 Configuration Results</h3>
+                        <div class="result-item">
+                            <span>Total Raw Storage:</span>
+                            <span class="result-value" id="ml350-raw-storage">0 TB</span>
+                        </div>
+                        <div class="result-item">
+                            <span>Usable Storage:</span>
+                            <span class="result-value" id="ml350-usable-storage">0 TB</span>
+                        </div>
+                        <div class="result-item">
+                            <span>Storage Efficiency:</span>
+                            <span class="result-value" id="ml350-storage-eff">0%</span>
+                        </div>
+                        <div class="result-item">
+                            <span>Total Memory:</span>
+                            <span class="result-value" id="ml350-total-memory">0 GB</span>
+                        </div>
+                        <div class="result-item">
+                            <span>Memory Channels:</span>
+                            <span class="result-value" id="ml350-memory-channels">8-channel</span>
+                        </div>
+                        <div class="note">
+                            Note: ML350 Gen11 is ideal for mixed workloads with flexible storage options.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DL360 Gen11 Calculator -->
+            <div id="dl360-config" class="server-config">
+                <h3>HPE ProLiant DL360 Gen11 Configuration</h3>
+                <div class="calculator-grid">
+                    <div class="input-group">
+                        <label>Drive Type:</label>
+                        <select id="dl360-drive-type">
+                            <option value="sas-hdd">SAS HDD</option>
+                            <option value="sata-hdd">SATA HDD</option>
+                            <option value="sas-ssd">SAS SSD</option>
+                            <option value="sata-ssd">SATA SSD</option>
+                            <option value="nvme">NVMe SSD</option>
+                        </select>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Drive Capacity:</label>
+                        <select id="dl360-drive-capacity">
+                            <option value="0.48">480GB</option>
+                            <option value="0.96">960GB</option>
+                            <option value="1.92">1.92TB</option>
+                            <option value="3.84">3.84TB</option>
+                            <option value="7.68">7.68TB</option>
+                            <option value="15.36">15.36TB</option>
+                        </select>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Number of Drives (1-6):</label>
+                        <input type="number" id="dl360-drive-count" min="1" max="6" value="4">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>RAID Level:</label>
+                        <select id="dl360-raid-level">
+                            <option value="0">RAID 0 (Striping)</option>
+                            <option value="1">RAID 1 (Mirroring)</option>
+                            <option value="5">RAID 5</option>
+                            <option value="6">RAID 6</option>
+                            <option value="10">RAID 10</option>
+                        </select>
+                    </div>
+                    
+                    <button class="btn-canon" onclick="calculateDL360Storage()">Calculate Storage</button>
+                    
+                    <div class="input-group">
+                        <label>DIMM Size:</label>
+                        <select id="dl360-dimm-size">
+                            <option value="16">16GB</option>
+                            <option value="32">32GB</option>
+                            <option value="64">64GB</option>
+                            <option value="128">128GB</option>
+                            <option value="256">256GB</option>
+                        </select>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Number of DIMMs (1-16):</label>
+                        <input type="number" id="dl360-dimm-count" min="1" max="16" value="8">
+                    </div>
+                    
+                    <button class="btn-canon" onclick="calculateDL360Memory()">Calculate Memory</button>
+                    
+                    <div id="dl360-results" class="results-container hidden">
+                        <h3>DL360 Gen11 Configuration Results</h3>
+                        <div class="result-item">
+                            <span>Total Raw Storage:</span>
+                            <span class="result-value" id="dl360-raw-storage">0 TB</span>
+                        </div>
+                        <div class="result-item">
+                            <span>Usable Storage:</span>
+                            <span class="result-value" id="dl360-usable-storage">0 TB</span>
+                        </div>
+                        <div class="result-item">
+                            <span>Storage Efficiency:</span>
+                            <span class="result-value" id="dl360-storage-eff">0%</span>
+                        </div>
+                        <div class="result-item">
+                            <span>Total Memory:</span>
+                            <span class="result-value" id="dl360-total-memory">0 GB</span>
+                        </div>
+                        <div class="result-item">
+                            <span>Memory Channels:</span>
+                            <span class="result-value" id="dl360-memory-channels">8-channel</span>
+                        </div>
+                        <div class="note">
+                            Note: DL360 Gen11 is optimized for high-density computing with 1U form factor.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab functionality
+        function openTab(tabName) {
+            const tabs = document.querySelectorAll('.tab');
+            const contents = document.querySelectorAll('.tab-content');
+            
+            tabs.forEach(tab => tab.classList.remove('active'));
+            contents.forEach(content => content.classList.remove('active'));
+            
+            document.querySelector(`.tab[onclick="openTab('${tabName}')"]`).classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+        }
+        
+        // DICOM Calculator
+        function calculateDICOM() {
+            const modality = document.getElementById('modality').value;
+            const slices = parseInt(document.getElementById('slice-count').value);
+            const imageSize = parseFloat(document.getElementById('image-size').value);
+            const compression = parseFloat(document.getElementById('compression').value);
+            const networkSpeed = parseInt(document.getElementById('network-speed-dicom').value);
+            
+            // Modality adjustments
+            const modalityFactors = {
+                ct: 1.0,
+                mr: 0.8,
+                xray: 1.5,
+                us: 0.5,
+                pet: 1.2,
+                custom: 1.0
+            };
+            
+            const adjustedSize = imageSize * modalityFactors[modality];
+            const uncompressed = slices * adjustedSize;
+            const compressed = uncompressed * compression;
+            const transferTime = (compressed * 8) / networkSpeed; // MB to Mb conversion
+            
+            document.getElementById('uncompressed-size').textContent = `${uncompressed.toFixed(1)} MB`;
+            document.getElementById('compressed-size').textContent = `${compressed.toFixed(1)} MB`;
+            document.getElementById('transfer-time').textContent = `${transferTime.toFixed(2)} seconds`;
+            document.getElementById('dicom-results').classList.remove('hidden');
+        }
+        
+        // Server Load Calculator
+        function calculateServerLoad() {
+            const studySize = parseFloat(document.getElementById('study-size-server').value);
+            const serverType = document.getElementById('server-type').value;
+            const concurrent = parseInt(document.getElementById('concurrent-studies').value);
+            const networkSpeed = parseInt(document.getElementById('network-speed-server').value);
+            
+            const serverFactors = {
+                entry: 2.5,
+                mid: 1.0,
+                high: 0.4,
+                cluster: 0.15
+            };
+            
+            const networkTime = (studySize * 8) / networkSpeed;
+            const processingTime = (studySize * 0.2 * serverFactors[serverType]) * (1 + (concurrent * 0.1));
+            const totalTime = networkTime + processingTime;
+            
+            document.getElementById('network-time').textContent = `${networkTime.toFixed(2)} seconds`;
+            document.getElementById('processing-time').textContent = `${processingTime.toFixed(2)} seconds`;
+            document.getElementById('total-time').textContent = `${totalTime.toFixed(2)} seconds`;
+            document.getElementById('server-results').classList.remove('hidden');
+        }
+        
+        // Bandwidth Calculator
+        function calculateBandwidth() {
+            const studySize = parseFloat(document.getElementById('study-size-network').value);
+            const studiesPerHour = parseFloat(document.getElementById('studies-per-hour').value);
+            const users = parseFloat(document.getElementById('concurrent-users').value);
+            const safetyFactor = 1 + (parseFloat(document.getElementById('safety-factor').value) / 100);
+            
+            const minBandwidth = (studySize * 8 * studiesPerHour * users) / 3600;
+            const recBandwidth = minBandwidth * safetyFactor;
+            
+            document.getElementById('min-bandwidth').textContent = `${minBandwidth.toFixed(2)} Mbps`;
+            document.getElementById('rec-bandwidth').textContent = `${recBandwidth.toFixed(2)} Mbps`;
+            document.getElementById('network-results').classList.remove('hidden');
+        }
+        
+        // RAID Calculator
+        function calculateRAID() {
+            const raidLevel = document.getElementById('raid-level').value;
+            const driveSize = parseFloat(document.getElementById('drive-size').value);
+            const driveCount = parseInt(document.getElementById('drive-count').value);
+            
+            let usableCapacity = 0;
+            let efficiency = 0;
+            
+            switch(raidLevel) {
+                case '0':
+                    usableCapacity = driveSize * driveCount;
+                    efficiency = 100;
+                    break;
+                case '1':
+                    usableCapacity = driveSize;
+                    efficiency = (1 / driveCount) * 100;
+                    break;
+                case '5':
+                    usableCapacity = driveSize * (driveCount - 1);
+                    efficiency = ((driveCount - 1) / driveCount) * 100;
+                    break;
+                case '6':
+                    usableCapacity = driveSize * (driveCount - 2);
+                    efficiency = ((driveCount - 2) / driveCount) * 100;
+                    break;
+                case '10':
+                    usableCapacity = (driveSize * driveCount) / 2;
+                    efficiency = 50;
+                    break;
+            }
+            
+            document.getElementById('raw-capacity').textContent = `${(driveSize * driveCount).toFixed(2)} GB`;
+            document.getElementById('usable-capacity').textContent = `${usableCapacity.toFixed(2)} GB`;
+            document.getElementById('efficiency').textContent = `${efficiency.toFixed(1)}%`;
+            document.getElementById('raid-results').classList.remove('hidden');
+        }
+        
+        // Server model toggle
+        function showServerModel(model) {
+            document.querySelectorAll('.server-config').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.model-btn').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(`${model}-config`).classList.add('active');
+            document.querySelector(`.model-btn[onclick="showServerModel('${model}')"]`).classList.add('active');
+        }
+
+        // DL380 Calculations
+        function calculateDL380Storage() {
+            const driveSize = parseFloat(document.getElementById('dl380-drive-capacity').value);
+            const driveCount = parseInt(document.getElementById('dl380-drive-count').value);
+            const raidLevel = document.getElementById('dl380-raid-level').value;
+            
+            let usableCapacity = 0;
+            let efficiency = 0;
+            
+            switch(raidLevel) {
+                case '0':
+                    usableCapacity = driveSize * driveCount;
+                    efficiency = 100;
+                    break;
+                case '1':
+                    usableCapacity = driveSize;
+                    efficiency = (1 / driveCount) * 100;
+                    break;
+                case '5':
+                    usableCapacity = driveSize * (driveCount - 1);
+                    efficiency = ((driveCount - 1) / driveCount) * 100;
+                    break;
+                case '6':
+                    usableCapacity = driveSize * (driveCount - 2);
+                    efficiency = ((driveCount - 2) / driveCount) * 100;
+                    break;
+                case '10':
+                    usableCapacity = (driveSize * driveCount) / 2;
+                    efficiency = 50;
+                    break;
+            }
+            
+            document.getElementById('dl380-raw-storage').textContent = `${(driveSize * driveCount).toFixed(2)} TB`;
+            document.getElementById('dl380-usable-storage').textContent = `${usableCapacity.toFixed(2)} TB`;
+            document.getElementById('dl380-storage-eff').textContent = `${efficiency.toFixed(1)}%`;
+            
+            // Show results if hidden
+            document.getElementById('dl380-results').classList.remove('hidden');
+        }
+
+        function calculateDL380Memory() {
+            const dimmSize = parseInt(document.getElementById('dl380-dimm-size').value);
+            const dimmCount = parseInt(document.getElementById('dl380-dimm-count').value);
+            const totalMemory = dimmSize * dimmCount;
+            
+            // Determine optimal channel configuration
+            const channels = dimmCount <= 8 ? "8-channel" : 
+                          dimmCount <= 16 ? "16-channel" : "32-channel";
+            
+            document.getElementById('dl380-total-memory').textContent = `${totalMemory} GB`;
+            document.getElementById('dl380-memory-channels').textContent = channels;
+            
+            // Show results if hidden
+            document.getElementById('dl380-results').classList.remove('hidden');
+        }
+
+        // ML350 Calculations
+        function calculateML350Storage() {
+            const driveSize = parseFloat(document.getElementById('ml350-drive-capacity').value);
+            const driveCount = parseInt(document.getElementById('ml350-drive-count').value);
+            const raidLevel = document.getElementById('ml350-raid-level').value;
+            
+            let usableCapacity = 0;
+            let efficiency = 0;
+            
+            switch(raidLevel) {
+                case '0':
+                    usableCapacity = driveSize * driveCount;
+                    efficiency = 100;
+                    break;
+                case '1':
+                    usableCapacity = driveSize;
+                    efficiency = (1 / driveCount) * 100;
+                    break;
+                case '5':
+                    usableCapacity = driveSize * (driveCount - 1);
+                    efficiency = ((driveCount - 1) / driveCount) * 100;
+                    break;
+                case '6':
+                    usableCapacity = driveSize * (driveCount - 2);
+                    efficiency = ((driveCount - 2) / driveCount) * 100;
+                    break;
+                case '10':
+                    usableCapacity = (driveSize * driveCount) / 2;
+                    efficiency = 50;
+                    break;
+            }
+            
+            document.getElementById('ml350-raw-storage').textContent = `${(driveSize * driveCount).toFixed(2)} TB`;
+            document.getElementById('ml350-usable-storage').textContent = `${usableCapacity.toFixed(2)} TB`;
+            document.getElementById('ml350-storage-eff').textContent = `${efficiency.toFixed(1)}%`;
+            
+            document.getElementById('ml350-results').classList.remove('hidden');
+        }
+
+        function calculateML350Memory() {
+            const dimmSize = parseInt(document.getElementById('ml350-dimm-size').value);
+            const dimmCount = parseInt(document.getElementById('ml350-dimm-count').value);
+            const totalMemory = dimmSize * dimmCount;
+            
+            const channels = dimmCount <= 8 ? "8-channel" : "16-channel";
+            
+            document.getElementById('ml350-total-memory').textContent = `${totalMemory} GB`;
+            document.getElementById('ml350-memory-channels').textContent = channels;
+            
+            document.getElementById('ml350-results').classList.remove('hidden');
+        }
+
+        // DL360 Calculations
+        function calculateDL360Storage() {
+            const driveSize = parseFloat(document.getElementById('dl360-drive-capacity').value);
+            const driveCount = parseInt(document.getElementById('dl360-drive-count').value);
+            const raidLevel = document.getElementById('dl360-raid-level').value;
+            
+            let usableCapacity = 0;
+            let efficiency = 0;
+            
+            switch(raidLevel) {
+                case '0':
+                    usableCapacity = driveSize * driveCount;
+                    efficiency = 100;
+                    break;
+                case '1':
+                    usableCapacity = driveSize;
+                    efficiency = (1 / driveCount) * 100;
+                    break;
+                case '5':
+                    usableCapacity = driveSize * (driveCount - 1);
+                    efficiency = ((driveCount - 1) / driveCount) * 100;
+                    break;
+                case '6':
+                    usableCapacity = driveSize * (driveCount - 2);
+                    efficiency = ((driveCount - 2) / driveCount) * 100;
+                    break;
+                case '10':
+                    usableCapacity = (driveSize * driveCount) / 2;
+                    efficiency = 50;
+                    break;
+            }
+            
+            document.getElementById('dl360-raw-storage').textContent = `${(driveSize * driveCount).toFixed(2)} TB`;
+            document.getElementById('dl360-usable-storage').textContent = `${usableCapacity.toFixed(2)} TB`;
+            document.getElementById('dl360-storage-eff').textContent = `${efficiency.toFixed(1)}%`;
+            
+            document.getElementById('dl360-results').classList.remove('hidden');
+        }
+
+        function calculateDL360Memory() {
+            const dimmSize = parseInt(document.getElementById('dl360-dimm-size').value);
+            const dimmCount = parseInt(document.getElementById('dl360-dimm-count').value);
+            const totalMemory = dimmSize * dimmCount;
+            
+            const channels = dimmCount <= 8 ? "8-channel" : "16-channel";
+            
+            document.getElementById('dl360-total-memory').textContent = `${totalMemory} GB`;
+            document.getElementById('dl360-memory-channels').textContent = channels;
+            
+            document.getElementById('dl360-results').classList.remove('hidden');
+        }
+        
+        // Initialize first tab
+        document.addEventListener('DOMContentLoaded', function() {
+            openTab('dicom');
+        });
+    </script>
+</body>
+</html>

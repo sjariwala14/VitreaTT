@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vitrea Advanced Cloud Technical Brief</title>
+    <style>
+        :root {
+            --canon-blue: #0066cc;
+            --canon-light-blue: #e6f2ff;
+            --warning-yellow: #fff8e1;
+            --warning-border: #ffc107;
+            --table-even-row: #f2f2f2;
+            --table-header: #0066cc;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        header {
+            background-color: var(--canon-blue);
+            color: white;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        h1 {
+            margin: 0;
+            font-size: 24px;
+            flex-grow: 1;
+        }
+        
+        .logo {
+            height: 50px;
+            margin-left: 20px;
+        }
+        
+        .search-container {
+            width: 100%;
+            margin: 10px 0;
+        }
+        
+        #search-input {
+            width: 100%;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+            flex-wrap: wrap;
+        }
+        
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #eee;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            border-radius: 5px 5px 0 0;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+        
+        .tab.active {
+            background-color: white;
+            border-bottom: 1px solid white;
+            margin-bottom: -1px;
+            font-weight: bold;
+            color: var(--canon-blue);
+        }
+        
+        .tab-content {
+            display: none;
+            background-color: white;
+            padding: 20px;
+            border-radius: 0 5px 5px 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .sub-tabs {
+            display: flex;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .sub-tab {
+            padding: 8px 15px;
+            cursor: pointer;
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+        
+        .sub-tab.active {
+            background-color: var(--canon-blue);
+            color: white;
+        }
+        
+        h2 {
+            color: var(--canon-blue);
+            border-bottom: 2px solid var(--canon-blue);
+            padding-bottom: 5px;
+        }
+        
+        h3 {
+            color: #333;
+            margin-top: 20px;
+        }
+        
+        .specs {
+            background-color: var(--canon-light-blue);
+            padding: 15px;
+            border-left: 4px solid var(--canon-blue);
+            margin: 15px 0;
+        }
+        
+        .spec-item {
+            margin-bottom: 8px;
+        }
+        
+        .spec-label {
+            font-weight: bold;
+        }
+        
+        .cloud-comparison {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        .cloud-comparison th {
+            background-color: var(--table-header);
+            color: white;
+            padding: 10px;
+            text-align: left;
+        }
+        
+        .cloud-comparison td {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .cloud-comparison tr:nth-child(even) {
+            background-color: var(--table-even-row);
+        }
+        
+        .note {
+            background-color: var(--warning-yellow);
+            padding: 10px;
+            border-left: 4px solid var(--warning-border);
+            margin: 15px 0;
+            font-size: 14px;
+        }
+        
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            border-bottom: 1px dotted black;
+            cursor: help;
+        }
+        
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+        
+        footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+            font-size: 12px;
+            color: #666;
+            text-align: center;
+        }
+        
+        .deployment-diagram {
+            width: 100%;
+            max-width: 800px;
+            height: auto;
+            margin: 15px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .resolution-note {
+            font-size: 0.9em;
+            color: #666;
+        }
+        
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .logo {
+                margin: 10px 0 0 0;
+            }
+            
+            .tabs, .sub-tabs {
+                flex-direction: row;
+                overflow-x: auto;
+                white-space: nowrap;
+                padding-bottom: 5px;
+            }
+            
+            .tab, .sub-tab {
+                margin-bottom: 0;
+            }
+            
+            .cloud-comparison {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+        
+        @media print {
+            body {
+                background-color: white;
+                color: black;
+                font-size: 12pt;
+            }
+            
+            .tab-content {
+                display: block !important;
+                page-break-inside: avoid;
+                padding: 0;
+                box-shadow: none;
+                border: none;
+            }
+            
+            .tabs, .sub-tabs, .search-container {
+                display: none;
+            }
+            
+            h2 {
+                page-break-after: avoid;
+            }
+            
+            .note {
+                page-break-inside: avoid;
+            }
+            
+            footer {
+                page-break-before: always;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Vitrea® Advanced Visualization 7.16 - Cloud Technical Brief</h1>
+        <img src="https://www.medical.canon/images/logo.png" alt="Canon Medical Logo" class="logo">
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="Search for terms like 'T4 GPU' or 'Windows Server'...">
+        </div>
+    </header>
+
+    <div class="tabs">
+        <div class="tab active" onclick="openTab(event, 'overview')">Overview</div>
+        <div class="tab" onclick="openTab(event, 'azure')">Azure</div>
+        <div class="tab" onclick="openTab(event, 'aws')">AWS</div>
+        <div class="tab" onclick="openTab(event, 'gcp')">GCP</div>
+        <div class="tab" onclick="openTab(event, 'comparison')">Cloud Comparison</div>
+        <div class="tab" onclick="openTab(event, 'client')">Client Specs</div>
+        <div class="tab" onclick="openTab(event, 'considerations')">Considerations</div>
+    </div>
+
+    <div id="overview" class="tab-content active">
+        <h2>Cloud Deployment Overview</h2>
+        <p>Vitrea Advanced Visualization is compatible with cloud environments. Canon Medical extends Vitrea Advanced Visualization (AV) cloud-compatibility for cloud hosted environments.</p>
+        
+        <div class="note">
+            <p>Canon Medical has chosen the most optimal configuration for typical cloud environments, but other options may be suitable depending on business use cases.</p>
+        </div>
+        
+        <h3>Key Factors to Consider</h3>
+        <ul>
+            <li><strong>Network topology</strong>: Design impacts performance and reliability</li>
+            <li><strong>Distance from data centers</strong>: Affects latency and throughput</li>
+            <li><strong>Storage and compute compatibility</strong>: Not all technologies are supported in clinical systems</li>
+            <li><strong>Data volume</strong>: Impacts storage requirements and processing power</li>
+        </ul>
+        
+        <p>Canon Medical will work with you to explore the best configuration for your situation, given the complexities involved in operating clinical systems.</p>
+        
+        <h3>Deployment Options</h3>
+        <div class="sub-tabs">
+            <div class="sub-tab active" onclick="openSubTab(event, 'single-server')">Single Server</div>
+            <div class="sub-tab" onclick="openSubTab(event, 'multi-node')">Multi-Node</div>
+        </div>
+        
+        <div id="single-server" class="sub-tab-content active">
+            <h4>Single Server Deployment</h4>
+            <p>Recommended for smaller implementations with fewer concurrent users (1-4 users).</p>
+            <img src="https://via.placeholder.com/800x300?text=Single+Server+Deployment+Diagram" alt="Single Server Deployment" class="deployment-diagram">
+            <p>Key characteristics:</p>
+            <ul>
+                <li>All components on a single virtual machine</li>
+                <li>Simpler to deploy and manage</li>
+                <li>Cost-effective for small workloads</li>
+                <li>Limited scalability</li>
+            </ul>
+        </div>
+        
+        <div id="multi-node" class="sub-tab-content">
+            <h4>Multi-Node Deployment</h4>
+            <p>Recommended for larger implementations requiring scalability and high availability.</p>
+            <img src="https://via.placeholder.com/800x300?text=Multi-Node+Deployment+Diagram" alt="Multi-Node Deployment" class="deployment-diagram">
+            <p>Key characteristics:</p>
+            <ul>
+                <li>Separate management and application servers</li>
+                <li>Horizontal scaling of application servers</li>
+                <li>Better fault tolerance</li>
+                <li>More complex to configure</li>
+                <li>Higher initial cost but better for growth</li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="azure" class="tab-content">
+        <h2>Microsoft Azure Deployment</h2>
+        
+        <div class="sub-tabs">
+            <div class="sub-tab active" onclick="openSubTab(event, 'azure-single')">Single Server</div>
+            <div class="sub-tab" onclick="openSubTab(event, 'azure-multi')">Multi-Node</div>
+        </div>
+        
+        <div id="azure-single" class="sub-tab-content active">
+            <h3>Single-User System (1)</h3>
+            <div class="specs">
+                <div class="spec-item"><span class="spec-label">Instance type:</span> Standard_NC16as_T4_v3</div>
+                <div class="spec-item"><span class="spec-label">vCPU:</span> 16, AMD EPYC 7V12(Rome)</div>
+                <div class="spec-item"><span class="spec-label">Speed:</span> 2.45/3.1 GHz</div>
+                <div class="spec-item"><span class="spec-label">Memory:</span> 110 GB</div>
+                <div class="spec-item"><span class="spec-label">GPU:</span> 1 × NVIDIA Tesla T4 (16 GB memory)</div>
+                <div class="spec-item"><span class="spec-label">Temporary disk:</span> 352 GB</div>
+                <div class="spec-item"><span class="spec-label">OS:</span> Windows Server 2019 Datacenter</div>
+                <div class="spec-item"><span class="spec-label">OS Disk:</span> 256 GB Premium SSD</div>
+                <div class="spec-item"><span class="spec-label">Data Disk:</span> 1 TB E30 (500 IOPS/1000 IOPS Burst)</div>
+                <div class="spec-item"><span class="spec-label">Resolution:</span> <span class="tooltip">1024×1024<span class="tooltiptext">Limited support for this resolution in some configurations</span></span></div>
+            </div>
+            
+            <h3>Four-User System (4)</h3>
+            <div class="specs">
+                <div class="spec-item"><span class="spec-label">Instance type:</span> Standard_NC64as_T4_v3</div>
+                <div class="spec-item"><span class="spec-label">vCPU:</span> 64, AMD EPYC 7V12(Rome)</div>
+                <div class="spec-item"><span class="spec-label">Speed:</span> 2.45/3.1 GHz</div>
+                <div class="spec-item"><span class="spec-label">Memory:</span> 440 GB</div>
+                <div class="spec-item"><span class="spec-label">GPU:</span> 4 × NVIDIA Tesla T4 (64 GB total memory)</div>
+                <div class="spec-item"><span class="spec-label">Temporary disk:</span> 2816 GB</div>
+                <div class="spec-item"><span class="spec-label">OS:</span> Windows Server 2019 Datacenter</div>
+                <div class="spec-item"><span class="spec-label">OS Disk:</span> 256 GB Premium SSD</div>
+                <div class="spec-item"><span class="spec-label">Data Disk:</span> 1 TB E30 (500 IOPS/1000 IOPS Burst)</div>
+                <div class="spec-item"><span class="spec-label">Resolution:</span> <span class="tooltip">1024×1024<span class="tooltiptext">Limited support for this resolution in some configurations</span></span></div>
+            </div>
+        </div>
+        
+        <div id="azure-multi" class="sub-tab-content">
+            <h3>Management Server and SQL</h3>
+            <div class="specs">
+                <div class="spec-item"><span class="spec-label">Instance type (recommended):</span> Standard_DC8es_v5</div>
+                <div class="spec-item"><span class="spec-label">vCPU:</span> 8, Intel Xeon (Sapphire Rapids)</div>
+                <div class="spec-item"><span class="spec-label">Speed:</span> 2.1/2.9 GHz</div>
+                <div class="spec-item"><span class="spec-label">Memory:</span> 32 GB</div>
+                <div class="spec-item"><span class="spec-label">OS:</span> SQL Server 2019 Standard on Windows Server 2022</div>
+                <div class="spec-item"><span class="spec-label">OS Disk:</span> 256 GB Premium SSD</div>
+                <div class="spec-item"><span class="spec-label">Minimum data disk:</span> P10 (128GB, 500/3500 IOPS)</div>
+            </div>
+            
+            <div class="specs">
+                <div class="spec-item"><span class="spec-label">Instance type (alternative):</span> Standard_DC8s_v3</div>
+                <div class="spec-item"><span class="spec-label">vCPU:</span> 8, Intel Xeon (Sapphire Rapids)</div>
+                <div class="spec-item"><span class="spec-label">Speed:</span> 2.3/3.5 GHz</div>
+                <div class="spec-item"><span class="spec-label">Memory:</span> 64 GB</div>
+                <div class="spec-item"><span class="spec-label">OS:</span> SQL Server 2019 Standard on Windows Server 2022</div>
+                <div class="spec-item"><span class="spec-label">OS Disk:</span> 256 GB Premium SSD</div>
+                <div class="spec-item"><span class="spec-label">Minimum data disk:</span> P10 (128GB, 500/3500 IOPS)</div>
+            </div>
+            
+            <h3>Application Servers (4 users each)</h3>
+            <div class="specs">
+                <div class="spec-item"><span class="spec-label">Instance type:</span> Standard_NC64as_T4_v3</div>
+                <div class="spec-item"><span class="spec-label">vCPU:</span> 64, AMD EPYC 7V12(Rome)</div>
+                <div class="spec-item"><span class="spec-label">Speed:</span> 2.45/3.1 GHz</div>
+                <div class="spec-item"><span class="spec-label">Memory:</span> 440 GB</div>
+                <div class="spec-item"><span class="spec-label">GPU:</span> 4 × NVIDIA Tesla T4 (64 GB total memory)</div>
+                <div class="spec-item"><span class="spec-label">Temporary disk:</span> 2816 GB</div>
+                <div class="spec-item"><span class="spec-label">OS:</span> Windows Server 2022 Datacenter</div>
+                <div class="spec-item"><span class="spec-label">OS Disk:</span> 256 GB Premium SSD</div>
+                <div class="spec-item"><span class="spec-label">Resolution:</span> <span class="tooltip">1024×1024<span class="tooltiptext">Limited support for this resolution in some configurations</span></span></div>
+            </div>
+        </div>
+        
+        <div class="note">
+            <p><strong>Important Azure-Specific Notes:</strong></p>
+            <ul>
+                <li>Azure-specific NVIDIA drivers must be used (standard drivers don't support WDDM mode)</li>
+                <li>NCas_T4_v3 variants support standard NVIDIA drivers but should use Azure-provided drivers for WDDM</li>
+                <li>Confidential compute is recommended for management servers</li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="aws" class="tab-content">
+        <h2>AWS Deployment</h2>
+        
+        <div class="sub-tabs">
+            <div class="sub-tab active" onclick="openSubTab(event, 'aws-single')">Single Server</div>
+            <div class="sub-tab" onclick="openSubTab(event, 'aws-multi')">Multi-Node</div>
+        </div>
+        
+        <div id="aws-single" class="sub-tab-content active">
+            <h3>Four-User System (4)</h3>
+            <div class="specs">
+                <div class="spec-item"><span class="spec-label">Instance type:</span> g4dn.12xlarge</div>
+                <div class="spec-item"><span class="spec-label">vCPU:</span> 48, Intel Cascade Lake P-8259CL</div>
+                <div class="spec-item"><span class="spec-label">Memory:</span> 192 GB</div>
+                <div class="spec-item"><span class="spec-label">GPU:</span> 4 × NVIDIA T4 Tensor Core (64 GB total memory)</div>
+                <div class="spec-item"><span class="spec-label">Temporary disk:</span> 900 GB</div>
+                <div class="spec-item"><span class="spec-label">OS:</span> Windows Server 2019 Datacenter</div>
+                <div class="spec-item"><span class="spec-label">OS Disk:</span> 256 GB</div>
+                <div class="spec-item"><span class="spec-label">Data Disk:</span> 1 TB gp3 (3000 IOPS)</div>
+                <div class="spec-item"><span class="spec-label">Resolution:</span> <span class="tooltip">1024×1024<span class="tooltiptext">Limited support for this resolution in some configurations</span></span></div>
+            </div>
+        </div>
+        
+        <div id="aws-multi" class="sub-tab-content">
+            <h3>Management Server and SQL</h3>
+            <div class="specs">
+                <div class="spec-item"><span class="spec-label">Instance type:</span> m7i.2xlarge</div>
+                <div class="spec-item"><span class="spec-label">vCPU:</span> 8, 4th Gen Intel Xeon Scalable (Sapphire Rapids 8488C)</div>
+                <div class="spec-item"><span class="spec-label">Memory:</span> 32 GB</div>
+                <div class="spec-item"><span class="spec-label">OS:</span> Windows Server 2019 Datacenter</div>
+                <div class="spec-item"><span class="spec-label">OS Disk:</span> 256 GB</div>
+                <div class="spec-item"><span class="spec-label">Data Disk:</span> 1 TB (speed based on customer choice)</div>
+            </div>
+            
+            <h3>Application Servers (4 users each)</h3>
+            <div class="specs">
+                <div class="spec-item"><span class="spec-label">Instance type:</span> g4dn.12xlarge</div>
+                <div class="spec-item"><span class="spec-label">vCPU:</span> 48, Intel Cascade Lake P-8259CL</div>
+                <div class="spec-item"><span class="spec-label">Memory:</span> 192 GB</div>
+                <div class="spec-item"><span class="spec-label">GPU:</span> 4 × NVIDIA T4 Tensor Core (64 GB total memory)</div>
+                <div class="spec-item"><span class="spec-label">Temporary disk:</span> 900 GB</div>
+                <div class="spec-item"><span class="spec-label">OS:</span> Windows Server 2019 Datacenter</div>
+                <div class="spec-item"><span class="spec-label">OS Disk:</span> 256 GB</div>
+                <div class="spec-item"><span class="spec-label">Resolution:</span> <span class="tooltip">1024×1024<span class="tooltiptext">Limited support for this resolution in some configurations</span></span></div>
+            </div>
+        </div>
+        
+        <div class="note">
+            <p><strong>AWS-Specific Considerations:</strong></p>
+            <ul>
+                <li>Bare Metal GPU instances are more specialized and can be difficult to allocate</li>
+                <li>Spot instances not recommended for production workloads</li>
+                <li>Ensure adequate capacity in your region for on-demand instances</li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="gcp" class="tab-content">
+        <h2>Google Cloud Platform Deployment</h2>
+        
+        <div class="sub-tabs">
+            <div class="sub-tab active" onclick="openSubTab(event, 'gcp-single')">Single Server</div>
+            <div class="sub-tab" onclick="openSubTab(event, 'gcp-multi')">Multi-Node</div>
+        </div>
+        
+        <div id="gcp-single" class="sub-tab-content active">
+            <h3>Four-User System (4)</h3>
+            <div class="specs">
+                <div class="spec-item"><span class="spec-label">Instance type:</span> n1-custom / 4 NVIDIA T4 GPU</div>
+                <div class="spec-item"><span class="spec-label">vCPU:</span> 30, Intel Skylake</div>
+                <div class="spec-item"><span class="spec-label">Memory:</span> 195 GB</div>
+                <div class="spec-item"><span class="spec-label">GPU:</span> 4 × NVIDIA T4 (64 GB total memory)</div>
+                <div class="spec-item"><span class="spec-label">OS:</span> Windows Server 2022 Datacenter</div>
+                <div class="spec-item"><span class="spec-label">OS Disk:</span> 256 GB</div>
+                <div class="spec-item"><span class="spec-label">Data Disk:</span> 1 TB Performance/SSD persistent disk</div>
+                <div class="spec-item"><span class="spec-label">Resolution:</span> <span class="tooltip">1024×1024<span class="tooltiptext">Limited support for this resolution in some configurations</span></span></div>
+            </div>
+        </div>
+        
+        <div id="gcp-multi" class="sub-tab-content">
+            <h3>Management Server and SQL</h3>
+            <div class="specs">
+                <div class="spec-item"><span class="spec-label">Instance type:</span> n2-custom-8</div>
+                <div class="spec-item"><span class="spec-label">vCPU:</span> 8, Intel Skylake</div>
+                <div class="spec-item"><span class="spec-label">Memory:</span> 64 GB</div>
+                <div class="spec-item"><span class="spec-label">OS:</span> Windows Server 2022 Datacenter</div>
+                <div class="spec-item"><span class="spec-label">OS Disk:</span> 250 GB</div>
+                <div class="spec-item"><span class="spec-label">Data Disk:</span> 1 TB Performance/SSD persistent disk</div>
+            </div>
+            
+            <h3>Application Servers</h3>
+            <div class="specs">
+                <div class="spec-item"><span class="spec-label">Instance type:</span> n1-custom-10 / 4 NVIDIA T4 GPU</div>
+                <div class="spec-item"><span class="spec-label">vCPU:</span> 20, Intel Skylake</div>
+                <div class="spec-item"><span class="spec-label">Memory:</span> 130 GB</div>
+                <div class="spec-item"><span class="spec-label">GPU:</span> 4 × NVIDIA T4 (64 GB total memory)</div>
+                <div class="spec-item"><span class="spec-label">OS:</span> Windows Server 2022 Datacenter</div>
+                <div class="spec-item"><span class="spec-label">OS Disk:</span> 256 GB</div>
+                <div class="spec-item"><span class="spec-label">Data Disk:</span> 1 TB Performance/SSD persistent disk</div>
+                <div class="spec-item"><span class="spec-label">Resolution:</span> <span class="tooltip">1024×1024<span class="tooltiptext">Limited support for this resolution in some configurations</span></span></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="comparison" class="tab-content">
+        <h2>Cloud Provider Comparison</h2>
+        
+        <h3>Single Server (4 Users) Comparison</h3>
+        <table class="cloud-comparison">
+            <thead>
+                <tr>
+                    <th>Feature</th>
+                    <th>Azure</th>
+                    <th>AWS</th>
+                    <th>GCP</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Instance Type</td>
+                    <td>Standard_NC64as_T4_v3</td>
+                    <td>g4dn.12xlarge</td>
+                    <td>n1-custom / 4 NVIDIA T4 GPU</td>
+                </tr>
+                <tr>
+                    <td>vCPU</td>
+                    <td>64 (AMD EPYC)</td>
+                    <td>48 (Intel Cascade Lake)</td>
+                    <td>30 (Intel Skylake)</td>
+                </tr>
+                <tr>
+                    <td>Memory</td>
+                    <td>440 GB</td>
+                    <td>192 GB</td>
+                    <td>195 GB</td>
+                </tr>
+                <tr>
+                    <td>GPU</td>
+                    <td>4 × Tesla T4 (64GB)</td>
+                    <td>4 × T4 Tensor Core (64GB)</td>
+                    <td>4 × T4 (64GB)</td>
+                </tr>
+                <tr>
+                    <td>OS</td>
+                    <td>Windows Server 2019</td>
+                    <td>Windows Server 2019</td>
+                    <td>Windows Server 2022</td>
+                </tr>
+                <tr>
+                    <td>Storage</td>
+                    <td>1 TB E30 (500 IOPS)</td>
+                    <td>1 TB gp3 (3000 IOPS)</td>
+                    <td>1 TB SSD</td>
+                </tr>
+                <tr>
+                    <td>Special Notes</td>
+                    <td>Azure-specific drivers required</td>
+                    <td>Bare metal instances scarce</td>
+                    <td>Custom configurations</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <h3>Management Server Comparison</h3>
+        <table class="cloud-comparison">
+            <thead>
+                <tr>
+                    <th>Feature</th>
+                    <th>Azure</th>
+                    <th>AWS</th>
+                    <th>GCP</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Instance Type</td>
+                    <td>Standard_DC8es_v5</td>
+                    <td>m7i.2xlarge</td>
+                    <td>n2-custom-8</td>
+                </tr>
+                <tr>
+                    <td>vCPU</td>
+                    <td>8 (Intel Xeon)</td>
+                    <td>8 (Intel Xeon)</td>
+                    <td>8 (Intel Skylake)</td>
+                </tr>
+                <tr>
+                    <td>Memory</td>
+                    <td>32 GB</td>
+                    <td>32 GB</td>
+                    <td>64 GB</td>
+                </tr>
+                <tr>
+                    <td>OS</td>
+                    <td>Windows Server 2022 + SQL 2019</td>
+                    <td>Windows Server 2019</td>
+                    <td>Windows Server 2022</td>
+                </tr>
+                <tr>
+                    <td>Storage</td>
+                    <td>P10 (128GB min)</td>
+                    <td>1 TB (custom speed)</td>
+                    <td>1 TB SSD</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div class="note">
+            <p><strong>Key Takeaways:</strong></p>
+            <ul>
+                <li>Azure offers the highest CPU core count for application servers</li>
+                <li>AWS provides the highest storage IOPS by default</li>
+                <li>GCP uses newer Windows Server versions by default</li>
+                <li>All providers use similar NVIDIA T4 GPUs with 16GB memory each</li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="client" class="tab-content">
+        <h2>Remote Access Client Specifications</h2>
+        
+        <h3>Minimum Requirements</h3>
+        <div class="specs">
+            <div class="spec-item"><span class="spec-label">Processor:</span> 1 GHz 64-bit (x64) with 2 or more cores</div>
+            <div class="spec-item"><span class="spec-label">RAM:</span> 4 GB</div>
+            <div class="spec-item"><span class="spec-label">Storage:</span> 40 GB (Win10) / 64 GB (Win11) with at least 1 GB free</div>
+            <div class="spec-item"><span class="spec-label">Browser:</span> Chrome, Edge, or Firefox for PACS integrations</div>
+            <div class="spec-item"><span class="spec-label">Resolutions:</span>
+                <ul>
+                    <li>Minimum: 1280×1024</li>
+                    <li>Recommended: 1920×1200</li>
+                    <li>Maximum: 3840×2160 (4k)</li>
+                </ul>
+            </div>
+            <div class="spec-item"><span class="spec-label">Network:</span> 1.0 Gbps connection</div>
+            <div class="spec-item"><span class="spec-label">Bandwidth:</span> Minimum 5Mbps with 100ms latency</div>
+        </div>
+        
+        <h3>Supported Operating Systems</h3>
+        <ul>
+            <li>Microsoft Windows 10 Professional 64-bit edition</li>
+            <li>Microsoft Windows 11 Professional 64-bit edition (Recommended)</li>
+            <li>Macintosh client access support – Microsoft remote desktop application 8.0.32 or later for Mac OS X 10.9</li>
+        </ul>
+        
+        <div class="note">
+            <p><strong>End of life notice:</strong> Windows 10 support from Microsoft will end on October 14th, 2025. Canon Medical recommends upgrading to a newer version of Windows for future compatibility, supportability, and security.</p>
+        </div>
+        
+        <h3>Network Topology Considerations</h3>
+        <p>For optimal performance, consider these network factors:</p>
+        <ul>
+            <li>Place client workstations as close as possible to the cloud region being used</li>
+            <li>Ensure adequate bandwidth for the number of concurrent users</li>
+            <li>VPN connections should have low latency (<100ms) for responsive interaction</li>
+            <li>For DICOM transfers, ensure sufficient sustained throughput</li>
+        </ul>
+    </div>
+
+    <div id="considerations" class="tab-content">
+        <h2>Additional Configuration Considerations</h2>
+        
+        <h3>General Requirements</h3>
+        <ul>
+            <li><strong>CPU Instructions:</strong> All systems must support AWX2 or newer CPU instructions</li>
+            <li><strong>Data Throughput:</strong> Network performance between storage and cluster nodes impacts data loading speeds</li>
+            <li><strong>Management Node:</strong> CPU speed affects data ingestion rates due to DICOM compression handling</li>
+        </ul>
+        
+        <h3>Instance Reservations</h3>
+        <div class="specs">
+            <p>While any reservation type can be used for the VMs running AV, we recommend:</p>
+            <ul>
+                <li><strong>Avoid spot instances</strong> - they can be stopped by the cloud provider at any time</li>
+                <li><strong>Use reserved or on-demand instances</strong> for production workloads</li>
+                <li><strong>With on-demand</strong>, verify instance availability especially if stopping them during off hours</li>
+                <li><strong>Reserved instances</strong> can provide cost savings for predictable workloads</li>
+            </ul>
+        </div>
+        
+        <h3>GPU Configuration</h3>
+        <div class="specs">
+            <ul>
+                <li>GPU instances must be configured in <strong>WDDM mode</strong> for Vitrea AV</li>
+                <li>NVIDIA licensing is handled by the cloud provider</li>
+                <li>Different cloud providers have specific driver requirements:
+                    <ul>
+                        <li>Azure requires Azure-specific NVIDIA drivers</li>
+                        <li>AWS and GCP can use standard NVIDIA drivers</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        
+        <h3>Storage Considerations</h3>
+        <div class="specs">
+            <ul>
+                <li>Choose storage tiers based on performance requirements</li>
+                <li>Higher IOPS improve responsiveness with large datasets</li>
+                <li>Consider separate disks for OS, applications, and patient data</li>
+                <li>Ensure adequate capacity for:
+                    <ul>
+                        <li>Current patient data</li>
+                        <li>Projected growth</li>
+                        <li>Temporary processing space</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        
+        <h3>Network Topology</h3>
+        <div class="specs">
+            <p>Design your network architecture considering:</p>
+            <ul>
+                <li>Latency between components</li>
+                <li>Bandwidth requirements for:
+                    <ul>
+                        <li>DICOM transfers</li>
+                        <li>Remote desktop protocols</li>
+                        <li>Inter-node communication</li>
+                    </ul>
+                </li>
+                <li>Security requirements for healthcare data</li>
+                <li>Integration with existing PACS and modalities</li>
+            </ul>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2025 Canon Medical Informatics, Inc | M-06643 A</p>
+        <p>Canon Medical Informatics 5850 Opus Parkway, Suite 300 | Minnetonka, MN 55343, USA | mi.medical.canon</p>
+    </footer>
+
+    <script>
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            
+            // Hide all tab content
+            tabcontent = document.getElementsByClassName("tab-content");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].classList.remove("active");
+            }
+            
+            // Remove active class from all tabs
+            tablinks = document.getElementsByClassName("tab");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove("active");
+            }
+            
+            // Show the current tab and add active class
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+            
+            // Reset sub-tabs to show first option when main tab changes
+            if (tabName !== 'overview' && tabName !== 'client' && tabName !== 'considerations' && tabName !== 'comparison') {
+                var subtabs = document.querySelectorAll("#" + tabName + " .sub-tab-content");
+                for (i = 0; i < subtabs.length; i++) {
+                    subtabs[i].classList.remove("active");
+                }
+                document.querySelector("#" + tabName + " .sub-tab-content").classList.add("active");
+                
+                var subtablinks = document.querySelectorAll("#" + tabName + " .sub-tab");
+                for (i = 0; i < subtablinks.length; i++) {
+                    subtablinks[i].classList.remove("active");
+                }
+                document.querySelector("#" + tabName + " .sub-tab").classList.add("active");
+            }
+        }
+        
+        function openSubTab(evt, subTabName) {
+            var i, subTabContent, subTabLinks;
+            
+            // Get all elements with class="sub-tab-content" inside the current main tab
+            var currentTab = evt.currentTarget.closest(".tab-content");
+            subTabContent = currentTab.getElementsByClassName("sub-tab-content");
+            for (i = 0; i < subTabContent.length; i++) {
+                subTabContent[i].classList.remove("active");
+            }
+            
+            // Get all elements with class="sub-tab" inside the current main tab and remove the active class
+            subTabLinks = currentTab.getElementsByClassName("sub-tab");
+            for (i = 0; i < subTabLinks.length; i++) {
+                subTabLinks[i].classList.remove("active");
+            }
+            
+            // Show the current sub-tab and add active class
+            document.getElementById(subTabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+        
+        // Search functionality
+        document.getElementById('search-input').addEventListener('keyup', function(e) {
+            if (e.key === 'Enter') {
+                const searchTerm = this.value.toLowerCase();
+                if (searchTerm.trim() === '') return;
+                
+                // Search through all tab content
+                const tabContents = document.querySelectorAll('.tab-content:not(.active)');
+                const activeTabContent = document.querySelector('.tab-content.active');
+                
+                // Check active tab first
+                if (activeTabContent.textContent.toLowerCase().includes(searchTerm)) {
+                    // Highlight matches in active tab
+                    highlightMatches(activeTabContent, searchTerm);
+                    return;
+                }
+                
+                // Check other tabs
+                for (let tab of tabContents) {
+                    if (tab.textContent.toLowerCase().includes(searchTerm)) {
+                        // Find which tab this belongs to and activate it
+                        const tabId = tab.id;
+                        const tabButton = document.querySelector(`.tab[onclick*="${tabId}"]`);
+                        if (tabButton) {
+                            tabButton.click();
+                            highlightMatches(tab, searchTerm);
+                        }
+                        return;
+                    }
+                }
+                
+                // If not found
+                alert('No matches found for: ' + searchTerm);
+            }
+        });
+        
+        function highlightMatches(element, searchTerm) {
+            // Remove previous highlights
+            const oldHighlights = element.querySelectorAll('.search-highlight');
+            oldHighlights.forEach(el => {
+                const parent = el.parentNode;
+                parent.replaceChild(document.createTextNode(el.textContent), el);
+                parent.normalize();
+            });
+            
+            // Highlight new matches
+            const textNodes = [];
+            const walker = document.createTreeWalker(
+                element,
+                NodeFilter.SHOW_TEXT,
+                null,
+                false
+            );
+            
+            let node;
+            while (node = walker.nextNode()) {
+                if (node.nodeValue.toLowerCase().includes(searchTerm)) {
+                    textNodes.push(node);
+                }
+            }
+            
+            textNodes.forEach(node => {
+                const span = document.createElement('span');
+                span.className = 'search-highlight';
+                span.style.backgroundColor = 'yellow';
+                
+                const text = node.nodeValue;
+                const start = text.toLowerCase().indexOf(searchTerm);
+                const end = start + searchTerm.length;
+                
+                const before = text.substring(0, start);
+                const match = text.substring(start, end);
+                const after = text.substring(end);
+                
+                node.nodeValue = before;
+                span.textContent = match;
+                
+                const afterNode = document.createTextNode(after);
+                
+                node.parentNode.insertBefore(span, node.nextSibling);
+                node.parentNode.insertBefore(afterNode, span.nextSibling);
+            });
+        }
+    </script>
+</body>
+</html>

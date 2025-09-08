@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vitrea Advanced Visualization - Complete Build of Materials</title>
+    <style>
+        :root {
+            --primary-color: #c41017; /* Canon Dark Red */
+            --accent-color: #ed1c24; /* Canon Red */
+            --text-color: #333;
+            --background-color: #f9f9f9;
+            --card-bg: #fff;
+            --border-color: #e0e0e0;
+        }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--background-color);
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color), #0066cc);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+		.logo {
+            height: 50px;
+            margin-right: 20px;
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+
+        .subtitle {
+            font-weight: 300;
+            margin-top: 0.5rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .search-box {
+            margin-bottom: 2rem;
+        } 
+
+        .search-box input {
+            width: 100%;
+            padding: 1rem;
+            font-size: 1.1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+        }
+
+        .system-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .system-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            max-height: 80vh;
+        }
+
+        .card-header {
+            background: var(--primary-color);
+            color: white;
+            padding: 1rem;
+            position: relative;
+        }
+
+        .card-header h2 {
+            margin: 0;
+            font-size: 1.25rem;
+        }
+
+        .card-header .sku {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-top: 0.25rem;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        .specs-list {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        .specs-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+        }
+
+        .specs-list li:last-child {
+            border-bottom: none;
+        }
+
+        .spec-label {
+            font-weight: 600;
+            min-width: 120px;
+        }
+
+        .spec-value {
+            flex: 1;
+        }
+
+        .sku-table-container {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-top: 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            display: none; /* Initially hidden */
+        }
+
+        .sku-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+
+        .sku-table th, .sku-table td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .sku-table th {
+            background: #f5f5f5;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+        }
+
+        .sku-table tr:hover {
+            background: #f9f9f9;
+        }
+
+        .category-header {
+            grid-column: 1 / -1;
+            background: #f0f0f0;
+            padding: 1rem;
+            margin: 2rem 0 1rem;
+            border-left: 4px solid var(--primary-color);
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .toggle-sku-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        .toggle-sku-btn:hover {
+            background-color: var(--accent-color);
+        }
+
+        .toggle-sku-btn::after {
+            content: "+";
+            font-size: 1.2rem;
+        }
+
+        .toggle-sku-btn.active::after {
+            content: "-";
+        }
+
+        @media (max-width: 768px) {
+            .system-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .specs-list li {
+                flex-direction: column;
+            }
+            
+            .spec-label {
+                margin-bottom: 0.25rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="https://global.canon/en/corporate/logo/img/logo_01.png" alt="Canon Medical Logo" class="logo">
+		<h1>Vitrea® Advanced Visualization 7.16 Specifications Rev F_BOM</h1>
+        <div class="subtitle">Complete Build of Materials</div>
+    </header>
+
+    <div class="container">
+        <div class="search-box">
+            <input type="text" id="search" placeholder="Search across all SKUs and components...">
+        </div>
+
+        <div class="system-cards" id="system-cards-container">
+            <!-- Category A: Workstation Deployment -->
+            <div class="category-header">A. Vitrea Advanced Visualization Workstation Systems</div>
+            
+            <!-- Single-User System -->
+            <div class="system-card">
+                <div class="card-header">
+                    <h2>HP Z2 G9 Workstation</h2>
+                    <div class="sku">SKU: A2LT0UC</div>
+                </div>
+                <div class="card-body">
+                    <h3>Configuration Details</h3>
+                    <ul class="specs-list">
+                        <li><span class="spec-label">CPU:</span><span class="spec-value">Intel® i7-14700K 5.6 GHz (20C)</span></li>
+                        <li><span class="spec-label">RAM:</span><span class="spec-value">64GB DDR5 4800</span></li>
+                        <li><span class="spec-label">Storage:</span><span class="spec-value">2x 2TB SSD PCIe M.2 RAID 1</span></li>
+                        <li><span class="spec-label">GPU:</span><span class="spec-value">NVIDIA RTX™ 2000 Ada 16GB</span></li>
+                        <li><span class="spec-label">OS:</span><span class="spec-value">Windows 11 Pro 64-bit</span></li>
+						<li><span class="spec-label">Network:</span><span class="spec-value">1.0 Gbps network connection </span></li>
+						<li><span class="spec-label">Heat dissipation:</span><span class="spec-value">Typical 1598+ BTU/HR </span></li>
+						<li><span class="spec-label">Display Adapter:</span><span class="spec-value">Mini display adapter comes with system </span></li>
+						<li><span class="spec-label">Support:</span><span class="spec-value">Support for 1024×1024 resolution CT images </span></li>
+                    </ul>
+                    
+                    <button class="toggle-sku-btn">Complete SKU Components</button>
+                    <div class="sku-table-container">
+                        <table class="sku-table">
+                            <thead>
+                                <tr>
+                                    <th>SKU</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>A2LT0UC#ABA</td><td>HP Z2 G9 TWR I714700K 64GB/2TB PC</td></tr>
+                                <tr><td>289D0AV</td><td>No Load Flex Port</td></tr>
+                                <tr><td>2PA20AV</td><td>HP miniDP-to-DP Adapter</td></tr>
+                                <tr><td>4Q481AV</td><td>Operating System Load to M.2</td></tr>
+                                <tr><td>4Q496AV</td><td>SSD HPZ 2TB 2280 PCIe TLC 2nd M.2</td></tr>
+                                <tr><td>4Q498AV</td><td>SSD HPZ 2TB 2280 PCIe TLC M.2</td></tr>
+                                <tr><td>4Q4C0AV#ABA</td><td>HP USB 320K KB US</td></tr>
+                                <tr><td>4Q4C1AV#ABA</td><td>CKIT HP Z2 G9 TWR US</td></tr>
+                                <tr><td>4Q515AV</td><td>MISC PKG Sgl UN TWR Z2</td></tr>
+                                <tr><td>4Q516AV</td><td>Mouse HP 320M WRD</td></tr>
+                                <tr><td>4Q527AV</td><td>ODD 9.5 SM DVDRW Ultra Slim Tray</td></tr>
+                                <tr><td>4Q531AV</td><td>OST W11P6</td></tr>
+                                <tr><td>4Q555AV</td><td>RAM 64GB (2x32GB) DDR5 4800 NECC</td></tr>
+                                <tr><td>4Q564AV#ABA</td><td>WARR 3/3/3 US</td></tr>
+                                <tr><td>4Q568AV#ABA</td><td>DT PWRCORD C13 1.83m st CNVTL US</td></tr>
+                                <tr><td>4X2V3AV</td><td>HP 4X2V3AV VITAL IMAGES GETMORE</td></tr>
+                                <tr><td>4Y0H8AV</td><td>BU HP Z2 TWR G9 700W RCTO</td></tr>
+                                <tr><td>4YQ39AV#ABA</td><td>OSLOC</td></tr>
+                                <tr><td>5JH54AV</td><td>HP External USB ODD</td></tr>
+                                <tr><td>7BD14AV</td><td>Corporate-Ready Image</td></tr>
+                                <tr><td>8F4R3AV</td><td>High Performance Mode default</td></tr>
+                                <tr><td>97M70AV</td><td>HP SRV VITAL Cust Adv Img Svc</td></tr>
+                                <tr><td>9F2G6AV</td><td>CPU INTL i7-14700K vPro Ent 5.60 20C125W</td></tr>
+                                <tr><td>9T1L8AV</td><td>LBL Intel Core i7 vProEnt Raptor Lake</td></tr>
+                                <tr><td>9T7P6AV</td><td>GFX NVIDIA RTX 2000 Ada 16GB 4mDP</td></tr>
+                                <tr><td>ZG228AV</td><td>Desktop Safety Reg Lic Agreement DVD</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Precision Workstation -->
+            <div class="system-card">
+                <div class="card-header">
+                    <h2>HP Z8 Fury G5 Workstation</h2>
+                    <div class="sku">SKU: 9D5U8UC</div>
+                </div>
+                <div class="card-body">
+                    <h3>Configuration Details</h3>
+                    <ul class="specs-list">
+                        <li><span class="spec-label">CPU:</span><span class="spec-value">Intel® Xeon® W5-3423 3.2 GHz (12C)</span></li>
+                        <li><span class="spec-label">RAM:</span><span class="spec-value">128GB DDR5 4800 ECC</span></li>
+                        <li><span class="spec-label">Storage:</span><span class="spec-value">2x 4TB SSD PCIe M.2 RAID 1</span></li>
+                        <li><span class="spec-label">GPU:</span><span class="spec-value">NVIDIA RTX™ A4000E 16GB</span></li>
+                        <li><span class="spec-label">OS:</span><span class="spec-value">Windows 10/11 Pro 64-bit</span></li>
+                    </ul>
+                    
+                    <button class="toggle-sku-btn">Complete SKU Components</button>
+                    <div class="sku-table-container">
+                        <table class="sku-table">
+                            <thead>
+                                <tr>
+                                    <th>SKU</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>9D5U8UC#ABA</td><td>HP Z8G5 W5-3423 128GB/4TB PC</td></tr>
+                                <tr><td>3F0P6AV</td><td>BU HP Z8 TWR G5 1125W EPA90 Fury RCTO</td></tr>
+                                <tr><td>3F0V6AV</td><td>No Adapters Needed</td></tr>
+                                <tr><td>3F5T6AV</td><td>MISC Data Science Ready</td></tr>
+                                <tr><td>3F5Y2AV#ABA</td><td>CKIT Z8</td></tr>
+                                <tr><td>3F6U9AV</td><td>CPU INTL Xeon W5-3423 12C 220W</td></tr>
+                                <tr><td>3F6Y8AV</td><td>MISC Packaging Sgl UN (TWR)</td></tr>
+                                <tr><td>3F6Z1AV</td><td>NIC Mod G2 HP Dual Port 10GBase-T</td></tr>
+                                <tr><td>3F6Z5AV</td><td>ODD 9.5 BD Writer 1st ODD</td></tr>
+                                <tr><td>3F7A0AV</td><td>Operating System Load to M.2</td></tr>
+                                <tr><td>3F7B2AV</td><td>RAM 128GB (8x16GB) DDR5 4800 ECC</td></tr>
+                                <tr><td>3R4U0AV</td><td>HP 3R4U0AV Z8FG5 Vital VROC Stnd Mod 3PO</td></tr>
+                                <tr><td>3R8S5AV</td><td>HP 3R8S5AV Vital USB BlueKey KBD US DIB</td></tr>
+                                <tr><td>4N386AV</td><td>Mouse HP LSR 128 WRD</td></tr>
+                                <tr><td>4X207AV</td><td>HP Srv VITAL IMAGES Z8 Fury G5 GetMore</td></tr>
+                                <tr><td>4X3W7AV</td><td>OST W11P6 WK7</td></tr>
+                                <tr><td>4YQ39AV#ABA</td><td>OSLOC</td></tr>
+                                <tr><td>613A3AV</td><td>SSD HPZ 4TB 2280 PCIe-4x4 2nd M.2</td></tr>
+                                <tr><td>613A6AV</td><td>SSD HPZ 4TB 2280 PCIe-4x4 M.2</td></tr>
+                                <tr><td>6U7A2AV</td><td>Entry Mod Type-A SprSpd USB5GbpsFrntIOv2</td></tr>
+                                <tr><td>6Y5B1AV</td><td>Wrnty Ext HP 3y ONS Care WKST HW Support</td></tr>
+                                <tr><td>70H23AV#ABA</td><td>WARR 1/1/1 US</td></tr>
+                                <tr><td>7BD29AV</td><td>Corporate-Ready Image</td></tr>
+                                <tr><td>7L5M8AV#ABA</td><td>DT PWRCORD C13 1.83m 15AstCNVTL US</td></tr>
+                                <tr><td>97N04AV</td><td>HP SRV VITAL IMAGES IMG SRV</td></tr>
+                                <tr><td>9T7S3AV</td><td>GFX NVIDIA RTX 2000 Ada 16GB 4mDP</td></tr>
+                                <tr><td>LK278AV</td><td>HP Phantom Z400 Keyboard</td></tr>
+                                <tr><td>ZG228AV</td><td>Desktop Safety Reg Lic Agreement DVD</td></tr>
+                                <tr><td>U46V0E</td><td>HP 3y Onsite Care WS Bundle HW Supp</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Three-User System -->
+            <div class="system-card">
+                <div class="card-header">
+                    <h2>HP Z8 G5 Workstation (3 Users)</h2>
+                    <div class="sku">SKU: 9D7L1UC</div>
+                </div>
+                <div class="card-body">
+                    <h3>Configuration Details</h3>
+                    <ul class="specs-list">
+                        <li><span class="spec-label">CPU:</span><span class="spec-value">2x Intel® Xeon® Silver 4514y 2.0 GHz (16C)</span></li>
+                        <li><span class="spec-label">RAM:</span><span class="spec-value">128GB DDR5-4800 ECC</span></li>
+                        <li><span class="spec-label">Storage:</span><span class="spec-value">2x 2TB SSD PCIe M.2 RAID 1</span></li>
+                        <li><span class="spec-label">GPU:</span><span class="spec-value">2x NVIDIA RTX™ 2000 Ada 16GB</span></li>
+                        <li><span class="spec-label">OS:</span><span class="spec-value">Windows Server 2022 Standard</span></li>
+                    </ul>
+                    
+                    <button class="toggle-sku-btn">Complete SKU Components</button>
+                    <div class="sku-table-container">
+                        <table class="sku-table">
+                            <thead>
+                                <tr>
+                                    <th>SKU</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>9D7L1UC#ABA</td><td>HP Z8G5 4514Y 128GB/2TB PC</td></tr>
+                                <tr><td>2PA21AV</td><td>HP miniDP-to-DP Adapter (2-pack)</td></tr>
+                                <tr><td>3F0Q3AV</td><td>BU HP Z8 TWR G5 1125W 100V/15A EPA90RCTO</td></tr>
+                                <tr><td>3F0V5AV</td><td>MISC Reduce Plastic No Included Keyboard</td></tr>
+                                <tr><td>3F2Z4AV</td><td>SSD HPZ 2TB 2280 PCIe TLC 2nd M.2</td></tr>
+                                <tr><td>3F2Z8AV</td><td>SSD HPZ 2TB 2280 PCIe TLC M.2</td></tr>
+                                <tr><td>3F3D9AV#ABA</td><td>CKIT Z8</td></tr>
+                                <tr><td>3F4J0AV</td><td>LOC LINUXRDY</td></tr>
+                                <tr><td>3F4J2AV</td><td>MISC Packaging Sgl UN (TWR)</td></tr>
+                                <tr><td>3F4J3AV</td><td>Mouse HP 320M WRD</td></tr>
+                                <tr><td>3F4K2AV</td><td>ODD 9.5 DVDWR 1st ODD</td></tr>
+                                <tr><td>3F4K4AV</td><td>Operating System Load to M.2</td></tr>
+                                <tr><td>3R4T3AV</td><td>HP 3R4T3AV Z8G5 Vital VROC Stnd Mod 3PO</td></tr>
+                                <tr><td>3R8S5AV</td><td>HP 3R8S5AV Vital USB BlueKey KBD US DIB</td></tr>
+                                <tr><td>4X205AV</td><td>HP Srv VITAL IMAGES INC Z8 G5 GetMore</td></tr>
+                                <tr><td>4YQ39AV#ABA</td><td>OSLOC</td></tr>
+                                <tr><td>63G43AV#ABA</td><td>PWRCRD WKS C13 st CNVTL</td></tr>
+                                <tr><td>6U7A8AV</td><td>Entry Mod Type-A SprSpd USB5GbpsFrntIOv2</td></tr>
+                                <tr><td>6Y5B1AV</td><td>Wrnty Ext HP 3y ONS Care WKST HW Support</td></tr>
+                                <tr><td>6Z327AV#ABA</td><td>WARR 1/1/1 US</td></tr>
+                                <tr><td>888A0AV</td><td>HP Srv VI Inc Img Build Load Svc</td></tr>
+                                <tr><td>9T7U0AV</td><td>GFX NVIDIA RTX 2000 Ada 16GB 4mDP</td></tr>
+                                <tr><td>9T7U1AV</td><td>GFX NVIDIA RTX 2000 Ada 16GB 4mDP 2nd</td></tr>
+                                <tr><td>9Z6W7AV</td><td>CPU INTL Xn 4514Y vProEn 3.40 16C 150W</td></tr>
+                                <tr><td>9Z8B4AV</td><td>CPU INTL Xn 4514Y vProEn 3.40 16C 150W</td></tr>
+                                <tr><td>A02TGAV</td><td>RAM 128GB (8x16GB) DDR5 5600 ECC 2CPU</td></tr>
+                                <tr><td>A04NGAV</td><td>HP Srv VITAL IMAGES INC Std BIOS Svc</td></tr>
+                                <tr><td>ZG228AV</td><td>Desktop Safety Reg Lic Agreement Card</td></tr>
+                                <tr><td>U46V0E</td><td>HP 3y Onsite Care WS Bundle HW Supp</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Category B: Enterprise Systems -->
+            <div class="category-header">B. Vitrea Advanced Visualization Enterprise Systems</div>
+            
+            <!-- Enterprise Single Server -->
+            <div class="system-card">
+                <div class="card-header">
+                    <h2>Enterprise Single Server (Rack Mounted)</h2>
+                    <div class="sku">SKU: S5F09A</div>
+                </div>
+                <div class="card-body">
+                    <h3>Configuration Details</h3>
+                    <ul class="specs-list">
+                        <li><span class="spec-label">CPU:</span><span class="spec-value">2x Intel® Xeon® Gold 6426Y 2.5 GHz (16C)</span></li>
+                        <li><span class="spec-label">RAM:</span><span class="spec-value">256GB DDR5-4800 ECC</span></li>
+                        <li><span class="spec-label">Storage:</span><span class="spec-value">4x 960GB SATA SSD RAID-10</span></li>
+                        <li><span class="spec-label">GPU:</span><span class="spec-value">3x NVIDIA RTX™ 4000 Ada 20GB</span></li>
+                        <li><span class="spec-label">OS:</span><span class="spec-value">Windows Server 2022/2025</span></li>
+                    </ul>
+                    
+                    <button class="toggle-sku-btn">Complete SKU Components</button>
+                    <div class="sku-table-container">
+                        <table class="sku-table">
+                            <thead>
+                                <tr>
+                                    <th>Qty.</th>
+                                    <th>SKU#</th>
+                                    <th>Description</th>
+                                    <th>Intro</th>
+                                    <th>EOL</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>1</td><td>P55432-B21</td><td>HPE OEM DL380 Gen11 8SFF NC CTO Svr</td><td>3/6/2023</td><td>7/1/2026</td></tr>
+                                <tr><td>1</td><td>HA838A1</td><td>HPE Fctry Express HW Sys Custom SVC</td><td>12/11/2010</td><td>7/1/2030</td></tr>
+                                <tr><td>1</td><td>HA839A1</td><td>HPE Fctry Express Svr Sys Custom SVC</td><td>2/10/2011</td><td>7/1/2030</td></tr>
+                                <tr><td>1</td><td>HA843A1</td><td>HPE Customer Supplied Image Load Service</td><td>2/1/2005</td><td>7/1/2030</td></tr>
+                                <tr><td>2</td><td>P61444-B21</td><td>INT Xeon-G 6426Y CPU for HPE OEM</td><td>3/6/2023</td><td>7/1/2026</td></tr>
+                                <tr><td>16</td><td>P43322-B21</td><td>HPE 16GB 1Rx8 PC5-4800B-R Smart Kit</td><td>12/12/2022</td><td>11/1/2026</td></tr>
+                                <tr><td>1</td><td>P48813-B21</td><td>HPE DL380 Gen11 2U 8SFF x1 TM Kit</td><td>12/12/2022</td><td>7/1/2026</td></tr>
+                                <tr><td>4</td><td>P40503-B21</td><td>HPE 960GB SATA MU SFF BC MV SSD</td><td>3/8/2021</td><td>10/1/2025</td></tr>
+                                <tr><td>1</td><td>P50728-B21</td><td>HPE DL380 Gen11 SFF Univ Media Bay Kit</td><td>12/12/2022</td><td>7/1/2026</td></tr>
+                                <tr><td>1</td><td>726537-B21</td><td>HPE 9.5mm SATA DVD-RW Optical Drive</td><td>7/17/2014</td><td>7/1/2025</td></tr>
+                                <tr><td>1</td><td>P48802-B21</td><td>HPE DL380 G11 2U x8/x16/x8 Sec Riser Kit</td><td>12/12/2022</td><td>7/1/2026</td></tr>
+                                <tr><td>3</td><td>S3T54C</td><td>NVIDIA RTX 4000 Ada Accelerator</td><td>6/3/2024</td><td>2/1/2027</td></tr>
+                                <tr><td>1</td><td>P48803-B21</td><td>HPE DL380 Gen11 2U 3x16 Prim Riser Kit</td><td>12/12/2022</td><td>7/1/2026</td></tr>
+                                <tr><td>1</td><td>P48804-B21</td><td>HPE DL380 Gen11 2U 2x16 Tert Riser Kit</td><td>12/12/2022</td><td>7/1/2026</td></tr>
+                                <tr><td>1</td><td>P26253-B21</td><td>BCM 57416 10GbE 2p BASE-T Adptr</td><td>8/10/2020</td><td>2/1/2026</td></tr>
+                                <tr><td>1</td><td>P01366-B21</td><td>HPE 96W Smart Stg Li-ion Batt 145mm Kit</td><td>11/10/2017</td><td>1/1/2026</td></tr>
+                                <tr><td>1</td><td>P48918-B21</td><td>HPE DL360 Gen11 Stg Cntrl Enable Cbl Kit</td><td>12/12/2022</td><td>5/1/2026</td></tr>
+                                <tr><td>1</td><td>P47781-B21</td><td>HPE MR416i-o Gen11 SPDM Storage Cntlr</td><td>10/29/2022</td><td>1/1/2026</td></tr>
+                                <tr><td>2</td><td>P38997-B21</td><td>HPE 1600W FS Plat Ht Plg LH PS Kit</td><td>2/1/2021</td><td>2/1/2027</td></tr>
+                                <tr><td>1</td><td>512485-B21</td><td>HPE iLO Adv 1-svr Lic 1yr Support</td><td>12/1/2008</td><td>12/15/2025</td></tr>
+                                <tr><td>1</td><td>P77096-B21</td><td>MS WS25 16C Std FIO UEFI WW SW</td><td>11/4/2024</td><td>10/31/2027</td></tr>
+                                <tr><td>1</td><td>P77104-B21</td><td>MS WS25 16C Std Add Lic WW SW</td><td>11/4/2024</td><td>10/31/2027</td></tr>
+                                <tr><td>1</td><td>P77124-B21</td><td>MS WS22 DG Std FIO Npi WW SW</td><td>11/4/2024</td><td>10/31/2027</td></tr>
+                                <tr><td>1</td><td>P51911-B21</td><td>HPE DL360 Gen11 CPU1/OCP2 x8 Enable Kit</td><td>12/12/2022</td><td>5/1/2026</td></tr>
+                                <tr><td>1</td><td>P56072-B21</td><td>HPE DL380/DL560 Gen11 2U GPU Pwr Cbl Kit</td><td>5/8/2023</td><td>5/1/2026</td></tr>
+                                <tr><td>1</td><td>P48820-B21</td><td>HPE DL380/DL560 G11 2U High Perf Fan Kit</td><td>12/12/2022</td><td>5/1/2026</td></tr>
+                                <tr><td>2</td><td>P48818-B21</td><td>HPE DL380/DL560 G11 High Perf 2U HS Kit</td><td>12/12/2022</td><td>8/1/2026</td></tr>
+                                <tr><td>1</td><td>P52341-B21</td><td>HPE DL3XX Gen11 Easy Install Rail 3 Kit</td><td>10/10/2022</td><td>7/1/2026</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Multi-User Application Server (Rack) -->
+            <div class="system-card">
+                <div class="card-header">
+                    <h2>Multi-User Application Server (Rack Mounted)</h2>
+                    <div class="sku">SKU: S5F08A</div>
+                </div>
+                <div class="card-body">
+                    <h3>Configuration Details</h3>
+                    <ul class="specs-list">
+                        <li><span class="spec-label">CPU:</span><span class="spec-value">2x Intel® Xeon® Gold 6426Y 2.5 GHz (16C)</span></li>
+                        <li><span class="spec-label">RAM:</span><span class="spec-value">192GB DDR5-4800</span></li>
+                        <li><span class="spec-label">Storage:</span><span class="spec-value">4x 960GB SATA SSD RAID 1</span></li>
+                        <li><span class="spec-label">GPU:</span><span class="spec-value">2x NVIDIA RTX™ 4000 Ada 20GB</span></li>
+                        <li><span class="spec-label">OS:</span><span class="spec-value">Windows Server 2022/2025</span></li>
+                    </ul>
+                    
+                    <button class="toggle-sku-btn">Complete Components List</button>
+                    <div class="sku-table-container">
+                        <table class="sku-table">
+                            <thead>
+                                <tr>
+                                    <th>Qty.</th>
+                                    <th>SKU#</th>
+                                    <th>Description</th>
+                                    <th>Intro</th>
+                                    <th>EOL</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>1</td><td>P55432-B21</td><td>HPE OEM DL380 Gen11 8SFF NC CTO Svr</td><td>3/6/2023</td><td>7/1/2026</td></tr>
+                                <tr><td>1</td><td>HA838A1</td><td>HPE Fctry Express HW Sys Custom SVC</td><td>12/11/2010</td><td>7/1/2030</td></tr>
+                                <tr><td>1</td><td>HA839A1</td><td>HPE Fctry Express Svr Sys Custom SVC</td><td>2/10/2011</td><td>7/1/2030</td></tr>
+                                <tr><td>1</td><td>HA843A1</td><td>HPE Customer Supplied Image Load Service</td><td>2/1/2005</td><td>7/1/2030</td></tr>
+                                <tr><td>2</td><td>P61444-B21</td><td>INT Xeon-G 6426Y CPU for HPE OEM</td><td>3/6/2023</td><td>7/1/2026</td></tr>
+                                <tr><td>12</td><td>P43322-B21</td><td>HPE 16GB 1Rx8 PC5-4800B-R Smart Kit</td><td>12/12/2022</td><td>11/1/2026</td></tr>
+                                <tr><td>1</td><td>P48813-B21</td><td>HPE DL380 Gen11 2U 8SFF x1 TM Kit</td><td>12/12/2022</td><td>7/1/2026</td></tr>
+                                <tr><td>4</td><td>P40503-B21</td><td>HPE 960GB SATA MU SFF BC MV SSD</td><td>3/8/2021</td><td>10/1/2025</td></tr>
+                                <tr><td>1</td><td>P50728-B21</td><td>HPE DL380 Gen11 SFF Univ Media Bay Kit</td><td>12/12/2022</td><td>7/1/2026</td></tr>
+                                <tr><td>1</td><td>726537-B21</td><td>HPE 9.5mm SATA DVD-RW Optical Drive</td><td>7/17/2014</td><td>7/1/2025</td></tr>
+                                <tr><td>1</td><td>P48802-B21</td><td>HPE DL380 G11 2U x8/x16/x8 Sec Riser Kit</td><td>12/12/2022</td><td>7/1/2026</td></tr>
+                                <tr><td>1</td><td>P48803-B21</td><td>HPE DL380 Gen11 2U 3x16 Prim Riser Kit</td><td>12/12/2022</td><td>7/1/2026</td></tr>
+                                <tr><td>2</td><td>S3T54C</td><td>NVIDIA RTX 4000 Ada Accelerator</td><td>6/3/2024</td><td>2/1/2027</td></tr>
+                                <tr><td>1</td><td>P01366-B21</td><td>HPE 96W Smart Stg Li-ion Batt 145mm Kit</td><td>11/10/2017</td><td>1/1/2026</td></tr>
+                                <tr><td>1</td><td>P48918-B21</td><td>HPE DL360 Gen11 Stg Cntrl Enable Cbl Kit</td><td>12/12/2022</td><td>5/1/2026</td></tr>
+                                <tr><td>1</td><td>P47781-B21</td><td>HPE MR416i-o Gen11 SPDM Storage Cntlr</td><td>10/29/2022</td><td>1/1/2026</td></tr>
+                                <tr><td>1</td><td>P08449-B21</td><td>INT I350 1GbE 4p BASE-T OCP3 Adptr</td><td>10/23/2019</td><td>2/1/2026</td></tr>
+                                <tr><td>2</td><td>P03178-B21</td><td>HPE 1000W FS Ti Ht Plg PS Kit</td><td>6/7/2021</td><td>2/1/2027</td></tr>
+                                <tr><td>1</td><td>512485-B21</td><td>HPE iLO Adv 1-svr Lic 1yr Support</td><td>12/1/2008</td><td>12/15/2025</td></tr>
+                                <tr><td>1</td><td>P77096-B21</td><td>MS WS25 16C Std FIO UEFI WW SW</td><td>11/4/2024</td><td>10/31/2027</td></tr>
+                                <tr><td>1</td><td>P77104-B21</td><td>MS WS25 16C Std Add Lic WW SW</td><td>11/4/2024</td><td>10/31/2027</td></tr>
+                                <tr><td>1</td><td>P77124-B21</td><td>MS WS22 DG Std FIO Npi WW SW</td><td>11/4/2024</td><td>10/31/2027</td></tr>
+                                <tr><td>1</td><td>P51911-B21</td><td>HPE DL360 Gen11 CPU1/OCP2 x8 Enable Kit</td><td>12/12/2022</td><td>5/1/2026</td></tr>
+                                <tr><td>1</td><td>P56072-B21</td><td>HPE DL380/DL560 Gen11 2U GPU Pwr Cbl Kit</td><td>5/8/2023</td><td>5/1/2026</td></tr>
+                                <tr><td>1</td><td>P48820-B21</td><td>HPE DL380/DL560 G11 2U High Perf Fan Kit</td><td>12/12/2022</td><td>5/1/2026</td></tr>
+                                <tr><td>2</td><td>P48818-B21</td><td>HPE DL380/DL560 G11 High Perf 2U HS Kit</td><td>12/12/2022</td><td>8/1/2026</td></tr>
+                                <tr><td>1</td><td>P52341-B21</td><td>HPE DL3XX Gen11 Easy Install Rail 3 Kit</td><td>10/10/2022</td><td>7/1/2026</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Multi-User Application Server (Tower) -->
+            <div class="system-card">
+                <div class="card-header">
+                    <h2>Multi-User Application Server (Tower Server)</h2>
+                    <div class="sku">SKU: S5F07A</div>
+                </div>
+                <div class="card-body">
+                    <h3>Configuration Details</h3>
+                    <ul class="specs-list">
+                        <li><span class="spec-label">CPU:</span><span class="spec-value">2x Intel® Xeon® Gold 6426Y 2.5 GHz (16C)</span></li>
+                        <li><span class="spec-label">RAM:</span><span class="spec-value">192GB DDR5-4800 ECC</span></li>
+                        <li><span class="spec-label">Storage:</span><span class="spec-value">4x 960GB SATA SSD RAID-10</span></li>
+                        <li><span class="spec-label">GPU:</span><span class="spec-value">2x NVIDIA RTX™ 4000 Ada 20GB</span></li>
+                        <li><span class="spec-label">OS:</span><span class="spec-value">Windows Server 2022/2025</span></li>
+                    </ul>
+                    
+                    <button class="toggle-sku-btn">Complete Components List</button>
+                    <div class="sku-table-container">
+                        <table class="sku-table">
+                            <thead>
+                                <tr>
+                                    <th>Qty.</th>
+                                    <th>SKU#</th>
+                                    <th>Description</th>
+                                    <th>Intro</th>
+                                    <th>EOL</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>1</td><td>P48405-B21</td><td>HPE ML350 Gen11 SFF CTO Svr</td><td>12/12/2022</td><td>5/1/2026</td></tr>
+                                <tr><td>1</td><td>HA838A1</td><td>HPE Fctry Express HW Sys Custom SVC</td><td>12/11/2010</td><td>7/1/2030</td></tr>
+                                <tr><td>1</td><td>HA839A1</td><td>HPE Fctry Express Svr Sys Custom SVC</td><td>2/10/2011</td><td>7/1/2030</td></tr>
+                                <tr><td>2</td><td>P49598-B21</td><td>INT Xeon-G 6426Y CPU for HPE</td><td>3/6/2023</td><td>5/1/2026</td></tr>
+                                <tr><td>12</td><td>P43322-B21</td><td>HPE 16GB 1Rx8 PC5-4800B-R Smart Kit</td><td>12/12/2022</td><td>11/1/2026</td></tr>
+                                <tr><td>4</td><td>P40503-B21</td><td>HPE 960GB SATA MU SFF BC MV SSD</td><td>3/8/2021</td><td>10/1/2025</td></tr>
+                                <tr><td>1</td><td>726537-B21</td><td>HPE 9.5mm SATA DVD-RW Optical Drive</td><td>7/17/2014</td><td>7/1/2025</td></tr>
+                                <tr><td>1</td><td>P47238-B21</td><td>HPE ML350 Gen11 2x16 Sec Riser Kit</td><td>12/12/2022</td><td>5/1/2026</td></tr>
+                                <tr><td>1</td><td>P48406-B21</td><td>HPE ML350 Gen11 2x16 Prim FIO Riser Kit</td><td>12/23/2022</td><td>5/1/2026</td></tr>
+                                <tr><td>2</td><td>S3T54C</td><td>NVIDIA RTX 4000 Ada Accelerator</td><td>6/3/2024</td><td>2/1/2027</td></tr>
+                                <tr><td>1</td><td>P01367-B21</td><td>HPE 96W Smart Storage Battery 260mm Cbl</td><td>11/10/2017</td><td>1/1/2026</td></tr>
+                                <tr><td>1</td><td>P58199-B21</td><td>HPE ML350 Gen11 Smart Stg Batt Cbl Kit</td><td>12/12/2022</td><td>5/1/2026</td></tr>
+                                <tr><td>1</td><td>P47781-B21</td><td>HPE MR416i-o Gen11 SPDM Storage Cntlr</td><td>10/29/2022</td><td>1/1/2026</td></tr>
+                                <tr><td>1</td><td>P08449-B21</td><td>INT I350 1GbE 4p BASE-T OCP3 Adptr</td><td>10/23/2019</td><td>2/1/2026</td></tr>
+                                <tr><td>2</td><td>P03178-B21</td><td>HPE 1000W FS Ti Ht Plg PS Kit</td><td>6/7/2021</td><td>2/1/2027</td></tr>
+                                <tr><td>1</td><td>512485-B21</td><td>HPE iLO Adv 1-svr Lic 1yr Support</td><td>12/1/2008</td><td>12/15/2025</td></tr>
+                                <tr><td>1</td><td>P77096-B21</td><td>MS WS25 16C Std FIO UEFI WW SW</td><td>11/4/2024</td><td>10/31/2027</td></tr>
+                                <tr><td>1</td><td>P77104-B21</td><td>MS WS25 16C Std Add Lic WW SW</td><td>11/4/2024</td><td>10/31/2027</td></tr>
+                                <tr><td>1</td><td>P77124-B21</td><td>MS WS22 DG Std FIO Npi WW SW</td><td>11/4/2024</td><td>10/31/2027</td></tr>
+                                <tr><td>2</td><td>P47221-B21</td><td>HPE ML350 12(8+4)p/16p Cbl Kit NVIDIA</td><td>5/17/2023</td><td>5/1/2026</td></tr>
+                                <tr><td>1</td><td>P47231-B21</td><td>HPE ML350 Gen11 OCP2 Enable Kit</td><td>12/12/2022</td><td>5/1/2026</td></tr>
+                                <tr><td>1</td><td>P47235-B21</td><td>HPE ML350 Gen11 SFF OROC Cbl Kit</td><td>12/12/2022</td><td>5/1/2026</td></tr>
+                                <tr><td>1</td><td>P47219-B21</td><td>HPE ML350 Gen11 Redundant Fan Kit</td><td>12/12/2022</td><td>5/1/2026</td></tr>
+                                <tr><td>1</td><td>P47902-B21</td><td>HPE ML350 Gen11 Sec CPU Fan Kit</td><td>12/12/2022</td><td>5/1/2026</td></tr>
+                                <tr><td>2</td><td>P47223-B21</td><td>HPE ML350 Gen11 Stnd Heat Sink Kit</td><td>12/12/2022</td><td>5/1/2026</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Management Server -->
+            <div class="system-card">
+                <div class="card-header">
+                    <h2>Management Server</h2>
+                    <div class="sku">SKU: S2H36A</div>
+                </div>
+                <div class="card-body">
+                    <h3>Configuration Details</h3>
+                    <ul class="specs-list">
+                        <li><span class="spec-label">CPU:</span><span class="spec-value">Intel® Xeon® Gold 5415+ 2.9 GHz (8C)</span></li>
+                        <li><span class="spec-label">RAM:</span><span class="spec-value">64GB DDR5-4400</span></li>
+                        <li><span class="spec-label">Storage:</span><span class="spec-value">4x 960GB SATA SSD RAID-1</span></li>
+                        <li><span class="spec-label">Database:</span><span class="spec-value">SQL Server® 2016/2017/2019</span></li>
+                        <li><span class="spec-label">OS:</span><span class="spec-value">Windows Server 2022/2025</span></li>
+                    </ul>
+                    
+                    <button class="toggle-sku-btn">Complete Components List</button>
+                    <div class="sku-table-container">
+                        <table class="sku-table">
+                            <thead>
+                                <tr>
+                                    <th>Product Number</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>P55428-B21</td><td>HPE OEM ProLiant DL360 Gen11 SFF NC Configure-to-order Server</td></tr>
+                                <tr><td>HA839A1</td><td>HPE System Settings Customization Service</td></tr>
+                                <tr><td>P61443-B21</td><td>INT Xeon-G 5415+ CPU for HPE OEM</td></tr>
+                                <tr><td>P43322-B21</td><td>HPE 16GB (1x16GB) Single Rank x8 DDR5-4800 CAS-40-39-39 EC8 Registered Smart Memory Kit (x4)</td></tr>
+                                <tr><td>P48895-B21</td><td>HPE ProLiant DL360 Gen11 8SFF x1 U.3 Tri-Mode Backplane Kit</td></tr>
+                                <tr><td>P40503-B21</td><td>HPE 960GB SATA 6G Mixed Use SFF BC Multi Vendor SSD (x4)</td></tr>
+                                <tr><td>P48926-B21</td><td>HPE ProLiant DL3X0 Gen11 1U 8SFF Display Port/USB/Optical Drive Blank Kit</td></tr>
+                                <tr><td>726537-B21</td><td>HPE 9.5mm SATA DVD-RW Optical Drive</td></tr>
+                                <tr><td>P01366-B21</td><td>HPE 96W Smart Storage Lithium-ion Battery with 145mm Cable Kit</td></tr>
+                                <tr><td>P48918-B21</td><td>HPE ProLiant DL360 Gen11 Storage Controller Enablement Cable Kit</td></tr>
+                                <tr><td>P47781-B21</td><td>HPE MR416i-o Gen11 x16 Lanes 8GB Cache OCP SPDM Storage Controller</td></tr>
+                                <tr><td>P08449-B21</td><td>Intel I350-T4 Ethernet 1Gb 4-port BASE-T OCP3 Adapter for HPE</td></tr>
+                                <tr><td>P48908-B21</td><td>HPE ProLiant DL3X0 Gen11 1U High Performance Fan Kit</td></tr>
+                                <tr><td>389692-B21</td><td>HPE Customer Defined RAID Setting Service</td></tr>
+                                <tr><td>865438-B21</td><td>HPE 800W Flex Slot Titanium Hot Plug Low Halogen Power Supply Kit (x2)</td></tr>
+                                <tr><td>512485-B21</td><td>HPE iLO Advanced 1-server License with 1yr Support on iLO Licensed Features</td></tr>
+                                <tr><td>P45862-B21</td><td>Microsoft Windows Server 2019 16-core Downgrade Standard FIO Not Pre-installed English SW</td></tr>
+                                <tr><td>P46155-B21</td><td>Microsoft Windows Server 2022 16-core Standard FIO Pre-installed UEFI en/fr/it/de/es/nl/pt SW</td></tr>
+                                <tr><td>P51911-B21</td><td>HPE ProLiant DL360 Gen11 CPU1 to OCP2 x8 Enablement Kit</td></tr>
+                                <tr><td>P52416-B21</td><td>HPE ProLiant DL360 Gen11 OROC Tri-Mode Cable Kit</td></tr>
+                                <tr><td>P48905-B21</td><td>HPE ProLiant DL3XX Gen11 High Performance Heat Sink Kit</td></tr>
+                                <tr><td>P52341-B21</td><td>HPE ProLiant DL3XX Gen11 Easy Install Rail 3 Kit</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Category C: Automation Platform -->
+            <div class="category-header">C. Automation Platform</div>
+            
+            <!-- HP Z6 G5 WKS -->
+            <div class="system-card">
+                <div class="card-header">
+                    <h2>HP Z6 G5 Workstation</h2>
+                    <div class="sku">SKU: 9Q7T9UC</div>
+                </div>
+                <div class="card-body">
+                    <h3>Configuration Details</h3>
+                    <ul class="specs-list">
+                        <li><span class="spec-label">CPU:</span><span class="spec-value">Intel® Xeon® W5-3423 3.2GHz (12C)</span></li>
+                        <li><span class="spec-label">RAM:</span><span class="spec-value">64GB DDR5 4800 ECC</span></li>
+                        <li><span class="spec-label">Storage:</span><span class="spec-value">2x 1TB SSD PCIe M.2</span></li>
+                        <li><span class="spec-label">GPU:</span><span class="spec-value">NVIDIA RTX A2000 Ada 16GB</span></li>
+                        <li><span class="spec-label">OS:</span><span class="spec-value">Red Hat Enterprise Linux</span></li>
+                        <li><span class="spec-label">Container:</span><span class="spec-value">Containerd 1.7.17+</span></li>
+                    </ul>
+                    
+                    <button class="toggle-sku-btn">Complete SKU Components</button>
+                    <div class="sku-table-container">
+                        <table class="sku-table">
+                            <thead>
+                                <tr>
+                                    <th>SKU</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>9Q7T9UC#ABA</td><td>HP Z6G5T W5-3423 64GB/1TB PC</td></tr>
+                                <tr><td>2PA21AV</td><td>HP miniDP-to-DP Adapter (2-pack)</td></tr>
+                                <tr><td>3R4U2AV</td><td>HP 3R4U2AV Z6G5 CMS VROC Stnd Mod 3PO</td></tr>
+                                <tr><td>4X2S1AV</td><td>HP Srv CMSU Z6 G5 BIOS</td></tr>
+                                <tr><td>4X2S2AV</td><td>HP Srv CMSU Z6 G5 RAID</td></tr>
+                                <tr><td>4YQ39AV#ABA</td><td>OSLOC</td></tr>
+                                <tr><td>57D35AV</td><td>BU HP Z6 TWR G5 1125W EPA90 RCTO</td></tr>
+                                <tr><td>57D40AV</td><td>CHAS OPT HP Z6 G5 Fan/Frnt Crd Guide Kt</td></tr>
+                                <tr><td>9T7T3AV</td><td>GFX NVIDIA RTX 2000 Ada 16GB 4mDP</td></tr>
+                                <tr><td>57F00AV</td><td>Mem Cooling Solution HP Z6 G5</td></tr>
+                                <tr><td>57F02AV</td><td>MISC Data Science Ready</td></tr>
+                                <tr><td>57F07AV</td><td>Operating System Load to M.2</td></tr>
+                                <tr><td>57F26AV</td><td>SSD ZTrb 1TB 2280 PCIe-4x4 TLC 2nd M.2</td></tr>
+                                <tr><td>57F29AV</td><td>SSD ZTrb 1TB 2280 PCIe-4x4 TLC M.2</td></tr>
+                                <tr><td>57F53AV#ABA</td><td>CKIT HP Z6G5 US</td></tr>
+                                <tr><td>57G73AV</td><td>CPU INTL Xeon W5-3423 12C 220W</td></tr>
+                                <tr><td>57G86AV</td><td>LOC LINUXRDY</td></tr>
+                                <tr><td>57G88AV</td><td>MISC Packaging Sgl UN (TWR)</td></tr>
+                                <tr><td>57G89AV</td><td>Mouse HP 320M WRD</td></tr>
+                                <tr><td>57G91AV</td><td>NIC Mod G2 HP Dual Port 10GBase-T</td></tr>
+                                <tr><td>57H00AV</td><td>ODD 9.5 DVDWR 1st ODD</td></tr>
+                                <tr><td>57H21AV</td><td>RAM 64GB (2x32GB) DDR5 4800 ECC</td></tr>
+                                <tr><td>57H29AV#ABA</td><td>HP USB 320K KB US</td></tr>
+                                <tr><td>6Q1H3AV</td><td>Entry Mod Type-A SprSpd USB5GbpsFrntIOv2</td></tr>
+                                <tr><td>6Y5B1AV</td><td>Wrnty Ext HP 3y ONS Care WKST HW Support</td></tr>
+                                <tr><td>6Y5B4AV#ABA</td><td>WARR 1/1/1 US</td></tr>
+                                <tr><td>7G9J8AV</td><td>Red Hat Enterprise Linux Drop in Box Lic</td></tr>
+                                <tr><td>7L5K3AV#ABA</td><td>DT PWRCORD C13 1.83m 15AstCNVTL US</td></tr>
+                                <tr><td>825K1AV</td><td>No Load Flex Port</td></tr>
+                                <tr><td>U46V0E</td><td>HP 3y Onsite Care WS Bundle HW Supp</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Z4 Rack G5 -->
+            <div class="system-card">
+                <div class="card-header">
+                    <h2>Z4 Rack G5 (NO vROC or RAID)</h2>
+                    <div class="sku">SKU: BG7M7UP</div>
+                </div>
+                <div class="card-body">
+                    <h3>Configuration Details</h3>
+                    <ul class="specs-list">
+                        <li><span class="spec-label">CPU:</span><span class="spec-value">Intel® Xeon® W5-2545 4.5GHz (12C)</span></li>
+                        <li><span class="spec-label">RAM:</span><span class="spec-value">64GB DDR5 4800 ECC</span></li>
+                        <li><span class="spec-label">Storage:</span><span class="spec-value">2x 1TB SSD PCIe M.2</span></li>
+                        <li><span class="spec-label">GPU:</span><span class="spec-value">NVIDIA RTX 2000 Ada 16GB</span></li>
+                        <li><span class="spec-label">OS:</span><span class="spec-value">Red Hat Enterprise Linux</span></li>
+                        <li><span class="spec-label">Network:</span><span class="spec-value">Intel X550-T2 10GbE Dual Port</span></li>
+                    </ul>
+                    
+                    <button class="toggle-sku-btn">Complete SKU Components</button>
+                    <div class="sku-table-container">
+                        <table class="sku-table">
+                            <thead>
+                                <tr>
+                                    <th>SKU</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>BG7M7UP#ABA</td><td>HP Z4G5R W52545 64GB/1TB PC</td></tr>
+                                <tr><td>3F0V6AV</td><td>No Adapters Needed</td></tr>
+                                <tr><td>4YQ39AV#ABA</td><td>OSLOC</td></tr>
+                                <tr><td>6Y598AV</td><td>Wrnty Ext HP 3y ONS Care WKST HW Support</td></tr>
+                                <tr><td>708C2AV</td><td>Entry Mod Type-A SprSpd USB5GbpsFrntIOv2</td></tr>
+                                <tr><td>708C6AV</td><td>CHAS OPT HP Z4 Rack Rail Rack Kit</td></tr>
+                                <tr><td>708D5AV</td><td>GFX NVIDIA RTX 2000 Ada 16GB 4mDP</td></tr>
+                                <tr><td>708H3AV</td><td>No Load Flex Port</td></tr>
+                                <tr><td>708H5AV</td><td>OS Load to M.2</td></tr>
+                                <tr><td>708J0AV</td><td>Rmt SysCntrl Main Board Adptr HP</td></tr>
+                                <tr><td>708J1AV</td><td>Rsr CrdHPZ4RackDualPCIeGen5x16+PCIeGen5x</td></tr>
+                                <tr><td>708L1AV</td><td>SSD ZTrb 1TB 2280 PCIe-4x4 TLC 2nd M.2</td></tr>
+                                <tr><td>708L4AV</td><td>SSD ZTrb 1TB 2280 PCIe-4x4 TLC M.2</td></tr>
+                                <tr><td>708N0AV#ABA</td><td>CKIT HP Z4 G5 Rack US</td></tr>
+                                <tr><td>709Q5AV</td><td>Intel X550-T2 10GbE Dual Port NIC</td></tr>
+                                <tr><td>709Q9AV</td><td>LOC LINUXRDY</td></tr>
+                                <tr><td>709R2AV</td><td>MISC PKG SgUn 1U WKS</td></tr>
+                                <tr><td>709R3AV</td><td>Mouse HP 320M WRD</td></tr>
+                                <tr><td>709S8AV</td><td>RAM 64GB (2x32GB) DDR5 4800 ECC</td></tr>
+                                <tr><td>709T0AV#ABA</td><td>WARR 1/1/1 US</td></tr>
+                                <tr><td>709T7AV#ABA</td><td>PWRCRD WKS C13 st CNVTL</td></tr>
+                                <tr><td>709T8AV#ABA</td><td>HP USB 320K KB US</td></tr>
+                                <tr><td>8D8X7AV</td><td>CHAS OPT HP Z4 Rack RSC Sppt Brckt</td></tr>
+                                <tr><td>97S97AV</td><td>Red Hat Enterprise Linux Drop in Box Lic</td></tr>
+                                <tr><td>A1UJ4AV</td><td>CPU INTL Xeon W5-2545 vProEn 4.5012C210W</td></tr>
+                                <tr><td>B20X8AV</td><td>BU HP Z4 Rack G5 R 675W RCTO</td></tr>
+                                <tr><td>U51W5E</td><td>HP 3y NBD Onsite WS Support Bundling</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Search functionality
+        document.getElementById('search').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const cards = document.querySelectorAll('.system-card');
+            
+            cards.forEach(card => {
+                const cardContent = card.textContent.toLowerCase();
+                if (searchTerm === '' || cardContent.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            
+            // Also handle category headers
+            const categories = document.querySelectorAll('.category-header');
+            categories.forEach(category => {
+                const nextCards = [];
+                let nextElement = category.nextElementSibling;
+                
+                while (nextElement && !nextElement.classList.contains('category-header')) {
+                    if (nextElement.classList.contains('system-card')) {
+                        nextCards.push(nextElement);
+                    }
+                    nextElement = nextElement.nextElementSibling;
+                }
+                
+                const hasVisibleCards = nextCards.some(card => card.style.display !== 'none');
+                category.style.display = hasVisibleCards ? 'block' : 'none';
+            });
+        });
+
+        // Toggle SKU tables
+        document.querySelectorAll('.toggle-sku-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const tableContainer = this.nextElementSibling;
+                this.classList.toggle('active');
+                
+                if (tableContainer.style.display === 'block') {
+                    tableContainer.style.display = 'none';
+                } else {
+                    tableContainer.style.display = 'block';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

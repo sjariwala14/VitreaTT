@@ -1,0 +1,1453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vitrea® Advanced Visualization 7.16 Specifications</title>
+    <style>
+        :root {
+            --primary-color: #c41017; /* Canon Dark Red */
+            --accent-color: #ed1c24; /* Canon Red */
+            --background-color: #f5f7fa;
+            --card-background: #ffffff;
+            --text-color: #1a1a1a;
+            --secondary-text: #4a4a4a;
+            --border-color: #e0e0e0;
+            --highlight-color: #e6f2ff;
+            --warning-color: #d32f2f;
+            --warning-bg: #ffebee;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--background-color);
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color), #0066cc);
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        header img {
+            max-height: 60px;
+            margin-bottom: 1rem;
+        }
+
+        header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        nav {
+            position: sticky;
+            top: 0;
+            background-color: var(--card-background);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            padding: 1rem;
+        }
+
+        nav ul {
+            display: flex;
+            justify-content: center;
+            list-style: none;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        nav a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--accent-color);
+        }
+
+        .search-container {
+            max-width: 600px;
+            margin: 1.5rem auto;
+            padding: 0 1rem;
+        }
+
+        #search-input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 25px;
+            font-size: 1rem;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%234a4a4a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>') no-repeat 10px center;
+            background-size: 20px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        #search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 8px rgba(0, 64, 128, 0.2);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin: 2rem 0 1rem;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .spec-section {
+            background-color: var(--card-background);
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+        }
+
+        .spec-section:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .spec-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .spec-title::after {
+            content: '▸';
+            color: var(--accent-color);
+            font-size: 1.5rem;
+        }
+
+        .spec-section.active .spec-title::after {
+            content: '▾';
+        }
+
+        .spec-details {
+            display: none;
+            padding: 1rem;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+            margin-top: 0.5rem;
+        }
+
+        .spec-section.active .spec-details {
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+            text-align: left;
+        }
+
+        th {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .note, .warning {
+            padding: 1rem;
+            border-radius: 4px;
+            margin: 1rem 0;
+        }
+
+        .note {
+            background-color: var(--highlight-color);
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .warning {
+            background-color: var(--warning-bg);
+            border-left: 4px solid var(--warning-color);
+        }
+
+        .calculator-section {
+            background-color: var(--card-background);
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1.5rem;
+        }
+
+        .calculator-section label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .calculator-section select,
+        .calculator-section input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .calculator-section button {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+
+        .calculator-section button:hover {
+            background-color: var(--accent-color);
+        }
+
+        .result-table.hidden {
+            display: none;
+        }
+
+        .server-section {
+            background-color: var(--card-background);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .hpe-header {
+            background: linear-gradient(135deg, var(--primary-color), #0066cc);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .model-toggle {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1.5rem;
+        }
+
+        .model-btn {
+            padding: 0.5rem 1rem;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.3s;
+        }
+
+        .model-btn.active {
+            background-color: var(--accent-color);
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .tab {
+            padding: 0.5rem 1rem;
+            background-color: var(--border-color);
+            cursor: pointer;
+            border-radius: 4px 4px 0 0;
+            font-size: 0.9rem;
+        }
+
+        .tab.active {
+            background-color: var(--card-background);
+            border-bottom: 2px solid var(--accent-color);
+            font-weight: 600;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .eol-card {
+            background-color: var(--warning-bg);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1.5rem 0;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid var(--warning-color);
+        }
+
+        .eol-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--warning-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .countdown {
+            font-weight: 500;
+            background-color: #fff3cd;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            display: inline-block;
+            margin: 0.5rem 0;
+        }
+
+        .link {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .link:hover {
+            text-decoration: underline;
+        }
+
+        .toggle-btn {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 0.5rem 0;
+        }
+
+        .toggle-btn:hover {
+            background-color: var(--accent-color);
+        }
+
+        .details {
+            display: none;
+            padding: 1rem;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+            margin: 0.5rem 0;
+        }
+
+        .details.show {
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .timestamp {
+            font-size: 0.85rem;
+            color: var(--secondary-text);
+            margin-top: 0.5rem;
+        }
+
+        .resource-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .resource-list li {
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .resource-list li::before {
+            content: '•';
+            color: var(--accent-color);
+            position: absolute;
+            left: 0;
+            font-size: 1.2rem;
+        }
+
+        footer {
+            background-color: var(--primary-color);
+            color: white;
+            text-align: center;
+            padding: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.5rem;
+            }
+
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            .spec-title {
+                font-size: 1rem;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header>
+        <img src="https://global.canon/en/corporate/logo/img/logo_01.png" alt="Canon Medical Logo">
+        <h1>Vitrea® Advanced Visualization 7.16 Specifications Rev F </h1>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="#workstations">Workstation Deployments</a></li>
+            <li><a href="#servers">Multi-User Servers</a></li>
+            <li><a href="#client">Client Specs</a></li>
+            <li><a href="#virtualization">Virtualization</a></li>
+            <li><a href="#nvidia">NVIDIA Products</a></li>
+            <li><a href="#upgrades">Upgrades</a></li>
+            <li><a href="#raid">RAID Calculator</a></li>
+            <li><a href="#hpe">HPE Servers</a></li>
+            <li><a href="#eol">EOL Notifications</a></li>
+        </ul>
+    </nav>
+
+    <div class="search-container">
+        <input type="text" id="search-input" placeholder="Search specifications...">
+    </div>
+
+    <div class="container">
+        <div class="note">
+            <strong>Note:</strong> Windows® 10 support ends October 14, 2025. Canon recommends upgrading to newer OS versions for future compatibility and security.
+        </div>
+
+        <section id="workstations">
+            <h2>Workstation Deployments</h2>
+            <!-- Single-User System -->
+            <div class="spec-section" data-search="single-user 1k support HP Z2 G9 workstation">
+                <div class="spec-title">Single-User (1) System with 1k Support</div>
+                <div class="spec-details">
+                    <p><strong>Model:</strong> HP® Z2 G9 Workstation (SKU# A2LT0UC)</p>
+                    <table>
+                        <tr><th>Component</th><th>Specification</th></tr>
+                        <tr><td>CPU</td><td>Intel® i7-14700K 5.6 GHz Base/3.4 GHz Base 5600 MHz 20C</td></tr>
+                        <tr><td>RAM</td><td>64GB (2x32GB) DDR5 4800 or 5600 DIMM ECC Registered</td></tr>
+                        <tr><td>Storage</td><td>Two (2) SSD 2TB 2280 PCIe M.2 RAID 1</td></tr>
+                        <tr><td>GPU</td><td>NVIDIA RTX™ 2000 Ada 16GB</td></tr>
+                        <tr><td>OS</td><td>Windows® 11 Professional 64-bit edition 22h2+ (Installed)</td></tr>
+                        <tr><td>Network</td><td>1.0 Gbps</td></tr>
+                        <tr><td>Resolution Support</td><td>1024×1024 resolution CT images</td></tr>
+                    </table>
+                    <p><strong>Optional Monitors:</strong> 24-inch (1920x1200), 27-inch 4K (3840x2160), 32-inch 4K (3840x2160)</p>
+                </div>
+            </div>
+            <!-- Precision Workstation -->
+            <div class="spec-section" data-search="precision workstation 1k 2k support HP Z8 Fury G5">
+                <div class="spec-title">Precision Workstation (1k and 2k Support)</div>
+                <div class="spec-details">
+                    <p><strong>Model:</strong> HP® Z8 Fury G5 Workstation (SKU# 9D5U8UC)</p>
+                    <table>
+                        <tr><th>Component</th><th>Specification</th></tr>
+                        <tr><td>CPU</td><td>Intel® Xeon® W5-3423 3.20 GHz Base/4.60 GHz Turbo 4800 MHz 12C</td></tr>
+                        <tr><td>RAM</td><td>128GB (8x16GB) DDR5 4800 DIMM ECC Registered</td></tr>
+                        <tr><td>Storage</td><td>Two (2) 4TB SSD 2280 PCIe M.2 with VROC in RAID 1</td></tr>
+                        <tr><td>GPU</td><td>NVIDIA RTX™ A4000E 16GB</td></tr>
+                        <tr><td>OS</td><td>Windows® 11/10 Professional 64-bit</td></tr>
+                        <tr><td>Resolution Support</td><td>1024x1024 and 2048x2048 resolution CT Images</td></tr>
+                    </table>
+                    <div class="note">
+                        <strong>Storage Note:</strong> Configuration results in approximately 4TB of available storage.
+                    </div>
+                </div>
+            </div>
+            <!-- Extend Deployment -->
+            <div class="spec-section" data-search="extend deployment three-user system HP Z8 G5 workstation">
+                <div class="spec-title">Extend Deployment - Three-User (3) System</div>
+                <div class="spec-details">
+                    <p><strong>Model:</strong> HP® Z8 G5 Workstation (SKU# 9D7L1UC)</p>
+                    <table>
+                        <tr><th>Component</th><th>Specification</th></tr>
+                        <tr><td>CPU</td><td>Two (2) Intel® Xeon® Silver 4514y16+ 2.0 GHz Base/4.00 GHz Turbo 4400 MHz 16C</td></tr>
+                        <tr><td>RAM</td><td>128 GB (8x16GB) DDR5-4800 ECC RAM</td></tr>
+                        <tr><td>Storage</td><td>Two (2) 2TB SSD 2280 PCIe TLC M.2 with VROC in RAID 1</td></tr>
+                        <tr><td>GPU</td><td>Two (2) NVIDIA RTX™ 2000 Ada 16GB graphics cards</td></tr>
+                        <tr><td>OS</td><td>Windows Server® 2022 Standard with Desktop Experience (16 Core) + Additional license required (purchased separately)</td></tr>
+                        <tr><td>Network</td><td>1.0 Gbps network connection</td></tr>
+                        <tr><td>Form Factor</td><td>5U Height</td></tr>
+                        <tr><td>Power</td><td>Single power supply: 110 Volt</td></tr>
+                        <tr><td>Resolution Support</td><td>Limited support - Not Validated for 1024×1024 resolution CT images</td></tr>
+                    </table>
+                    <p><strong>Optional Monitors:</strong></p>
+                    <ul>
+                        <li>HP® Series 7 Pro 724pn 24-inch widescreen monitor (1920x1200)</li>
+                        <li>HP® Series 7 Pro 727pk 27-inch 4K widescreen monitor (3840x2160)</li>
+                        <li>HP® Series 7 Pro 732pk 32-inch 4K widescreen monitor (3840x2160)</li>
+                    </ul>
+                    <div class="note">
+                        <strong>Software Note:</strong> Microsoft® SQL Server® Express edition is provided at the time of deployment.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="servers">
+            <h2>Multi-User Server Deployments</h2>
+            <!-- Enterprise Single Server -->
+            <div class="spec-section" data-search="enterprise single server rack mounted HPE DL380 Gen11">
+                <div class="spec-title">Enterprise Single Server (Rack Mounted)</div>
+                <div class="spec-details">
+                    <p><strong>Deployment Options:</strong></p>
+                    <ul>
+                        <li>Six-User (6) Server with 1k support</li>
+                        <li>Four-User (4) 1k ESS with Automation Platform</li>
+                        <li>Four-User (4) ESS with Automation Platform</li>
+                    </ul>
+                    <p><strong>Model:</strong> HPE® DL380 Gen11 Server 8SFF (SKU# S5F09A)</p>
+                    <table>
+                        <tr><th>Component</th><th>Specification</th></tr>
+                        <tr><td>CPU</td><td>Two (2) Intel® Xeon® Gold 6426Y 2.5 GHz Base / 4.10 GHz Turbo 4800MHz 16C</td></tr>
+                        <tr><td>RAM</td><td>256GB (16x16GB) DDR5-4800 ECC</td></tr>
+                        <tr><td>Storage</td><td>Four (4) 960GB SATA 6Gb mixed-use SFF SSDs in RAID-10</td></tr>
+                        <tr><td>GPU</td><td>Three (3) NVIDIA RTX™ 4000 Ada 20GB</td></tr>
+                        <tr><td>OS</td><td>Windows Server® 2022 Standard (Installed) + 2025 entitlement</td></tr>
+                        <tr><td>Network</td><td>Broadcom 10GB 2 Port NIC</td></tr>
+                        <tr><td>Power</td><td>Dual 1600-Watt 220 Volt</td></tr>
+                    </table>
+                    <p><strong>Support:</strong> 1024x1024 resolution CT Images (Six (6) total users)</p>
+                </div>
+            </div>
+            <!-- Multi-User Application Server -->
+            <div class="spec-section" data-search="multi-user application server tower HPE ML350 Gen11">
+                <div class="spec-title">Multi-User Application Server (Tower Server)</div>
+                <div class="spec-details">
+                    <p><strong>Deployment Options:</strong></p>
+                    <ul>
+                        <li>Four-User (4) Server with 1k support</li>
+                        <li>Two-User (2) 1k ESS with Automation Platform</li>
+                        <li>Four-User (4) 1k Application Server with Management Server</li>
+                    </ul>
+                    <p><strong>Model:</strong> HPE® ML350 Gen11 Server SFF (SKU# S5F07A)</p>
+                    <table>
+                        <tr><th>Component</th><th>Specification</th></tr>
+                        <tr><td>CPU</td><td>Two (2) Intel® Xeon® Gold 6426Y 2.5 GHz Base / 4.10 GHz Turbo 4800MHz 16C</td></tr>
+                        <tr><td>RAM</td><td>192GB (12x16GB) DDR5-4800 ECC</td></tr>
+                        <tr><td>Storage</td><td>Four (4) 960GB SATA 6Gb mixed-use SFF SSDs in RAID-10</td></tr>
+                        <tr><td>GPU</td><td>Two (2) NVIDIA RTX™ 4000 Ada 20GB</td></tr>
+                        <tr><td>OS</td><td>Windows Server® 2022 Standard (Installed) + 2025 entitlement</td></tr>
+                        <tr><td>Network</td><td>1.0 Gbps</td></tr>
+                        <tr><td>Form Factor</td><td>4U with rack conversion kit (874578-B21 sold separately)</td></tr>
+                    </table>
+                    <div class="note">
+                        <strong>Note:</strong> Support for 1024x1024 resolution CT Images for Vitrea only (not Automation Platform).
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="client">
+            <h2>Client Specifications</h2>
+            <div class="spec-section" data-search="remote access client minimum specifications">
+                <div class="spec-title">Remote Access Client Minimum Specifications</div>
+                <div class="spec-details">
+                    <table>
+                        <tr><th>Component</th><th>Minimum Requirement</th><th>Recommended</th></tr>
+                        <tr><td>Processor</td><td>1 GHz 64-bit (x64) with 2+ cores</td><td>Higher performance recommended</td></tr>
+                        <tr><td>RAM</td><td>4GB</td><td>8GB+</td></tr>
+                        <tr><td>Storage</td><td>40GB (Win10)/64GB (Win11) with 1GB free</td><td>SSD recommended</td></tr>
+                        <tr><td>Display</td><td>1280x1024</td><td>1920x1200 or 3840x2160 (4K)</td></tr>
+                        <tr><td>OS</td><td colspan="2">Windows® 10/11 Professional 64-bit<br>Mac® via Remote Desktop (8.0.32+ for OS X 10.9+)</td></tr>
+                        <tr><td>Network</td><td colspan="2">1.0 Gbps connection, Minimum 5Mbps bandwidth with <100ms latency</td></tr>
+                    </table>
+                    <div class="warning">
+                        <strong>Important:</strong> Virtual Desktop Infrastructure (VDI) or double remote desktop sessions are not supported.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="virtualization">
+            <h2>Virtualization Specifications</h2>
+            <!-- 512x512 Matrix Support -->
+            <div class="spec-section" data-search="virtualization 512x512 matrix support">
+                <div class="spec-title">512x512 Matrix Support</div>
+                <div class="spec-details">
+                    <p><strong>Hypervisor:</strong> VMware vSphere® 7.0+ with VMware Tools™ 11.3+</p>
+                    <h3>Vitrea Management Server</h3>
+                    <ul>
+                        <li>18,000 MHz - up to 30 users</li>
+                        <li>24GB RAM</li>
+                        <li>250GB OS VMDK + 50GB DICOM receive VMDK</li>
+                        <li>Storage: 1500 IOPS and 80 MB/sec throughput with <15ms latency</li>
+                        <li>Network: 1 Gb/sec uplink</li>
+                    </ul>
+                    <h3>SQL Server</h3>
+                    <ul>
+                        <li>5900 MHz (multi-core vCPUs)</li>
+                        <li>4GB RAM</li>
+                        <li>250GB OS VMDK + 40GB SQL VMDK</li>
+                        <li>SQL Server® 2016/2017/2019 Standard</li>
+                    </ul>
+                    <h3>Vitrea Application Server (GPU Rendering)</h3>
+                    <ul>
+                        <li>19,000 MHz per user</li>
+                        <li>24GB RAM per user</li>
+                        <li>128MB video memory</li>
+                        <li>vGPU: "Q" profile with ≥4GB framebuffer (e.g., T4-4q)</li>
+                        <li>≥900 CUDA cores per user</li>
+                    </ul>
+                </div>
+            </div>
+            <!-- 1024x1024 Matrix Support -->
+            <div class="spec-section" data-search="virtualization 1024x1024 matrix support">
+                <div class="spec-title">1024x1024 Matrix Support</div>
+                <div class="spec-details">
+                    <p><strong>Hypervisor:</strong> VMware vSphere® 7.0+ with VMware Tools™ 11.3+</p>
+                    <h3>Vitrea Management Server</h3>
+                    <ul>
+                        <li>25,000 MHz - up to 30 users</li>
+                        <li>48GB RAM</li>
+                        <li>250GB OS VMDK + 100GB DICOM receive VMDK</li>
+                        <li>Storage: 1500 IOPS and 175 MB/sec throughput with <15ms latency</li>
+                        <li>Network: 10 Gb/sec uplink</li>
+                    </ul>
+                    <h3>SQL Server</h3>
+                    <ul>
+                        <li>5900 MHz (4+ cores, multi-core vCPUs)</li>
+                        <li>4GB RAM</li>
+                        <li>250GB OS VMDK + 40GB SQL VMDK</li>
+                        <li>SQL Server® 2016/2017/2019 Standard</li>
+                        <li>Network: 10 Gb/sec</li>
+                    </ul>
+                    <h3>Vitrea Application Server (GPU Rendering)</h3>
+                    <ul>
+                        <li>25,000 MHz per user</li>
+                        <li>28GB RAM + 16GB page file per user</li>
+                        <li>256MB video memory</li>
+                        <li>vGPU: "Q" profile with ≥8GB framebuffer (e.g., T4-8q)</li>
+                        <li>≥1280 CUDA cores per user</li>
+                    </ul>
+                    <div class="note">
+                        <strong>CPU Calculation:</strong> Required MHz ÷ CPU Speed (MHz) = vCPUs (round up)<br>
+                        Example: 18,000 MHz ÷ 2400 MHz = 7.5 → 8 vCPUs
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="nvidia">
+            <h2>NVIDIA® Data Center Products</h2>
+            <div class="spec-section" data-search="nvidia vgpu requirements data center">
+                <div class="spec-title">vGPU Requirements</div>
+                <div class="spec-details">
+                    <p><strong>Supported Technologies:</strong></p>
+                    <ul>
+                        <li>Virtual Dedicated Graphics Acceleration (vDGA)</li>
+                        <li>Data Center GPUs for Visual Computing (vGPU)</li>
+                    </ul>
+                    <h3>vGPU Requirements</h3>
+                    <table>
+                        <tr><th>Data Type</th><th>Profile</th><th>CUDA Cores per User</th></tr>
+                        <tr><td>512x512</td><td>XXX-4q</td><td>900</td></tr>
+                        <tr><td>1024x1024</td><td>XXX-8q</td><td>1280</td></tr>
+                        <tr><td>1024x1024</td><td>XXX-12q</td><td>1280</td></tr>
+                    </table>
+                    <h3>License Requirements</h3>
+                    <ul>
+                        <li>NVIDIA® Virtual GPU Software License Server required</li>
+                        <li>Perpetual License + SUMS recommended</li>
+                        <li>Performance degradation occurs after:
+                            <ul>
+                                <li>20 minutes: Frame rate capped at 15 FPS, CUDA degraded</li>
+                                <li>24 hours: Frame rate capped at 3 FPS, CUDA stops working</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <div class="warning">
+                        <strong>Important:</strong> WDDM mode capable cards required. Customers responsible for purchasing/configuring NVIDIA® licenses.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="upgrades">
+            <h2>Hardware Specification for Upgrades to 1024x1024 Matrix Support</h2>
+            <div class="spec-section" data-search="upgrade 1024x1024 matrix HPE DL380 Gen10 Gen11">
+                <div class="spec-title">Six-User (6) Servers Rack Mounted Upgrade Options</div>
+                <div class="spec-details">
+                    <h3>Option 1: HPE® DL380 Gen10 Server 8SFF</h3>
+                    <ul>
+                        <li><strong>Memory:</strong> P00920-B21 Four (4) HPE® 16GB (1x16GB) Single Rank x4 DDR4-2933 CAS-21-21-21 Registered Smart Memory Kit</li>
+                        <li><strong>GPU:</strong> NVIDIA RTX™ 4000 cards will limit GIR support for 1k (No longer available for purchase)</li>
+                        <li><strong>Network:</strong> 813661-B32 (1) Broadcom BCM57416 Ethernet 10Gb 2-port BASE-T Adapter</li>
+                    </ul>
+                    <h3>Option 2: HPE® DL380 Gen10 Plus Server 8SFF</h3>
+                    <ul>
+                        <li><strong>Memory:</strong> P06029-B21 Four (4) HPE® 16GB (1x16GB) Single Rank x4 DDR4-2933 CAS-21-21-21 Registered Smart Memory Kit</li>
+                        <li><strong>GPU:</strong> R7G36C-NVIDIA RTX™ A4000 16GB cards will limit GIR support for 1k</li>
+                        <li><strong>Network:</strong> P26253-B21 One (1) BCM57416 Ethernet 10Gb 2-port BASE-T Adapter</li>
+                    </ul>
+                    <h3>Option 3: HPE® DL380 Gen11 Server 8SFF</h3>
+                    <ul>
+                        <li><strong>Memory:</strong> P43322-B21 Four (4) HPE® 16GB (1x16GB) Single Rank x8 DDR5-4800 CAS-40-39-39 EC8 Registered Smart Memory Kit</li>
+                        <li><strong>Power:</strong> P38997-B21 Two (2) HPE® 1600W Flex Slot Platinum Hot Plug Low Halogen Power Supply Kit</li>
+                        <li><strong>Network:</strong> P26253-B21 One (1) Broadcom BCM57416 Ethernet 10Gb 2-port BASE-T Adapter</li>
+                        <li><strong>GPU Options:</strong>
+                            <ul>
+                                <li>R7G36C-NVIDIA RTX™ A4000E 16GB (limits GIR support for 1k, comes with original Rev A SKUs)</li>
+                                <li>S3T54C-NVIDIA RTX™ 4000 Ada 20GB (no GIR limitations, default with Rev B SKUs)</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <div class="note">
+                        <strong>Note:</strong> The NVIDIA RTX™ 4000 Ada 20GB cards provide full support for 1024x1024 resolution without GIR limitations.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="raid">
+            <h2>RAID Storage Calculator</h2>
+            <div class="calculator-section">
+                <label for="raid-level">Select RAID Level:</label>
+                <select id="raid-level">
+                    <option value="raid1">RAID 1 (Mirroring)</option>
+                    <option value="raid10">RAID 10 (1+0)</option>
+                </select>
+                <label for="drive-size">Drive Size (GB):</label>
+                <input type="number" id="drive-size" placeholder="Enter drive size in GB" min="1">
+                <label for="drive-count">Number of Drives:</label>
+                <input type="number" id="drive-count" placeholder="Enter number of drives" min="2">
+                <button onclick="calculateRAID()">Calculate</button>
+                <div id="raid-results" class="result-table hidden">
+                    <h3>RAID Calculation Results</h3>
+                    <table>
+                        <tr><th>Metric</th><th>Value</th></tr>
+                        <tr><td>Total Raw Storage</td><td id="raw-storage"></td></tr>
+                        <tr><td>Usable Storage</td><td id="usable-storage"></td></tr>
+                        <tr><td>Redundancy</td><td id="redundancy"></td></tr>
+                        <tr><td>Efficiency (%)</td><td id="efficiency"></td></tr>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section id="hpe">
+            <h2>Interactive Technical Reference with Configuration Calculators</h2>
+            <div class="hpe-header">
+                <h1>HPE ProLiant Server Comparison</h1>
+                <p>Technical specifications and configuration calculators for DL380 Gen11, ML350 Gen11, and DL360 Gen11 servers</p>
+            </div>
+            <div class="model-toggle">
+                <button class="model-btn active" onclick="showServer('dl380')">DL380 Gen11 (8SFF)</button>
+                <button class="model-btn" onclick="showServer('ml350')">ML350 Gen11 (SFF)</button>
+                <button class="model-btn" onclick="showServer('dl360')">DL360 Gen11 (8SFF)</button>
+                <button class="model-btn" onclick="showComparison()">Compare All</button>
+            </div>
+            <!-- Comparison Table -->
+            <div id="comparison" class="server-section" style="display:none">
+                <h2>HPE ProLiant Server Comparison</h2>
+                <table>
+                    <tr><th>Feature</th><th>DL380 Gen11 (8SFF)</th><th>ML350 Gen11 (SFF)</th><th>DL360 Gen11 (8SFF)</th></tr>
+                    <tr><td>Form Factor</td><td>2U Rack</td><td>Tower/Rack Convertible</td><td>1U Rack</td></tr>
+                    <tr><td>Max Drive Bays</td><td>8 x 2.5" SFF</td><td>Up to 16 x 2.5" SFF</td><td>8 x 2.5" SFF</td></tr>
+                    <tr><td>Max Processors</td><td>2</td><td>2</td><td>2</td></tr>
+                    <tr><td>Max Memory</td><td>8TB (32 DIMMs)</td><td>8TB (32 DIMMs)</td><td>8TB (32 DIMMs)</td></tr>
+                    <tr><td>Max Storage Capacity</td><td>122.88TB (8x15.36TB)</td><td>245.76TB (16x15.36TB)</td><td>122.88TB (8x15.36TB)</td></tr>
+                    <tr><td>Power Supply Options</td><td>800W-2000W</td><td>800W-2000W</td><td>800W-1600W</td></tr>
+                    <tr><td>Network Options</td><td>Flexible LOM, OCP 3.0</td><td>Flexible LOM, OCP 3.0</td><td>Flexible LOM, OCP 3.0</td></tr>
+                    <tr><td>Best For</td><td>General purpose workloads, storage</td><td>Versatile deployments, expandability</td><td>High-density computing</td></tr>
+                </table>
+            </div>
+            <!-- DL380 Gen11 -->
+            <div id="dl380" class="server-section">
+                <h2>HPE ProLiant DL380 Gen11 Server (8SFF)</h2>
+                <p>A versatile 2U rack server designed for performance, security, and sustainability with 8 small form factor drives.</p>
+                <div class="tabs">
+                    <div class="tab active" onclick="openTab('dl380', 'specs')">Specifications</div>
+                    <div class="tab" onclick="openTab('dl380', 'calculator')">Configuration Calculator</div>
+                    <div class="tab" onclick="openTab('dl380', 'resources')">Resources</div>
+                </div>
+                <div id="dl380-specs" class="tab-content active">
+                    <div class="hpe-spec-section">
+                        <h3>Overview</h3>
+                        <p>The HPE ProLiant DL380 Gen11 server is a 2U rack server optimized for a wide range of workloads with excellent expandability.</p>
+                    </div>
+                    <div class="hpe-spec-section">
+                        <h3>Processor</h3>
+                        <table>
+                            <tr><th>Feature</th><th>Specification</th></tr>
+                            <tr><td>Processor Options</td><td>4th Gen Intel Xeon Scalable processors (Sapphire Rapids)</td></tr>
+                            <tr><td>Max Processors</td><td>2</td></tr>
+                            <tr><td>Cores per Processor</td><td>Up to 60 cores</td></tr>
+                            <tr><td>Base Frequency</td><td>1.9 GHz to 3.8 GHz</td></tr>
+                        </table>
+                    </div>
+                    <div class="hpe-spec-section">
+                        <h3>Memory</h3>
+                        <table>
+                            <tr><th>Feature</th><th>Specification</th></tr>
+                            <tr><td>Memory Slots</td><td>32 DIMM slots (16 per CPU)</td></tr>
+                            <tr><td>Memory Type</td><td>DDR5-4800</td></tr>
+                            <tr><td>Max Memory Capacity</td><td>8TB (with 256GB DIMMs)</td></tr>
+                        </table>
+                    </div>
+                    <div class="hpe-spec-section">
+                        <h3>Storage (8SFF Configuration)</h3>
+                        <table>
+                            <tr><th>Feature</th><th>Specification</th></tr>
+                            <tr><td>Drive Bays</td><td>8 x 2.5" SFF hot-plug drive bays</td></tr>
+                            <tr><td>Drive Options</td><td>SAS, SATA, NVMe SSD</td></tr>
+                            <tr><td>Max Internal Storage</td><td>Up to 122.88TB (8 x 15.36TB SAS SSDs)</td></tr>
+                            <tr><td>RAID Controllers</td><td>HPE Smart Array, HPE MR416i-a, HPE MR216i-a</td></tr>
+                        </table>
+                    </div>
+                </div>
+                <div id="dl380-calculator" class="tab-content">
+                    <div class="hpe-spec-section">
+                        <h3>Storage Capacity Calculator</h3>
+                        <p>Calculate potential storage configurations for your DL380 Gen11 8SFF server.</p>
+                        <div class="calculator">
+                            <label for="dl380-driveType">Drive Type:</label>
+                            <select id="dl380-driveType">
+                                <option value="sas_hdd">SAS HDD</option>
+                                <option value="sata_hdd">SATA HDD</option>
+                                <option value="sas_ssd">SAS SSD</option>
+                                <option value="sata_ssd">SATA SSD</option>
+                                <option value="nvme_ssd">NVMe SSD</option>
+                            </select>
+                            <label for="dl380-driveCapacity">Drive Capacity (TB):</label>
+                            <select id="dl380-driveCapacity">
+                                <option value="0.48">480GB</option>
+                                <option value="0.96">960GB</option>
+                                <option value="1.92">1.92TB</option>
+                                <option value="3.84">3.84TB</option>
+                                <option value="7.68">7.68TB</option>
+                                <option value="15.36">15.36TB</option>
+                            </select>
+                            <label for="dl380-driveCount">Number of Drives (1-8):</label>
+                            <input type="number" id="dl380-driveCount" min="1" max="8" value="8">
+                            <label for="dl380-raidLevel">RAID Level:</label>
+                            <select id="dl380-raidLevel">
+                                <option value="0">RAID 0 (Striping)</option>
+                                <option value="1">RAID 1 (Mirroring)</option>
+                                <option value="5">RAID 5</option>
+                                <option value="6">RAID 6</option>
+                                <option value="10">RAID 10</option>
+                            </select>
+                            <button onclick="calculateStorage('dl380')">Calculate Storage</button>
+                            <div id="dl380-result" class="result"></div>
+                        </div>
+                    </div>
+                    <div class="hpe-spec-section">
+                        <h3>Memory Configuration Calculator</h3>
+                        <div class="calculator">
+                            <label for="dl380-dimmSize">DIMM Size (GB):</label>
+                            <select id="dl380-dimmSize">
+                                <option value="16">16GB</option>
+                                <option value="32">32GB</option>
+                                <option value="64">64GB</option>
+                                <option value="128">128GB</option>
+                                <option value="256">256GB</option>
+                            </select>
+                            <label for="dl380-dimmCount">Number of DIMMs (1-32):</label>
+                            <input type="number" id="dl380-dimmCount" min="1" max="32" value="16">
+                            <button onclick="calculateMemory('dl380')">Calculate Memory</button>
+                            <div id="dl380-memoryResult" class="result"></div>
+                        </div>
+                    </div>
+                </div>
+                <div id="dl380-resources" class="tab-content">
+                    <div class="hpe-spec-section">
+                        <h3>Additional Resources</h3>
+                        <ul>
+                            <li><a href="https://www.hpe.com/us/en/product-catalog/servers/proliant-servers/pip.hpe-proliant-dl380-gen11-server.1011613476.html" class="link" target="_blank">HPE Product Page</a></li>
+                            <li><a href="https://www.hpe.com/psnow/doc/a50002933enw" class="link" target="_blank">QuickSpecs PDF</a></li>
+                            <li><a href="https://h20195.www2.hpe.com/v2/GetPDF.aspx/c05184785.pdf" class="link" target="_blank">Data Sheet</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- ML350 Gen11 -->
+            <div id="ml350" class="server-section" style="display:none">
+                <h2>HPE ProLiant ML350 Gen11 Server (SFF)</h2>
+                <p>A versatile tower/rack convertible server with flexible storage options in SFF configuration.</p>
+                <div class="tabs">
+                    <div class="tab active" onclick="openTab('ml350', 'specs')">Specifications</div>
+                    <div class="tab" onclick="openTab('ml350', 'calculator')">Configuration Calculator</div>
+                    <div class="tab" onclick="openTab('ml350', 'resources')">Resources</div>
+                </div>
+                <div id="ml350-specs" class="tab-content active">
+                    <div class="hpe-spec-section">
+                        <h3>Overview</h3>
+                        <p>The HPE ProLiant ML350 Gen11 server is a tower/rack convertible server designed for versatility and performance in general business workloads.</p>
+                    </div>
+                    <div class="hpe-spec-section">
+                        <h3>Processor</h3>
+                        <table>
+                            <tr><th>Feature</th><th>Specification</th></tr>
+                            <tr><td>Processor Options</td><td>4th Gen Intel Xeon Scalable processors (Sapphire Rapids)</td></tr>
+                            <tr><td>Max Processors</td><td>2</td></tr>
+                            <tr><td>Cores per Processor</td><td>Up to 60 cores</td></tr>
+                            <tr><td>Base Frequency</td><td>1.9 GHz to 3.8 GHz</td></tr>
+                        </table>
+                    </div>
+                    <div class="hpe-spec-section">
+                        <h3>Memory</h3>
+                        <table>
+                            <tr><th>Feature</th><th>Specification</th></tr>
+                            <tr><td>Memory Slots</td><td>32 DIMM slots (16 per CPU)</td></tr>
+                            <tr><td>Memory Type</td><td>DDR5-4800</td></tr>
+                            <tr><td>Max Memory Capacity</td><td>8TB (with 256GB DIMMs)</td></tr>
+                        </table>
+                    </div>
+                    <div class="hpe-spec-section">
+                        <h3>Storage (SFF Configuration)</h3>
+                        <table>
+                            <tr><th>Feature</th><th>Specification</th></tr>
+                            <tr><td>Drive Bays</td><td>Up to 16 x 2.5" SFF hot-plug drive bays (standard config varies)</td></tr>
+                            <tr><td>Drive Options</td><td>SAS, SATA, NVMe SSD</td></tr>
+                            <tr><td>Max Internal Storage</td><td>Up to 245.76TB (16 x 15.36TB SAS SSDs)</td></tr>
+                            <tr><td>RAID Controllers</td><td>HPE Smart Array, HPE MR416i-a, HPE MR216i-a</td></tr>
+                        </table>
+                    </div>
+                </div>
+                <div id="ml350-calculator" class="tab-content">
+                    <div class="hpe-spec-section">
+                        <h3>Storage Capacity Calculator</h3>
+                        <p>Calculate potential storage configurations for your ML350 Gen11 SFF server.</p>
+                        <div class="calculator">
+                            <label for="ml350-driveType">Drive Type:</label>
+                            <select id="ml350-driveType">
+                                <option value="sas_hdd">SAS HDD</option>
+                                <option value="sata_hdd">SATA HDD</option>
+                                <option value="sas_ssd">SAS SSD</option>
+                                <option value="sata_ssd">SATA SSD</option>
+                                <option value="nvme_ssd">NVMe SSD</option>
+                            </select>
+                            <label for="ml350-driveCapacity">Drive Capacity (TB):</label>
+                            <select id="ml350-driveCapacity">
+                                <option value="0.48">480GB</option>
+                                <option value="0.96">960GB</option>
+                                <option value="1.92">1.92TB</option>
+                                <option value="3.84">3.84TB</option>
+                                <option value="7.68">7.68TB</option>
+                                <option value="15.36">15.36TB</option>
+                            </select>
+                            <label for="ml350-driveCount">Number of Drives (1-16):</label>
+                            <input type="number" id="ml350-driveCount" min="1" max="16" value="8">
+                            <label for="ml350-raidLevel">RAID Level:</label>
+                            <select id="ml350-raidLevel">
+                                <option value="0">RAID 0 (Striping)</option>
+                                <option value="1">RAID 1 (Mirroring)</option>
+                                <option value="5">RAID 5</option>
+                                <option value="6">RAID 6</option>
+                                <option value="10">RAID 10</option>
+                            </select>
+                            <button onclick="calculateStorage('ml350')">Calculate Storage</button>
+                            <div id="ml350-result" class="result"></div>
+                        </div>
+                    </div>
+                    <div class="hpe-spec-section">
+                        <h3>Memory Configuration Calculator</h3>
+                        <div class="calculator">
+                            <label for="ml350-dimmSize">DIMM Size (GB):</label>
+                            <select id="ml350-dimmSize">
+                                <option value="16">16GB</option>
+                                <option value="32">32GB</option>
+                                <option value="64">64GB</option>
+                                <option value="128">128GB</option>
+                                <option value="256">256GB</option>
+                            </select>
+                            <label for="ml350-dimmCount">Number of DIMMs (1-32):</label>
+                            <input type="number" id="ml350-dimmCount" min="1" max="32" value="16">
+                            <button onclick="calculateMemory('ml350')">Calculate Memory</button>
+                            <div id="ml350-memoryResult" class="result"></div>
+                        </div>
+                    </div>
+                </div>
+                <div id="ml350-resources" class="tab-content">
+                    <div class="hpe-spec-section">
+                        <h3>Additional Resources</h3>
+                        <ul>
+                            <li><a href="https://www.hpe.com/us/en/product-catalog/servers/proliant-servers/pip.hpe-proliant-ml350-gen11-server.1011613477.html" class="link" target="_blank">HPE Product Page</a></li>
+                            <li><a href="https://www.hpe.com/psnow/doc/a50002932enw" class="link" target="_blank">QuickSpecs PDF</a></li>
+                            <li><a href="https://h20195.www2.hpe.com/v2/GetPDF.aspx/c05184786.pdf" class="link" target="_blank">Data Sheet</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- DL360 Gen11 -->
+            <div id="dl360" class="server-section" style="display:none">
+                <h2>HPE ProLiant DL360 Gen11 Server (8SFF)</h2>
+                <p>A dense 1U rack server optimized for performance and efficiency with 8 small form factor drives.</p>
+                <div class="tabs">
+                    <div class="tab active" onclick="openTab('dl360', 'specs')">Specifications</div>
+                    <div class="tab" onclick="openTab('dl360', 'calculator')">Configuration Calculator</div>
+                    <div class="tab" onclick="openTab('dl360', 'resources')">Resources</div>
+                </div>
+                <div id="dl360-specs" class="tab-content active">
+                    <div class="hpe-spec-section">
+                        <h3>Overview</h3>
+                        <p>The HPE ProLiant DL360 Gen11 server is a 1U rack server designed for high-density computing with excellent performance per watt.</p>
+                    </div>
+                    <div class="hpe-spec-section">
+                        <h3>Processor</h3>
+                        <table>
+                            <tr><th>Feature</th><th>Specification</th></tr>
+                            <tr><td>Processor Options</td><td>4th Gen Intel Xeon Scalable processors (Sapphire Rapids)</td></tr>
+                            <tr><td>Max Processors</td><td>2</td></tr>
+                            <tr><td>Cores per Processor</td><td>Up to 60 cores</td></tr>
+                            <tr><td>Base Frequency</td><td>1.9 GHz to 3.8 GHz</td></tr>
+                        </table>
+                    </div>
+                    <div class="hpe-spec-section">
+                        <h3>Memory</h3>
+                        <table>
+                            <tr><th>Feature</th><th>Specification</th></tr>
+                            <tr><td>Memory Slots</td><td>32 DIMM slots (16 per CPU)</td></tr>
+                            <tr><td>Memory Type</td><td>DDR5-4800</td></tr>
+                            <tr><td>Max Memory Capacity</td><td>8TB (with 256GB DIMMs)</td></tr>
+                        </table>
+                    </div>
+                    <div class="hpe-spec-section">
+                        <h3>Storage (8SFF Configuration)</h3>
+                        <table>
+                            <tr><th>Feature</th><th>Specification</th></tr>
+                            <tr><td>Drive Bays</td><td>8 x 2.5" SFF hot-plug drive bays</td></tr>
+                            <tr><td>Drive Options</td><td>SAS, SATA, NVMe SSD</td></tr>
+                            <tr><td>Max Internal Storage</td><td>Up to 122.88TB (8 x 15.36TB SAS SSDs)</td></tr>
+                            <tr><td>RAID Controllers</td><td>HPE Smart Array, HPE MR416i-a, HPE MR216i-a</td></tr>
+                        </table>
+                    </div>
+                </div>
+                <div id="dl360-calculator" class="tab-content">
+                    <div class="hpe-spec-section">
+                        <h3>Storage Capacity Calculator</h3>
+                        <p>Calculate potential storage configurations for your DL360 Gen11 8SFF server.</p>
+                        <div class="calculator">
+                            <label for="dl360-driveType">Drive Type:</label>
+                            <select id="dl360-driveType">
+                                <option value="sas_hdd">SAS HDD</option>
+                                <option value="sata_hdd">SATA HDD</option>
+                                <option value="sas_ssd">SAS SSD</option>
+                                <option value="sata_ssd">SATA SSD</option>
+                                <option value="nvme_ssd">NVMe SSD</option>
+                            </select>
+                            <label for="dl360-driveCapacity">Drive Capacity (TB):</label>
+                            <select id="dl360-driveCapacity">
+                                <option value="0.48">480GB</option>
+                                <option value="0.96">960GB</option>
+                                <option value="1.92">1.92TB</option>
+                                <option value="3.84">3.84TB</option>
+                                <option value="7.68">7.68TB</option>
+                                <option value="15.36">15.36TB</option>
+                            </select>
+                            <label for="dl360-driveCount">Number of Drives (1-8):</label>
+                            <input type="number" id="dl360-driveCount" min="1" max="8" value="8">
+                            <label for="dl360-raidLevel">RAID Level:</label>
+                            <select id="dl360-raidLevel">
+                                <option value="0">RAID 0 (Striping)</option>
+                                <option value="1">RAID 1 (Mirroring)</option>
+                                <option value="5">RAID 5</option>
+                                <option value="6">RAID 6</option>
+                                <option value="10">RAID 10</option>
+                            </select>
+                            <button onclick="calculateStorage('dl360')">Calculate Storage</button>
+                            <div id="dl360-result" class="result"></div>
+                        </div>
+                    </div>
+                    <div class="hpe-spec-section">
+                        <h3>Memory Configuration Calculator</h3>
+                        <div class="calculator">
+                            <label for="dl360-dimmSize">DIMM Size (GB):</label>
+                            <select id="dl360-dimmSize">
+                                <option value="16">16GB</option>
+                                <option value="32">32GB</option>
+                                <option value="64">64GB</option>
+                                <option value="128">128GB</option>
+                                <option value="256">256GB</option>
+                            </select>
+                            <label for="dl360-dimmCount">Number of DIMMs (1-32):</label>
+                            <input type="number" id="dl360-dimmCount" min="1" max="32" value="16">
+                            <button onclick="calculateMemory('dl360')">Calculate Memory</button>
+                            <div id="dl360-memoryResult" class="result"></div>
+                        </div>
+                    </div>
+                </div>
+                <div id="dl360-resources" class="tab-content">
+                    <div class="hpe-spec-section">
+                        <h3>Additional Resources</h3>
+                        <ul>
+                            <li><a href="https://www.hpe.com/us/en/product-catalog/servers/proliant-servers/pip.hpe-proliant-dl360-gen11-server.1011613475.html" class="link" target="_blank">HPE Product Page</a></li>
+                            <li><a href="https://www.hpe.com/psnow/doc/a50002934enw" class="link" target="_blank">QuickSpecs PDF</a></li>
+                            <li><a href="https://h20195.www2.hpe.com/v2/GetPDF.aspx/c05184784.pdf" class="link" target="_blank">Data Sheet</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="eol">
+            <h2>End of Life Notifications</h2>
+            <h1 style="color: var(--primary-color); border-bottom: 2px solid var(--accent-color); padding-bottom: 0.5rem;">Vitrea Advanced Visualization End of Life Notifications</h1>
+            <div class="eol-card">
+                <div class="eol-title">Windows 10 Workstation Support Ending</div>
+                <p>Windows® 10 support from Microsoft® will end on <strong>October 14th, 2025</strong>.</p>
+                <div class="countdown" id="win10Countdown"></div>
+                <p>Vitrea Advanced Visualization version 7.16 will continue to operate on Windows® 10, but we recommend upgrading to a newer version of Windows® for future compatibility, supportability, and security.</p>
+                <a href="https://learn.microsoft.com/en-us/lifecycle/products/windows-10-home-and-pro" class="link" target="_blank">Microsoft Windows 10 Lifecycle Documentation</a>
+                <div class="timestamp">Last checked: June 2024</div>
+            </div>
+            <div class="eol-card">
+                <div class="eol-title">SQL Server 2016 Support Ending</div>
+                <p>Microsoft® SQL Server® 2016 support will end on <strong>July 14th, 2026</strong>.</p>
+                <div class="countdown" id="sqlCountdown"></div>
+                <p>Canon Medical recommends planning your Microsoft® SQL Server® upgrade. Vitrea Advanced Visualization version 7.16 will continue to operate with SQL Server® 2016, but upgrading to a newer version is recommended for compatibility, supportability, and security.</p>
+                <a href="https://learn.microsoft.com/en-us/lifecycle/products/sql-server-2016" class="link" target="_blank">Microsoft SQL Server 2016 Lifecycle Documentation</a>
+                <div class="timestamp">Last checked: June 2024</div>
+            </div>
+        </section>
+
+        <section id="resources">
+            <h2>Additional Resources</h2>
+            <button class="toggle-btn" onclick="toggleDetails('virtualizationDetails')">Show Virtualization Resources</button>
+            <div id="virtualizationDetails" class="details">
+                <h3>NVIDIA Virtual GPU Resources</h3>
+                <ul class="resource-list">
+                    <li><a href="https://www.vmware.com/resources/compatibility/search.php?deviceCategory=vdga" class="link" target="_blank">VMware Compatibility Guide for vDGA</a> - Check hardware compatibility for Virtual Dedicated Graphics Acceleration</li>
+                    <li><a href="https://docs.nvidia.com/grid/index.html" class="link" target="_blank">NVIDIA Virtual GPU Software Documentation</a> - Official documentation for NVIDIA vGPU solutions</li>
+                    <li><a href="https://www.nvidia.com/content/dam/en-zz/Solutions/design-visualization/solutions/resources/documents1/Virtual-GPU-Packaging-and-Licensing-Guide.pdf" class="link" target="_blank">NVIDIA Virtual GPU Packaging and Licensing Guide</a> - Complete guide to licensing options</li>
+                    <li><a href="https://docs.nvidia.com/license-system/latest/nvidia-license-system-user-guide/index.html" class="link" target="_blank">NVIDIA License System User Guide</a> - How to manage your NVIDIA licenses</li>
+                    <li><a href="https://www.nvidia.com/en-us/drivers/vgpu-software-driver/" class="link" target="_blank">NVIDIA vGPU Software Drivers</a> - Download the latest drivers</li>
+                    <li><a href="https://nvid.nvidia.com/dashboard/" class="link" target="_blank">NVIDIA Licensing Portal</a> - Access your product activation keys and licenses</li>
+                </ul>
+            </div>
+            <button class="toggle-btn" onclick="toggleDetails('hardwareDetails')">Show Hardware Resources</button>
+            <div id="hardwareDetails" class="details">
+                <h3>Hardware Compatibility Resources</h3>
+                <ul class="resource-list">
+                    <li><a href="https://dell.com/GPU" class="link" target="_blank">Dell Supported GPU Information</a> - Check compatible GPUs for Dell hardware</li>
+                    <li><a href="https://mi.medical.canon" class="link" target="_blank">Canon Medical Imaging Solutions</a> - Official Canon Medical website for hardware specifications</li>
+                </ul>
+            </div>
+            <button class="toggle-btn" onclick="toggleDetails('contactDetails')">Show Contact Information</button>
+            <div id="contactDetails" class="details">
+                <h3>Canon Medical Support</h3>
+                <p>For more information about upgrading your Vitrea Advanced Visualization system, please contact:</p>
+                <div class="contact-info">
+                    <p><strong>Canon Sales Operations Team</strong></p>
+                    <p>Phone: <a href="tel:9524879505" class="link">952.487.9505</a></p>
+                    <p>Website: <a href="https://mi.medical.canon" class="link" target="_blank">mi.medical.canon</a></p>
+                    <p>Email: <a href="mailto:support@medical.canon.com" class="link">support@medical.canon.com</a></p>
+                </div>
+                <p><em>Please have your system information ready when contacting support, including your Vitrea version number and current hardware configuration.</em></p>
+            </div>
+            <button class="toggle-btn" onclick="toggleDetails('faqDetails')">Show Upgrade FAQ</button>
+            <div id="faqDetails" class="details">
+                <h3>Frequently Asked Questions</h3>
+                <h4>When should I plan my upgrade?</h4>
+                <p>We recommend planning your upgrade at least 3-6 months before the end-of-life date to allow time for testing and validation.</p>
+                <h4>Will my current workflows be affected?</h4>
+                <p>Vitrea 7.16 will continue to function after the end-of-life dates, but you won't receive security updates or technical support for the outdated components.</p>
+                <h4>What are my upgrade options?</h4>
+                <p>Canon offers several upgrade paths depending on your current configuration. Contact our sales team for a personalized upgrade assessment.</p>
+                <h4>How long does an upgrade typically take?</h4>
+                <p>Most upgrades can be completed in 1-2 days, but this depends on your system complexity and the need for data migration.</p>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>© <span id="currentYear"></span> Canon Medical Systems. All rights reserved.</p>
+        <p>Vitrea® is a registered trademark of Canon Medical Systems Corporation.</p>
+        <p style="margin-top: 0.5rem; font-size: 0.8rem;">This information is provided for planning purposes only. Always verify with official sources before making upgrade decisions.</p>
+    </footer>
+
+    <script>
+        // Set current year in footer
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        // Toggle specification sections
+        document.querySelectorAll('.spec-section').forEach(section => {
+            section.addEventListener('click', function(e) {
+                if (e.target.closest('.spec-details')) return;
+                this.classList.toggle('active');
+                const details = this.querySelector('.spec-details');
+                details.style.display = details.style.display === 'block' ? 'none' : 'block';
+            });
+        });
+
+        // Search functionality
+        const searchInput = document.getElementById('search-input');
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase().trim();
+            let hasResults = false;
+            document.querySelectorAll('.spec-section').forEach(section => {
+                const searchData = section.getAttribute('data-search').toLowerCase();
+                if (searchTerm === '' || searchData.includes(searchTerm)) {
+                    section.style.display = 'block';
+                    hasResults = true;
+                } else {
+                    section.style.display = 'none';
+                }
+            });
+            let noResults = document.querySelector('.no-results');
+            if (!hasResults && searchTerm !== '') {
+                if (!noResults) {
+                    noResults = document.createElement('div');
+                    noResults.className = 'no-results';
+                    noResults.textContent = `No results found for "${searchTerm}"`;
+                    noResults.style.padding = '1rem';
+                    noResults.style.textAlign = 'center';
+                    noResults.style.color = 'var(--warning-color)';
+                    document.querySelector('.container').prepend(noResults);
+                }
+            } else if (noResults) {
+                noResults.remove();
+            }
+        });
+
+        // RAID Storage Calculator
+        function calculateRAID() {
+            const raidLevel = document.getElementById('raid-level').value;
+            const driveSize = parseFloat(document.getElementById('drive-size').value);
+            const driveCount = parseInt(document.getElementById('drive-count').value);
+            const resultsDiv = document.getElementById('raid-results');
+
+            if (isNaN(driveSize) || isNaN(driveCount) || driveSize <= 0 || driveCount < 2) {
+                alert('Please enter valid drive size and number of drives (minimum 2).');
+                return;
+            }
+
+            let usableStorage = 0;
+            let redundancy = '';
+            let efficiency = 0;
+
+            if (raidLevel === 'raid1') {
+                usableStorage = driveSize;
+                redundancy = 'Full redundancy (mirroring)';
+                efficiency = (1 / driveCount) * 100;
+            } else if (raidLevel === 'raid10') {
+                if (driveCount % 2 !== 0) {
+                    alert('RAID 10 requires an even number of drives.');
+                    return;
+                }
+                usableStorage = (driveSize * driveCount) / 2;
+                redundancy = 'Mirroring + striping';
+                efficiency = 50;
+            }
+
+            const totalRaw = driveSize * driveCount;
+            document.getElementById('raw-storage').textContent = `${totalRaw} GB`;
+            document.getElementById('usable-storage').textContent = `${usableStorage} GB`;
+            document.getElementById('redundancy').textContent = redundancy;
+            document.getElementById('efficiency').textContent = efficiency.toFixed(2) + '%';
+            resultsDiv.classList.remove('hidden');
+        }
+
+        // Server Comparison Tab Functionality
+        function showServer(model) {
+            document.querySelectorAll('.server-section').forEach(section => {
+                section.style.display = section.id === model ? 'block' : 'none';
+            });
+            document.querySelectorAll('.model-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.getAttribute('onclick') === `showServer('${model}')`);
+            });
+            openTab(model, 'specs');
+        }
+
+        function showComparison() {
+            document.querySelectorAll('.server-section').forEach(section => {
+                section.style.display = section.id === 'comparison' ? 'block' : 'none';
+            });
+            document.querySelectorAll('.model-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.getAttribute('onclick') === 'showComparison()');
+            });
+        }
+
+        function openTab(model, tab) {
+            document.querySelectorAll(`#${model} .tab-content`).forEach(content => {
+                content.classList.remove('active');
+            });
+            document.querySelectorAll(`#${model} .tab`).forEach(t => {
+                t.classList.remove('active');
+            });
+            document.getElementById(`${model}-${tab}`).classList.add('active');
+            document.querySelector(`#${model} .tab[onclick="openTab('${model}', '${tab}')"]`).classList.add('active');
+        }
+
+        function calculateStorage(model) {
+            const driveType = document.getElementById(`${model}-driveType`).value;
+            const driveCapacity = parseFloat(document.getElementById(`${model}-driveCapacity`).value);
+            const driveCount = parseInt(document.getElementById(`${model}-driveCount`).value);
+            const raidLevel = document.getElementById(`${model}-raidLevel`).value;
+            const resultDiv = document.getElementById(`${model}-result`);
+
+            const maxDrives = model === 'ml350' ? 16 : 8;
+            if (isNaN(driveCount) || driveCount < 1 || driveCount > maxDrives) {
+                resultDiv.textContent = `Please enter a valid number of drives (1-${maxDrives}).`;
+                resultDiv.style.display = 'block';
+                return;
+            }
+
+            let usableCapacity = 0;
+            let minDrives = 1;
+            let redundancy = '';
+
+            switch (raidLevel) {
+                case '0':
+                    usableCapacity = driveCapacity * driveCount;
+                    redundancy = 'No redundancy (striping)';
+                    break;
+                case '1':
+                    minDrives = 2;
+                    usableCapacity = driveCapacity;
+                    redundancy = 'Full redundancy (mirroring)';
+                    break;
+                case '5':
+                    minDrives = 3;
+                    usableCapacity = driveCapacity * (driveCount - 1);
+                    redundancy = 'Single drive failure protection';
+                    break;
+                case '6':
+                    minDrives = 4;
+                    usableCapacity = driveCapacity * (driveCount - 2);
+                    redundancy = 'Dual drive failure protection';
+                    break;
+                case '10':
+                    minDrives = 4;
+                    if (driveCount % 2 !== 0) {
+                        resultDiv.textContent = 'RAID 10 requires an even number of drives.';
+                        resultDiv.style.display = 'block';
+                        return;
+                    }
+                    usableCapacity = (driveCapacity * driveCount) / 2;
+                    redundancy = 'Mirroring + striping';
+                    break;
+            }
+
+            if (driveCount < minDrives) {
+                resultDiv.textContent = `RAID ${raidLevel} requires at least ${minDrives} drives.`;
+                resultDiv.style.display = 'block';
+                return;
+            }
+
+            const totalRaw = driveCapacity * driveCount;
+            const efficiency = (usableCapacity / totalRaw) * 100;
+
+            resultDiv.innerHTML = `
+                <p><strong>Total Raw Capacity:</strong> ${totalRaw.toFixed(2)} TB</p>
+                <p><strong>Usable Capacity:</strong> ${usableCapacity.toFixed(2)} TB</p>
+                <p><strong>Redundancy:</strong> ${redundancy}</p>
+                <p><strong>Efficiency:</strong> ${efficiency.toFixed(2)}%</p>
+                <p><strong>Drive Type:</strong> ${driveType.toUpperCase()}</p>
+            `;
+            resultDiv.style.display = 'block';
+        }
+
+        function calculateMemory(model) {
+            const dimmSize = parseInt(document.getElementById(`${model}-dimmSize`).value);
+            const dimmCount = parseInt(document.getElementById(`${model}-dimmCount`).value);
+            const resultDiv = document.getElementById(`${model}-memoryResult`);
+
+            if (isNaN(dimmCount) || dimmCount < 1 || dimmCount > 32) {
+                resultDiv.textContent = 'Please enter a valid number of DIMMs (1-32).';
+                resultDiv.style.display = 'block';
+                return;
+            }
+
+            const totalMemory = dimmSize * dimmCount;
+            const maxMemory = 8000; // 8TB in GB
+            if (totalMemory > maxMemory) {
+                resultDiv.textContent = `Total memory exceeds maximum capacity of ${maxMemory} GB.`;
+                resultDiv.style.display = 'block';
+                return;
+            }
+
+            resultDiv.innerHTML = `
+                <p><strong>Total Memory:</strong> ${totalMemory} GB</p>
+                <p><strong>DIMM Size:</strong> ${dimmSize} GB</p>
+                <p><strong>Number of DIMMs:</strong> ${dimmCount}</p>
+                <p><strong>Memory Type:</strong> DDR5-4800</p>
+            `;
+            resultDiv.style.display = 'block';
+        }
+
+        function toggleDetails(id) {
+            const element = document.getElementById(id);
+            const isVisible = element.classList.contains('show');
+            element.classList.toggle('show', !isVisible);
+            element.style.display = isVisible ? 'none' : 'block';
+        }
+
+        function startCountdown(targetDate, elementId, prefix = '') {
+            const countdownElement = document.getElementById(elementId);
+            
+            function updateCountdown() {
+                const now = new Date();
+                const target = new Date(targetDate);
+                const diff = target - now;
+
+                if (diff <= 0) {
+                    countdownElement.textContent = `${prefix}Support has ended.`;
+                    return;
+                }
+
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+                countdownElement.textContent = `${prefix}${days} days, ${hours} hours, ${minutes} minutes remaining`;
+            }
+
+            updateCountdown();
+            setInterval(updateCountdown, 60000); // Update every minute
+        }
+
+        // Initialize countdowns and default server view
+        startCountdown('2025-10-14T23:59:59', 'win10Countdown', 'Support ends in: ');
+        startCountdown('2026-07-14T23:59:59', 'sqlCountdown', 'Support ends in: ');
+        showServer('dl380');
+    </script>
+</body>
+</html>
