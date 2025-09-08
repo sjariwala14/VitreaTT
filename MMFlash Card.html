@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vitrea® Multiple Monitor Setup Interactive Guide</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f7fa;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        header {
+            background-color: #0056b3;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            border-radius: 5px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            margin: 0;
+            font-size: 2.2em;
+        }
+        h2 {
+            color: #0056b3;
+            border-bottom: 2px solid #0056b3;
+            padding-bottom: 5px;
+            margin-top: 30px;
+        }
+        .tab-container {
+            display: flex;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .tab {
+            padding: 10px 20px;
+            background-color: #e0e0e0;
+            cursor: pointer;
+            border-radius: 5px 5px 0 0;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            transition: all 0.3s;
+        }
+        .tab:hover {
+            background-color: #d0d0d0;
+        }
+        .tab.active {
+            background-color: #0056b3;
+            color: white;
+        }
+        .tab-content {
+            display: none;
+            padding: 20px;
+            background-color: white;
+            border-radius: 0 5px 5px 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .question {
+            background-color: #f8f9fa;
+            border-left: 4px solid #0056b3;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 0 5px 5px 0;
+        }
+        .options {
+            margin-top: 10px;
+        }
+        .option {
+            margin-bottom: 8px;
+            padding: 8px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .option:hover {
+            background-color: #d1e7ff;
+        }
+        .option.selected {
+            background-color: #b8d4ff;
+            font-weight: bold;
+        }
+        .option.correct {
+            background-color: #d4edda;
+        }
+        .option.incorrect {
+            background-color: #f8d7da;
+        }
+        .feedback {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 4px;
+            display: none;
+        }
+        .correct-feedback {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .incorrect-feedback {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+        .flashcard {
+            perspective: 1000px;
+            width: 100%;
+            height: 200px;
+            margin-bottom: 20px;
+        }
+        .flashcard-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        .flashcard.flipped .flashcard-inner {
+            transform: rotateY(180deg);
+        }
+        .flashcard-front, .flashcard-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .flashcard-front {
+            background-color: #0056b3;
+            color: white;
+            font-size: 1.2em;
+            text-align: center;
+        }
+        .flashcard-back {
+            background-color: white;
+            transform: rotateY(180deg);
+            color: #333;
+        }
+        .flashcard-controls {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .flashcard-controls button {
+            padding: 8px 15px;
+            margin: 0 5px;
+            background-color: #0056b3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .flashcard-controls button:hover {
+            background-color: #003d7a;
+        }
+        .scenario {
+            background-color: #fff3cd;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #ffc107;
+        }
+        .scenario h3 {
+            margin-top: 0;
+            color: #856404;
+        }
+        .solution {
+            background-color: #e2e3e5;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 4px;
+            display: none;
+        }
+        .show-solution {
+            background-color: #0056b3;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .show-solution:hover {
+            background-color: #003d7a;
+        }
+        .progress-container {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .progress-bar {
+            height: 20px;
+            background-color: #0056b3;
+            border-radius: 5px;
+            width: 0%;
+            transition: width 0.3s;
+        }
+        .score-display {
+            text-align: center;
+            font-size: 1.2em;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .nav-button {
+            padding: 10px 20px;
+            background-color: #0056b3;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .nav-button:hover {
+            background-color: #003d7a;
+        }
+        .nav-button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        .quick-tip {
+            background-color: #e7f1ff;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #0056b3;
+        }
+        .quick-tip h3 {
+            margin-top: 0;
+            color: #0056b3;
+        }
+        .search-container {
+            margin-bottom: 20px;
+        }
+        #searchInput {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .highlight {
+            background-color: yellow;
+        }
+        @media (max-width: 768px) {
+            .tab {
+                padding: 8px 12px;
+                font-size: 0.9em;
+            }
+            .flashcard {
+                height: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Vitrea® Advanced Visualization</h1>
+            <p>Multiple Monitor Setup Interactive Guide</p>
+        </header>
+
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Search through content...">
+        </div>
+
+        <div class="tab-container">
+            <div class="tab active" onclick="openTab('flashcards')">Flash Cards</div>
+            <div class="tab" onclick="openTab('mcq')">Multiple Choice</div>
+            <div class="tab" onclick="openTab('scenarios')">Troubleshooting</div>
+            <div class="tab" onclick="openTab('tips')">Quick Tips</div>
+        </div>
+
+        <div id="flashcards" class="tab-content active">
+            <h2>Flash Cards</h2>
+            <div class="progress-container">
+                <div class="progress-bar" id="flashcardProgress"></div>
+            </div>
+            <div class="score-display" id="flashcardScore">Card 1 of 50</div>
+            
+            <div class="flashcard" id="currentFlashcard" onclick="flipCard()">
+                <div class="flashcard-inner">
+                    <div class="flashcard-front" id="flashcardQuestion">
+                        Loading question...
+                    </div>
+                    <div class="flashcard-back" id="flashcardAnswer">
+                        Loading answer...
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flashcard-controls">
+                <button onclick="prevCard()">Previous</button>
+                <button onclick="nextCard()">Next</button>
+                <button onclick="shuffleCards()">Shuffle</button>
+            </div>
+        </div>
+
+        <div id="mcq" class="tab-content">
+            <h2>Multiple Choice Questions</h2>
+            <div class="progress-container">
+                <div class="progress-bar" id="quizProgress"></div>
+            </div>
+            <div class="score-display" id="quizScore">Question 1 of 50 | Score: 0/50</div>
+            
+            <div id="mcqContainer">
+                <!-- Questions will be loaded here by JavaScript -->
+            </div>
+            
+            <div class="navigation">
+                <button class="nav-button" id="prevQuestion" onclick="prevQuestion()" disabled>Previous</button>
+                <button class="nav-button" id="nextQuestion" onclick="nextQuestion()">Next</button>
+            </div>
+        </div>
+
+        <div id="scenarios" class="tab-content">
+            <h2>Troubleshooting Scenarios</h2>
+            <div id="scenariosContainer">
+                <!-- Scenarios will be loaded here by JavaScript -->
+            </div>
+        </div>
+
+        <div id="tips" class="tab-content">
+            <h2>Quick Tips</h2>
+            <div id="tipsContainer">
+                <!-- Tips will be loaded here by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Complete data for all 50 flash cards
+        const flashcards = [
+            { question: "What is the publication date of the 'VPMC-17222 E Multiple Monitor Setup Guide'?", answer: "The document doesn't specify an exact publication date, but it's valid for Vitrea® software versions 7.16.2.SU01 and later." },
+            { question: "What software versions is the VPMC-17222 E guide valid for?", answer: "Vitrea® Advanced Visualization software versions 7.16.2.SU01 and later." },
+            { question: "Who holds the copyright for the Vitrea® Advanced Visualization guide?", answer: "Canon Medical Systems Corporation holds the copyright." },
+            { question: "Is any part of the work allowed to be reproduced without written permission?", answer: "No, no part of the work may be reproduced without written permission from Canon Medical." },
+            { question: "Is 'Vitrea' a registered trademark?", answer: "Yes, Vitrea is a registered trademark of Canon Medical Systems Corporation." },
+            { question: "Who is responsible for trademarks other than Vitrea?", answer: "All other trademarks are the property of their respective owners." },
+            { question: "What clause governs the use of this software by the DoD of the U.S. Government?", answer: "DFARS 252.227-7013 subparagraph (c)(l)(ii) governs the use by the Department of Defense." },
+            { question: "What restriction applies if the software is delivered to a U.S. Government unit/agency other than DoD?", answer: "Use is subject to restrictions set forth in FAR 52.227-19 (b)(3)." },
+            { question: "What restriction applies if the software is delivered to NASA?", answer: "Use is subject to 18-52.227-86(d) of the NASA FAR Supplement." },
+            { question: "Does Canon Medical have liability for incidental damages due to software malfunction?", answer: "No, Canon Medical shall have no liability of any kind for incidental or consequential damages." },
+            { question: "Does Canon Medical provide an implied warranty of merchantability?", answer: "No, Canon Medical makes no implied warranty of merchantability." },
+            { question: "Is the software and its information considered proprietary and confidential to Canon Medical?", answer: "Yes, the software and its information are proprietary, confidential, and trade secret to Canon Medical." },
+            { question: "Can the software be copied or reproduced in any form?", answer: "No, the software cannot be copied or reproduced without authorization." },
+            { question: "To whom can the software and its information be disclosed?", answer: "Only to authorized representatives of the user's employer who need to know." },
+            { question: "Are users permitted to reverse compile or disassemble the software?", answer: "No, reverse compiling, disassembling, or reverse engineering is strictly prohibited." },
+            { question: "How must this software be used according to the 'Software License Notice'?", answer: "It must be used strictly in accordance with the terms of the applicable Software License Agreement." },
+            { question: "In case of conflict, do the terms in this guide or a written agreement control?", answer: "The terms of the written or assented agreement shall control." },
+            { question: "Who is the Australian Sponsor for Vitrea?", answer: "Canon Medical Systems ANZ Pty Limited is the Australian Sponsor." },
+            { question: "What is the ARTG number for Vitrea in Australia?", answer: "The ARTG number is 339583." },
+            { question: "Who is the authorized sponsor in Australia for safety-related incidents?", answer: "Canon Medical Systems ANZ Pty Limited." },
+            { question: "Who is the first line of communication for customers regarding service and complaints in Australia?", answer: "Distributors are the first line of communication." },
+            { question: "Who is the Brazil Importer and Distributor?", answer: "Canon Medical System do Brasil Ltda." },
+            { question: "What is the ANVISA registration number for Vitrea in Brazil?", answer: "The ANVISA registration number is 80514710011." },
+            { question: "Who is the Canada Importer and Distributor?", answer: "Canon Medical Systems Canada Inc." },
+            { question: "Who is the European Importer and Distributor?", answer: "Canon Medical Systems Europe B.V." },
+            { question: "Who is the Ukraine Authorized Representative?", answer: "MDSS GmbH." },
+            { question: "Who is the UK Responsible Person?", answer: "Canon Medical Systems Limited." },
+            { question: "Who imports Vitrea into India?", answer: "Canon Medical Systems India Pvt. Ltd." },
+            { question: "What is the name and address of the manufacturer of Vitrea?", answer: "Canon Medical Informatics, Inc., 5850 Opus Parkway, Suite 300; Minnetonka, MN, USA; 55343." },
+            { question: "What does 'N.A.' stand for regarding Expiry Date and Batch No.?", answer: "N.A. stands for 'Not Applicable'." },
+            { question: "Who is the contact for Switzerland?", answer: "Canon (Schweiz) AG." },
+            { question: "What is the phone number to report a serious incident to Canon Medical in the U.S.?", answer: "1.800.208.3005." },
+            { question: "Where can more detailed contact information be found?", answer: "At mi.medical.canon/contact-us." },
+            { question: "What document should be referred to before using the product for general safety information?", answer: "The 'ABOUT VITREA MEDICAL IMAGING SOFTWARE DOCUMENT'." },
+            { question: "What federal law restricts the sale of this device?", answer: "21 CFR 801.109(b)(1) restricts sale to by or on order of a physician." },
+            { question: "Are slight differences between screen captures and the actual software interface possible?", answer: "Yes, slight differences are possible." },
+            { question: "How can you contact Canon Medical for general, non-technical support questions?", answer: "By calling 866.433.4624." },
+            { question: "What is the Customer Support line number in the U.S. for technical support?", answer: "1.800.208.3005." },
+            { question: "How do you find the Vitrea unique device identifier (UDI)?", answer: "Click the gear icon in the upper right corner, then select Help (Central), and look under Version Info." },
+            { question: "Where is the UDI displayed once found?", answer: "It is displayed in the Version Info section." },
+            { question: "Where can Release Notes be obtained?", answer: "From your system administrator or from Canon Medical." },
+            { question: "What is the primary purpose of the 'Multiple Monitor Setup Guide'?", answer: "To help users set up multiple monitor configurations on existing Vitrea deployments." },
+            { question: "What is assumed about the user's knowledge of Windows Operating Systems?", answer: "Users are assumed to have a basic understanding of Windows Operating Systems." },
+            { question: "What types of Vitrea deployments support multiple monitor configurations?", answer: "Vitrea Enterprise, Vitrea Enterprise Single Server, Vitrea Extend, and Vitrea Workstation (including Thin Client)." },
+            { question: "Are embedded window deployments supported for multiple monitor configurations?", answer: "No, embedded window deployments are not supported." },
+            { question: "What is a 'display region' generally defined as?", answer: "A region defined for each display seen by Microsoft Windows, usually corresponding to a single physical monitor." },
+            { question: "What must be configured the same if Vitrea software is going to span multiple monitors?", answer: "All connected monitors must have the same resolution, DPI, and orientation settings." },
+            { question: "What happens to the AppShell window when minimized in multiple monitor mode?", answer: "It is minimized on all monitors." },
+            { question: "What happens if AppShell detects a monitor configuration change while in multiple monitor mode?", answer: "It immediately reverts to single monitor mode." },
+            { question: "Which application is currently the only one that can span more than one monitor?", answer: "Mirada XD is currently the only application that can span more than one monitor." }
+        ];
+
+        // Complete data for all 50 multiple choice questions
+        const mcqs = [
+            {
+                question: "The 'VPMC-17222 E Multiple Monitor Setup Guide' is published in what year?",
+                options: ["1997", "2024", "2025", "2013"],
+                correctAnswer: 2,
+                explanation: "While the exact year isn't specified in the document, it's valid for versions 7.16.2.SU01 and later, suggesting it's current."
+            },
+            {
+                question: "This guide is valid for which Vitrea software versions?",
+                options: ["7.16.1.SU01 and later", "7.16.2.SU01 and later", "7.16.0.SU01 only", "All Vitrea versions"],
+                correctAnswer: 1,
+                explanation: "The guide is specifically valid for Vitrea® Advanced Visualization software versions 7.16.2.SU01 and later."
+            },
+            {
+                question: "If this software is delivered to the Department of Defense (DoD) of the U.S. Government, use is subject to restrictions set forth in:",
+                options: ["FAR 52.227-19 (b)(3)", "18-52.227-86(d) of the NASA FAR Supplement", "DFARS 252.227-7013 subparagraph (c)(l)(ii)", "UCC Article 2"],
+                correctAnswer: 2,
+                explanation: "Use by the DoD is governed by DFARS 252.227-7013 subparagraph (c)(l)(ii)."
+            },
+            {
+                question: "Canon Medical's liability for direct, indirect, special, incidental, or consequential damages based on software defects is:",
+                options: ["Limited to the purchase price", "Subject to a 30-day warranty", "None of any kind", "Fully assumed by Canon Medical"],
+                correctAnswer: 2,
+                explanation: "The guide states that Canon Medical shall have no liability of any kind for such damages."
+            },
+            {
+                question: "Regarding software and information confidentiality, which action is explicitly prohibited for the user?",
+                options: ["Using the software for its intended purpose", "Disclosing to authorized employer representatives", "Reverse compile, disassemble, or reverse engineer the software", "Reporting software bugs to Canon Medical"],
+                correctAnswer: 2,
+                explanation: "Reverse engineering of any kind is strictly prohibited."
+            },
+            {
+                question: "In the event of a conflict between the terms in this guide and a written agreement with Canon Medical:",
+                options: ["This guide's terms shall control", "The terms of the latest document control", "The terms of the written or assented agreement shall control", "Both documents are void"],
+                correctAnswer: 2,
+                explanation: "The written agreement terms take precedence over the guide."
+            },
+            {
+                question: "Who acts on behalf of Canon Medical Informatics, Inc. for safety-related incidents and regulatory matters with the Therapeutic Goods Administration in Australia?",
+                options: ["Distributors", "Canon Medical Systems ANZ Pty Limited", "MDSS GmbH", "Canon Medical System do Brasil"],
+                correctAnswer: 1,
+                explanation: "Canon Medical Systems ANZ Pty Limited is the Australian Sponsor."
+            },
+            {
+                question: "For customer technical support outside the U.S., users should:",
+                options: ["Call 1.800.208.3005", "Send an email to support@mi.medical.canon", "Contact their distributor", "Refer to the 'About Vitrea Medical Imaging Software' document"],
+                correctAnswer: 2,
+                explanation: "International users should contact their local distributor for support."
+            },
+            {
+                question: "To locate the Vitrea unique device identifier (UDI), after launching the software, the user must first:",
+                options: ["Click 'File'", "Click the gear icon in the upper right corner", "Select 'Version Info' directly", "Go to the 'Applications Home screen'"],
+                correctAnswer: 1,
+                explanation: "The gear icon in the upper right corner is the first step to access the UDI."
+            },
+            {
+                question: "The UDI (Unique Device Identifier) for Vitrea contains:",
+                options: ["Customer ID and installation date", "Software version information and manufacture date", "Warranty status and support plan", "Licensed features and user count"],
+                correctAnswer: 1,
+                explanation: "The UDI displays software version information and manufacture date."
+            },
+            {
+                question: "The 'Multiple Monitor Setup Guide' is intended for individuals who want to configure multiple monitors on what type of Vitrea deployment?",
+                options: ["Only Vitrea Workstation", "Only Vitrea Enterprise Single Server", "An existing Vitrea Enterprise, Vitrea Enterprise Single Server, Extend, or Workstation deployment", "Any new Vitrea installation"],
+                correctAnswer: 2,
+                explanation: "The guide is for existing deployments of these types."
+            },
+            {
+                question: "Which of the following Vitrea deployments does not support multiple monitor configurations?",
+                options: ["Vitrea Enterprise", "Vitrea Thin Client", "Vitrea Workstation", "Embedded window deployments"],
+                correctAnswer: 3,
+                explanation: "Embedded window deployments are explicitly not supported."
+            },
+            {
+                question: "For Vitrea software to span multiple monitors, what must be true about all connected monitors?",
+                options: ["They must be from the same manufacturer", "They must be configured with the same resolution, DPI, and orientation settings", "They must have different Windows scale factors", "They must all be set as primary monitors"],
+                correctAnswer: 1,
+                explanation: "Identical resolution, DPI, and orientation settings are required for spanning."
+            },
+            {
+                question: "If Vitrea displays on a single monitor, and you are using multiple monitors with different Windows scale factors, and you want Vitrea on a monitor with a scale factor greater than 100%, what should you do?",
+                options: ["Set that monitor to 100% scaling", "Set that monitor as the 'primary' monitor in Windows", "Launch Vitrea on any connected monitor", "This configuration is not supported"],
+                correctAnswer: 1,
+                explanation: "The monitor with >100% scaling must be set as primary for Vitrea to display there."
+            },
+            {
+                question: "What is the first step when setting up a multiple monitor configuration after launching Vitrea software?",
+                options: ["Select 'Help (Central)'", "Select the gear icon in the upper right corner", "Click 'All Displays'", "Launch Vitrea on a system with two monitors"],
+                correctAnswer: 1,
+                explanation: "The gear icon is the starting point for monitor configuration."
+            },
+            {
+                question: "On the 'Display Selection - Step 1 of 2' screen, if you click the 'One Display' button, what is the next step?",
+                options: ["Click the 'All Displays' button", "Move the Display Selection screen to the desired monitor and click 'Continue'", "The application automatically selects the primary monitor", "Close the screen and relaunch Vitrea"],
+                correctAnswer: 1,
+                explanation: "You must manually position the selection screen on the desired monitor."
+            },
+            {
+                question: "In a typical multiple monitor configuration, how are the Study List and application displayed?",
+                options: ["Both on the same monitor", "Study List on one monitor, and the application on a second monitor", "Study List spanning both monitors", "Applications must always be on the primary monitor"],
+                correctAnswer: 1,
+                explanation: "The Study List typically appears on one monitor with applications on another."
+            },
+            {
+                question: "In multiple monitor mode, when the AppShell window is minimized on one monitor:",
+                options: ["It remains open on other monitors", "It closes completely", "It is minimized on all monitors", "It moves to the primary monitor"],
+                correctAnswer: 2,
+                explanation: "AppShell behaves as a unified application across all monitors."
+            },
+            {
+                question: "If AppShell detects a monitor configuration change (e.g., adding/removing a monitor) while running in multiple monitor mode, what happens?",
+                options: ["It prompts the user to reconfigure", "It restarts the Vitrea software", "It immediately reverts to single monitor mode", "It automatically adjusts to the new configuration"],
+                correctAnswer: 2,
+                explanation: "Any configuration change causes an immediate revert to single monitor mode."
+            },
+            {
+                question: "When AppShell reverts to single monitor mode due to a configuration change, where are all open tabs moved?",
+                options: ["They are closed", "They are saved and can be reopened later", "They are moved to the remaining monitor", "They are moved to the primary monitor"],
+                correctAnswer: 2,
+                explanation: "All open tabs are consolidated to the single remaining monitor."
+            },
+            {
+                question: "For Vitrea Thin Client deployments in multiple monitor mode, what is true regarding patient applications and Mirada applications?",
+                options: ["They are linked and can interact", "Only one type of application can be active at a time", "You can launch any patient application on the primary monitor while a Mirada application is active on the secondary monitor, but they are not linked", "Mirada applications cannot be active on a secondary monitor"],
+                correctAnswer: 2,
+                explanation: "They can run simultaneously but operate independently."
+            },
+            {
+                question: "Which of the following is true about the Mirada XD application in a multiple monitor setup?",
+                options: ["Its windows are independent", "Actions performed in the secondary monitor are also performed in the primary monitor", "It cannot open a secondary window", "It closes completely if either window is closed"],
+                correctAnswer: 1,
+                explanation: "Mirada XD windows are linked, with actions mirrored between them."
+            },
+            {
+                question: "How can you relaunch the secondary window of a Mirada XD application after closing it?",
+                options: ["Restart the Vitrea software", "Click 'New Window' from the Study List", "Select Window | New Window from the Mirada application", "It cannot be relaunched without closing the primary"],
+                correctAnswer: 2,
+                explanation: "The Window menu in Mirada provides the New Window option."
+            },
+            {
+                question: "By default, where does the Mirada XD application load when launched from the Vitrea Study List?",
+                options: ["On the secondary monitor", "On the main display", "Randomly on any connected monitor", "It prompts the user to select a monitor"],
+                correctAnswer: 1,
+                explanation: "Mirada XD defaults to the main display."
+            },
+            {
+                question: "What happens if you preview a series for a different patient than the patient loaded in the application on another monitor?",
+                options: ["The application automatically switches to the new patient", "Both patient studies are displayed side-by-side", "The monitor with the application will be grayed out", "An error message is displayed"],
+                correctAnswer: 2,
+                explanation: "The application monitor grays out to indicate a patient mismatch."
+            },
+            {
+                question: "To restore the application view after it has been grayed out due to previewing a different patient's series:",
+                options: ["Reload the application", "Close the Study List", "Click within that monitor", "Press the 'Esc' key"],
+                correctAnswer: 2,
+                explanation: "Clicking the grayed-out monitor restores the view."
+            },
+            {
+                question: "Who is the manufacturer of the Vitrea software?",
+                options: ["Canon Medical Systems Corporation", "Canon Medical Systems Europe B.V.", "Canon Medical Informatics, Inc.", "MDSS GmbH"],
+                correctAnswer: 2,
+                explanation: "Canon Medical Informatics, Inc. is the manufacturer."
+            },
+            {
+                question: "The address for Canon Medical Informatics, Inc. is:",
+                options: ["Schiffgraben 41, 30175 Hannover, Germany", "Bovenkerkerweg 59, 1185 XB Amstelveen, The Netherlands", "5850 Opus Parkway, Suite 300; Minnetonka, MN, USA; 55343", "Boundary Court, Gatwick Road Crawley, RH10 9AX United Kingdom"],
+                correctAnswer: 2,
+                explanation: "This is the correct Minnesota address for Canon Medical Informatics."
+            },
+            {
+                question: "The main goal of Canon Medical's 'Made for Life' philosophy is to provide:",
+                options: ["The most advanced AI solutions", "Enterprise-level IT infrastructure", "Solutions that support medical professionals in contributing to patient health and wellbeing", "Both b and c are correct"],
+                correctAnswer: 2,
+                explanation: "The focus is on supporting healthcare professionals and patient outcomes."
+            },
+            {
+                question: "The guide advises that distributors are the first line of communication for customers regarding:",
+                options: ["Regulatory matters", "Safety-related incidents", "Product development", "Service and complaints"],
+                correctAnswer: 3,
+                explanation: "Distributors handle initial service and complaint communications."
+            },
+            {
+                question: "If you need a printed version of the Release Notes, Education and Reference Guide, or Installation Guides, who should you contact?",
+                options: ["Your system administrator", "Canon Medical Informatics, Inc.", "Customer Support at 1.800.208.3005", "The European Importer and Distributor"],
+                correctAnswer: 2,
+                explanation: "U.S. customers should contact Customer Support for printed materials."
+            },
+            {
+                question: "The 'Intended Audience' section assumes users have:",
+                options: ["Advanced IT certifications", "A basic understanding of Windows Operating Systems", "Experience with PACS integration", "Knowledge of programming languages"],
+                correctAnswer: 1,
+                explanation: "Basic Windows knowledge is the only prerequisite mentioned."
+            },
+            {
+                question: "What is the approximate number of monitors typically defined in a multiple monitor configuration for Vitrea?",
+                options: ["One", "Two", "Three or more", "Any number of monitors can be used"],
+                correctAnswer: 1,
+                explanation: "The guide primarily discusses two-monitor configurations."
+            },
+            {
+                question: "When setting up a multiple monitor configuration, which step occurs after launching the Vitrea software and selecting the gear icon?",
+                options: ["Click OK", "Select 'Help (Central)'", "Select the 'Set Monitor Preference' option", "Launch Vitrea on a system with two monitors"],
+                correctAnswer: 2,
+                explanation: "'Set Monitor Preference' is the next step after the gear icon."
+            },
+            {
+                question: "When setting up a multiple monitor configuration, after selecting 'Set Monitor Preference,' what is the next action displayed on screen?",
+                options: ["Select 'All Displays'", "Click OK", "Move the Display Selection screen", "Select 'One Display'"],
+                correctAnswer: 1,
+                explanation: "The OK button appears after selecting the preference."
+            },
+            {
+                question: "In the Vitrea software multiple monitor workflow, after logging in and completing the setup procedure, what is the next step on the Applications Home screen?",
+                options: ["Launch the desired clinical application", "Select the Study List option", "Click the 'All Displays' button", "Select the Mirada XD application"],
+                correctAnswer: 1,
+                explanation: "The Study List is typically the next step after setup."
+            },
+            {
+                question: "If you are using a Vitrea Thin Client for multiple monitor setup, what is a necessary preliminary step?",
+                options: ["Install additional graphics drivers", "Establish the RDP connection", "Configure a VPN", "Purchase a separate license"],
+                correctAnswer: 1,
+                explanation: "The RDP connection must be established first for Thin Client."
+            },
+            {
+                question: "In the Vitrea with Mirada software multiple monitor workflow, after selecting the Study List, what is the next action for Mirada XD?",
+                options: ["Select the Mirada XD application and click the 'Open' button", "Go to the 'Window' menu directly", "Launch Mirada XD from the desktop shortcut", "Drag the Study List to the second monitor"],
+                correctAnswer: 0,
+                explanation: "The standard workflow is to select and open Mirada XD from the Study List."
+            },
+            {
+                question: "What is a 'display region' as defined by the guide?",
+                options: ["A logical grouping of applications", "A region defined for each display seen by Microsoft Windows, usually corresponding to a single physical monitor", "A section of the monitor designated for special functions", "A software interface element"],
+                correctAnswer: 1,
+                explanation: "Display regions correspond to physical monitors as seen by Windows."
+            },
+            {
+                question: "How are display regions numbered according to the guide?",
+                options: ["From top to bottom, then left to right", "From bottom to top, then right to left", "From left to right, then top to bottom", "Based on Windows' own numbering scheme"],
+                correctAnswer: 2,
+                explanation: "Windows numbers displays left to right, then top to bottom."
+            },
+            {
+                question: "If one physical monitor has been split into two, how are these seen by Windows and therefore as display regions?",
+                options: ["As one combined display region", "As distinct displays and separate display regions", "This configuration is not supported", "As a single display region with dual zones"],
+                correctAnswer: 1,
+                explanation: "Windows treats them as separate displays if properly configured."
+            },
+            {
+                question: "What is the purpose of the 'Vitrea Release Notes'?",
+                options: ["To provide general software safety information", "To detail the multiple monitor setup procedures", "To contain late-breaking information not available when the Education and Reference Guide was released", "To list all supported hardware"],
+                correctAnswer: 2,
+                explanation: "Release Notes provide updates not in the main documentation."
+            },
+            {
+                question: "Canon Medical offers a full range of diagnostic medical imaging solutions including:",
+                options: ["Only CT and X-Ray", "Only Ultrasound and MR", "CT, X-Ray, Ultrasound, Vascular and MR", "All of the above, plus Healthcare IT solutions"],
+                correctAnswer: 3,
+                explanation: "Canon Medical provides all these imaging solutions plus IT."
+            },
+            {
+                question: "Vital Images has adopted the Canon Medical brand to support:",
+                options: ["Localized business approaches", "Independent research and development", "A unified business approach", "Reduced global infrastructure"],
+                correctAnswer: 2,
+                explanation: "The rebranding supports a unified business strategy."
+            },
+            {
+                question: "If your desired monitor is using 100% scaling, and Vitrea software is not going to span multiple monitors, what is true about displaying Vitrea?",
+                options: ["You must set that monitor as primary", "You must use a scale factor greater than 100%", "You can display the Vitrea software on any other connected monitor without setting it as primary", "This configuration is not supported"],
+                correctAnswer: 2,
+                explanation: "At 100% scaling, Vitrea can display on any monitor without being primary."
+            },
+            {
+                question: "What is the main benefit of the Mirada XD application having linked monitor windows?",
+                options: ["It allows for independent viewing on each monitor", "Actions performed in one window are replicated in the other", "It enables different applications to run simultaneously", "It prevents accidental closure of windows"],
+                correctAnswer: 1,
+                explanation: "The linking ensures synchronized operation across monitors."
+            },
+            {
+                question: "When launching a clinical application in a multi-monitor setup after the Study List displays on the main display, where does the clinical application appear by default?",
+                options: ["On the main display, covering the Study List", "On the next available monitor", "It prompts the user to select a monitor", "It launches minimized"],
+                correctAnswer: 1,
+                explanation: "Applications typically open on the next available monitor."
+            },
+            {
+                question: "You can preview a series in the Study Tab of the Study List on one monitor while an application displays on the other monitor. What is a key note about this functionality?",
+                options: ["Both monitors will always show the same patient", "The preview is always linked to the application's patient", "If the previewed series is for a different patient, the application monitor will be grayed out", "This feature is not available in multiple monitor mode"],
+                correctAnswer: 2,
+                explanation: "Patient mismatch causes the application monitor to gray out."
+            },
+            {
+                question: "Who is the 'UK Responsible Person' for Canon Medical Systems?",
+                options: ["MDSS GmbH", "Canon Medical Informatics, Inc.", "Canon Medical Systems Limited", "Canon Medical System do Brasil"],
+                correctAnswer: 2,
+                explanation: "Canon Medical Systems Limited serves this role for the UK."
+            },
+            {
+                question: "What is the phone number for Canon Medical Informatics, Inc. listed in the guide?",
+                options: ["1.800.208.3005", "866.433.4624", "+1 866.433.4624", "Both b and c are listed"],
+                correctAnswer: 3,
+                explanation: "Both formats of the same number are provided."
+            }
+        ];
+
+        // Complete data for all 25 troubleshooting scenarios
+        const scenarios = [
+            {
+                scenario: "A user wants to reproduce a part of the 'Multiple Monitor Setup Guide' for training purposes.",
+                solution: "The user should be aware that no part of this work may be reproduced, stored in a retrieval system, or transmitted in any form or by any means, electronic or mechanical, without permission in writing from Canon Medical."
+            },
+            {
+                scenario: "A U.S. Government agency (not DoD or NASA) is using the Vitrea software and needs to understand its usage restrictions.",
+                solution: "They should refer to the Restricted Rights Legend, specifically that use, duplication, or disclosure by the U.S. Government is subject to FAR 52.227-19 (b)(3)."
+            },
+            {
+                scenario: "A user experiences a software malfunction and attempts to claim damages from Canon Medical.",
+                solution: "The user should be aware that Canon Medical shall have no liability of any kind for any direct, indirect, special, incidental or consequential damages based on any defect, failure or malfunction of the software."
+            },
+            {
+                scenario: "An employee attempts to reverse engineer the Vitrea software to understand its underlying ideas and concepts.",
+                solution: "This is strictly prohibited. The software and its information are proprietary, confidential, and trade secret to Canon Medical, and users shall not attempt to discern Canon Medical's confidential and trade secret information and shall not reverse compile, disassemble, or otherwise reverse engineer this software or any information contained therein."
+            },
+            {
+                scenario: "A customer in Australia has a service issue with Vitrea.",
+                solution: "They should initially contact their distributor, as distributors are the first line of communication for service and complaints."
+            },
+            {
+                scenario: "A user believes they have encountered a serious incident related to the Vitrea device in the U.S.",
+                solution: "They should report it to Canon Medical at 1.800.208.3005 and the competent authority of the Member State in which the user and/or patient is established. More detailed contact information is available at mi.medical.canon/contact-us."
+            },
+            {
+                scenario: "A physician's office is attempting to purchase the Vitrea device directly from a general vendor.",
+                solution: "They should be aware that Federal law restricts this device to sale by or on the order of a physician, as directed by 21 CFR 801.109(b)(1)."
+            },
+            {
+                scenario: "A user wants to find the specific software version and manufacture date of their Vitrea installation.",
+                solution: "They need to locate the Vitrea unique device identifier (UDI). This is found by clicking the gear icon at the top of the window, selecting Help (Central), and then looking under the Version Info section."
+            },
+            {
+                scenario: "A system administrator needs late-breaking information about Vitrea not found in the standard documentation.",
+                solution: "They should refer to the Vitrea Release Notes, which are available from their system administrator or from Canon Medical."
+            },
+            {
+                scenario: "A user is trying to set up multiple monitors, but their Vitrea deployment is PACS Integration.",
+                solution: "They should be informed that PACS Integration or an embedded window deployment is not supported for multiple monitor configurations."
+            },
+            {
+                scenario: "A user wants to span the Vitrea software across two monitors, but the displays have different DPI settings.",
+                solution: "For Vitrea software to span multiple monitors, all connected monitors must be configured with the same resolution, DPI, and orientation settings. The user needs to adjust their monitor settings."
+            },
+            {
+                scenario: "A user has multiple monitors with different Windows scale factors and wants Vitrea to display on a specific monitor with a scale factor greater than 100%. Vitrea is not spanning.",
+                solution: "They must set that monitor as the 'primary' monitor in Windows."
+            },
+            {
+                scenario: "A user has multiple monitors, Vitrea is not spanning, and they want Vitrea on a monitor with 100% scaling. They are having trouble getting Vitrea to display there.",
+                solution: "If the desired monitor is using 100% scaling, they can display the Vitrea software on any other connected monitor without having to set that monitor as the 'primary' monitor in Windows. The problem might be elsewhere if it's not showing."
+            },
+            {
+                scenario: "A user has launched Vitrea, but cannot find the option to set monitor preferences.",
+                solution: "They need to look for and select the gear icon in the upper right corner of the Vitrea window, then select Set Monitor Preference."
+            },
+            {
+                scenario: "After selecting 'All Displays' for a multiple monitor setup, the user cannot find where to specify the main display for Vitrea Applications and Study List.",
+                solution: "On the 'Display Selection - Step 1 of 2' screen, after clicking 'All Displays', they need to move the Display Selection screen to the desired monitor where they want the Vitrea Applications and Study List to display, then click the Continue button."
+            },
+            {
+                scenario: "A user in multiple monitor mode minimizes the AppShell window on one monitor, but expects it to remain visible on the other monitors.",
+                solution: "They should be aware that the AppShell window behaves as one unified application in multiple monitor mode. When you minimize the AppShell on one monitor, it is minimized on all monitors."
+            },
+            {
+                scenario: "A user is working in multiple monitor mode, and suddenly, the Vitrea application reverts to single monitor mode, and all open tabs move to one screen.",
+                solution: "This occurs if AppShell detects a monitor configuration change while running in multiple monitor mode, i.e., adding or removing a monitor. It will immediately revert to single monitor mode and move all open tabs to the remaining monitor."
+            },
+            {
+                scenario: "A user is trying to make a patient application and a Mirada application interact directly or link together on a Vitrea Thin Client in multiple monitor mode.",
+                solution: "They should note that while they can launch patient applications on the primary monitor with a Mirada application active on the secondary, the two windows are not linked."
+            },
+            {
+                scenario: "A user is trying to span a Vitrea clinical application (not Mirada XD) across two monitors.",
+                solution: "They will find this is not possible, as currently, only the Mirada XD application can span more than one monitor."
+            },
+            {
+                scenario: "A user closed the secondary window of their Mirada XD application and wants to reopen it without closing the entire Mirada application.",
+                solution: "They can relaunch the secondary window by selecting Window | New Window from the Mirada application."
+            },
+            {
+                scenario: "A user closed the primary window of their Mirada XD application, and expects the entire application to close. However, the secondary window remains open.",
+                solution: "This is expected behavior; you can close the primary window and the secondary window remains open. To relaunch the primary window, select Window | New Window."
+            },
+            {
+                scenario: "A user has launched the Study List on one monitor and a clinical application on another. They then preview a series for a different patient in the Study Tab, and the application monitor turns gray.",
+                solution: "This is a designed feature; if you preview a series for a different patient than the patient loaded in the application, the monitor with the application will be grayed out. To restore the application view, simply click within that monitor."
+            },
+            {
+                scenario: "A user is trying to configure multiple monitors on a Vitrea Thin Client and cannot get it to work.",
+                solution: "A key initial step for Vitrea Thin Client is to establish the RDP connection. This must be done before setting up the monitor configuration."
+            },
+            {
+                scenario: "A user experiences an issue with the Vitrea software's performance and is looking for a general disclaimer of warranty.",
+                solution: "They should refer to the Limits of Liability and Disclaimer of Warranty section, which states that Canon Medical makes no warranty, express or implied, including but not limited to, any warranty of merchantability or fitness for a particular purpose whether arising from statute, common law, custom or otherwise."
+            },
+            {
+                scenario: "A user cannot drag or move the clinical application between their two monitors in a Vitrea Enterprise Single Server deployment.",
+                solution: "This functionality should be supported. For Enterprise Single Server, you can drag or move the applications between the two monitors. The user should check if the setup is correctly in multiple monitor mode and if any configuration changes reverted it to single monitor mode."
+            }
+        ];
+
+        // Complete data for all 20 quick tips
+        const tips = [
+            "Copyright and Reproduction: Do not reproduce any part of the guide without written permission from Canon Medical.",
+            "Confidentiality: The software and its information are proprietary and confidential. Do not copy, reproduce, disclose without authorization, or attempt to reverse engineer it.",
+            "Software License: Use the software strictly according to the terms of the applicable Software License Agreement. In case of conflict, the agreement's terms control.",
+            "Safety & Regulatory: Always refer to the 'ABOUT VITREA MEDICAL IMAGING SOFTWARE DOCUMENT' for general safety and regulatory information.",
+            "Physician Order Required: Be aware that federal law restricts this device to sale by or on the order of a physician.",
+            "Locate UDI: To find the software version and manufacture date, locate the Unique Device Identifier (UDI) under Help (Central) > Version Info.",
+            "Technical Support: For technical issues in the U.S., call 1.800.208.3005. Outside the U.S., contact your distributor.",
+            "Supported Deployments: Multiple monitor configurations are supported on Vitrea Enterprise, Vitrea Enterprise Single Server, Vitrea Extend, and Vitrea Workstation, including Vitrea Thin Client. Embedded window deployments are not supported.",
+            "Consistent Monitor Settings (Spanning): If Vitrea is going to span multiple monitors, ensure all connected monitors have the same resolution, DPI, and orientation settings. This is crucial for proper display.",
+            "Primary Monitor for Scaling: If Vitrea is not spanning multiple monitors, and you are using monitors with different Windows scale factors, set the monitor with a scale factor greater than 100% as the 'primary' monitor in Windows if you want Vitrea to display there.",
+            "Easy Single Monitor Display (100% Scaling): If your desired monitor uses 100% scaling, you can display Vitrea on it without making it the primary monitor.",
+            "Setting Monitor Preference: To configure multiple monitors, launch Vitrea, click the gear icon, and select Set Monitor Preference.",
+            "AppShell Behavior: In multiple monitor mode, the AppShell window behaves as one unified application. Minimizing it on one monitor minimizes it on all.",
+            "Monitor Configuration Changes: If a monitor is added or removed while AppShell is in multiple monitor mode, it will immediately revert to single monitor mode, and all open tabs will move to the remaining monitor.",
+            "Dragging Applications: You can generally drag or move applications between the two monitors in most supported deployments.",
+            "Mirada XD Specifics: Only Mirada XD can span more than one monitor. Its two monitor windows are linked, meaning actions in the secondary are mirrored in the primary.",
+            "Mirada Window Management: You can close the secondary window of Mirada XD without closing the application and relaunch it via Window | New Window. You can also close the primary window while the secondary remains open.",
+            "Study List and Application Workflow: The Study List typically displays on the main display, and clinical applications on the next available monitor.",
+            "Patient Preview Note: If you preview a series for a different patient than the one loaded in an application, the application monitor will be grayed out. Simply click within that monitor to restore the view.",
+            "Vitrea Thin Client RDP: When using a Vitrea Thin Client, you must establish the RDP connection before setting up the multiple monitor configuration."
+        ];
+
+        // Initialize variables
+        let currentFlashcardIndex = 0;
+        let flashcardOrder = Array.from({length: flashcards.length}, (_, i) => i);
+        let currentQuestionIndex = 0;
+        let userAnswers = Array(mcqs.length).fill(-1);
+        let score = 0;
+
+        // Initialize the page when loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            displayFlashcard();
+            displayQuestion();
+            displayScenarios();
+            displayTips();
+            
+            // Set up search functionality
+            document.getElementById('searchInput').addEventListener('keyup', searchContent);
+        });
+
+        // Display current flashcard
+        function displayFlashcard() {
+            document.getElementById("flashcardQuestion").textContent = 
+                flashcards[flashcardOrder[currentFlashcardIndex]].question;
+            document.getElementById("flashcardAnswer").textContent = 
+                flashcards[flashcardOrder[currentFlashcardIndex]].answer;
+            document.getElementById("flashcardScore").textContent = 
+                `Card ${currentFlashcardIndex + 1} of ${flashcards.length}`;
+            
+            // Update progress bar
+            document.getElementById("flashcardProgress").style.width = 
+                `${((currentFlashcardIndex + 1) / flashcards.length * 100)}%`;
+            
+            // Reset card to front
+            document.getElementById("currentFlashcard").classList.remove("flipped");
+        }
+
+        // Flip the current card
+        function flipCard() {
+            document.getElementById("currentFlashcard").classList.toggle("flipped");
+        }
+
+        // Go to next flashcard
+        function nextCard() {
+            if (currentFlashcardIndex < flashcards.length - 1) {
+                currentFlashcardIndex++;
+                displayFlashcard();
+            }
+        }
+
+        // Go to previous flashcard
+        function prevCard() {
+            if (currentFlashcardIndex > 0) {
+                currentFlashcardIndex--;
+                displayFlashcard();
+            }
+        }
+
+        // Shuffle flashcards
+        function shuffleCards() {
+            // Fisher-Yates shuffle algorithm
+            for (let i = flashcardOrder.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [flashcardOrder[i], flashcardOrder[j]] = [flashcardOrder[j], flashcardOrder[i]];
+            }
+            
+            currentFlashcardIndex = 0;
+            displayFlashcard();
+        }
+
+        // Display current MCQ
+        function displayQuestion() {
+            const currentQuestion = mcqs[currentQuestionIndex];
+            let html = `<div class='question'>
+                <h3>${currentQuestion.question}</h3>
+                <div class='options'>`;
+            
+            currentQuestion.options.forEach((option, index) => {
+                let optionClass = "option";
+                if (userAnswers[currentQuestionIndex] === index) {
+                    optionClass += " selected";
+                }
+                html += `<div class='${optionClass}' onclick='selectOption(${index})'>${option}</div>`;
+            });
+            
+            html += `</div>`;
+            
+            // Show feedback if answered
+            if (userAnswers[currentQuestionIndex] !== -1) {
+                const isCorrect = userAnswers[currentQuestionIndex] === currentQuestion.correctAnswer;
+                const feedbackClass = isCorrect ? "correct-feedback" : "incorrect-feedback";
+                const correctAnswerText = currentQuestion.options[currentQuestion.correctAnswer];
+                
+                html += `<div class='feedback ${feedbackClass}'>${
+                    isCorrect ? "Correct!" : "Incorrect."
+                } ${currentQuestion.explanation}</div>`;
+            }
+            
+            html += `</div>`;
+            
+            document.getElementById("mcqContainer").innerHTML = html;
+            
+            // Update progress and score
+            document.getElementById("quizScore").textContent = 
+                `Question ${currentQuestionIndex + 1} of ${mcqs.length} | Score: ${score}/${mcqs.length}`;
+            document.getElementById("quizProgress").style.width = 
+                `${((currentQuestionIndex + 1) / mcqs.length * 100)}%`;
+            
+            // Enable/disable navigation buttons
+            document.getElementById("prevQuestion").disabled = (currentQuestionIndex === 0);
+            document.getElementById("nextQuestion").disabled = (currentQuestionIndex === mcqs.length - 1);
+        }
+
+        // Select an option for current question
+        function selectOption(optionIndex) {
+            // Only allow selection if not already answered
+            if (userAnswers[currentQuestionIndex] === -1) {
+                userAnswers[currentQuestionIndex] = optionIndex;
+                
+                // Update score if correct
+                if (optionIndex === mcqs[currentQuestionIndex].correctAnswer) {
+                    score++;
+                }
+                
+                // Redisplay question to show feedback
+                displayQuestion();
+            }
+        }
+
+        // Go to next question
+        function nextQuestion() {
+            if (currentQuestionIndex < mcqs.length - 1) {
+                currentQuestionIndex++;
+                displayQuestion();
+            }
+        }
+
+        // Go to previous question
+        function prevQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                displayQuestion();
+            }
+        }
+
+        // Display all scenarios
+        function displayScenarios() {
+            let html = "";
+            
+            scenarios.forEach((scenario, index) => {
+                html += `<div class='scenario'>
+                    <h3>Scenario ${index + 1}</h3>
+                    <p>${scenario.scenario}</p>
+                    <button class='show-solution' onclick='showSolution(${index})'>Show Solution</button>
+                    <div class='solution' id='solution${index}'>${scenario.solution}</div>
+                </div>`;
+            });
+            
+            document.getElementById("scenariosContainer").innerHTML = html;
+        }
+
+        // Show solution for a scenario
+        function showSolution(index) {
+            document.getElementById(`solution${index}`).style.display = "block";
+        }
+
+        // Display all quick tips
+        function displayTips() {
+            let html = "";
+            
+            tips.forEach((tip, index) => {
+                html += `<div class='quick-tip'>
+                    <h3>Tip ${index + 1}</h3>
+                    <p>${tip}</p>
+                </div>`;
+            });
+            
+            document.getElementById("tipsContainer").innerHTML = html;
+        }
+
+        // Open a tab
+        function openTab(tabName) {
+            // Hide all tab contents
+            document.querySelectorAll(".tab-content").forEach(tab => {
+                tab.classList.remove("active");
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll(".tab").forEach(tab => {
+                tab.classList.remove("active");
+            });
+            
+            // Show the selected tab and mark it as active
+            document.getElementById(tabName).classList.add("active");
+            event.currentTarget.classList.add("active");
+        }
+
+        // Search through content
+        function searchContent() {
+            const searchText = document.getElementById("searchInput").value.toLowerCase();
+            
+            if (!searchText) {
+                // Remove all highlights if search is empty
+                document.querySelectorAll(".highlight").forEach(el => {
+                    el.classList.remove("highlight");
+                });
+                return;
+            }
+            
+            // Search through all text content
+            const elements = document.querySelectorAll(".tab-content.active *:not(script):not(style)");
+            
+            // First remove existing highlights
+            document.querySelectorAll(".highlight").forEach(el => {
+                el.classList.remove("highlight");
+            });
+            
+            // Add highlights to matching elements
+            elements.forEach(el => {
+                if (el.textContent.toLowerCase().includes(searchText)) {
+                    el.classList.add("highlight");
+                    
+                    // Scroll to the first highlighted element
+                    if (document.querySelectorAll(".highlight").length === 1) {
+                        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

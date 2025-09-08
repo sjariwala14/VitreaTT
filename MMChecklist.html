@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vitrea Multiple Monitor Setup Checklist</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #0066cc;
+            text-align: center;
+            border-bottom: 2px solid #0066cc;
+            padding-bottom: 10px;
+        }
+        h2 {
+            color: #0066cc;
+            border-left: 4px solid #0066cc;
+            padding-left: 10px;
+            margin-top: 30px;
+        }
+        h3 {
+            color: #333;
+            margin-top: 20px;
+        }
+        .checklist-section {
+            background-color: #f5f9ff;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border: 1px solid #d0e0ff;
+        }
+        .checklist-item {
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .checkbox-container {
+            display: flex;
+            align-items: flex-start;
+        }
+        .checkbox {
+            margin-right: 10px;
+            margin-top: 3px;
+        }
+        .item-content {
+            flex: 1;
+        }
+        .action {
+            font-weight: bold;
+            color: #0066cc;
+            margin-top: 5px;
+        }
+        .notes {
+            font-style: italic;
+            color: #666;
+            margin-top: 5px;
+            padding-left: 15px;
+            border-left: 2px solid #ddd;
+        }
+        .troubleshooting {
+            background-color: #fff5f5;
+            border: 1px solid #ffd0d0;
+        }
+        .troubleshooting h3 {
+            color: #cc0000;
+        }
+        .completed {
+            background-color: #f0fff0;
+            border-left: 4px solid #00aa00;
+        }
+        .btn {
+            background-color: #0066cc;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .btn:hover {
+            background-color: #0055aa;
+        }
+        .page-ref {
+            font-size: 0.8em;
+            color: #666;
+            float: right;
+        }
+        .section-toggle {
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .section-toggle::after {
+            content: "▼";
+            font-size: 0.8em;
+        }
+        .section-toggle.collapsed::after {
+            content: "►";
+        }
+        .collapsible-content {
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        .collapsed + .collapsible-content {
+            max-height: 0 !important;
+        }
+        #saveBtn, #resetBtn {
+            margin-right: 10px;
+        }
+        #controls {
+            margin: 20px 0;
+            text-align: center;
+        }
+        .progress-container {
+            width: 100%;
+            background-color: #ddd;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .progress-bar {
+            height: 20px;
+            background-color: #0066cc;
+            border-radius: 5px;
+            width: 0%;
+            transition: width 0.3s;
+            text-align: center;
+            color: white;
+            line-height: 20px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Vitrea Multiple Monitor Setup Checklist</h1>
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar">0%</div>
+    </div>
+    <div id="controls">
+        <button class="btn" id="saveBtn">Save Progress</button>
+        <button class="btn" id="resetBtn">Reset Checklist</button>
+        <button class="btn" id="expandAllBtn">Expand All</button>
+        <button class="btn" id="collapseAllBtn">Collapse All</button>
+    </div>
+    
+    <p>This checklist provides step-by-step instructions for configuring a multiple monitor setup for Vitrea Advanced Visualization software, as outlined in the "Vitrea Advanced Visualization Multiple Monitor Setup Guide" (VPMC-17222E). Complete all steps to ensure a successful multi-monitor deployment.</p>
+    
+    <div class="checklist-section">
+        <h2 class="section-toggle">Pre-Setup Requirements</h2>
+        <div class="collapsible-content">
+            <div class="checklist-item" id="item1">
+                <div class="checkbox-container">
+                    <input type="checkbox" class="checkbox" id="check1">
+                    <div class="item-content">
+                        <h3>Verify Existing Vitrea Deployment <span class="page-ref">Page 8</span></h3>
+                        <p>Confirm a fully functional Vitrea Enterprise, Vitrea Enterprise Single Server, Extend, or Workstation deployment is installed and configured.</p>
+                        <div class="action">Action: Log in to Vitrea and verify that the system loads the Study List and applications without errors.</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="checklist-item" id="item2">
+                <div class="checkbox-container">
+                    <input type="checkbox" class="checkbox" id="check2">
+                    <div class="item-content">
+                        <h3>Check Monitor Compatibility <span class="page-ref">Page 10, 13</span></h3>
+                        <p>Ensure all connected monitors have identical resolution, DPI, and orientation settings if Vitrea spans multiple monitors.</p>
+                        <p>For single-monitor Vitrea display:</p>
+                        <ul>
+                            <li>If using a monitor with a scale factor >100%, set it as the primary monitor in Windows.</li>
+                            <li>If using 100% scaling, any connected monitor can display Vitrea without being the primary monitor.</li>
+                        </ul>
+                        <p>Supported resolutions: Minimum 1280x1024, Recommended 1920x1200, Maximum 2560x1600.</p>
+                        <div class="action">Action: In Windows Display Settings, verify that all monitors share the same resolution, DPI, and orientation (e.g., all set to 1920x1200, 100% scaling, landscape).</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="checklist-section">
+        <h2 class="section-toggle">Multiple Monitor Configuration Setup</h2>
+        <div class="collapsible-content">
+            <div class="checklist-item" id="item3">
+                <div class="checkbox-container">
+                    <input type="checkbox" class="checkbox" id="check3">
+                    <div class="item-content">
+                        <h3>Launch Vitrea Software <span class="page-ref">Page 10</span></h3>
+                        <p>Log into the Vitrea system.</p>
+                        <p>For Vitrea Thin Client, establish an RDP connection.</p>
+                        <div class="action">Action: Ensure a stable RDP connection for Thin Client users and verify login credentials work correctly.</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="checklist-item" id="item4">
+                <div class="checkbox-container">
+                    <input type="checkbox" class="checkbox" id="check4">
+                    <div class="item-content">
+                        <h3>Access Monitor Preference Settings <span class="page-ref">Page 10-11</span></h3>
+                        <p>Select the gear icon in the upper right corner of the Vitrea software.</p>
+                        <p>Choose "Set Monitor Preference" and click OK to enable monitor selection on the next launch.</p>
+                        <div class="action">Action: Confirm the gear icon is accessible and the "Set Monitor Preference" option appears in the menu.</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="checklist-item" id="item5">
+                <div class="checkbox-container">
+                    <input type="checkbox" class="checkbox" id="check5">
+                    <div class="item-content">
+                        <h3>Configure Display Selection <span class="page-ref">Page 11</span></h3>
+                        <p>Relaunch Vitrea software on a system with multiple monitors.</p>
+                        <p>On the "Display Selection - Step 1 of 2" screen, choose between:</p>
+                        <ul>
+                            <li>"One Display" for single-monitor use.</li>
+                            <li>"All Displays" for multi-monitor configuration.</li>
+                        </ul>
+                        <p>Click the "All Displays" button to enable Vitrea to span multiple monitors.</p>
+                        <div class="action">Action: Move the Display Selection window to the desired main monitor and click "Continue" to confirm the selection.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="checklist-section">
+        <h2 class="section-toggle">Multiple Monitor Workflow Configuration</h2>
+        <div class="collapsible-content">
+            <div class="checklist-item" id="item6">
+                <div class="checkbox-container">
+                    <input type="checkbox" class="checkbox" id="check6">
+                    <div class="item-content">
+                        <h3>Set Up General Multi-Monitor Workflow <span class="page-ref">Page 14-15</span></h3>
+                        <p>Open the Study List from the Applications Home screen; it displays on the main monitor.</p>
+                        <p>Launch a clinical application, which will display on the next available monitor.</p>
+                        <p>Optionally, drag the Study List or clinical application to any desired monitor.</p>
+                        <p>Verify ability to preview a series in the Study Tab on one monitor while a clinical application runs on another.</p>
+                        <div class="notes">Note: If previewing a different patient, the application monitor may gray out; click the application monitor to restore.</div>
+                        <div class="action">Action: Test dragging applications between monitors and confirm the Study List and clinical applications display as expected.</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="checklist-item" id="item7">
+                <div class="checkbox-container">
+                    <input type="checkbox" class="checkbox" id="check7">
+                    <div class="item-content">
+                        <h3>Set Up Mirada XD Multi-Monitor Workflow <span class="page-ref">Page 15</span></h3>
+                        <p>Open the Study List and select the Mirada XD application from the Applications Home screen.</p>
+                        <p>From the Mirada XD application, select "Window" > "New Window" to launch a second window on the secondary monitor.</p>
+                        <p>Verify that actions in the secondary monitor are linked to the primary monitor.</p>
+                        <p>Test closing and relaunching primary or secondary windows using "Window" > "New Window."</p>
+                        <div class="action">Action: Confirm the Mirada XD application opens a second window on the secondary monitor and that interactions are synchronized.</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="checklist-item" id="item8">
+                <div class="checkbox-container">
+                    <input type="checkbox" class="checkbox" id="check8">
+                    <div class="item-content">
+                        <h3>Handle Monitor Configuration Changes <span class="page-ref">Page 14</span></h3>
+                        <p>Confirm that if a monitor is added or removed, Vitrea reverts to single-monitor mode, moving all open tabs to the remaining monitor.</p>
+                        <p>For Vitrea Thin Client or Workstation, verify that minimizing the AppShell window minimizes it across all monitors.</p>
+                        <div class="action">Action: Simulate adding or removing a monitor (e.g., disconnecting a monitor) and verify that Vitrea reverts to single-monitor mode correctly.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="checklist-section troubleshooting">
+        <h2 class="section-toggle">Troubleshooting Scenarios</h2>
+        <div class="collapsible-content">
+            <div class="checklist-item" id="item9">
+                <div class="checkbox-container">
+                    <input type="checkbox" class="checkbox" id="check9">
+                    <div class="item-content">
+                        <h3>Issue 1: Vitrea Fails to Detect All Connected Monitors</h3>
+                        <p><strong>Cause:</strong> Windows may not recognize all monitors, or monitor settings (resolution, DPI, orientation) are mismatched.</p>
+                        <p><strong>Action:</strong></p>
+                        <ul>
+                            <li>Verify all monitors are detected in Windows Display Settings.</li>
+                            <li>Ensure identical resolution, DPI, and orientation settings across all monitors (Page 10, 13).</li>
+                            <li>Restart Vitrea after adjusting Windows settings.</li>
+                            <li>If issue persists, reconnect monitors and restart the system.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="checklist-item" id="item10">
+                <div class="checkbox-container">
+                    <input type="checkbox" class="checkbox" id="check10">
+                    <div class="item-content">
+                        <h3>Issue 2: "Display Selection" Screen Does Not Appear on Relaunch</h3>
+                        <p><strong>Cause:</strong> Monitor preference settings may not have saved correctly, or Vitrea is not in multi-monitor mode.</p>
+                        <p><strong>Action:</strong></p>
+                        <ul>
+                            <li>Re-access "Set Monitor Preference" via the gear icon and click OK (Page 11).</li>
+                            <li>Ensure multiple monitors are connected and powered on before launching Vitrea.</li>
+                            <li>Check Windows Display Settings to confirm monitors are set to "Extend" mode, not "Duplicate."</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="checklist-item" id="item11">
+                <div class="checkbox-container">
+                    <input type="checkbox" class="checkbox" id="check11">
+                    <div class="item-content">
+                        <h3>Issue 3: Application or Study List Does Not Display on Desired Monitor</h3>
+                        <p><strong>Cause:</strong> Incorrect monitor selection during setup or scaling issues.</p>
+                        <p><strong>Action:</strong></p>
+                        <ul>
+                            <li>Repeat the "Configure Display Selection" step, ensuring the Display Selection window is moved to the desired main monitor (Page 11-12).</li>
+                            <li>Verify the target monitor's scaling is set to 100% or set as the primary monitor if >100% (Page 10).</li>
+                            <li>Manually drag the application or Study List to the desired monitor and test functionality.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="checklist-item" id="item12">
+                <div class="checkbox-container">
+                    <input type="checkbox" class="checkbox" id="check12">
+                    <div class="item-content">
+                        <h3>Issue 4: Application Monitor Grays Out When Previewing a Different Patient</h3>
+                        <p><strong>Cause:</strong> Expected behavior when previewing a different patient in the Study List (Page 15).</p>
+                        <p><strong>Action:</strong></p>
+                        <ul>
+                            <li>Click within the grayed-out application monitor to restore the view (Page 15).</li>
+                            <li>Ensure the correct patient is selected in the Study List to avoid conflicts.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="checklist-item" id="item13">
+                <div class="checkbox-container">
+                    <input type="checkbox" class="checkbox" id="check13">
+                    <div class="item-content">
+                        <h3>Issue 5: Mirada XD Second Window Does Not Open on Secondary Monitor</h3>
+                        <p><strong>Cause:</strong> Incorrect monitor configuration or Mirada XD settings issue.</p>
+                        <p><strong>Action:</strong></p>
+                        <ul>
+                            <li>Confirm "All Displays" was selected during the Display Selection step (Page 11).</li>
+                            <li>Re-select "Window" > "New Window" in Mirada XD (Page 15).</li>
+                            <li>Verify Windows recognizes the secondary monitor as an extended display.</li>
+                            <li>If issue persists, restart the Mirada XD application and reattempt.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="checklist-item" id="item14">
+                <div class="checkbox-container">
+                    <input type="checkbox" class="checkbox" id="check14">
+                    <div class="item-content">
+                        <h3>Issue 6: Vitrea Reverts to Single-Monitor Mode Unexpectedly</h3>
+                        <p><strong>Cause:</strong> Monitor configuration change (e.g., disconnected cable, sleep mode) detected by Vitrea (Page 14).</p>
+                        <p><strong>Action:</strong></p>
+                        <ul>
+                            <li>Check all monitor connections and power status.</li>
+                            <li>Re-run the "Set up multiple monitor configuration" procedure (Page 10-12).</li>
+                            <li>Avoid changing monitor configurations while Vitrea is running.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="checklist-item" id="item15">
+                <div class="checkbox-container">
+                    <input type="checkbox" class="checkbox" id="check15">
+                    <div class="item-content">
+                        <h3>Issue 7: Performance Issues or Lag in Multi-Monitor Mode</h3>
+                        <p><strong>Cause:</strong> Insufficient system resources or outdated graphics drivers.</p>
+                        <p><strong>Action:</strong></p>
+                        <ul>
+                            <li>Verify system meets Vitrea's hardware requirements (refer to the Vitrea Installation Guide, Page 5).</li>
+                            <li>Update graphics drivers to the latest version compatible with your system.</li>
+                            <li>Reduce the number of open applications or tabs in Vitrea to lower resource usage.</li>
+                            <li>Contact Canon Medical Support if performance issues persist (Page 5).</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="checklist-section">
+        <h2 class="section-toggle">Additional Notes</h2>
+        <div class="collapsible-content">
+            <div class="checklist-item" id="item16">
+                <div class="checkbox-container">
+                    <input type="checkbox" class="checkbox" id="check16">
+                    <div class="item-content">
+                        <h3>Understand Display Regions <span class="page-ref">Page 10</span></h3>
+                        <p>Confirm display regions are numbered from left to right, top to bottom (e.g., 1, 2, 3, 4 for a 2x2 layout).</p>
+                        <p>Ensure physical monitors split into multiple regions are recognized as separate displays by Windows.</p>
+                        <div class="action">Action: In Windows Display Settings, verify monitor numbering matches the expected layout.</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="checklist-item" id="item17">
+                <div class="checkbox-container">
+                    <input type="checkbox" class="checkbox" id="check17">
+                    <div class="item-content">
+                        <h3>Validate Application Behavior <span class="page-ref">Page 14</span></h3>
+                        <p>For Vitrea Thin Client: Confirm Mirada applications on the secondary monitor are not linked to the primary monitor's patient application.</p>
+                        <p>For Mirada XD: Only this application can span multiple monitors; verify functionality.</p>
+                        <div class="action">Action: Test Mirada XD's multi-monitor functionality separately from other applications.</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="checklist-item" id="item18">
+                <div class="checkbox-container">
+                    <input type="checkbox" class="checkbox" id="check18">
+                    <div class="item-content">
+                        <h3>Contact Support for Issues <span class="page-ref">Page 5-6</span></h3>
+                        <p>For technical support, contact Canon Medical at 1-800-208-3005 (U.S.) or support@mi.medical.canon.</p>
+                        <p>Report serious incidents to Canon Medical at 1-800-208-3005 and the competent authority in your region.</p>
+                        <div class="action">Action: Document error messages or unexpected behavior before contacting support for faster resolution.</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="checklist-item" id="item19">
+                <div class="checkbox-container">
+                    <input type="checkbox" class="checkbox" id="check19">
+                    <div class="item-content">
+                        <h3>Notes</h3>
+                        <ul>
+                            <li>Ensure compliance with the requirement that all monitors have identical settings for resolution, DPI, and orientation when spanning multiple monitors.</li>
+                            <li>Refer to the Vitrea Release Notes for any late-breaking information (Page 6).</li>
+                            <li>Only Mirada XD supports spanning multiple monitors; other applications are limited to single-monitor display unless dragged manually.</li>
+                            <li>For additional documentation, contact Customer Support at 1-800-208-3005 to request printed versions of the Release Notes, Education and Reference Guide, or Installation Guides (Page 5).</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set up collapsible sections
+            const sectionToggles = document.querySelectorAll('.section-toggle');
+            sectionToggles.forEach(toggle => {
+                toggle.addEventListener('click', function() {
+                    this.classList.toggle('collapsed');
+                    const content = this.nextElementSibling;
+                    if (this.classList.contains('collapsed')) {
+                        content.style.maxHeight = '0';
+                    } else {
+                        content.style.maxHeight = content.scrollHeight + 'px';
+                    }
+                });
+                
+                // Initialize all sections as expanded
+                toggle.classList.remove('collapsed');
+                toggle.nextElementSibling.style.maxHeight = toggle.nextElementSibling.scrollHeight + 'px';
+            });
+            
+            // Set up checkboxes
+            const checkboxes = document.querySelectorAll('.checkbox');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updateProgress);
+                
+                // Load saved state
+                const savedState = localStorage.getItem(checkbox.id);
+                if (savedState === 'checked') {
+                    checkbox.checked = true;
+                    checkbox.closest('.checklist-item').classList.add('completed');
+                }
+            });
+            
+            // Save button
+            document.getElementById('saveBtn').addEventListener('click', function() {
+                checkboxes.forEach(checkbox => {
+                    localStorage.setItem(checkbox.id, checkbox.checked ? 'checked' : 'unchecked');
+                });
+                alert('Progress saved!');
+            });
+            
+            // Reset button
+            document.getElementById('resetBtn').addEventListener('click', function() {
+                if (confirm('Are you sure you want to reset all checkboxes?')) {
+                    checkboxes.forEach(checkbox => {
+                        checkbox.checked = false;
+                        checkbox.closest('.checklist-item').classList.remove('completed');
+                        localStorage.setItem(checkbox.id, 'unchecked');
+                    });
+                    updateProgress();
+                }
+            });
+            
+            // Expand All button
+            document.getElementById('expandAllBtn').addEventListener('click', function() {
+                sectionToggles.forEach(toggle => {
+                    toggle.classList.remove('collapsed');
+                    toggle.nextElementSibling.style.maxHeight = toggle.nextElementSibling.scrollHeight + 'px';
+                });
+            });
+            
+            // Collapse All button
+            document.getElementById('collapseAllBtn').addEventListener('click', function() {
+                sectionToggles.forEach(toggle => {
+                    toggle.classList.add('collapsed');
+                    toggle.nextElementSibling.style.maxHeight = '0';
+                });
+            });
+            
+            // Update progress bar on load
+            updateProgress();
+            
+            // Function to update progress
+            function updateProgress() {
+                const total = checkboxes.length;
+                const checked = document.querySelectorAll('.checkbox:checked').length;
+                const percentage = Math.round((checked / total) * 100);
+                
+                const progressBar = document.getElementById('progressBar');
+                progressBar.style.width = percentage + '%';
+                progressBar.textContent = percentage + '%';
+                
+                // Update completed class on items
+                checkboxes.forEach(checkbox => {
+                    const item = checkbox.closest('.checklist-item');
+                    if (checkbox.checked) {
+                        item.classList.add('completed');
+                    } else {
+                        item.classList.remove('completed');
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
