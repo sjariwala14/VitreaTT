@@ -1,0 +1,1519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vitrea Troubleshooting Mind Map</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2980b9;
+            --success-color: #27ae60;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --light-color: #ecf0f1;
+            --dark-color: #2c3e50;
+            --text-color: #333;
+            --bg-color: #f5f5f5;
+            --card-bg: #fff;
+            --border-radius: 8px;
+            --box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            --transition: all 0.3s ease;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background-color: var(--card-bg);
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+        
+        h1 {
+            color: var(--dark-color);
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: 600;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 10px;
+        }
+        
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+        
+        .search-container {
+            flex: 1;
+            min-width: 250px;
+            position: relative;
+        }
+        
+        #search {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            transition: var(--transition);
+        }
+        
+        #search:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        
+        .search-results {
+            position: absolute;
+            width: 100%;
+            max-height: 300px;
+            overflow-y: auto;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 0 0 var(--border-radius) var(--border-radius);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            z-index: 100;
+            display: none;
+        }
+        
+        .search-result-item {
+            padding: 10px 15px;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .search-result-item:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 20px;
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .filter-btn:hover {
+            background-color: #d5dbdb;
+        }
+        
+        .filter-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .favorites-btn {
+            background-color: var(--warning-color);
+            color: white;
+        }
+        
+        .breadcrumbs {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        
+        .breadcrumb {
+            color: var(--primary-color);
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+        
+        .breadcrumb:hover {
+            text-decoration: underline;
+        }
+        
+        .breadcrumb-separator {
+            margin: 0 8px;
+            color: #95a5a6;
+        }
+        
+        .mindmap-container {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .mindmap-nav {
+            width: 300px;
+            flex-shrink: 0;
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 15px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        
+        .mindmap {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .node {
+            margin: 3px 0;
+            padding: 10px 15px;
+            border-radius: var(--border-radius);
+            background-color: var(--light-color);
+            cursor: pointer;
+            transition: var(--transition);
+            border-left: 4px solid var(--primary-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .node:hover {
+            background-color: #d4e6f1;
+            transform: translateX(5px);
+        }
+        
+        .node.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-left-color: var(--secondary-color);
+        }
+        
+        .node-favorite {
+            color: var(--warning-color);
+            margin-left: 10px;
+            cursor: pointer;
+        }
+        
+        .node-favorite.active {
+            color: var(--warning-color);
+        }
+        
+        .deployment-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            background-color: var(--danger-color);
+            color: white;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-left: 10px;
+        }
+        
+        .content-container {
+            flex: 1;
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 20px;
+            min-height: 600px;
+        }
+        
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+        }
+        
+        .content-title {
+            margin: 0;
+            color: var(--dark-color);
+            font-size: 24px;
+        }
+        
+        .content-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .action-btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: var(--border-radius);
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .action-btn:hover {
+            background-color: #d5dbdb;
+        }
+        
+        .action-btn.primary {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .content-section {
+            margin-bottom: 25px;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            color: var(--dark-color);
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .section-title:hover {
+            color: var(--primary-color);
+        }
+        
+        .section-title::before {
+            content: '▶';
+            font-size: 12px;
+            margin-right: 10px;
+            transition: var(--transition);
+        }
+        
+        .section-title.expanded::before {
+            transform: rotate(90deg);
+        }
+        
+        .section-content {
+            padding-left: 20px;
+            margin-top: 10px;
+            display: none;
+        }
+        
+        .section-content.expanded {
+            display: block;
+        }
+        
+        .subsection {
+            margin-bottom: 15px;
+        }
+        
+        .subsection-title {
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 5px;
+        }
+        
+        ul, ol {
+            margin-top: 5px;
+            margin-bottom: 5px;
+            padding-left: 20px;
+        }
+        
+        li {
+            margin-bottom: 5px;
+        }
+        
+        .highlight {
+            background-color: #fffacd;
+            padding: 0 2px;
+            border-radius: 3px;
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 20px;
+            color: #95a5a6;
+            font-style: italic;
+        }
+        
+        .favorite-star {
+            color: #ccc;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 20px;
+        }
+        
+        .favorite-star.active {
+            color: var(--warning-color);
+        }
+        
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            border-bottom: 1px dotted #666;
+            cursor: help;
+        }
+        
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 300px;
+            background-color: #555;
+            color: #fff;
+            text-align: left;
+            border-radius: 6px;
+            padding: 10px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -150px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+        
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+        
+        .registry-key {
+            font-family: Consolas, monospace;
+            background-color: #f0f0f0;
+            padding: 2px 4px;
+            border-radius: 3px;
+            border: 1px solid #ddd;
+        }
+        
+        .sql-query {
+            font-family: Consolas, monospace;
+            background-color: #f8f8f8;
+            padding: 10px;
+            border-radius: 5px;
+            border-left: 4px solid #3498db;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+        
+        .step-by-step {
+            background-color: #f9f9f9;
+            border-left: 4px solid var(--success-color);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 var(--border-radius) var(--border-radius) 0;
+        }
+        
+        .step {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed #eee;
+        }
+        
+        .step:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        
+        .step-number {
+            display: inline-block;
+            width: 25px;
+            height: 25px;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 25px;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        
+        .deployment-specific {
+            background-color: #f0f7ff;
+            border-left: 4px solid var(--primary-color);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 var(--border-radius) var(--border-radius) 0;
+        }
+        
+        .deployment-tabs {
+            display: flex;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 15px;
+        }
+        
+        .deployment-tab {
+            padding: 8px 15px;
+            cursor: pointer;
+            border: 1px solid transparent;
+            border-bottom: none;
+            border-radius: 5px 5px 0 0;
+            margin-right: 5px;
+            background-color: #f1f1f1;
+        }
+        
+        .deployment-tab.active {
+            background-color: white;
+            border-color: #ddd;
+            border-bottom-color: white;
+            margin-bottom: -1px;
+            font-weight: bold;
+        }
+        
+        .deployment-content {
+            display: none;
+        }
+        
+        .deployment-content.active {
+            display: block;
+        }
+        
+        @media (max-width: 768px) {
+            .mindmap-container {
+                flex-direction: column;
+            }
+            
+            .mindmap-nav {
+                width: 100%;
+                max-height: 300px;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .filter-buttons {
+                justify-content: center;
+            }
+            
+            .tooltip .tooltiptext {
+                width: 200px;
+                margin-left: -100px;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1><i class="fas fa-map"></i> Vitrea Troubleshooting Mind Map</h1>
+        
+        <div class="controls">
+            <div class="search-container">
+                <input type="text" id="search" placeholder="Search for issues, symptoms, or solutions...">
+                <div class="search-results" id="search-results"></div>
+            </div>
+            
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="enterprise">Enterprise</button>
+                <button class="filter-btn" data-filter="workstation">Workstation</button>
+                <button class="filter-btn" data-filter="extend">Extend</button>
+                <button class="filter-btn favorites-btn" data-filter="favorites">
+                    <i class="fas fa-star"></i> Favorites
+                </button>
+            </div>
+        </div>
+        
+        <div class="breadcrumbs" id="breadcrumbs">
+            <span class="breadcrumb" data-level="0">All Issues</span>
+        </div>
+        
+        <div class="mindmap-container">
+            <div class="mindmap-nav">
+                <div id="mindmap" class="mindmap">
+                    <!-- Mind map will be generated here by JavaScript -->
+                </div>
+            </div>
+            
+            <div class="content-container" id="content-container">
+                <div id="welcome-message">
+                    <h2>Welcome to Vitrea Troubleshooting Guide</h2>
+                    <p>Select an issue from the left panel to view detailed troubleshooting information.</p>
+                    <p>You can:</p>
+                    <ul>
+                        <li>Search for specific issues using the search box</li>
+                        <li>Filter by deployment type (Enterprise, Workstation, Extend)</li>
+                        <li>Mark issues as favorites for quick access</li>
+                        <li>Click on any issue to see detailed troubleshooting steps</li>
+                    </ul>
+                    <div style="margin-top: 30px; background-color: #f8f9fa; padding: 15px; border-radius: 5px;">
+                        <h3><i class="fas fa-lightbulb"></i> Quick Tips</h3>
+                        <ul>
+                            <li>Use the breadcrumbs above to navigate back to previous levels</li>
+                            <li>Click section headers to expand/collapse content</li>
+                            <li>Star icon (<i class="fas fa-star" style="color: var(--warning-color)"></i>) marks favorites</li>
+                            <li>Hover over <span class="tooltip">technical terms<span class="tooltiptext">Like this tooltip that explains technical terms</span></span> for explanations</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div id="content" style="display: none;">
+                    <div class="content-header">
+                        <h2 class="content-title" id="content-title"></h2>
+                        <div class="content-actions">
+                            <button class="action-btn" id="print-btn">
+                                <i class="fas fa-print"></i> Print
+                            </button>
+                            <button class="action-btn primary" id="favorite-btn">
+                                <i class="far fa-star"></i> Favorite
+                            </button>
+                            <button class="action-btn" id="expand-all-btn">
+                                <i class="fas fa-expand"></i> Expand All
+                            </button>
+                            <button class="action-btn" id="collapse-all-btn">
+                                <i class="fas fa-compress"></i> Collapse All
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div id="content-body">
+                        <!-- Content will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Complete data structure with all technical details
+        const troubleshootingData = {
+            "All Sessions are in use": {
+                "Symptom": "An 'All Sessions are in use, another user must disconnect before you can connect:' error screen is displayed on an Application Server.",
+                "Deployment": "Enterprise deployment (Application Server only)",
+                "Resolution": {
+                    "Steps": [
+                        "Click Exit to close the error screen.",
+                        "Connect to the Application Server.",
+                        {
+                            "Disconnect a user": [
+                                "Access Server Manager > Remote Desktop Services screen",
+                                "Expand Collections in the left pane",
+                                "In the Connections section, right-click the desired user",
+                                "Select Logoff"
+                            ]
+                        }
+                    ],
+                    "Registry Keys": [
+                        "HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Control\\Terminal Server\\MaxInstanceCount - Sets maximum concurrent sessions"
+                    ]
+                }
+            },
+            "Applications are not launching": {
+                "Symptom": "An application fails to start when attempting to launch it from the StudyList or Application Selector.",
+                "Deployment": "Enterprise, Enterprise Single Server, and Vitrea extend deployments",
+                "Potential Causes": [
+                    "Licensing issues",
+                    "The application failing to get required resources to start",
+                    "An application error"
+                ],
+                "Specific Errors": {
+                    "Application name (process id #) terminated abnormally": {
+                        "Action": [
+                            "Collect the corresponding application's logfile from:",
+                            "<span class='registry-key'>C:\\ProgramData\\Vitrea\\Logs\\applications\\{application name}</span>",
+                            "Note any exception information",
+                            "Record the time of occurrence",
+                            "Document steps to reproduce the issue"
+                        ]
+                    },
+                    "Vitrea Client has encountered an error and cannot retrieve required study information": {
+                        "Action": [
+                            "Collect log information for:",
+                            "AppShell: <span class='registry-key'>C:\\ProgramData\\Vitrea\\Logs\\AppShell</span>",
+                            "SessionHelper: <span class='registry-key'>C:\\ProgramData\\Vitrea\\Logs\\SessionHelper</span>"
+                        ]
+                    },
+                    "Unable to acquire system resources to launch this application": {
+                        "Action": [
+                            {
+                                "NVIDIA Driver Check": [
+                                    "Open Device Manager",
+                                    "Expand Display adapters",
+                                    "Right-click NVIDIA device and select Properties",
+                                    "Verify driver version matches supported versions",
+                                    "Update driver if necessary"
+                                ]
+                            },
+                            {
+                                "Check User Sessions": [
+                                    "Open Task Manager",
+                                    "Go to Users tab",
+                                    "Identify users consuming GPU resources",
+                                    "Ask users to close desktop applications",
+                                    "If necessary, log users off"
+                                ]
+                            }
+                        ]
+                    },
+                    "Cedars Applications (QBS, QGS/QPS) error dialog": {
+                        "Action": [
+                            {
+                                "License Verification": [
+                                    "Navigate to <span class='registry-key'>C:\\Program Files\\Cedars-Sinai\\Licenses</span>",
+                                    "Verify license file exists and is valid",
+                                    "Check license expiration date",
+                                    "Contact Canon Medical for license renewal if needed"
+                                ]
+                            }
+                        ]
+                    }
+                },
+                "Licensing": {
+                    "Action": [
+                        {
+                            "Check License Status": [
+                                "Open browser and navigate to:",
+                                "<span class='registry-key'>http://localhost:8700/management/api/license/usage</span>",
+                                "Verify feature is listed under purchased licenses",
+                                "Check available count matches expected"
+                            ]
+                        }
+                    ],
+                    "Note": "When accessing Vitrea Applications and administration screens, only use the Vitrea Client or Remote Desktop to the Enterprise Single Server, Management Server, or Vitrea Extend system."
+                },
+                "Registry Checks": [
+                    "HKEY_LOCAL_MACHINE\\SOFTWARE\\Vital Images\\Vitrea\\Licensing - Verify license server settings",
+                    "HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\Vitrea Licensing Service - Check service parameters"
+                ]
+            },
+            "NASRoot Migration": {
+                "Symptom": "Need to migrate NASRoot to a new location or storage system",
+                "Deployment": "Enterprise, Vitrea extend, and Vitrea workstation deployments",
+                "Prerequisites": [
+                    "Schedule downtime window",
+                    "Ensure sufficient storage space at destination",
+                    "Verify backup of current NASRoot exists"
+                ],
+                "Step-by-Step Guide": {
+                    "Enterprise Deployment": [
+                        {
+                            "Preparation": [
+                                "Notify all users of maintenance window",
+                                "Stop all Vitrea services on Management Server and Application Servers",
+                                "Take backup of current NASRoot folder"
+                            ]
+                        },
+                        {
+                            "Migration": [
+                                "Robocopy command: <span class='sql-query'>robocopy \\\\oldserver\\NASRoot \\\\newserver\\NASRoot /MIR /COPYALL /R:1 /W:1 /LOG:C:\\NasMigration.log</span>",
+                                "Verify copy completion with summary in log file",
+                                "Update NASRoot location in System Configuration"
+                            ]
+                        },
+                        {
+                            "Post-Migration": [
+                                "Update registry keys pointing to old location:",
+                                "<span class='registry-key'>HKEY_LOCAL_MACHINE\\SOFTWARE\\Vital Images\\Vitrea\\NASRoot</span>",
+                                "<span class='registry-key'>HKEY_LOCAL_MACHINE\\SOFTWARE\\Vital Images\\VIMS\\NASRoot</span>",
+                                "Restart all Vitrea services",
+                                "Verify data accessibility through Vitrea client"
+                            ]
+                        }
+                    ],
+                    "Workstation Deployment": [
+                        {
+                            "Preparation": [
+                                "Close all Vitrea applications",
+                                "Stop Vitrea services",
+                                "Create backup of current NASRoot"
+                            ]
+                        },
+                        {
+                            "Migration": [
+                                "Use Windows Explorer to copy all files to new location",
+                                "Alternative: <span class='sql-query'>xcopy C:\\Vitrea\\NASRoot D:\\NewNASRoot /E /H /K /O /X</span>"
+                            ]
+                        },
+                        {
+                            "Post-Migration": [
+                                "Update NASRoot path in registry:",
+                                "<span class='registry-key'>HKEY_LOCAL_MACHINE\\SOFTWARE\\Vital Images\\VitreaWorkstation\\NASRoot</span>",
+                                "Restart Vitrea services",
+                                "Verify application functionality"
+                            ]
+                        }
+                    ]
+                },
+                "SQL Updates (Enterprise)": [
+                    {
+                        "VSP Database": [
+                            "<span class='sql-query'>UPDATE SystemSettings SET Value = '\\\\newserver\\NASRoot' WHERE Name = 'NASRootPath'</span>"
+                        ]
+                    },
+                    {
+                        "VIDicom Database": [
+                            "<span class='sql-query'>EXEC sp_configure 'show advanced options', 1; RECONFIGURE; EXEC sp_configure 'xp_cmdshell', 1; RECONFIGURE;</span>",
+                            "<span class='sql-query'>EXEC xp_cmdshell 'mklink /D C:\\Vitrea\\NASRoot \\\\newserver\\NASRoot'</span>"
+                        ]
+                    }
+                ],
+                "Verification Steps": [
+                    "Check StudyList displays studies",
+                    "Open sample studies from different modalities",
+                    "Verify evidence creation functionality",
+                    "Check reporting features"
+                ]
+            },
+            "Database Maintenance": {
+                "Symptom": "Database performance issues or corruption",
+                "Deployment": "All deployments",
+                "Maintenance Procedures": {
+                    "SQL Server Maintenance": [
+                        {
+                            "Index Rebuild": [
+                                "<span class='sql-query'>USE VIDicom; EXEC sp_MSforeachtable 'PRINT ''?''; ALTER INDEX ALL ON ? REBUILD';</span>"
+                            ]
+                        },
+                        {
+                            "Statistics Update": [
+                                "<span class='sql-query'>USE VIDicom; EXEC sp_updatestats;</span>"
+                            ]
+                        },
+                        {
+                            "Integrity Check": [
+                                "<span class='sql-query'>DBCC CHECKDB('VIDicom') WITH NO_INFOMSGS, ALL_ERRORMSGS;</span>"
+                            ]
+                        }
+                    ],
+                    "Database Backup": [
+                        {
+                            "Full Backup": [
+                                "<span class='sql-query'>BACKUP DATABASE VIDicom TO DISK = 'D:\\Backups\\VIDicom_Full.bak' WITH COMPRESSION, STATS = 10;</span>"
+                            ]
+                        },
+                        {
+                            "Transaction Log Backup": [
+                                "<span class='sql-query'>BACKUP LOG VIDicom TO DISK = 'D:\\Backups\\VIDicom_Log.trn' WITH COMPRESSION;</span>"
+                            ]
+                        }
+                    ]
+                },
+                "Configuration Settings": [
+                    {
+                        "Memory Configuration": [
+                            "<span class='sql-query'>EXEC sp_configure 'max server memory', 8192; RECONFIGURE;</span>",
+                            "Adjust based on available system memory"
+                        ]
+                    },
+                    {
+                        "TempDB Optimization": [
+                            "<span class='sql-query'>ALTER DATABASE tempdb MODIFY FILE (NAME = tempdev, SIZE = 4096MB, FILEGROWTH = 1024MB);</span>",
+                            "Create multiple tempdb files (one per CPU core)"
+                        ]
+                    }
+                ]
+            },
+            "DICOM Configuration": {
+                "Symptom": "DICOM communication issues with PACS or modalities",
+                "Deployment": "All deployments",
+                "Configuration Files": [
+                    {
+                        "VIMS Configuration": [
+                            "Location: <span class='registry-key'>C:\\Program Files\\Vital Images\\VIMS\\Config\\vims.cfg</span>",
+                            "Key parameters:",
+                            "AE Title, Port, Storage Commitment"
+                        ]
+                    },
+                    {
+                        "Dicom Services": [
+                            "Configuration: <span class='registry-key'>C:\\ProgramData\\Vitrea\\databases\\vims.json</span>",
+                            "Verify AE Title matches PACS expectations"
+                        ]
+                    }
+                ],
+                "Registry Settings": [
+                    "HKEY_LOCAL_MACHINE\\SOFTWARE\\Vital Images\\VIMS\\Dicom\\AETitle - Verify matches configuration",
+                    "HKEY_LOCAL_MACHINE\\SOFTWARE\\Vital Images\\VIMS\\Dicom\\Port - Default 3002"
+                ],
+                "Firewall Ports": [
+                    "TCP 3002 - DICOM Receive",
+                    "TCP 3003 - Query/Retrieve",
+                    "TCP 104 - Standard DICOM port (if configured)"
+                ],
+                "Troubleshooting Steps": [
+                    {
+                        "Verification": [
+                            "Check DICOM service is running",
+                            "Verify port is listening: <span class='sql-query'>netstat -ano | findstr 3002</span>",
+                            "Test connectivity from PACS"
+                        ]
+                    },
+                    {
+                        "Log Analysis": [
+                            "Review VIMS logs: <span class='registry-key'>C:\\ProgramData\\Vitrea\\Logs\\VIMS</span>",
+                            "Check for association errors",
+                            "Verify storage commitment success"
+                        ]
+                    }
+                ]
+            },
+            "Advanced Troubleshooting": {
+                "Symptom": "Complex issues requiring advanced diagnostics",
+                "Deployment": "All deployments",
+                "Diagnostic Tools": [
+                    {
+                        "Performance Monitoring": [
+                            "PerfMon counters for Vitrea services",
+                            "SQL Server Profiler traces",
+                            "Windows Event Log filtering"
+                        ]
+                    },
+                    {
+                        "Network Analysis": [
+                            "Wireshark captures for DICOM communication",
+                            "NetMon for RDP issues",
+                            "Ping and traceroute tests"
+                        ]
+                    }
+                ],
+                "Debug Logging": [
+                    {
+                        "Enable Verbose Logging": [
+                            "Edit: <span class='registry-key'>C:\\Program Files\\Vital Images\\Vitrea\\Config\\log4net.config</span>",
+                            "Change level to DEBUG",
+                            "Restart services"
+                        ]
+                    },
+                    {
+                        "Dump File Collection": [
+                            "Configure Windows Error Reporting",
+                            "Set up crash dump collection",
+                            "Configure symbol paths for debugging"
+                        ]
+                    }
+                ],
+                "SQL Queries for Diagnostics": [
+                    {
+                        "Session Tracking": [
+                            "<span class='sql-query'>SELECT * FROM VSP.Sessions WHERE LastActivityDate > DATEADD(hour, -1, GETDATE());</span>"
+                        ]
+                    },
+                    {
+                        "Job Monitoring": [
+                            "<span class='sql-query'>SELECT * FROM VSP.Jobs WHERE Status = 'Running' AND StartTime < DATEADD(minute, -30, GETDATE());</span>"
+                        ]
+                    }
+                ]
+            }
+        };
+
+        // Favorites system
+        let favorites = JSON.parse(localStorage.getItem('vitreaFavorites')) || [];
+        
+        // Current state
+        let currentIssue = null;
+        let currentFilter = 'all';
+        let currentSearchTerm = '';
+        
+        // Tooltip definitions
+        const tooltips = {
+            "NASRoot": "Network Attached Storage Root - The shared directory where Vitrea stores all study data and evidence",
+            "AE Title": "Application Entity Title - A unique identifier for DICOM communication between systems",
+            "VIMS": "Vital Images Management System - The core service handling DICOM communication in Vitrea",
+            "VSP": "Vitrea Service Platform - The main application server component in Enterprise deployments",
+            "Registry Key": "A Windows Registry entry that stores configuration settings for applications and the operating system",
+            "SQL Query": "A command used to retrieve or modify data in a SQL database",
+            "DICOM": "Digital Imaging and Communications in Medicine - The standard protocol for medical imaging communication",
+            "Robocopy": "Robust File Copy - A command-line utility for reliable file copying in Windows",
+            "PerfMon": "Performance Monitor - A Windows tool for tracking system and application performance metrics"
+        };
+
+        // Function to create the mind map
+        function createMindMap() {
+            const mindmapElement = document.getElementById('mindmap');
+            mindmapElement.innerHTML = '';
+            
+            let issuesToShow = Object.keys(troubleshootingData);
+            
+            // Apply search filter
+            if (currentSearchTerm.trim() !== '') {
+                issuesToShow = issuesToShow.filter(issue => 
+                    issue.toLowerCase().includes(currentSearchTerm.toLowerCase()) ||
+                    JSON.stringify(troubleshootingData[issue]).toLowerCase().includes(currentSearchTerm.toLowerCase())
+                );
+            }
+            
+            // Apply deployment filter
+            if (currentFilter !== 'all' && currentFilter !== 'favorites') {
+                issuesToShow = issuesToShow.filter(issue => {
+                    const deployment = troubleshootingData[issue].Deployment || '';
+                    return deployment.toLowerCase().includes(currentFilter.toLowerCase());
+                });
+            }
+            
+            // Apply favorites filter
+            if (currentFilter === 'favorites') {
+                issuesToShow = issuesToShow.filter(issue => favorites.includes(issue));
+            }
+            
+            if (issuesToShow.length === 0) {
+                mindmapElement.innerHTML = '<div class="no-results">No issues found matching your criteria</div>';
+                return;
+            }
+            
+            issuesToShow.forEach(issue => {
+                const node = document.createElement('div');
+                node.className = `node ${currentIssue === issue ? 'active' : ''}`;
+                
+                const nodeText = document.createElement('span');
+                nodeText.textContent = issue;
+                node.appendChild(nodeText);
+                
+                // Add deployment badge if available
+                if (troubleshootingData[issue].Deployment) {
+                    const deploymentBadge = document.createElement('span');
+                    deploymentBadge.className = 'deployment-badge';
+                    deploymentBadge.textContent = troubleshootingData[issue].Deployment;
+                    node.appendChild(deploymentBadge);
+                }
+                
+                // Add favorite star
+                const favoriteStar = document.createElement('span');
+                favoriteStar.className = `node-favorite ${favorites.includes(issue) ? 'active' : ''}`;
+                favoriteStar.innerHTML = favorites.includes(issue) ? '<i class="fas fa-star"></i>' : '<i class="far fa-star"></i>';
+                favoriteStar.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    toggleFavorite(issue);
+                });
+                node.appendChild(favoriteStar);
+                
+                node.addEventListener('click', function(e) {
+                    if (!e.target.classList.contains('node-favorite')) {
+                        showContent(issue);
+                    }
+                });
+                
+                mindmapElement.appendChild(node);
+            });
+        }
+
+        // Function to show content for a selected issue
+        function showContent(issue) {
+            currentIssue = issue;
+            const content = troubleshootingData[issue];
+            const contentTitle = document.getElementById('content-title');
+            const contentBody = document.getElementById('content-body');
+            const contentElement = document.getElementById('content');
+            const welcomeMessage = document.getElementById('welcome-message');
+            const favoriteBtn = document.getElementById('favorite-btn');
+            
+            // Update breadcrumbs
+            updateBreadcrumbs(issue);
+            
+            // Hide welcome message and show content
+            welcomeMessage.style.display = 'none';
+            contentElement.style.display = 'block';
+            
+            // Update favorite button
+            favoriteBtn.innerHTML = favorites.includes(issue) ? 
+                '<i class="fas fa-star"></i> Favorited' : 
+                '<i class="far fa-star"></i> Favorite';
+            
+            // Set title
+            contentTitle.textContent = issue;
+            
+            // Build content body
+            contentBody.innerHTML = '';
+            
+            // Add deployment information if available
+            if (content.Deployment) {
+                const section = createContentSection('Deployment', content.Deployment);
+                contentBody.appendChild(section);
+            }
+            
+            // Add symptom if available
+            if (content.Symptom) {
+                const section = createContentSection('Symptom', content.Symptom);
+                contentBody.appendChild(section);
+            }
+            
+            // Add other content
+            for (const key in content) {
+                if (key !== 'Deployment' && key !== 'Symptom') {
+                    const section = createContentSection(key, content[key]);
+                    contentBody.appendChild(section);
+                }
+            }
+            
+            // Highlight search terms in content
+            if (currentSearchTerm.trim() !== '') {
+                highlightSearchTerms(contentBody);
+            }
+            
+            // Add tooltips to technical terms
+            addTooltips(contentBody);
+            
+            // Update active node in mindmap
+            createMindMap();
+        }
+
+        // Create a content section with expand/collapse functionality
+        function createContentSection(title, content) {
+            const sectionDiv = document.createElement('div');
+            sectionDiv.className = 'content-section';
+            
+            const sectionTitle = document.createElement('h3');
+            sectionTitle.className = 'section-title';
+            sectionTitle.textContent = title;
+            sectionTitle.addEventListener('click', function() {
+                this.classList.toggle('expanded');
+                const content = this.nextElementSibling;
+                content.classList.toggle('expanded');
+            });
+            
+            const sectionContent = document.createElement('div');
+            sectionContent.className = 'section-content';
+            
+            if (Array.isArray(content)) {
+                // For arrays, create a list
+                const list = document.createElement('ul');
+                content.forEach(item => {
+                    const li = document.createElement('li');
+                    if (typeof item === 'object') {
+                        li.appendChild(processComplexContent(item));
+                    } else {
+                        li.textContent = item;
+                    }
+                    list.appendChild(li);
+                });
+                sectionContent.appendChild(list);
+            } else if (typeof content === 'object') {
+                // For objects, create nested structure
+                sectionContent.appendChild(processComplexContent(content));
+            } else {
+                // For simple values
+                sectionContent.textContent = content;
+            }
+            
+            sectionDiv.appendChild(sectionTitle);
+            sectionDiv.appendChild(sectionContent);
+            
+            // Expand the first few sections by default
+            if (['Resolution', 'Solution', 'Steps', 'Action', 'Step-by-Step Guide', 'Registry Checks', 'SQL Updates'].includes(title)) {
+                sectionTitle.classList.add('expanded');
+                sectionContent.classList.add('expanded');
+            }
+            
+            return sectionDiv;
+        }
+
+        // Process complex content (objects with nested structures)
+        function processComplexContent(content) {
+            const container = document.createElement('div');
+            
+            for (const key in content) {
+                if (Array.isArray(content[key])) {
+                    // Array of items or steps
+                    if (key.toLowerCase().includes('step') || content[key].some(item => typeof item === 'object')) {
+                        // Step-by-step guide
+                        const stepContainer = document.createElement('div');
+                        stepContainer.className = 'step-by-step';
+                        
+                        content[key].forEach((step, index) => {
+                            const stepDiv = document.createElement('div');
+                            stepDiv.className = 'step';
+                            
+                            const stepNumber = document.createElement('span');
+                            stepNumber.className = 'step-number';
+                            stepNumber.textContent = index + 1;
+                            stepDiv.appendChild(stepNumber);
+                            
+                            if (typeof step === 'object') {
+                                const stepTitle = document.createElement('div');
+                                stepTitle.className = 'subsection-title';
+                                stepTitle.textContent = Object.keys(step)[0];
+                                stepDiv.appendChild(stepTitle);
+                                
+                                const stepContent = document.createElement('div');
+                                if (Array.isArray(step[Object.keys(step)[0]])) {
+                                    const stepList = document.createElement('ul');
+                                    step[Object.keys(step)[0]].forEach(item => {
+                                        const li = document.createElement('li');
+                                        li.textContent = item;
+                                        stepList.appendChild(li);
+                                    });
+                                    stepContent.appendChild(stepList);
+                                } else {
+                                    stepContent.textContent = step[Object.keys(step)[0]];
+                                }
+                                stepDiv.appendChild(stepContent);
+                            } else {
+                                const stepText = document.createElement('span');
+                                stepText.textContent = step;
+                                stepDiv.appendChild(stepText);
+                            }
+                            
+                            stepContainer.appendChild(stepDiv);
+                        });
+                        
+                        container.appendChild(stepContainer);
+                    } else {
+                        // Simple list
+                        const subsection = document.createElement('div');
+                        subsection.className = 'subsection';
+                        
+                        const subTitle = document.createElement('div');
+                        subTitle.className = 'subsection-title';
+                        subTitle.textContent = key;
+                        subsection.appendChild(subTitle);
+                        
+                        const list = document.createElement('ul');
+                        content[key].forEach(item => {
+                            const li = document.createElement('li');
+                            li.textContent = item;
+                            list.appendChild(li);
+                        });
+                        subsection.appendChild(list);
+                        
+                        container.appendChild(subsection);
+                    }
+                } else if (typeof content[key] === 'object') {
+                    // Nested object
+                    const subsection = document.createElement('div');
+                    subsection.className = 'subsection';
+                    
+                    const subTitle = document.createElement('div');
+                    subTitle.className = 'subsection-title';
+                    subTitle.textContent = key;
+                    subsection.appendChild(subTitle);
+                    
+                    subsection.appendChild(processComplexContent(content[key]));
+                    container.appendChild(subsection);
+                } else {
+                    // Simple key-value pair
+                    const subsection = document.createElement('div');
+                    subsection.className = 'subsection';
+                    
+                    const subTitle = document.createElement('div');
+                    subTitle.className = 'subsection-title';
+                    subTitle.textContent = key;
+                    subsection.appendChild(subTitle);
+                    
+                    const subContent = document.createElement('div');
+                    subContent.textContent = content[key];
+                    subsection.appendChild(subContent);
+                    
+                    container.appendChild(subsection);
+                }
+            }
+            
+            return container;
+        }
+
+        // Update breadcrumbs
+        function updateBreadcrumbs(issue) {
+            const breadcrumbsElement = document.getElementById('breadcrumbs');
+            breadcrumbsElement.innerHTML = '';
+            
+            const allIssuesCrumb = document.createElement('span');
+            allIssuesCrumb.className = 'breadcrumb';
+            allIssuesCrumb.textContent = 'All Issues';
+            allIssuesCrumb.addEventListener('click', function() {
+                currentIssue = null;
+                document.getElementById('welcome-message').style.display = 'block';
+                document.getElementById('content').style.display = 'none';
+                createMindMap();
+            });
+            breadcrumbsElement.appendChild(allIssuesCrumb);
+            
+            if (issue) {
+                const separator = document.createElement('span');
+                separator.className = 'breadcrumb-separator';
+                separator.innerHTML = '&raquo;';
+                breadcrumbsElement.appendChild(separator);
+                
+                const issueCrumb = document.createElement('span');
+                issueCrumb.className = 'breadcrumb';
+                issueCrumb.textContent = issue;
+                breadcrumbsElement.appendChild(issueCrumb);
+            }
+        }
+
+        // Toggle favorite status
+        function toggleFavorite(issue) {
+            const index = favorites.indexOf(issue);
+            if (index === -1) {
+                favorites.push(issue);
+            } else {
+                favorites.splice(index, 1);
+            }
+            localStorage.setItem('vitreaFavorites', JSON.stringify(favorites));
+            createMindMap();
+            
+            // Update favorite button if this is the current issue
+            if (currentIssue === issue) {
+                const favoriteBtn = document.getElementById('favorite-btn');
+                favoriteBtn.innerHTML = favorites.includes(issue) ? 
+                    '<i class="fas fa-star"></i> Favorited' : 
+                    '<i class="far fa-star"></i> Favorite';
+            }
+        }
+
+        // Highlight search terms in content
+        function highlightSearchTerms(element) {
+            const searchTerm = currentSearchTerm.toLowerCase();
+            if (!searchTerm.trim()) return;
+            
+            const regex = new RegExp(searchTerm, 'gi');
+            
+            function highlightTextNodes(node) {
+                if (node.nodeType === Node.TEXT_NODE) {
+                    const text = node.nodeValue;
+                    if (text.toLowerCase().includes(searchTerm)) {
+                        const span = document.createElement('span');
+                        span.innerHTML = text.replace(regex, match => 
+                            `<span class="highlight">${match}</span>`
+                        );
+                        node.parentNode.replaceChild(span, node);
+                    }
+                } else if (node.nodeType === Node.ELEMENT_NODE && 
+                          !['SCRIPT', 'STYLE', 'TEXTAREA', 'INPUT', 'SPAN'].includes(node.tagName)) {
+                    Array.from(node.childNodes).forEach(highlightTextNodes);
+                }
+            }
+            
+            highlightTextNodes(element);
+        }
+
+        // Add tooltips to technical terms
+        function addTooltips(element) {
+            // Add tooltips to known terms
+            Object.keys(tooltips).forEach(term => {
+                const elements = element.querySelectorAll(`:not(.tooltip):contains('${term}')`);
+                elements.forEach(el => {
+                    if (el.childNodes.length === 1 && el.childNodes[0].nodeType === Node.TEXT_NODE) {
+                        const html = el.innerHTML.replace(
+                            new RegExp(term, 'g'), 
+                            `<span class="tooltip">${term}<span class="tooltiptext">${tooltips[term]}</span></span>`
+                        );
+                        el.innerHTML = html;
+                    }
+                });
+            });
+            
+            // Add tooltips to registry keys
+            const registryKeys = element.querySelectorAll('.registry-key');
+            registryKeys.forEach(key => {
+                if (!key.parentElement.classList.contains('tooltip')) {
+                    const wrapper = document.createElement('span');
+                    wrapper.className = 'tooltip';
+                    wrapper.innerHTML = key.outerHTML + 
+                        `<span class="tooltiptext">Windows Registry key path. Use Registry Editor (regedit.exe) to view/modify.</span>`;
+                    key.replaceWith(wrapper);
+                }
+            });
+            
+            // Add tooltips to SQL queries
+            const sqlQueries = element.querySelectorAll('.sql-query');
+            sqlQueries.forEach(query => {
+                if (!query.parentElement.classList.contains('tooltip')) {
+                    const wrapper = document.createElement('span');
+                    wrapper.className = 'tooltip';
+                    wrapper.innerHTML = query.outerHTML + 
+                        `<span class="tooltiptext">SQL query to execute in SQL Server Management Studio. Run with appropriate permissions.</span>`;
+                    query.replaceWith(wrapper);
+                }
+            });
+        }
+
+        // Advanced search functionality
+        function setupSearch() {
+            const searchInput = document.getElementById('search');
+            const searchResults = document.getElementById('search-results');
+            
+            searchInput.addEventListener('input', function() {
+                currentSearchTerm = this.value;
+                searchResults.innerHTML = '';
+                
+                if (currentSearchTerm.trim() === '') {
+                    searchResults.style.display = 'none';
+                    createMindMap();
+                    return;
+                }
+                
+                const results = [];
+                const searchTermLower = currentSearchTerm.toLowerCase();
+                
+                // Search in issue titles
+                Object.keys(troubleshootingData).forEach(issue => {
+                    if (issue.toLowerCase().includes(searchTermLower)) {
+                        results.push({
+                            type: 'Issue',
+                            title: issue,
+                            content: issue,
+                            path: [issue]
+                        });
+                    }
+                });
+                
+                // Search in content
+                Object.keys(troubleshootingData).forEach(issue => {
+                    const content = troubleshootingData[issue];
+                    searchContent(content, searchTermLower, results, [issue]);
+                });
+                
+                // Display results
+                if (results.length > 0) {
+                    results.slice(0, 20).forEach(result => {
+                        const item = document.createElement('div');
+                        item.className = 'search-result-item';
+                        
+                        const typeSpan = document.createElement('span');
+                        typeSpan.style.color = '#666';
+                        typeSpan.style.fontSize = '0.8em';
+                        typeSpan.textContent = result.type + ': ';
+                        item.appendChild(typeSpan);
+                        
+                        const titleSpan = document.createElement('span');
+                        titleSpan.textContent = result.title;
+                        item.appendChild(titleSpan);
+                        
+                        item.addEventListener('click', function() {
+                            if (result.path.length === 1) {
+                                showContent(result.path[0]);
+                            } else {
+                                showContent(result.path[0]);
+                                // TODO: Scroll to specific section
+                            }
+                            searchResults.style.display = 'none';
+                            searchInput.value = result.content;
+                        });
+                        
+                        searchResults.appendChild(item);
+                    });
+                    searchResults.style.display = 'block';
+                } else {
+                    searchResults.style.display = 'none';
+                }
+                
+                createMindMap();
+            });
+            
+            // Hide results when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+                    searchResults.style.display = 'none';
+                }
+            });
+        }
+        
+        // Recursive function to search content
+        function searchContent(content, searchTerm, results, path) {
+            if (typeof content === 'string' && content.toLowerCase().includes(searchTerm)) {
+                const excerpt = content.length > 100 ? content.substring(0, 100) + '...' : content;
+                results.push({
+                    type: 'Content',
+                    title: path.join(' > '),
+                    content: excerpt,
+                    path: [...path]
+                });
+            } else if (Array.isArray(content)) {
+                content.forEach((item, index) => {
+                    if (typeof item === 'object') {
+                        searchContent(item, searchTerm, results, [...path, `Item ${index + 1}`]);
+                    } else if (typeof item === 'string' && item.toLowerCase().includes(searchTerm)) {
+                        results.push({
+                            type: 'List Item',
+                            title: path.join(' > '),
+                            content: item,
+                            path: [...path]
+                        });
+                    }
+                });
+            } else if (typeof content === 'object') {
+                Object.keys(content).forEach(key => {
+                    if (key.toLowerCase().includes(searchTerm)) {
+                        results.push({
+                            type: 'Section',
+                            title: [...path, key].join(' > '),
+                            content: key,
+                            path: [...path, key]
+                        });
+                    }
+                    searchContent(content[key], searchTerm, results, [...path, key]);
+                });
+            }
+        }
+
+        // Initialize the application
+        function init() {
+            createMindMap();
+            setupSearch();
+            
+            // Filter buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentFilter = this.dataset.filter;
+                    createMindMap();
+                });
+            });
+            
+            // Favorite button
+            document.getElementById('favorite-btn').addEventListener('click', function() {
+                if (currentIssue) {
+                    toggleFavorite(currentIssue);
+                }
+            });
+            
+            // Print button
+            document.getElementById('print-btn').addEventListener('click', function() {
+                window.print();
+            });
+            
+            // Expand all button
+            document.getElementById('expand-all-btn').addEventListener('click', function() {
+                document.querySelectorAll('.section-title').forEach(title => {
+                    if (!title.classList.contains('expanded')) {
+                        title.classList.add('expanded');
+                        title.nextElementSibling.classList.add('expanded');
+                    }
+                });
+            });
+            
+            // Collapse all button
+            document.getElementById('collapse-all-btn').addEventListener('click', function() {
+                document.querySelectorAll('.section-title').forEach(title => {
+                    if (title.classList.contains('expanded')) {
+                        title.classList.remove('expanded');
+                        title.nextElementSibling.classList.remove('expanded');
+                    }
+                });
+            });
+            
+            // Keyboard shortcuts
+            document.addEventListener('keydown', function(e) {
+                // Ctrl+E to expand all sections
+                if (e.ctrlKey && e.key === 'e') {
+                    document.getElementById('expand-all-btn').click();
+                    e.preventDefault();
+                }
+                // Ctrl+C to collapse all sections
+                else if (e.ctrlKey && e.key === 'c') {
+                    document.getElementById('collapse-all-btn').click();
+                    e.preventDefault();
+                }
+            });
+        }
+        
+        // Start the application
+        init();
+    </script>
+</body>
+</html>

@@ -3,909 +3,952 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Complete Vitrea Administration Mind Map</title>
+    <title>Vitrea Troubleshooting Mind Map</title>
     <style>
-        :root {
-            --primary: #2c3e50;
-            --secondary: #3498db;
-            --accent: #e74c3c;
-            --light: #ecf0f1;
-            --dark: #2c3e50;
-            --warning: #e74c3c;
-            --highlight: #fffde7;
-            --note: #7f8c8d;
-        }
-        
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: Arial, sans-serif;
             margin: 0;
             padding: 20px;
-            background-color: #f5f7fa;
-            color: var(--dark);
-            line-height: 1.6;
+            background-color: #f5f5f5;
         }
-        
         .container {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
-        
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-        
         h1 {
-            color: var(--primary);
-            margin: 0;
-            border-bottom: 2px solid var(--secondary);
-            padding-bottom: 10px;
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
         }
-        
-        .search-container {
-            display: flex;
-            gap: 10px;
-        }
-        
-        #searchInput {
-            padding: 8px 12px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            min-width: 250px;
-        }
-        
-        #searchButton {
-            padding: 8px 16px;
-            background-color: var(--secondary);
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        
         .mindmap {
             display: flex;
             flex-direction: column;
-            align-items: center;
         }
-        
-        .central-node {
-            background-color: var(--secondary);
-            color: white;
-            padding: 15px 30px;
-            border-radius: 8px;
-            font-weight: bold;
-            text-align: center;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            margin-bottom: 30px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            width: fit-content;
-        }
-        
-        .central-node:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
-        }
-        
-        .branches {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 20px;
-            width: 100%;
-        }
-        
-        .branch {
-            flex: 1;
-            min-width: 280px;
-            max-width: 380px;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            overflow: hidden;
-            transition: all 0.3s ease;
-        }
-        
-        .branch:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
-        }
-        
-        .branch-header {
-            background-color: var(--primary);
-            color: white;
-            padding: 12px 15px;
-            font-weight: bold;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .branch-header::after {
-            content: '+';
-            font-size: 18px;
-        }
-        
-        .branch-header.active::after {
-            content: '-';
-        }
-        
-        .branch-content {
-            padding: 15px;
-            display: none;
-            max-height: 600px;
-            overflow-y: auto;
-        }
-        
-        .branch-content.show {
-            display: block;
-        }
-        
-        .sub-node {
-            margin-bottom: 15px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #eee;
-        }
-        
-        .sub-node:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-            padding-bottom: 0;
-        }
-        
-        .sub-node-header {
-            font-weight: bold;
-            color: var(--primary);
-            margin-bottom: 8px;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .sub-node-header::after {
-            content: '+';
-            font-size: 18px;
-        }
-        
-        .sub-node-header.active::after {
-            content: '-';
-        }
-        
-        .sub-node-content {
-            display: none;
-            padding: 10px;
-            background-color: var(--light);
-            border-radius: 5px;
-            margin-top: 8px;
-        }
-        
-        .sub-node-content.show {
-            display: block;
-        }
-        
-        .leaf-node {
-            margin-left: 15px;
-            margin-top: 8px;
-            padding: 8px;
-            background-color: #e8f4fc;
-            border-radius: 5px;
-            font-size: 14px;
-            position: relative;
-        }
-        
-        .leaf-node.has-tooltip:hover::after {
-            content: attr(data-tooltip);
-            position: absolute;
-            left: 100%;
-            top: 0;
-            min-width: 200px;
-            max-width: 300px;
-            background-color: var(--dark);
-            color: white;
-            padding: 8px;
-            border-radius: 4px;
-            font-size: 13px;
-            z-index: 100;
-            margin-left: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-        
-        .step-by-step {
-            margin-top: 10px;
-            padding-left: 15px;
-            border-left: 3px solid var(--secondary);
-        }
-        
-        .step {
-            margin-bottom: 8px;
-            position: relative;
-            padding-left: 20px;
-        }
-        
-        .step::before {
-            content: '→';
-            position: absolute;
-            left: 0;
-            color: var(--secondary);
-        }
-        
-        .registry-key {
-            font-family: 'Courier New', monospace;
-            background-color: #f0f0f0;
-            padding: 2px 4px;
-            border-radius: 3px;
-        }
-        
-        .sql-query {
-            font-family: 'Courier New', monospace;
-            background-color: #f5f5f5;
-            padding: 5px;
-            border-radius: 3px;
-            display: block;
+        .node {
             margin: 5px 0;
-            white-space: pre-wrap;
-            font-size: 13px;
-        }
-        
-        .deployment-specific {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 10px;
-        }
-        
-        .deployment-type {
-            background-color: #e8f5e9;
-            padding: 8px;
+            padding: 10px;
             border-radius: 4px;
-            border-left: 3px solid #4caf50;
+            background-color: #e8f4f8;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-left: 4px solid #3498db;
         }
-        
-        .note {
-            font-style: italic;
-            color: var(--note);
-            font-size: 13px;
-            margin-top: 5px;
+        .node:hover {
+            background-color: #d4e6f1;
+            transform: translateX(5px);
         }
-        
-        .warning {
-            color: var(--warning);
-            font-weight: bold;
+        .node.active {
+            background-color: #d4e6f1;
+            border-left: 4px solid #2980b9;
         }
-        
+        .children {
+            margin-left: 20px;
+            display: none;
+        }
+        .node.active + .children {
+            display: block;
+        }
+        .content {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+            border-left: 4px solid #27ae60;
+        }
+        .content h3 {
+            margin-top: 0;
+            color: #27ae60;
+        }
+        .search-container {
+            margin-bottom: 20px;
+        }
+        #search {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
         .highlight {
-            background-color: var(--highlight);
-            padding: 2px 4px;
-            border-radius: 3px;
-        }
-        
-        .tooltip-icon {
-            display: inline-block;
-            width: 16px;
-            height: 16px;
-            background-color: var(--secondary);
-            color: white;
-            border-radius: 50%;
-            text-align: center;
-            line-height: 16px;
-            font-size: 12px;
-            margin-left: 5px;
-            cursor: help;
-        }
-        
-        .search-highlight {
             background-color: yellow;
             font-weight: bold;
         }
-        
-        @media (max-width: 768px) {
-            .branches {
-                flex-direction: column;
-                align-items: center;
-            }
-            
-            .branch {
-                width: 100%;
-                max-width: 100%;
-            }
-            
-            header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            
-            .search-container {
-                width: 100%;
-            }
-            
-            #searchInput {
-                flex-grow: 1;
-            }
+        .deployment {
+            display: inline-block;
+            padding: 2px 6px;
+            background-color: #e74c3c;
+            color: white;
+            border-radius: 3px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+        .back-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-bottom: 15px;
+            display: none;
+        }
+        .back-btn:hover {
+            background-color: #2980b9;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>Complete Vitrea Administration Reference</h1>
-            <div class="search-container">
-                <input type="text" id="searchInput" placeholder="Search for settings, registry keys...">
-                <button id="searchButton">Search</button>
-            </div>
-        </header>
+        <h1>Vitrea Troubleshooting Mind Map</h1>
         
-        <div class="mindmap">
-            <div class="central-node" onclick="toggleAll()">
-                Vitrea Administration Procedures
-                <div style="font-size: 14px; font-weight: normal; margin-top: 5px;">Click to expand/collapse all</div>
-            </div>
-            
-            <div class="branches">
-                <!-- Branch 1 -->
-                <div class="branch">
-                    <div class="branch-header" onclick="toggleBranch(this)">
-                        I. General System Configuration
-                    </div>
-                    <div class="branch-content">
-                        <!-- Windows DPI Settings -->
-                        <div class="sub-node">
-                            <div class="sub-node-header" onclick="toggleSubNode(this)">
-                                Windows DPI Settings (4K Displays)
-                            </div>
-                            <div class="sub-node-content">
-                                <div class="leaf-node">Recommended setting: <span class="highlight">100%</span></div>
-                                <div class="leaf-node">Sign out required for changes</div>
-                                <div class="deployment-specific">
-                                    <div class="deployment-type">
-                                        <strong>Applicable to:</strong> Vitrea extend/workstation deployments
-                                    </div>
-                                </div>
-                                <div class="note">For optimal display quality on high-resolution monitors</div>
-                            </div>
-                        </div>
-                        
-                        <!-- Administrative Reveal Desktop -->
-                        <div class="sub-node">
-                            <div class="sub-node-header" onclick="toggleSubNode(this)">
-                                Administrative Reveal Desktop
-                            </div>
-                            <div class="sub-node-content">
-                                <div class="leaf-node">Minimizes Vitrea to perform admin work</div>
-                                <div class="leaf-node">Launches Windows Explorer</div>
-                                <div class="leaf-node">System resets to defaults when Kiosk session closes</div>
-                                <div class="step-by-step">
-                                    <div class="step">Access through Vitrea System Settings</div>
-                                    <div class="step">Select "Reveal Desktop" option</div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- System Settings -->
-                        <div class="sub-node">
-                            <div class="sub-node-header" onclick="toggleSubNode(this)">
-                                System Settings
-                            </div>
-                            <div class="sub-node-content">
-                                <div class="leaf-node">Central configuration section</div>
-                                <div class="step-by-step">
-                                    <div class="step">Select "Make Changes"</div>
-                                    <div class="step">Enter reason for change</div>
-                                    <div class="step">Click "OK" then "Activate Changes"</div>
-                                </div>
-                                <div class="leaf-node warning">Many settings require Vitrea restart</div>
-                                <div class="leaf-node">Key configuration areas:</div>
-                                <div class="leaf-node">- Application behavior</div>
-                                <div class="leaf-node">- DICOM settings</div>
-                                <div class="leaf-node">- User interface preferences</div>
-                            </div>
-                        </div>
-                        
-                        <!-- Restarting Servers and Services -->
-                        <div class="sub-node">
-                            <div class="sub-node-header" onclick="toggleSubNode(this)">
-                                Restarting Servers and Services
-                            </div>
-                            <div class="sub-node-content">
-                                <div class="deployment-specific">
-                                    <div class="deployment-type">
-                                        <strong>Enterprise Deployment:</strong>
-                                        <div class="step-by-step">
-                                            <div class="step">Ensure no Application Servers are restarting</div>
-                                            <div class="step">Verify no active user sessions</div>
-                                            <div class="step">Stop Management Server services in correct order</div>
-                                        </div>
-                                    </div>
-                                    <div class="deployment-type">
-                                        <strong>Single Server/Extend/Workstation:</strong>
-                                        <div class="step-by-step">
-                                            <div class="step">Stop all VSP services</div>
-                                            <div class="step">Perform maintenance</div>
-                                            <div class="step">Restart services in reverse order</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="leaf-node">Troubleshooting steps if services don't start:</div>
-                                <div class="step-by-step">
-                                    <div class="step">Check <span class="registry-key">Event Viewer</span> for errors</div>
-                                    <div class="step">Verify service user has <span class="registry-key">Logon as Service</span> rights</div>
-                                    <div class="step">Confirm password hasn't changed</div>
-                                </div>
-                                <div class="leaf-node">Key services to monitor:</div>
-                                <div class="leaf-node">- VSP Management Service</div>
-                                <div class="leaf-node">- VSP Application Service</div>
-                                <div class="leaf-node">- VSP Database Service</div>
-                            </div>
-                        </div>
-                        
-                        <!-- Changing Hostname -->
-                        <div class="sub-node">
-                            <div class="sub-node-header" onclick="toggleSubNode(this)">
-                                Changing Hostname
-                            </div>
-                            <div class="sub-node-content">
-                                <div class="deployment-specific">
-                                    <div class="deployment-type">
-                                        <strong>Applicable to:</strong> Enterprise Single Server, Vitrea extend, Workstation
-                                    </div>
-                                </div>
-                                <div class="leaf-node warning">Hostname requirements:</div>
-                                <div class="leaf-node">- Maximum <span class="highlight">15 characters</span></div>
-                                <div class="leaf-node">- Cannot be "Vitrea"</div>
-                                <div class="step-by-step">
-                                    <div class="step">Remove system from domain (if applicable)</div>
-                                    <div class="step">Change AE Title in configuration</div>
-                                    <div class="step">Stop all VSP services</div>
-                                    <div class="step">Access System Properties → Change hostname</div>
-                                    <div class="step">Restart machine</div>
-                                    <div class="step">Run <span class="registry-key">VitreaHostnameTool.exe</span></div>
-                                    <div class="step">Reinstall/refresh VIMS components</div>
-                                </div>
-                                <div class="leaf-node">Registry keys affected:</div>
-                                <div class="leaf-node">- <span class="registry-key">HKLM\Software\Vital\Vitrea\Hostname</span></div>
-                                <div class="leaf-node">- <span class="registry-key">HKLM\Software\Vital\VSP\Configuration</span></div>
-                                <div class="note">Complete documentation available in Vitrea Installation Guide section 4.2.3</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Branch 2 -->
-                <div class="branch">
-                    <div class="branch-header" onclick="toggleBranch(this)">
-                        II. User & Permission Management
-                    </div>
-                    <div class="branch-content">
-                        <!-- User Access Overview -->
-                        <div class="sub-node">
-                            <div class="sub-node-header" onclick="toggleSubNode(this)">
-                                User Access Overview
-                            </div>
-                            <div class="sub-node-content">
-                                <div class="leaf-node">Supported authentication methods:</div>
-                                <div class="leaf-node">- Windows groups (Active Directory or local)</div>
-                                <div class="leaf-node">- Local database users</div>
-                                <div class="leaf-node">Role-based permissions structure:</div>
-                                <div class="leaf-node">- Service: System-level access</div>
-                                <div class="leaf-node">- User: Standard application access</div>
-                                <div class="leaf-node">- Admin: Full administrative privileges</div>
-                                <div class="sql-query">-- Example SQL query to view role mappings
-SELECT g.GroupName, r.RoleName 
-FROM UserGroups g
-JOIN GroupRoles gr ON g.GroupID = gr.GroupID
-JOIN Roles r ON gr.RoleID = r.RoleID</div>
-                            </div>
-                        </div>
-                        
-                        <!-- External Groups (AD) -->
-                        <div class="sub-node">
-                            <div class="sub-node-header" onclick="toggleSubNode(this)">
-                                External Groups (AD)
-                            </div>
-                            <div class="sub-node-content">
-                                <div class="step-by-step">
-                                    <div class="step">Navigate to User Management in Vitrea Admin Console</div>
-                                    <div class="step">Select "Add External Group"</div>
-                                    <div class="step">Enter AD group name (domain\group)</div>
-                                    <div class="step">Assign appropriate roles (Service, User, Admin)</div>
-                                </div>
-                                <div class="leaf-node warning">Critical security note:</div>
-                                <div class="leaf-node">- Never deselect Admin Role for <span class="registry-key">BUILTIN\Administrators</span></div>
-                                <div class="leaf-node">- This would lock all administrators out of Local Vitrea</div>
-                                <div class="leaf-node">Registry keys involved:</div>
-                                <div class="leaf-node">- <span class="registry-key">HKLM\Software\Vital\Vitrea\Security\ADGroups</span></div>
-                            </div>
-                        </div>
-                        
-                        <!-- Local Database Groups -->
-                        <div class="sub-node">
-                            <div class="sub-node-header" onclick="toggleSubNode(this)">
-                                Local Database Groups
-                            </div>
-                            <div class="sub-node-content">
-                                <div class="deployment-specific">
-                                    <div class="deployment-type">
-                                        <strong>Applicable to:</strong> Single Server, Extend, Workstation
-                                    </div>
-                                </div>
-                                <div class="step-by-step">
-                                    <div class="step">Access Local User Management</div>
-                                    <div class="step">Create new group</div>
-                                    <div class="step">Assign permissions from template or custom</div>
-                                    <div class="step">Add users to group</div>
-                                </div>
-                                <div class="sql-query">-- SQL to create local group (example)
-INSERT INTO LocalGroups (GroupName, Description)
-VALUES ('Radiologists', 'Group for radiology staff')</div>
-                                <div class="note">Local groups are stored in Vitrea database tables LocalGroups and LocalGroupMembers</div>
-                            </div>
-                        </div>
-                        
-                        <!-- Audit Logging -->
-                        <div class="sub-node">
-                            <div class="sub-node-header" onclick="toggleSubNode(this)">
-                                Audit Logging
-                            </div>
-                            <div class="sub-node-content">
-                                <div class="leaf-node">Uses Integrated Windows Authentication</div>
-                                <div class="step-by-step">
-                                    <div class="step">Configure Microsoft security audit policy:</div>
-                                    <div class="step">1. Open Local Security Policy (secpol.msc)</div>
-                                    <div class="step">2. Navigate to Security Settings → Local Policies → Audit Policy</div>
-                                    <div class="step">3. Enable "Audit logon events" and "Audit object access"</div>
-                                </div>
-                                <div class="leaf-node">Key audit events tracked:</div>
-                                <div class="leaf-node">- User logons/logoffs</div>
-                                <div class="leaf-node">- Configuration changes</div>
-                                <div class="leaf-node">- Sensitive data access</div>
-                                <div class="sql-query">-- Query audit logs example
-SELECT * FROM AuditLog 
-WHERE EventTime > DATEADD(day, -7, GETDATE())
-ORDER BY EventTime DESC</div>
-                            </div>
-                        </div>
-                        
-                        <!-- Single Sign-On (SSO) -->
-                        <div class="sub-node">
-                            <div class="sub-node-header" onclick="toggleSubNode(this)">
-                                Single Sign-On (SSO)
-                            </div>
-                            <div class="sub-node-content">
-                                <div class="leaf-node">Controlled by registry key:</div>
-                                <div class="leaf-node">- <span class="registry-key">HKLM\Software\Vital\Vitrea\Security\singleSignOnEnabled</span></div>
-                                <div class="leaf-node">Default values:</div>
-                                <div class="leaf-node">- <span class="highlight">true</span> (Workstation/Enterprise)</div>
-                                <div class="leaf-node">- <span class="highlight">false</span> (Extend in kiosk mode)</div>
-                                <div class="step-by-step">
-                                    <div class="step">To disable SSO:</div>
-                                    <div class="step">1. Open Registry Editor</div>
-                                    <div class="step">2. Navigate to the key above</div>
-                                    <div class="step">3. Change value to 0</div>
-                                    <div class="step">4. Restart Vitrea services</div>
-                                </div>
-                                <div class="leaf-node">Permission assignment:</div>
-                                <div class="leaf-node">- Windows Administrators group → Vitrea Admin role</div>
-                                <div class="leaf-node">- Windows Users group → Vitrea User role</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Branch 3 -->
-                <div class="branch">
-                    <div class="branch-header" onclick="toggleBranch(this)">
-                        III. Data Management
-                    </div>
-                    <div class="branch-content">
-                        <!-- Changing Storage Location -->
-                        <div class="sub-node">
-                            <div class="sub-node-header" onclick="toggleSubNode(this)">
-                                Changing Storage Location (NASRoot)
-                            </div>
-                            <div class="sub-node-content">
-                                <div class="deployment-specific">
-                                    <div class="deployment-type">
-                                        <strong>Enterprise Deployment:</strong>
-                                        <div class="step-by-step">
-                                            <div class="step warning">This is a complex, time-consuming procedure</div>
-                                            <div class="step">1. Stop all Vitrea services on all servers</div>
-                                            <div class="step">2. Detach database using SQL Management Studio</div>
-                                            <div class="step">3. Copy data using robocopy:
-                                                <div class="sql-query">robocopy \\oldnas\share \\newnas\share /MIR /COPYALL /R:1 /W:1</div>
-                                            </div>
-                                            <div class="step">4. Set NTFS permissions (Full Control for VSP service account)</div>
-                                            <div class="step">5. Update SQL tables:
-                                                <div class="sql-query">UPDATE SystemSettings SET Value='\\newnas\share' WHERE Key='NASRoot'</div>
-                                            </div>
-                                            <div class="step">6. Update registry keys:
-                                                <div class="leaf-node">- <span class="registry-key">HKLM\Software\Vital\VSP\DataPath</span></div>
-                                            </div>
-                                            <div class="step">7. Update config files:
-                                                <div class="leaf-node">- <span class="registry-key">E:\VitreaData\Config\vsp.config</span></div>
-                                            </div>
-                                            <div class="step">8. Reattach database</div>
-                                            <div class="step">9. Restart all services</div>
-                                        </div>
-                                        <div class="leaf-node warning">UNC path must be ≤31 characters due to Windows limitations</div>
-                                        <div class="leaf-node warning">Moving SQL database to remote device will significantly impact performance</div>
-                                    </div>
-                                    
-                                    <div class="deployment-type">
-                                        <strong>Single Server/Extend/Workstation:</strong>
-                                        <div class="step-by-step">
-                                            <div class="step">1. Stop all VSP services</div>
-                                            <div class="step">2. Move VitreaData folder to new location</div>
-                                            <div class="step">3. Update registry keys:
-                                                <div class="leaf-node">- <span class="registry-key">HKLM\Software\Vital\VSP\DataPath</span></div>
-                                            </div>
-                                            <div class="step">4. Update config files:
-                                                <div class="leaf-node">- <span class="registry-key">[InstallDir]\Config\vsp.config</span></div>
-                                            </div>
-                                            <div class="step">5. Restart services</div>
-                                        </div>
-                                        <div class="leaf-node warning">Not recommended for changing to network drive</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Database Backup/Restore -->
-                        <div class="sub-node">
-                            <div class="sub-node-header" onclick="toggleSubNode(this)">
-                                Database Backup/Restore
-                            </div>
-                            <div class="sub-node-content">
-                                <div class="leaf-node">Scheduled backup job runs daily at <span class="highlight">1:00 a.m.</span></div>
-                                <div class="leaf-node">Retention: <span class="highlight">five copies</span> of backup files</div>
-                                <div class="leaf-node">Default locations:</div>
-                                <div class="leaf-node">- Single/Extend/Workstation: <span class="registry-key">E:\VitreaData\DBBackup</span></div>
-                                <div class="leaf-node">- Enterprise: <span class="registry-key">\\[machinename]\nasroot\DBBackup</span></div>
-                                
-                                <div class="step-by-step">
-                                    <div class="step">Manual backup procedure:</div>
-                                    <div class="step">1. Open SQL Management Studio</div>
-                                    <div class="step">2. Right-click Vitrea database → Tasks → Back Up</div>
-                                    <div class="step">3. Select backup type (Full)</div>
-                                    <div class="step">4. Choose destination</div>
-                                    <div class="step">5. Execute backup</div>
-                                </div>
-                                
-                                <div class="step-by-step">
-                                    <div class="step">Restore procedure:</div>
-                                    <div class="step warning">Must be running same Vitrea version as backup</div>
-                                    <div class="step">1. Stop all Vitrea services</div>
-                                    <div class="step">2. Open SQL Management Studio</div>
-                                    <div class="step">3. Right-click Databases → Restore Database</div>
-                                    <div class="step">4. Select backup file</div>
-                                    <div class="step">5. Check "Overwrite the existing database"</div>
-                                    <div class="step">6. Execute restore</div>
-                                    <div class="step">7. Restart services</div>
-                                </div>
-                                
-                                <div class="sql-query">-- Check database version compatibility
-SELECT [Version] FROM DatabaseSchema 
-WHERE SchemaID = (SELECT MAX(SchemaID) FROM DatabaseSchema)</div>
-                            </div>
-                        </div>
-                        
-                        <!-- Evidence Auto Export -->
-                        <div class="sub-node">
-                            <div class="sub-node-header" onclick="toggleSubNode(this)">
-                                Evidence Auto Export
-                            </div>
-                            <div class="sub-node-content">
-                                <div class="step-by-step">
-                                    <div class="step">Configuration steps:</div>
-                                    <div class="step">1. Navigate to System Settings → Evidence</div>
-                                    <div class="step">2. Select "Enable Auto Export"</div>
-                                    <div class="step">3. Add DICOM archive destinations</div>
-                                    <div class="step">4. Configure Evidence Types:
-                                        <div class="leaf-node">- Images</div>
-                                        <div class="leaf-node">- Batches</div>
-                                        <div class="leaf-node">- Sessions</div>
-                                        <div class="leaf-node warning">- Reports (disables draft functionality)</div>
-                                    </div>
-                                </div>
-                                
-                                <div class="leaf-node">Registry keys involved:</div>
-                                <div class="leaf-node">- <span class="registry-key">HKLM\Software\Vital\Vitrea\Export\AutoExportEnabled</span></div>
-                                <div class="leaf-node">- <span class="registry-key">HKLM\Software\Vital\Vitrea\Export\ArchiveKeys</span></div>
-                                
-                                <div class="sql-query">-- SQL to verify configured archives
-SELECT ArchiveKey, AE_Title, Host, Port 
-FROM DICOMArchives
-WHERE AutoExport = 1</div>
-                            </div>
-                        </div>
-                        
-                        <!-- Uncommitted Evidence Retention -->
-                        <div class="sub-node">
-                            <div class="sub-node-header" onclick="toggleSubNode(this)">
-                                Uncommitted Evidence Retention
-                            </div>
-                            <div class="sub-node-content">
-                                <div class="leaf-node">Default: <span class="highlight">1000 years</span> (Vitrea 7.10+)</div>
-                                <div class="leaf-node">Previous default: 6 months</div>
-                                
-                                <div class="step-by-step">
-                                    <div class="step">To modify retention period:</div>
-                                    <div class="step">1. Open Registry Editor</div>
-                                    <div class="step">2. Navigate to <span class="registry-key">HKLM\Software\Vital\Vitrea\Evidence</span></div>
-                                    <div class="step">3. Create/modify DWORD <span class="registry-key">RetentionPeriodDays</span></div>
-                                    <div class="step">4. Set value in days (365000 = ~1000 years)</div>
-                                    <div class="step">5. Restart Vitrea services</div>
-                                </div>
-                                
-                                <div class="leaf-node warning">Setting to extremely high values may cause disk space issues</div>
-                                
-                                <div class="sql-query">-- SQL to check current retention settings
-SELECT EvidenceType, RetentionDays 
-FROM EvidenceRetentionSettings</div>
-                            </div>
-                        </div>
-                        
-                        <!-- Max Data Saved to Media -->
-                        <div class="sub-node">
-                            <div class="sub-node-header" onclick="toggleSubNode(this)">
-                                Max Data Saved to Media
-                            </div>
-                            <div class="sub-node-content">
-                                <div class="leaf-node">Controlled by setting:</div>
-                                <div class="leaf-node">- <span class="registry-key">HKLM\Software\Vital\Vitrea\Export\maxSaveToMediaSize</span></div>
-                                <div class="leaf-node">Default: <span class="highlight">49GB</span> (recommended)</div>
-                                
-                                <div class="step-by-step">
-                                    <div class="step">Modification procedure:</div>
-                                    <div class="step">1. Open Registry Editor</div>
-                                    <div class="step">2. Navigate to the key above</div>
-                                    <div class="step">3. Modify value (in bytes)</div>
-                                    <div class="step">4. Restart Vitrea services</div>
-                                </div>
-                                
-                                <div class="leaf-node warning">Higher values may:</div>
-                                <div class="leaf-node">- Stress system resources</div>
-                                <div class="leaf-node">- Cause longer processing times</div>
-                                <div class="leaf-node">- Risk timeouts during export</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Additional branches would continue here with the same level of detail -->
-                <!-- Branches IV-VII would follow the same pattern with complete technical details -->
-                
-            </div>
+        <div class="search-container">
+            <input type="text" id="search" placeholder="Search for issues, symptoms, or solutions...">
+        </div>
+        
+        <button class="back-btn" id="backBtn">Back to Main Map</button>
+        
+        <div id="mindmap" class="mindmap">
+            <!-- Mind map will be generated here by JavaScript -->
+        </div>
+        
+        <div id="content" class="content" style="display: none;">
+            <h3 id="content-title"></h3>
+            <div id="content-body"></div>
         </div>
     </div>
 
     <script>
-        // Toggle functions
-        function toggleBranch(header) {
-            const branch = header.parentElement;
-            const content = branch.querySelector('.branch-content');
-            content.classList.toggle('show');
-            header.classList.toggle('active');
-        }
-        
-        function toggleSubNode(header) {
-            header.classList.toggle('active');
-            const content = header.nextElementSibling;
-            content.classList.toggle('show');
-        }
-        
-        function toggleAll() {
-            const branches = document.querySelectorAll('.branch');
-            const firstBranchContent = branches[0].querySelector('.branch-content');
-            const isShowing = firstBranchContent.classList.contains('show');
-            
-            branches.forEach(branch => {
-                const content = branch.querySelector('.branch-content');
-                if (isShowing) {
-                    content.classList.remove('show');
-                    branch.querySelector('.branch-header').classList.remove('active');
-                    // Also close all sub-nodes
-                    const subNodes = branch.querySelectorAll('.sub-node-content');
-                    subNodes.forEach(node => node.classList.remove('show'));
-                    const subHeaders = branch.querySelectorAll('.sub-node-header');
-                    subHeaders.forEach(header => header.classList.remove('active'));
-                } else {
-                    content.classList.add('show');
-                    branch.querySelector('.branch-header').classList.add('active');
+        // Data structure for the mind map
+        const troubleshootingData = {
+            "All Sessions are in use": {
+                "Symptom": "An 'All Sessions are in use, another user must disconnect before you can connect:' error screen is displayed on an Application Server.",
+                "Deployment": "Enterprise deployment (Application Server only)",
+                "Resolution": [
+                    "Click Exit to close the error screen.",
+                    "Connect to the Application Server.",
+                    "If the error screen displays, disconnect a user by accessing Server Manager > Remote Desktop Services screen, expanding Collections in the left pane, and then in the Connections section, right-clicking the desired user and selecting Logoff."
+                ]
+            },
+            "Applications are not launching": {
+                "Symptom": "An application fails to start when attempting to launch it from the StudyList or Application Selector.",
+                "Deployment": "Enterprise, Enterprise Single Server, and Vitrea extend deployments",
+                "Potential Causes": [
+                    "Licensing issues",
+                    "The application failing to get required resources to start",
+                    "An application error"
+                ],
+                "Specific Errors": {
+                    "Application name (process id #) terminated abnormally": {
+                        "Action": "Collect the corresponding application's logfile and any exception information, note the time, and any information on how to reproduce the issue."
+                    },
+                    "Vitrea Client has encountered an error and cannot retrieve required study information": {
+                        "Action": "Collect log information for the AppShell and SessionHelper."
+                    },
+                    "Unable to acquire system resources to launch this application": {
+                        "Action": [
+                            "Ensure the correct NVIDIA driver is installed.",
+                            "Ensure other user sessions have closed all desktop applications (and logged out, if applicable)."
+                        ]
+                    },
+                    "Cedars Applications (QBS, QGS/QPS) error dialog": {
+                        "Action": "Review the license installation."
+                    }
+                },
+                "Licensing": {
+                    "Action": "Confirm the feature is purchased and available using the licensing admin page and the 'in-use' licensing URL: http://localhost:8700/management/api/license/usage.",
+                    "Note": "When accessing Vitrea Applications and administration screens, only use the Vitrea Client or Remote Desktop to the Enterprise Single Server, Management Server, or Vitrea Extend system."
                 }
-            });
+            },
+            "Applications are unable to load data": {
+                "Symptom": "Unable to launch/load data into clinical applications, or unable to create snapshots or evidence.",
+                "Deployment": "Enterprise, Vitrea extend, and Vitrea workstation deployments",
+                "Solutions": [
+                    "Verify and correct your NASROOT permissions (the Management Server must be shared with R/W permissions).",
+                    "Verify and correct your NASROOT permission Groups, ensuring your domain group (with your user account) has R/W permissions."
+                ]
+            },
+            "AppShell Timeout error displays": {
+                "Symptom": "Launching the thin client produces a timeout error dialog.",
+                "Deployment": "Enterprise and Vitrea extend deployments",
+                "Tips": "Check group policies for Vitrea Kiosk launch on connection.",
+                "Solution": "Apply the group policy and re-login."
+            },
+            "Cannot import study using Media Manager": {
+                "Deployment": "Enterprise deployment (Management Server, Application Server, and Multi Modality Viewer Server)",
+                "Tips": "Check the AE Title and port in the Media Manager Config."
+            },
+            "Cannot launch Vitrea on a client system using a non-administrator user": {
+                "Deployment": "Enterprise Single Server and Vitrea extend deployments",
+                "Resolution Steps": [
+                    "Log onto the client machine as an administrator.",
+                    "Open regedit.",
+                    "Delete the HKLM\\SOFTWARE\\Microsoft\\MSLicensing registry key.",
+                    "Delete the HKLM\\SOFTWARE\\Wow6432Node\\Microsoft\\MSLicensing registry key.",
+                    "Reboot the client machine.",
+                    "Log onto the client machine as an administrator and open MSTSC.exe as an administrator.",
+                    "Connect to the Vitrea extend host system.",
+                    "Reboot the client machine.",
+                    "Log onto the client machine as a standard user.",
+                    "Run Vitrea client as an administrator and enter admin credentials.",
+                    "Exit the Vitrea software.",
+                    "Run Vitrea client as a standard user."
+                ]
+            },
+            "Collecting Performance Logs": {
+                "Deployment": "Enterprise, Enterprise Single Server, Vitrea extend, and Vitrea workstation deployments",
+                "Steps": [
+                    "Log into the Vitrea software.",
+                    "From the Applications Home screen, click the gear icon in the upper right corner to access a dropdown menu.",
+                    "Select the Collect Performance Logs option.",
+                    "Type the desired issue description in the field below the 'Describe your issue' heading.",
+                    "(Optional) Click the button to take a screenshot of the active screen.",
+                    "Click the Save button after entering the description and including a screenshot."
+                ],
+                "Result": "The system collects environment information and saves logs (and screenshots) to C:\\NAS\\logCollection\\current\\{year}/{month}\\{date-guid} folder."
+            },
+            "CONFIG REQUIRED button displays on install screen during installation": {
+                "Symptom": "The 'CONFIG REQUIRED' button is displayed during installation.",
+                "Deployment": "Enterprise, Enterprise Single Server, Vitrea extend, and Vitrea workstation deployments",
+                "Cause": "The 'Run the System Setup Script' procedure for Windows 7 has not been completed.",
+                "Action": "Complete the 'Run the System Setup Script' procedure for Windows 7 before continuing installation."
+            },
+            "Connection credentials already in use": {
+                "Symptom": "Receiving this message on a Vitrea Thin Client.",
+                "Deployment": "Enterprise, Enterprise Single Server, and Vitrea Extend deployments",
+                "Cause": "Your credentials are already connected to the collection (Enterprise) or system (Enterprise Single Server or Vitrea Extend). Multiple logins by the same user are not supported.",
+                "Resolution Steps": [
+                    "Log off the other session shown in the message screen.",
+                    "Try to connect again.",
+                    "For Enterprise deployment: If you can select a different collection, connecting to that one may work."
+                ]
+            },
+            "Credentials screen always displays": {
+                "Symptom": "The credentials screen always displays, or broken thumbnails display on the Vitrea software.",
+                "Deployment": "Enterprise deployment (Management Server, Application Server, and Multi Modality Viewer Server)",
+                "Cause": "There may be an issue with the Local Intranet Settings.",
+                "Resolution Steps": [
+                    "Complete the 'Configure Site to Zone Assignment List' procedure in the Enterprise Deployment Active Directory Planning Guide.",
+                    "If it's the first time logging in, cancel the prompt, close Vitrea (AppShell), and re-launch."
+                ]
+            },
+            "Database Deployment Tool displays errors during Management Server installation": {
+                "Symptom": "Errors display when deploying Database Deployment Tool Schemas during Management Server installation.",
+                "Deployment": "Enterprise deployment",
+                "Resolution Steps": [
+                    "In the affected Schema (VSP or Dicom Services), press the Rescan button.",
+                    "Press the Deploy button.",
+                    "Complete these steps for each displayed error message."
+                ]
+            },
+            "Database Deployment Tool failed during installation": {
+                "Symptom": "The Database Deployment Tool fails during installation.",
+                "Deployment": "Enterprise Single Server, Vitrea extend, and Vitrea workstation deployments",
+                "Resolution Steps": [
+                    "Click the EXIT button on the Vitrea installer screen.",
+                    "From the Start button, select Run and enter services.msc.",
+                    "Restart the SQL Server (VITALSQLEXPRESS) service.",
+                    "Open SQL Server Management Studio.",
+                    "Right-click VIDicom and select Properties.",
+                    "In the left pane, select Options.",
+                    "Select MULTI_USER from the Restrict Access pull-down menu.",
+                    "On the Open Connections prompt, click Yes.",
+                    "Close SQL Server Management Studio.",
+                    "Double-click on C:\\ProgramFiles\\Vital Images\\DatabaseDeploymentTool\\ddt-ui.exe.",
+                    "Click the VSP dropdown menu and select the hostname.",
+                    "Click the Dicom Services dropdown menu and select the hostname.",
+                    "Click the Deploy button for the VSP Schema.",
+                    "Click the Deploy button for the Dicom Servers Schema.",
+                    "Click the Deploy button for the Vitrea Workstation Schema.",
+                    "Click the Permissions button for the VSP Schema.",
+                    "Click the Permissions button for the Dicom Servers Schema.",
+                    "Click the Permissions button for the Vitrea Workstation Schema.",
+                    "Close the Database Deployment Tool window.",
+                    "Reboot the system."
+                ]
+            },
+            "Delay to accept association and start data transfer occurs during DICOM Receive": {
+                "Symptom": "A delay in accepting association and starting data transfer during DICOM Receive (from PACS or other archives).",
+                "Deployment": "Enterprise, Enterprise Single Server, Vitrea extend, and Vitrea workstation deployments",
+                "Cause": "There may be an issue with DNS name resolution.",
+                "Resolution Steps": [
+                    "Open a Command prompt to gather information: ping -a machineName, tracert machineName, nslookup machineName.",
+                    "If using DNS, ensure Forward Lookup Zones and Reverse Lookup Zones are set up.",
+                    "If not using DNS, navigate to C:\\Windows\\System32\\drivers\\etc\\hosts file and add the PACS or other archive's machine name."
+                ]
+            },
+            "Determine if the Vitrea License Server is working correctly": {
+                "Deployment": "Enterprise Single Server and Vitrea extend deployment",
+                "Steps": [
+                    "Open an Internet browser.",
+                    "In the URL field, enter http://localhost:8700/management/api/license/usage.",
+                    "Under the License heading, click the desired link to access a subscreen that lists purchased licenses, available licenses, and current users of specific licenses."
+                ]
+            },
+            "Download and View option unavailable for supported file types": {
+                "Symptom": "The 'Download and View' option is unavailable or does not function for certain Vitrea workflows.",
+                "Deployment": "Enterprise, Enterprise Single Server, Vitrea extend, and Vitrea workstation deployments",
+                "Cause": "A viewer file extension has not been associated with installed viewer software.",
+                "Resolution Steps": [
+                    "After installing the corresponding viewer software, open a Command line as an administrator.",
+                    "Enter a command line similar to: assoc .stl=STL and ftype STL=C:\\Program Files\\MySTLViewer\\stlview.exe %1 %*.",
+                    "Replace the path with the actual path to the installed viewer software."
+                ]
+            },
+            "Enable/Disable Logging for Windows Firewall": {
+                "Deployment": "Enterprise Single Server and Vitrea extend deployments",
+                "Commands": [
+                    "To create a log file: netsh advfirewall set currentprofile logging filename %systemroot%\\system32\\LogFiles\\Firewall\\pfirewall.log",
+                    "To set maximum file size: netsh advfirewall set currentprofile logging maxfilesize 4096",
+                    "To enable/disable logging dropped connections: netsh advfirewall set currentprofile logging droppedconnections enable/disable",
+                    "To enable/disable logging allowed connections: netsh advfirewall set currentprofile logging allowedconnections enable/disable"
+                ]
+            },
+            "Error creating FMS Artifact for report page displays after saving draft report and publishing report fails": {
+                "Symptom": "This error displays after saving a draft report or clicking the Publish Report button in the Report editor.",
+                "Deployment": "Enterprise deployment",
+                "Resolution Steps": [
+                    "On the Management Server, click Search and enter gpedit to open Group Policy Management.",
+                    "In Computer Configuration, expand Administrative Templates > System > Internet Communication Management, and select Internet Communication Settings.",
+                    "Double-click Turn off Automatic Root Certificates Update.",
+                    "Select the Enabled radio button and click OK.",
+                    "Complete these steps on each Application Server in your deployment."
+                ]
+            },
+            "Error occurs if you delete the configured default archive": {
+                "Symptom": "A 500 error displays and the Vitrea software becomes unusable if the configured default archive is deleted.",
+                "Deployment": "Enterprise Single Server and Vitrea extend deployments",
+                "Caution": "Do not update or delete the default archive; add the new archive as an additional archive.",
+                "Resolution Steps": [
+                    "Uninstall the Vitrea software from the system.",
+                    "Delete the VIDicom database.",
+                    "Install the Vitrea software on the system."
+                ]
+            },
+            "Evidence could not be saved error displays": {
+                "Symptom": "This message displays when creating a large batch or movie.",
+                "Deployment": "Enterprise, Enterprise Single Server, Vitrea extend, and Vitrea workstation deployments",
+                "Resolution": "Administrator should recommend the clinical user reduce the size of the movie or batch by modifying output settings."
+            },
+            "Expect connectivity issues due to current database state error displays when using the Database Deployment Tool": {
+                "Symptom": "This error message displays when using the Database Deployment Tool.",
+                "Deployment": "Enterprise, Enterprise Single Server, Vitrea extend, and Vitrea workstation deployments",
+                "Resolution Steps": [
+                    "Close the Database Deployment Tool.",
+                    "Make sure all Vitrea services on the system are stopped.",
+                    "From the Start menu, select All Programs > Microsoft SQL Server 2017 > SQL Server Management Studio.",
+                    "Connect to the SQL instance.",
+                    "Right-click the VIDicom database and select Properties > Options.",
+                    "Scroll to the bottom and locate Restrict Access.",
+                    "Change the value to multi_user and click OK.",
+                    "When prompted to close all database connections, click Yes.",
+                    "Open the Database Deployment Tool."
+                ]
+            },
+            "Fails to create evidence": {
+                "Deployment": "Enterprise deployment (Management Server)",
+                "Tips": [
+                    "Check NAS permissions.",
+                    "Check IIS content length settings."
+                ],
+                "Solution": [
+                    "NAS permissions should include the management server machine name with full access.",
+                    "Set the maximum content length in IIS config to 4294967295."
+                ]
+            },
+            "How to Access Application Servers or Multi Modality Viewer Servers for Troubleshooting Purposes": {
+                "Deployment": "Enterprise deployment",
+                "Steps": [
+                    "Right-click Start and select Run.",
+                    "Enter mstsc /admin. The Remote Desktop Application launches.",
+                    "Enter connection information to the server and click Connect.",
+                    "Once on the desktop, right-click Start and select Command Prompt (Admin).",
+                    "In the Command prompt, type hostname to verify the correct system.",
+                    "Perform administration or troubleshooting procedures."
+                ]
+            },
+            "HTTP 403 error occurs during launch after new install": {
+                "Symptom": "An HTTP 403 error during launch after a new install.",
+                "Deployment": "Enterprise, Enterprise Single Server, Vitrea extend and Vitrea workstation deployments",
+                "Cause": "The operating system is set in a language other than English.",
+                "Resolution Steps": [
+                    "Click Start, type region and select Region settings.",
+                    "Select the Administrative language settings option.",
+                    "Click the Copy settings button.",
+                    "Confirm the Welcome screen settings list English (United States).",
+                    "If not English (United States), set your profile to have it as its setting first.",
+                    "Complete steps again and select the Welcome screen and system accounts checkbox.",
+                    "Click OK and reboot the system.",
+                    "Confirm this workaround resolved the issue."
+                ]
+            },
+            "Licensing error displays when you launch Cedars on an Application Server": {
+                "Symptom": "A licensing error when launching Cedars software on an Application Server.",
+                "Deployment": "Enterprise deployment",
+                "Action": "Ensure the Application Server can reach the Floating License Server on port 6433."
+            },
+            "Licensing mode for the Remote Desktop Session Host is not configured": {
+                "Symptom": "An error stating 'Licensing mode for the Remote Desktop Session Host is not configured' on the RD Licensing Diagnoser.",
+                "Deployment": "Enterprise deployment (Management Server), Enterprise Single Server and Vitrea Extend system",
+                "Resolution Steps": [
+                    "Run Powershell commands to set the licensing server on the RD Session Host.",
+                    "Start the registry editor (regedit).",
+                    "Browse to HKLM\\SYSTEM\\CurrentControlSet\\Control\\Terminal Server\\RCM\\Licensing Core\\LicensingMode.",
+                    "Change the DWORD to 2 for Per Device or 4 for Per User.",
+                    "Restart the Management Server."
+                ]
+            },
+            "List of Required Ports": {
+                "Deployment": "Enterprise, Enterprise Single Server, Vitrea extend, and Vitrea workstation deployments",
+                "Required Ports/Firewall Rules": [
+                    "TCP port 443 (HTTPS)",
+                    "TCP port 3002 (Dicom Receive)",
+                    "TCP port 3003 (Query Retrieve)",
+                    "Port 3389 (Remote Desktop Protocol)"
+                ]
+            },
+            "Log File Locations": {
+                "Note": "The ProgramData folder is hidden by default; access by entering C:\\ProgramData into the file path field.",
+                "Enterprise deployment": {
+                    "Management Server": [
+                        "Application Service Log: C:\\ProgramData\\Vitrea\\Logs\\Application",
+                        "Management Service Log: C:\\ProgramData\\Vitrea\\Logs\\Management",
+                        "Installation Logs: C:\\ProgramData\\Vitrea\\Logs\\Install"
+                    ],
+                    "Application Server": [
+                        "Installation Logs: C:\\ProgramData\\Vitrea\\Logs\\Install",
+                        "Application Log: C:\\ProgramData\\Vitrea\\Logs\\Application"
+                    ]
+                },
+                "Workstation deployment": [
+                    "Installation Log: C:\\ProgramData\\Vitrea\\Logs\\Install",
+                    "Application Log: C:\\ProgramData\\Vitrea\\Logs\\Install"
+                ]
+            },
+            "Logout screen displays due to inactivity": {
+                "Symptom": "Session times out due to inactivity, displaying 'Session Ended' or Microsoft warning messages followed by a Vitrea message.",
+                "Deployment": "Enterprise, Enterprise Single Server, Vitrea extend, and Vitrea workstation deployments",
+                "Duration": [
+                    "'Session Ended' screen duration (Vitrea Workstation/Extend console) defaults to 4 hours",
+                    "Idle Session Timeout (remote via Thin Client) defaults to 30 minutes"
+                ],
+                "Action": "Contact site administrator to modify these values."
+            },
+            "Manage List Services": {
+                "Deployment": "Enterprise Single Server and Vitrea extend deployments",
+                "Steps": [
+                    "On Vitrea, right-click My Computer and select Manage.",
+                    "In Computer Management, expand Services and Applications, then click Services.",
+                    "Check the displayed list of services for accuracy, noting their Startup Type (mostly Automatic) and Logon As (System Account or Local System)."
+                ]
+            },
+            "Modify Local Users": {
+                "Deployment": "Vitrea extend and Vitrea workstation deployments",
+                "To edit a local user": [
+                    "On the System Configuration screen, select Local Database User Management.",
+                    "Double-click or right-click the desired user and select Edit User.",
+                    "Modify fields and checkboxes, then click Save."
+                ],
+                "To delete a local user": [
+                    "On the System Configuration screen, select Local Database User Management.",
+                    "Right-click the desired user and select Delete User.",
+                    "Click Yes to confirm deletion."
+                ]
+            },
+            "Reporting does not launch": {
+                "Symptom": "Other applications launch, but reporting does not launch.",
+                "Deployment": "Enterprise, Enterprise Single Server, Vitrea extend, and Vitrea workstation deployments",
+                "Solution": "Add the service user to the local Administrators group."
+            },
+            "Results not found after patient edit of accession number intermittently on some datasets": {
+                "Symptom": "After editing a study with evidence and waiting for processing, some or all results are not shown.",
+                "Deployment": "Enterprise, Enterprise Single Server, Vitrea extend, and Vitrea workstation deployments",
+                "Resolution Steps": [
+                    "From the Applications Home tab, select System Configuration.",
+                    "In the Subsystem menu, select System Settings.",
+                    "From the Component dropdown menu, select FMSGeneral.",
+                    "Click the Make Changes button, enter a reason, and click OK.",
+                    "Double-click the Value column in the archiveBlockRetentionPeriod row and enter 1000 (default is 5000ms).",
+                    "Click the Activate Changes button."
+                ]
+            },
+            "Revert permissions on ProgramData subfolders": {
+                "Deployment": "Enterprise, Enterprise Single Server, Vitrea extend, and Vitrea workstation deployments",
+                "To effectively remove restrictions": [
+                    "Open a Command Prompt or PowerShell window as an Admin.",
+                    "Run these two commands:",
+                    "icacls 'C:\\ProgramData\\Vital Images' /inheritance:e",
+                    "icacls 'C:\\ProgramData\\Vitrea' /inheritance:e"
+                ],
+                "To restore restrictions": [
+                    "Open a PowerShell window as an Admin.",
+                    "Change directory to Vital_Resources folder, then the sub-folder for your Vitrea version, then Utilities\\OS Configuration Scripts\\Shared.",
+                    "Run the command: .\\SetProgramDataDirsAcls.ps1."
+                ]
+            },
+            "Slow Remote Desktop connections": {
+                "Symptom": "Remote Desktop connections are slow.",
+                "Deployment": "Enterprise and Enterprise Single Server deployments",
+                "Resolution Steps": [
+                    "Click Start, then Run.",
+                    "Type gpedit.msc, click OK.",
+                    "(If UAC displays) Confirm action and click Continue.",
+                    "Expand Computer Configuration > Administrative Templates > System > Internet Communication Management, and select Internet Communication settings.",
+                    "Double-click Turn off Automatic Root Certificates Update, select Enabled radio button, and click OK.",
+                    "Close the Local Group Policy Editor."
+                ]
+            },
+            "SSO enabled but account is locked out of VSP (403 error displays on startup)": {
+                "Symptom": "A '403 error' page may display when starting the AppShell if admin permissions for BUILTIN groups are unintentionally removed.",
+                "Deployment": "Enterprise deployment (Management Server)",
+                "Solution": [
+                    "Using a browser, navigate to: http://localhost:8700/management/auth/login.",
+                    "Login and navigate to the System Settings application to restore settings (may need to enable browser popups)."
+                ]
+            },
+            "Start Vitrea does not connect": {
+                "Symptom": "After launching Vitrea, it remains on the 'Connecting to Vitrea' screen, or nothing occurs/a crash dialog displays.",
+                "Deployment": "Enterprise deployment (Management Server, Application Server, and Multi Modality Viewer Server)",
+                "Common Causes/Tips": [
+                    "AppShell cannot connect to the local Application service.",
+                    "No sessions available on the host for another remote session (for Thin Client connection issues).",
+                    "Session disconnected due to time-out or Remote Desktop Broker."
+                ],
+                "Troubleshooting Steps": [
+                    "Check Application service: Open Services administrative tool, verify 'VSP Application' is started on the local computer, start if not.",
+                    "Check Application service database connection: Open Application service logfile.",
+                    "Authentication/SSL errors: If authentication errors in log, verify service account permissions.",
+                    "Verify Management service: Ensure it's running on the Management Server.",
+                    "Verify home page login: Navigate to http://localhost:8700/management/start.",
+                    "Collect log files."
+                ]
+            },
+            "StudyList displays but no data is shown": {
+                "Symptom": "The StudyList displays, but no data pushed to the system appears.",
+                "Deployment": "Enterprise, Enterprise Single Server, Vitrea extend, and Vitrea workstation deployments",
+                "Tips": [
+                    "Check UI filters (default Study Date = 'Today'; set to 'Any').",
+                    "Click Search to force a refresh.",
+                    "Check VAT data directory location for correctness and presence of patient data.",
+                    "Check VAT AutoDelete settings vs. current available disk space.",
+                    "If using MediaManager for import, verify configuration with Vitrea Media Manager Config tool.",
+                    "Check log files for StudyList, Thumbnail generator, VIMS, and Stackers."
+                ]
+            },
+            "System Health Performance numbers do not display": {
+                "Symptom": "Performance pages on System Health screen do not list network throughput, or OSStats are missing from log files.",
+                "Deployment": "Enterprise deployment (Management Server or Application Server)",
+                "Resolution Steps": [
+                    "Sign into the server as an administrator.",
+                    "Open a command prompt.",
+                    "Query counters: lodctr /q.",
+                    "Rebuild counters: lodctr /r.",
+                    "Close the error screen.",
+                    "Restart the Vitrea.SystemProvisionAllocator service.",
+                    "Reboot the server."
+                ]
+            },
+            "The User Profile Service service failed the sign-in error displays": {
+                "Symptom": "Receiving this error on an Application Server.",
+                "Deployment": "Enterprise deployment (Application Server)",
+                "Resolution Steps": [
+                    "Click OK to close the error screen.",
+                    "Sign into the Application Server using the Vitrea-Admin account.",
+                    "Verify there is free space on the C:\\ drive to run Vitrea applications."
+                ]
+            },
+            "To fix or adjust the number of users based off of the machine resources": {
+                "Symptom": "The number of expected users on a machine is incorrect.",
+                "Deployment": "Enterprise, Enterprise Single Server, and Vitrea extend deployments",
+                "Resolution Steps": [
+                    "Confirm the number of users in the System Health page.",
+                    "Navigate to C:\\Program Files\\Vital Images\\VitreaSPAInfoServices\\Vitrea.SPA directory.",
+                    "Make a copy of Vitrea.SystemProvisionAllocator.config.dict.",
+                    "Stop and restart the Vitrea.SystemProvisionAllocator service.",
+                    "Navigate to C:\\ProgramData\\Vitrea\\Logs\\Vitrea.SystemProvisionAllocator.",
+                    "Open the log file and look for resource allocation information.",
+                    "Open Vitrea.SystemProvisionAllocator.config.dict.",
+                    "Find the OverrideConfigs section and append with desired settings.",
+                    "Restart the Vitrea.SystemProvisionAllocator service.",
+                    "Confirm changes by checking System Health."
+                ]
+            },
+            "Troubleshoot Cedars-Sinai Cardiac Suite": {
+                "Deployment": "Vitrea extend and Vitrea workstation deployments",
+                "Invalid Key File screen displays after licensing": {
+                    "Action": "Click OK, then contact Canon Medical Customer Support."
+                }
+            },
+            "Troubleshooting Group Policy Objects": {
+                "Deployment": "Enterprise Single Server and Vitrea extend deployments",
+                "Known settings impacting Vitrea's performance": [
+                    "'Prevent IIS installation' GPO: Must be disabled.",
+                    "For Vitrea Server Reporting: Set 'Allow active scripting' and 'Allow cut, copy or paste operations from the clipboard via script' to Enabled."
+                ]
+            },
+            "Troubleshoot Oncology Fusion or Oncology Fusion Core software": {
+                "Deployment": "Enterprise Single Server, Vitrea extend, and Vitrea workstation deployments",
+                "Changing AE Title": [
+                    "For Mirada XD: Manually edit scp.xml under Program Files\\Mirada XD\\3.6\\config",
+                    "For Mirada RTx: Manually edit scp.xml under Program Files\\Mirada RT\\1.6\\config"
+                ],
+                "Oncology Fusion sessions are not restorable": {
+                    "Cause": "Corrupted configuration file.",
+                    "Resolution": "Delete user-specific configuration files to ensure only factory default remains."
+                }
+            },
+            "Troubleshoot Services": {
+                "Deployment": "Enterprise, Enterprise Single Server, Vitrea extend, and Vitrea workstation deployments",
+                "To disable and stop services": [
+                    "Launch PowerShell as Administrator.",
+                    "Navigate to Vitrea_Resources folder, then Utilities > Scripts > ManageServices.",
+                    "Type .\\Manage-VitreaServices.ps1 -action disable and press Enter."
+                ],
+                "To enable and start services": [
+                    "Same as above but use -action enable instead."
+                ],
+                "To stop all Vitrea services": [
+                    "Same as above but use -action stop instead."
+                ],
+                "To restart services": [
+                    "Same as above but use -action start instead."
+                ],
+                "To verify services status": [
+                    "Same as above but use -action status instead."
+                ]
+            },
+            "Ultrasound Clinical Package application error displays": {
+                "Symptom": "Error screen displays after installing Vitrea software with the Ultrasound Clinical Package application.",
+                "Deployment": "Vitrea workstation deployment only",
+                "Resolution Steps": [
+                    "Log into the system as an administrator.",
+                    "Run C:\\TOSHIBA US\\TMSC\\TMSCWSClinicalApp_US\\bin\\SetupBuildStartWS.js.",
+                    "Wait for about 1 minute.",
+                    "Restart the system."
+                ]
+            },
+            "Unable to configure the RD Session Host server error displays when you add an Application Server to a Collection": {
+                "Symptom": "This error message may display when trying to add an Application Server to a Collection.",
+                "Deployment": "Enterprise deployment (Management Server)",
+                "Resolution Steps": [
+                    "Navigate to Microsoft KnowledgeBase article: https://support.microsoft.com/en-us/kb/3014614.",
+                    "Review article content and complete recommended procedure."
+                ]
+            },
+            "Unable to connect to Vitrea after running Windows Updates": {
+                "Symptom": "Unable to connect to Vitrea after Windows Updates.",
+                "Deployment": "Enterprise deployment only",
+                "Cause": "The Remote Desktop Service may be locked.",
+                "Resolution Steps": [
+                    "On the Management Server, right-click Start and select Computer Management.",
+                    "Expand Services and Applications, then click Services.",
+                    "Stop the Vitrea.RemoteDesktopServices service.",
+                    "Restart the Vitrea.RemoteDesktopServices service."
+                ]
+            },
+            "Unable to launch the Appshell or the StudyList": {
+                "Symptom": "Cannot launch the Appshell or StudyList, or a 'Page failed to load' error displays.",
+                "Deployment": "Enterprise, Enterprise Single Server, and Vitrea extend deployments",
+                "Resolution Methods": [
+                    "Method One: Login as an administrator and delete the user's profile on the system.",
+                    "Method Two: Adjust LAN settings through inetcpl.cpl."
+                ]
+            },
+            "Uninstall the Vitrea software": {
+                "Deployment": "Enterprise, Enterprise Single Server, Vitrea extend, and Vitrea workstation deployments",
+                "Steps": [
+                    "Click Start, select Control Panel > Programs and Features.",
+                    "Scroll to and select desired option (e.g., Management Server, Application Server, or Vitrea).",
+                    "Select the Uninstall option.",
+                    "Double-click REBOOT REQUIRED when uninstall is complete.",
+                    "Click OK to restart the system."
+                ]
+            },
+            "Unlocking Administrator Account": {
+                "Deployment": "Enterprise, Enterprise Single Server, Vitrea extend, and Vitrea workstation deployments",
+                "Resolution": "If administrator account becomes locked, contact Canon Medical Customer Support."
+            },
+            "Using VIMS Monitor": {
+                "Deployment": "Enterprise Single Server and Vitrea extend deployments",
+                "Steps": [
+                    "Access VIMS Monitor: Start > Programs > Vital Images > VIMS Monitor.",
+                    "View screen for troubleshooting information."
+                ]
+            },
+            "USCF and WRWMT applications fail to export movie on an Application Server": {
+                "Symptom": "Error message displays and Vitrea fails to save a movie after starting USCF or MRWMT application.",
+                "Deployment": "Enterprise deployment",
+                "Resolution Steps": [
+                    "Log onto the Application Server.",
+                    "Navigate to C:\\Program Files\\Vital Images\\VitreaCourierService.",
+                    "Open VitreaCourierService.exe.config in Notepad.",
+                    "Modify values in the relevant line: change /R: 0 to /R: 4 and /W: 0 to /W: 2.",
+                    "Save the revised file."
+                ]
+            },
+            "Validate Remote Desktop Broker Registry Entries": {
+                "Symptom": "Remote Desktop Broker is not functioning as expected.",
+                "Deployment": "Enterprise deployment (Management Server)",
+                "To verify Registry Entries": [
+                    "Launch Registry Editor.",
+                    "Verify specific registry values are correct."
+                ],
+                "If Registry Entries are not present": "Execute C:\\Program Files\\Vital Images\\VitreaRemoteDesktopBrokerPlugin\\RegisterPlugin.reg."
+            },
+            "Verify Name Resolution": {
+                "Deployment": "Enterprise deployment only",
+                "Purpose": "To confirm DNS entry for PowerScribe.",
+                "Steps": [
+                    "Ask site IT for PowerScribe system hostname.",
+                    "On the integration system, open Command prompt, enter ping -a [hostname].",
+                    "Add PowerScribe Server hostname to the hosts file OR have site IT add it to DNS servers.",
+                    "Import the SSL certificate created previously.",
+                    "Update the web.config file with the appropriate certificate issuer."
+                ]
+            },
+            "Verify Remote Sessions are inactive prior to reboot": {
+                "Deployment": "Enterprise Single Server and Vitrea extend deployments",
+                "Steps": [
+                    "Click Start, type Task Manager.",
+                    "Select the Users tab.",
+                    "Contact remote users before rebooting to prevent data loss."
+                ]
+            },
+            "VIMS Install Fails": {
+                "Symptom": "VIMS install fails during Management Server installation.",
+                "Deployment": "Enterprise deployment (Management Server)",
+                "Resolution": [
+                    "Check NASROOT permissions.",
+                    "Ensure proper permissions (including the Management Server object) are applied."
+                ]
+            },
+            "Vitrea Client connection error may display when trying to connect from the Vitrea Thin Client": {
+                "Symptom": "Error message displays when connecting to Vitrea Thin Client after adding server to collection.",
+                "Deployment": "Enterprise, Enterprise Single Server, and Vitrea extend deployments",
+                "Resolution Steps": [
+                    "Click OK to close the error screen.",
+                    "Wait approximately five minutes before attempting to connect again."
+                ]
+            },
+            "Vitrea does not start and shows blank gray screen on Home / Default application when TLS is enabled": {
+                "Symptom": "Vitrea starts, but displays a blank gray screen.",
+                "Deployment": "Enterprise deployment (Application Server/Multi Modality Viewer Server, and Management Server)",
+                "Solution Steps": [
+                    "As an administrator, login to the affected server.",
+                    "Access Certificate Manager.",
+                    "Navigate to Certificates (Local Computer) > Trusted Root Certification Authorities (CA) folder.",
+                    "Inspect and delete any expired Domain CA certificates.",
+                    "Restart the server."
+                ]
+            },
+            "VitreaInstaller.exe bootstrapper failed during installation": {
+                "Symptom": "VitreaInstaller.exe bootstrapper fails during installation with an error.",
+                "Deployment": "Vitrea workstation deployment only",
+                "Resolutions": [
+                    "Ensure installation with local administrator rights.",
+                    "Review and confirm Operating System Setup Script was run.",
+                    "Confirm no conflicts (e.g., pre-existing SQL Express Database).",
+                    "Check log files for details."
+                ]
+            },
+            "Vitrea software does not start automatically via Vitrea Thin Client": {
+                "Symptom": "When using Vitrea Thin Client, the user's desktop is seen instead of Vitrea software.",
+                "Deployment": "Enterprise deployment (Application Server and Multi Modality Viewer Server)",
+                "Tips": "Check Group Policy for Computer and User for correct Kiosk startup policies.",
+                "Solution": "Set up the group policy 'Startup program' to launch the Kiosk application on login."
+            },
+            "Vitrea deployment using Vmware Tools 11.2.6 may cause resolution issues": {
+                "Symptom": "Patient images may not render or a gray screen may display when opening a patient study.",
+                "Deployment": "Enterprise deployment only",
+                "Solution": "Install Vmware Tools 11.3 or greater, as 11.2.6 has graphic issues."
+            },
+            "VSP Application Service does not have access to PowerScribe Keystore error displays": {
+                "Symptom": "This error screen may display when configuring PowerScribe Credentials.",
+                "Deployment": "Vitrea workstation deployment only",
+                "Action": "Click the Save button to provide the VSP Application service access to the PowerScribe Keystore."
+            },
+            "VSP Services do not start": {
+                "Symptom": "VSP services do not start even after manual attempts, and no logs are generated.",
+                "Deployment": "Enterprise deployment (Management Server, Application Server, and Multi Modality Viewer Server)",
+                "Solutions": [
+                    "Grant the service user 'Logon As Service' rights.",
+                    "Update the service user's password in the Services administration application."
+                ]
+            }
+        };
+
+        // Function to create the mind map
+        function createMindMap() {
+            const mindmapElement = document.getElementById('mindmap');
+            mindmapElement.innerHTML = '';
+            
+            for (const issue in troubleshootingData) {
+                const node = document.createElement('div');
+                node.className = 'node';
+                node.textContent = issue;
+                
+                // Add deployment badge if available
+                if (troubleshootingData[issue].Deployment) {
+                    const deploymentBadge = document.createElement('span');
+                    deploymentBadge.className = 'deployment';
+                    deploymentBadge.textContent = troubleshootingData[issue].Deployment;
+                    node.appendChild(deploymentBadge);
+                }
+                
+                node.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    showContent(issue);
+                });
+                
+                mindmapElement.appendChild(node);
+            }
         }
-        
-        // Search functionality
-        document.getElementById('searchButton').addEventListener('click', performSearch);
-        document.getElementById('searchInput').addEventListener('keyup', function(e) {
-            if (e.key === 'Enter') performSearch();
+
+        // Function to show content for a selected issue
+        function showContent(issue) {
+            const content = troubleshootingData[issue];
+            const contentTitle = document.getElementById('content-title');
+            const contentBody = document.getElementById('content-body');
+            const contentElement = document.getElementById('content');
+            const backBtn = document.getElementById('backBtn');
+            
+            // Hide mindmap and show content
+            document.getElementById('mindmap').style.display = 'none';
+            contentElement.style.display = 'block';
+            backBtn.style.display = 'block';
+            
+            // Set title
+            contentTitle.textContent = issue;
+            
+            // Build content body
+            contentBody.innerHTML = '';
+            
+            // Add deployment information if available
+            if (content.Deployment) {
+                const deploymentDiv = document.createElement('div');
+                deploymentDiv.innerHTML = `<strong>Deployment:</strong> ${content.Deployment}`;
+                contentBody.appendChild(deploymentDiv);
+            }
+            
+            // Add symptom if available
+            if (content.Symptom) {
+                const symptomDiv = document.createElement('div');
+                symptomDiv.innerHTML = `<strong>Symptom:</strong> ${content.Symptom}`;
+                contentBody.appendChild(symptomDiv);
+            }
+            
+            // Add other content
+            for (const key in content) {
+                if (key !== 'Deployment' && key !== 'Symptom') {
+                    const sectionDiv = document.createElement('div');
+                    sectionDiv.style.marginTop = '15px';
+                    
+                    const sectionTitle = document.createElement('h4');
+                    sectionTitle.textContent = key;
+                    sectionDiv.appendChild(sectionTitle);
+                    
+                    if (Array.isArray(content[key])) {
+                        // For arrays, create a list
+                        const list = document.createElement('ul');
+                        content[key].forEach(item => {
+                            const li = document.createElement('li');
+                            li.textContent = item;
+                            list.appendChild(li);
+                        });
+                        sectionDiv.appendChild(list);
+                    } else if (typeof content[key] === 'object') {
+                        // For objects, create nested structure
+                        for (const subKey in content[key]) {
+                            const subSection = document.createElement('div');
+                            subSection.style.marginLeft = '20px';
+                            subSection.style.marginTop = '10px';
+                            
+                            const subTitle = document.createElement('strong');
+                            subTitle.textContent = subKey + ': ';
+                            subSection.appendChild(subTitle);
+                            
+                            if (Array.isArray(content[key][subKey])) {
+                                const subList = document.createElement('ul');
+                                content[key][subKey].forEach(item => {
+                                    const li = document.createElement('li');
+                                    li.textContent = item;
+                                    subList.appendChild(li);
+                                });
+                                subSection.appendChild(subList);
+                            } else if (typeof content[key][subKey] === 'object') {
+                                // Handle deeper nesting if needed
+                                subSection.appendChild(document.createTextNode(JSON.stringify(content[key][subKey])));
+                            } else {
+                                subSection.appendChild(document.createTextNode(content[key][subKey]));
+                            }
+                            
+                            sectionDiv.appendChild(subSection);
+                        }
+                    } else {
+                        // For simple values
+                        sectionDiv.appendChild(document.createTextNode(content[key]));
+                    }
+                    
+                    contentBody.appendChild(sectionDiv);
+                }
+            }
+        }
+
+        // Back button functionality
+        document.getElementById('backBtn').addEventListener('click', function() {
+            document.getElementById('mindmap').style.display = 'block';
+            document.getElementById('content').style.display = 'none';
+            this.style.display = 'none';
         });
-        
-        function performSearch() {
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            if (!searchTerm) {
-                removeHighlights();
+
+        // Search functionality
+        document.getElementById('search').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const nodes = document.querySelectorAll('.node');
+            
+            if (searchTerm.trim() === '') {
+                // If search is empty, show all nodes and remove highlights
+                nodes.forEach(node => {
+                    node.style.display = 'block';
+                    const text = node.textContent;
+                    node.textContent = text; // This removes any HTML including highlights
+                    
+                    // Re-add deployment badge if it was there
+                    if (node.querySelector('.deployment')) {
+                        const deployment = node.querySelector('.deployment').textContent;
+                        node.textContent = text.replace(deployment, '').trim();
+                        const deploymentBadge = document.createElement('span');
+                        deploymentBadge.className = 'deployment';
+                        deploymentBadge.textContent = deployment;
+                        node.appendChild(deploymentBadge);
+                    }
+                });
                 return;
             }
             
-            // First remove previous highlights
-            removeHighlights();
-            
-            // Search through all text content
-            const elements = document.querySelectorAll('.branch-content, .sub-node-content');
-            let found = false;
-            
-            elements.forEach(element => {
-                if (element.textContent.toLowerCase().includes(searchTerm)) {
-                    // Expand parent elements
-                    element.classList.add('show');
-                    if (element.classList.contains('sub-node-content')) {
-                        element.parentElement.querySelector('.sub-node-header').classList.add('active');
-                        element.closest('.branch').querySelector('.branch-content').classList.add('show');
-                        element.closest('.branch').querySelector('.branch-header').classList.add('active');
-                    }
+            nodes.forEach(node => {
+                const text = node.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    node.style.display = 'block';
                     
-                    // Highlight matching text
-                    highlightText(element, searchTerm);
-                    found = true;
-                }
-            });
-            
-            if (!found) {
-                alert('No matches found for "' + searchTerm + '"');
-            }
-        }
-        
-        function highlightText(element, searchTerm) {
-            const text = element.textContent;
-            const regex = new RegExp(searchTerm, 'gi');
-            const newText = text.replace(regex, match => 
-                `<span class="search-highlight">${match}</span>`
-            );
-            
-            // Create a temporary div to parse HTML
-            const temp = document.createElement('div');
-            temp.innerHTML = newText;
-            
-            // Replace element's content while preserving structure
-            Array.from(element.childNodes).forEach(child => {
-                if (child.nodeType === Node.TEXT_NODE) {
-                    const span = document.createElement('span');
-                    span.innerHTML = child.textContent.replace(regex, match => 
-                        `<span class="search-highlight">${match}</span>`
+                    // Highlight the matching text
+                    const originalText = node.textContent;
+                    const regex = new RegExp(searchTerm, 'gi');
+                    const highlightedText = originalText.replace(regex, match => 
+                        `<span class="highlight">${match}</span>`
                     );
-                    child.replaceWith(span);
-                }
-            });
-        }
-        
-        function removeHighlights() {
-            document.querySelectorAll('.search-highlight').forEach(highlight => {
-                const parent = highlight.parentNode;
-                parent.replaceChild(document.createTextNode(highlight.textContent), highlight);
-                parent.normalize();
-            });
-        }
-        
-        // Open first sub-node of each branch by default
-        document.addEventListener('DOMContentLoaded', function() {
-            const branches = document.querySelectorAll('.branch');
-            branches.forEach(branch => {
-                const firstSubNode = branch.querySelector('.sub-node');
-                if (firstSubNode) {
-                    const header = firstSubNode.querySelector('.sub-node-header');
-                    const content = firstSubNode.querySelector('.sub-node-content');
-                    header.classList.add('active');
-                    content.classList.add('show');
+                    node.innerHTML = highlightedText;
+                } else {
+                    node.style.display = 'none';
                 }
             });
         });
+
+        // Initialize the mind map
+        createMindMap();
     </script>
 </body>
 </html>
