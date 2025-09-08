@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vitrea Application Server Installation Checklist</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        h1, h2, h3 {
+            color: #005b94;
+        }
+        h1 {
+            border-bottom: 2px solid #005b94;
+            padding-bottom: 10px;
+        }
+        h2 {
+            background-color: #e6f2ff;
+            padding: 10px;
+            border-left: 4px solid #005b94;
+            margin-top: 30px;
+        }
+        h3 {
+            margin-top: 20px;
+            cursor: pointer;
+            padding: 8px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+        }
+        h3:hover {
+            background-color: #e0e0e0;
+        }
+        .section {
+            margin-bottom: 30px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .checklist-item {
+            margin-bottom: 10px;
+            padding-left: 30px;
+            position: relative;
+        }
+        .checklist-item input[type="checkbox"] {
+            position: absolute;
+            left: 0;
+            top: 3px;
+            width: 20px;
+            height: 20px;
+        }
+        .checklist-item label {
+            display: inline-block;
+            margin-left: 5px;
+            cursor: pointer;
+        }
+        .completed {
+            text-decoration: line-through;
+            color: #777;
+        }
+        .page-ref {
+            font-size: 0.8em;
+            color: #666;
+            margin-left: 5px;
+        }
+        .notes {
+            background-color: #fffde7;
+            padding: 15px;
+            border-left: 4px solid #ffd600;
+            margin: 15px 0;
+        }
+        .notes h4 {
+            margin-top: 0;
+            color: #795548;
+        }
+        .troubleshooting {
+            background-color: #ffebee;
+            padding: 15px;
+            border-left: 4px solid #f44336;
+            margin: 15px 0;
+        }
+        .troubleshooting h4 {
+            margin-top: 0;
+            color: #c62828;
+        }
+        .troubleshooting-item {
+            margin-bottom: 15px;
+        }
+        .troubleshooting-item h5 {
+            margin-bottom: 5px;
+            color: #d32f2f;
+        }
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+        }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            background-color: #f1f1f1;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            margin-right: 5px;
+            border-radius: 5px 5px 0 0;
+        }
+        .tab.active {
+            background-color: white;
+            border-bottom: 1px solid white;
+            margin-bottom: -1px;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .progress-container {
+            width: 100%;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .progress-bar {
+            height: 30px;
+            background-color: #4CAF50;
+            border-radius: 5px;
+            width: 0%;
+            transition: width 0.5s;
+            text-align: center;
+            line-height: 30px;
+            color: white;
+        }
+        .collapsible {
+            cursor: pointer;
+        }
+        .collapsible-content {
+            display: none;
+            overflow: hidden;
+            transition: max-height 0.2s ease-out;
+        }
+        button {
+            background-color: #005b94;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px 0;
+        }
+        button:hover {
+            background-color: #003d66;
+        }
+        .controls {
+            margin: 20px 0;
+            display: flex;
+            justify-content: space-between;
+        }
+        @media print {
+            .no-print, .controls {
+                display: none;
+            }
+            body {
+                background-color: white;
+                color: black;
+            }
+            .section {
+                box-shadow: none;
+                border: 1px solid #ddd;
+                page-break-inside: avoid;
+            }
+            .checklist-item input[type="checkbox"] {
+                -webkit-appearance: checkbox;
+                appearance: checkbox;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Vitrea Application Server Installation Checklist</h1>
+    <p>This interactive checklist outlines the key steps for installing and configuring the Vitrea Advanced Visualization Application Server and Multi Modality Viewer Server, as detailed in the "Vitrea Advanced Visualization Application Server Install Guide" (VPMC-17208F).</p>
+    
+    <div class="progress-container no-print">
+        <div class="progress-bar" id="progressBar">0%</div>
+    </div>
+    
+    <div class="controls no-print">
+        <button id="expandAll">Expand All</button>
+        <button id="collapseAll">Collapse All</button>
+        <button id="resetAll">Reset All</button>
+        <button id="printBtn">Print Checklist</button>
+    </div>
+    
+    <div class="tabs no-print">
+        <div class="tab active" data-tab="installation">Installation</div>
+        <div class="tab" data-tab="troubleshooting">Troubleshooting</div>
+    </div>
+    
+    <div class="tab-content active" id="installation">
+        <div class="section">
+            <h2>Pre-Installation Requirements</h2>
+            
+            <h3 class="collapsible">1. Verify Hardware and Software Requirements <span class="page-ref">(Page 84-89)</span></h3>
+            <div class="collapsible-content">
+                <div class="checklist-item">
+                    <input type="checkbox" id="req1">
+                    <label for="req1">Confirm CPU supports Advanced Vector Extensions 2 (AVX2)</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="req2">
+                    <label for="req2">Ensure hardware meets specifications (e.g., HPE ProLiant DL380 Gen11, 2x Intel Xeon Gold 6426Y, 128-192GB RAM, NVIDIA Quadro RTX 4000 or equivalent)</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="req3">
+                    <label for="req3">Verify supported OS: Microsoft Windows Server 2016/2019/2022/2025 Standard with Desktop Experience</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="req4">
+                    <label for="req4">Ensure 1.0 Gbps network connection (10 Gbps recommended)</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="req5">
+                    <label for="req5">Confirm 250GB OS VMDK for virtual deployments, 480-960GB SATA SSDs in RAID 1 for physical servers</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="req6">
+                    <label for="req6">Verify NVIDIA GPU requirements: 4GB framebuffer, 900 CUDA cores per user for 512x512 CT matrix; 8GB/1280 CUDA cores for 1024x1024 <span class="page-ref">(Page 93-96)</span></label>
+                </div>
+            </div>
+            
+            <h3 class="collapsible">2. Prepare Vitrea_Resources Folder <span class="page-ref">(Page 16)</span></h3>
+            <div class="collapsible-content">
+                <div class="checklist-item">
+                    <input type="checkbox" id="res1">
+                    <label for="res1">Copy product media contents to a designated Vitrea_Resources folder (e.g., E:\Vitrea_Resources)</label>
+                </div>
+            </div>
+            
+            <h3 class="collapsible">3. Run Vitrea System Checker Script <span class="page-ref">(Page 119)</span></h3>
+            <div class="collapsible-content">
+                <div class="checklist-item">
+                    <input type="checkbox" id="check1">
+                    <label for="check1">Navigate to E:\Vitrea_Resources\media contents\Utilities\Scripts\SystemChecker</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="check2">
+                    <label for="check2">Run VitreaSystemChecker.ps1 as administrator per ReadMe instructions to verify security and best practice configurations</label>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>System Hardening and Security</h2>
+            
+            <h3 class="collapsible">1. Run System Hardening Script <span class="page-ref">(Page 113-118)</span></h3>
+            <div class="collapsible-content">
+                <div class="checklist-item">
+                    <input type="checkbox" id="hard1">
+                    <label for="hard1">Navigate to E:\Vitrea_Resources\media contents\Utilities\Scripts</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="hard2">
+                    <label for="hard2">Run .\runscript.bat in PowerShell as administrator</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="hard3">
+                    <label for="hard3">Select [A] Application profile and press Enter</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="hard4">
+                    <label for="hard4">If prompted with a security warning, type Y and press Enter</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="hard5">
+                    <label for="hard5">Reboot system after script completion (type A for Yes to All)</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="hard6">
+                    <label for="hard6">Verify settings: Disable SMBv1, PowerShell 2.0, WDigest Authentication, Named Pipes, Shared Memory; set directory ownership to SYSTEM <span class="page-ref">(Page 114-118)</span></label>
+                </div>
+            </div>
+            
+            <h3 class="collapsible">2. Enable SSL/TLS <span class="page-ref">(Page 67-69)</span></h3>
+            <div class="collapsible-content">
+                <div class="checklist-item">
+                    <input type="checkbox" id="ssl1">
+                    <label for="ssl1">Log in as Vitrea-Admin, run certlm.msc to access Local Computer Certificate Store</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="ssl2">
+                    <label for="ssl2">Locate customer-installed SSL/TLS certificate in Personal > Certificates</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="ssl3">
+                    <label for="ssl3">Run .\ConfigureTLS_Enterprise.ps1 -Enable -CertificateFriendlyName &lt;friendly name&gt; in PowerShell, ensuring thumbnail hash has no spaces</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="ssl4">
+                    <label for="ssl4">Set calendar reminder 1-2 months before certificate expiration</label>
+                </div>
+            </div>
+            
+            <h3 class="collapsible">3. Configure IIS to Restrict IP Addresses <span class="page-ref">(Page 71)</span></h3>
+            <div class="collapsible-content">
+                <div class="checklist-item">
+                    <input type="checkbox" id="iis1">
+                    <label for="iis1">Run .\TestIIS.ps1 -ManagementIp &lt;IP address of Management Server&gt; in PowerShell</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="iis2">
+                    <label for="iis2">If security warning appears, type R and press Enter</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="iis3">
+                    <label for="iis3">Verify IIS endpoints allow requestors with no unexpected failures</label>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>Installation Process</h2>
+            
+            <h3 class="collapsible">1. Install Application Server Software <span class="page-ref">(Page 18-26)</span></h3>
+            <div class="collapsible-content">
+                <div class="checklist-item">
+                    <input type="checkbox" id="app1">
+                    <label for="app1">Sign in as Vitrea-Admin (domain account with local administrator rights)</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="app2">
+                    <label for="app2">Run InstallVitrea.exe as administrator from Vitrea_Resources</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="app3">
+                    <label for="app3">Select Vitrea Enterprise - Application profile</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="app4">
+                    <label for="app4">Enter Service Account credentials (e.g., ENG\vitrea-service, password or Group Managed Service Account)</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="app5">
+                    <label for="app5">Configure SQL database connection: Select default or named instance, enter hostname (max 15 characters), database name (e.g., VDiCom), and test connectivity</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="app6">
+                    <label for="app6">Enter Management Service URL (e.g., https://&lt;ManagementServerFQDN&gt;/management)</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="app7">
+                    <label for="app7">Run system hardening script when prompted</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="app8">
+                    <label for="app8">Click INSTALL and wait 20-30 minutes for installation</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="app9">
+                    <label for="app9">Click REBOOT REQUIRED and confirm to restart the system</label>
+                </div>
+            </div>
+            
+            <h3 class="collapsible">2. Install Multi Modality Viewer Server Software (Optional) <span class="page-ref">(Page 54-62)</span></h3>
+            <div class="collapsible-content">
+                <div class="checklist-item">
+                    <input type="checkbox" id="mmv1">
+                    <label for="mmv1">Run InstallVitrea.exe as administrator, select VitreaEnterpriseDedicatedDM profile</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="mmv2">
+                    <label for="mmv2">Enter Service Account credentials and configure SQL database connection</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="mmv3">
+                    <label for="mmv3">Enter Management Service URL with https</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="mmv4">
+                    <label for="mmv4">Click INSTALL, wait 20-30 minutes, and reboot when prompted</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="mmv5">
+                    <label for="mmv5">Ensure maximum of four concurrent users and two dedicated servers <span class="page-ref">(Page 51)</span></label>
+                </div>
+            </div>
+            
+            <h3 class="collapsible">3. Install Monthly Windows Updates <span class="page-ref">(Page 26, 62)</span></h3>
+            <div class="collapsible-content">
+                <div class="checklist-item">
+                    <input type="checkbox" id="upd1">
+                    <label for="upd1">Install latest Microsoft Windows updates and reboot the system</label>
+                </div>
+            </div>
+            
+            <h3 class="collapsible">4. Verify GPU Configuration <span class="page-ref">(Page 26, 62-66)</span></h3>
+            <div class="collapsible-content">
+                <div class="checklist-item">
+                    <input type="checkbox" id="gpu1">
+                    <label for="gpu1">Confirm GPU is in WDDM mode (not TCC) using nvidia-smi.exe -dm 0 if needed</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="gpu2">
+                    <label for="gpu2">Verify NVIDIA vGPU profile: 4GB/900 CUDA cores for 512x512, 8GB/1280 CUDA cores for 1024x1024 <span class="page-ref">(Page 93-96)</span></label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="gpu3">
+                    <label for="gpu3">Check NVIDIA Control Panel for Primary License Server hostname</label>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>Post-Installation Configuration</h2>
+            
+            <h3 class="collapsible">1. Configure JIT Matrix Filter Support <span class="page-ref">(Page 36, 72)</span></h3>
+            <div class="collapsible-content">
+                <div class="checklist-item">
+                    <input type="checkbox" id="jit1">
+                    <label for="jit1">Log in to Application Server as administrator</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="jit2">
+                    <label for="jit2">Run JITMatrix Filter script, select AutoMPRBrainJIT in System Configuration</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="jit3">
+                    <label for="jit3">Verify MatrixSize 512x512 or 256x256 is added</label>
+                </div>
+            </div>
+            
+            <h3 class="collapsible">2. Configure Mirada XD 4.2 (Optional) <span class="page-ref">(Page 37-40, 72-75)</span></h3>
+            <div class="collapsible-content">
+                <div class="checklist-item">
+                    <input type="checkbox" id="xd1">
+                    <label for="xd1">Open Mirada XD Administration Tool</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="xd2">
+                    <label for="xd2">Add institution details (name, address, deployment)</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="xd3">
+                    <label for="xd3">Configure DICOM SCP: Enter Name, AE Title, IP Address, Port, Timeout, and apply</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="xd4">
+                    <label for="xd4">Copy scp.xml and xd-system.json to C:\ProgramData\Mirada Medical Ltd\Mirada XD on all Application Servers</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="xd5">
+                    <label for="xd5">If unlicensed error occurs, move plugin, plugin.xml.hmac, and newEmbeddedWindow.pkg files from C:\Program Files\Mirada Medical\Mirada XD\bin, then move back after configuration</label>
+                </div>
+            </div>
+            
+            <h3 class="collapsible">3. Install Cedars Applications (Optional) <span class="page-ref">(Page 43)</span></h3>
+            <div class="collapsible-content">
+                <div class="checklist-item">
+                    <input type="checkbox" id="ced1">
+                    <label for="ced1">Install cedarsInstaller.msi and cedarsVitreaAppInstaller.msi on each Application Server</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="ced2">
+                    <label for="ced2">Run cscconfig.exe, enter Cedars License Server hostname and port 6433, and restart server</label>
+                </div>
+            </div>
+            
+            <h3 class="collapsible">4. Install VSTP2 Applications (Optional) <span class="page-ref">(Page 44, 78)</span></h3>
+            <div class="collapsible-content">
+                <div class="checklist-item">
+                    <input type="checkbox" id="vst1">
+                    <label for="vst1">Install DEImageGenerationPlugin_3.4.0.msi, SpectralAnalysisInstaller_x64.msi, SpectralCompositionAnalysisInstaller_x64.msi, and SpectralStoneAnalysisInstaller_x64.msi</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="vst2">
+                    <label for="vst2">Configure AutoMPRSpineJIT and AutoMPRBrainJIT: Import dataset, set Auto Processing Settings, and create rules <span class="page-ref">(Page 79)</span></label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="vst3">
+                    <label for="vst3">Configure Spectral Analysis: Add SnapshotConverterLauncher.groovy script in System Configuration > Scripts, name it "Snapshot Converter," and activate <span class="page-ref">(Page 80-81)</span></label>
+                </div>
+            </div>
+            
+            <h3 class="collapsible">5. Disable Thin Client Local Drive Access (Optional) <span class="page-ref">(Page 42, 77)</span></h3>
+            <div class="collapsible-content">
+                <div class="checklist-item">
+                    <input type="checkbox" id="thin1">
+                    <label for="thin1">Open Group Policy Management Editor, navigate to Computer Configuration > Policies > Administrative Templates > Windows Components > Remote Desktop Services > Remote Desktop Session Host > Drive and Resource Redirection</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="thin2">
+                    <label for="thin2">Enable "Do not allow direct redirection" and apply</label>
+                </div>
+            </div>
+            
+            <h3 class="collapsible">6. Update .NET Core Runtime <span class="page-ref">(Page 41, 76)</span></h3>
+            <div class="collapsible-content">
+                <div class="checklist-item">
+                    <input type="checkbox" id="net1">
+                    <label for="net1">Check for .NET Core vulnerabilities, download ASP.NET Core Runtime, .NET Desktop Runtime, and .NET Runtime from Microsoft</label>
+                </div>
+                <div class="checklist-item">
+                    <input type="checkbox" id="net2">
+                    <label for="net2">Install all three components and reboot the system</label>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>Post-Installation Verification</h2>
+            
+            <h3 class="collapsible">1. Verify Installation and Configuration <span class="page-ref">(Page 119)</span></h3>
+            <div class="collapsible-content">
+                <div class="checklist-item">
+                    <input type="checkbox" id="ver1">
+                    <label for="ver1">Check C:\ProgramData\VitreaSystemChecker for System Checker report (OK in green, Not OK in red)</label>
+                </div>
+            </div>
+            
+            <h3 class="collapsible">2. Troubleshoot VSTP2 Spectral Analysis (Optional) <span class="page-ref">(Page 48, 82)</span></h3>
+            <div class="collapsible-content">
+                <div class="checklist-item">
+                    <input type="checkbox" id="trou1">
+                    <label for="trou1">If reverting to VSTP1, run CMSCWSClinicalApp.msi in Repair mode from Vitrea installation folder > Bundle and restart</label>
+                </div>
+            </div>
+            
+            <h3 class="collapsible">3. Verify Monitor Resolutions <span class="page-ref">(Page 120)</span></h3>
+            <div class="collapsible-content">
+                <div class="checklist-item">
+                    <input type="checkbox" id="mon1">
+                    <label for="mon1">Confirm supported resolutions for VSTP applications (e.g., 1920x1200, 1600x1200 for Angio Viewer, Cerebral Aneurysm Analysis; 3840x2160 for SUREVolume Synthesis, Utilization Analysis Tool)</label>
+                </div>
+            </div>
+        </div>
+        
+        <div class="notes">
+            <h4>Additional Notes</h4>
+            <ul>
+                <li>Ensure Management Server is installed per the Management Server Installation Guide <span class="page-ref">(Page 15)</span></li>
+                <li>Only English operating systems are supported <span class="page-ref">(Page 102)</span></li>
+                <li>Virtual deployments require VMware ESXi with 1-2 sockets, 19,000 MHz, 24GB RAM per user for 512x512 matrix <span class="page-ref">(Page 97-99)</span></li>
+                <li>Contact Canon Medical Support at mi.medical.canon for issues <span class="page-ref">(Page 5-6)</span></li>
+                <li>Refer to Mirada XD and SpectralAnalysisHelp.pdf documentation for detailed configurations <span class="page-ref">(Page 40, 83)</span></li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="tab-content" id="troubleshooting">
+        <div class="section">
+            <h2>Troubleshooting Checklist</h2>
+            
+            <div class="troubleshooting">
+                <h4>1. Installation Fails or Aborts</h4>
+                <div class="troubleshooting-item">
+                    <h5>Symptoms:</h5>
+                    <ul>
+                        <li>Installation executable crashes or terminates unexpectedly</li>
+                        <li>Error messages such as "Installation failed" or "Prerequisites not met"</li>
+                        <li>System reboots unexpectedly during installation</li>
+                    </ul>
+                </div>
+                <div class="troubleshooting-item">
+                    <h5>Resolution Steps:</h5>
+                    <ol>
+                        <li><strong>Review Installation Logs:</strong> Check log files in the installation directory (e.g., <code>%ProgramFiles%\Application\Logs\Install.log</code> or similar)</li>
+                        <li><strong>Verify Prerequisites:</strong> Confirm .NET Framework version (e.g., 4.8 or newer) is installed</li>
+                        <li><strong>Check Disk Space:</strong> Ensure sufficient free disk space (e.g., 400GB+ for application data and binaries)</li>
+                        <li><strong>Disable Antivirus Temporarily:</strong> Pause antivirus software during installation</li>
+                        <li><strong>Run Installer as Administrator:</strong> Right-click the installer and select "Run as administrator"</li>
+                    </ol>
+                </div>
+                <p><strong>Reference:</strong> VPMC-17427B Pages 15-26 (Installation Process)</p>
+            </div>
+            
+            <div class="troubleshooting">
+                <h4>2. Application Service Fails to Start</h4>
+                <div class="troubleshooting-item">
+                    <h5>Symptoms:</h5>
+                    <ul>
+                        <li>Service does not start after installation</li>
+                        <li>Event Log errors like "Service terminated unexpectedly" or Error 1053</li>
+                        <li>Ports required by the application are not listening</li>
+                    </ul>
+                </div>
+                <div class="troubleshooting-item">
+                    <h5>Resolution Steps:</h5>
+                    <ol>
+                        <li><strong>Verify Service Account:</strong> Ensure the service account has not expired and has "Log on as a service" rights</li>
+                        <li><strong>Check Dependencies:</strong> Confirm SQL Server connectivity and Windows Firewall settings</li>
+                        <li><strong>Review Event Logs:</strong> Open Event Viewer and filter for application-specific events</li>
+                        <li><strong>Restart Service:</strong> Use <code>services.msc</code> to restart the application service</li>
+                    </ol>
+                </div>
+                <p><strong>Reference:</strong> VPMC-17427B Pages 119-124 (Windows Firewall), 206-207 (SQL Permissions)</p>
+            </div>
+            
+            <div class="troubleshooting">
+                <h4>3. Database Connectivity Issues</h4>
+                <div class="troubleshooting-item">
+                    <h5>Symptoms:</h5>
+                    <ul>
+                        <li>Errors like "Database deployment failed" or "Cannot connect to SQL Server"</li>
+                        <li>Slow performance when accessing application data</li>
+                        <li>Timeout errors in application logs</li>
+                    </ul>
+                </div>
+                <div class="troubleshooting-item">
+                    <h5>Resolution Steps:</h5>
+                    <ol>
+                        <li><strong>Verify SQL Server Configuration:</strong> Confirm SQL Server is running with sufficient resources</li>
+                        <li><strong>Check Network Connectivity:</strong> Test connectivity to SQL Server</li>
+                        <li><strong>Validate Permissions:</strong> Ensure the application service account has appropriate roles</li>
+                        <li><strong>Optimize SQL Performance:</strong> Enable "Lock Pages in Memory" and set Max Degree of Parallelism</li>
+                    </ol>
+                </div>
+                <p><strong>Reference:</strong> VPMC-17427B Pages 27-35 (Database Deployment), 206-207 (SQL Permissions)</p>
+            </div>
+            
+            <div class="troubleshooting">
+                <h4>4. Network and DICOM Connectivity Issues</h4>
+                <div class="troubleshooting-item">
+                    <h5>Symptoms:</h5>
+                    <ul>
+                        <li>DICOM C-ECHO tests fail to PACS or modalities</li>
+                        <li>Studies not appearing in the application</li>
+                        <li>"DICOM Association Rejected" errors in logs</li>
+                    </ul>
+                </div>
+                <div class="troubleshooting-item">
+                    <h5>Resolution Steps:</h5>
+                    <ol>
+                        <li><strong>Verify AE Titles:</strong> Ensure Application Entity Titles are unique and alphanumeric</li>
+                        <li><strong>Check Network Connectivity:</strong> Ping PACS/modality IPs from the server</li>
+                        <li><strong>Validate Firewall Rules:</strong> Ensure inbound rules exist for DICOM ports</li>
+                        <li><strong>Check DICOM Configuration:</strong> Verify DICOM device settings in System Configuration</li>
+                    </ol>
+                </div>
+                <p><strong>Reference:</strong> VPMC-17427B Pages 60-67, 110-112 (DICOM Settings)</p>
+            </div>
+            
+            <div class="troubleshooting">
+                <h4>5. Licensing Activation Failures</h4>
+                <div class="troubleshooting-item">
+                    <h5>Symptoms:</h5>
+                    <ul>
+                        <li>"Invalid license file" or "Host ID mismatch" errors</li>
+                        <li>Application features disabled after a trial period</li>
+                        <li>License application fails in the management interface</li>
+                    </ul>
+                </div>
+                <div class="troubleshooting-item">
+                    <h5>Resolution Steps:</h5>
+                    <ol>
+                        <li><strong>Verify Host ID:</strong> Compare <code>HostInformation.xml</code> with the license file</li>
+                        <li><strong>Check License File:</strong> Ensure the license file is saved in the correct folder</li>
+                        <li><strong>Apply License:</strong> Open the application's licensing interface and apply the license file</li>
+                        <li><strong>Contact Support:</strong> Email vendor support with <code>HostInformation.xml</code> and error details</li>
+                    </ol>
+                </div>
+                <p><strong>Reference:</strong> VPMC-17427B Pages 12-14, 55-56 (Licensing)</p>
+            </div>
+            
+            <div class="troubleshooting">
+                <h4>6. SSL/TLS Certificate Issues</h4>
+                <div class="troubleshooting-item">
+                    <h5>Symptoms:</h5>
+                    <ul>
+                        <li>Browser warnings like "Invalid certificate" when accessing web components</li>
+                        <li>Remote Desktop or web application connections fail with SSL errors</li>
+                        <li>Application components not loading due to certificate issues</li>
+                    </ul>
+                </div>
+                <div class="troubleshooting-item">
+                    <h5>Resolution Steps:</h5>
+                    <ol>
+                        <li><strong>Verify Certificate:</strong> Check the certificate's expiration date and SAN</li>
+                        <li><strong>Check Permissions:</strong> Grant <code>NETWORK SERVICE</code> read access to the certificate's private key</li>
+                        <li><strong>Validate IIS Bindings:</strong> Ensure HTTPS bindings use the correct certificate and port</li>
+                        <li><strong>Replace Certificate if Needed:</strong> Install a new customer-provided SSL/TLS certificate</li>
+                    </ol>
+                </div>
+                <p><strong>Reference:</strong> VPMC-17427B Pages 119-121, 197-201 (SSL/TLS Configuration)</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Collapsible functionality
+            const collapsibles = document.querySelectorAll('.collapsible');
+            collapsibles.forEach(item => {
+                item.addEventListener('click', function() {
+                    this.classList.toggle('active');
+                    const content = this.nextElementSibling;
+                    if (content.style.display === 'block') {
+                        content.style.display = 'none';
+                    } else {
+                        content.style.display = 'block';
+                    }
+                });
+            });
+            
+            // Tab functionality
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Remove active class from all tabs and content
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    
+                    // Add active class to clicked tab and corresponding content
+                    this.classList.add('active');
+                    const tabId = this.getAttribute('data-tab');
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+            
+            // Expand All button
+            document.getElementById('expandAll').addEventListener('click', function() {
+                document.querySelectorAll('.collapsible-content').forEach(content => {
+                    content.style.display = 'block';
+                    content.previousElementSibling.classList.add('active');
+                });
+            });
+            
+            // Collapse All button
+            document.getElementById('collapseAll').addEventListener('click', function() {
+                document.querySelectorAll('.collapsible-content').forEach(content => {
+                    content.style.display = 'none';
+                    content.previousElementSibling.classList.remove('active');
+                });
+            });
+            
+            // Reset All button
+            document.getElementById('resetAll').addEventListener('click', function() {
+                document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                    checkbox.checked = false;
+                    const label = checkbox.nextElementSibling;
+                    label.classList.remove('completed');
+                });
+                updateProgress();
+            });
+            
+            // Print button
+            document.getElementById('printBtn').addEventListener('click', function() {
+                window.print();
+            });
+            
+            // Checkbox functionality
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const label = this.nextElementSibling;
+                    if (this.checked) {
+                        label.classList.add('completed');
+                    } else {
+                        label.classList.remove('completed');
+                    }
+                    updateProgress();
+                });
+            });
+            
+            // Progress bar update
+            function updateProgress() {
+                const total = document.querySelectorAll('input[type="checkbox"]').length;
+                const completed = document.querySelectorAll('input[type="checkbox"]:checked').length;
+                const percentage = Math.round((completed / total) * 100);
+                const progressBar = document.getElementById('progressBar');
+                progressBar.style.width = percentage + '%';
+                progressBar.textContent = percentage + '%';
+            }
+            
+            // Initialize progress bar
+            updateProgress();
+        });
+    </script>
+</body>
+</html>

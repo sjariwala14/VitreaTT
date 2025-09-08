@@ -1,0 +1,1516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Vitrea® Study Guide</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        h1 {
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        h2 {
+            margin-top: 30px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+        }
+        .tab-container {
+            margin-bottom: 20px;
+        }
+        .tab-buttons {
+            display: flex;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        .tab-button {
+            padding: 10px 15px;
+            background-color: #eee;
+            border: none;
+            cursor: pointer;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            border-radius: 5px 5px 0 0;
+            transition: all 0.3s;
+        }
+        .tab-button.active {
+            background-color: #3498db;
+            color: white;
+        }
+        .tab-content {
+            display: none;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 0 5px 5px 5px;
+            background-color: white;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .flashcard {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+            background-color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .flashcard:hover {
+            box-shadow: 0 0 8px rgba(0,0,0,0.1);
+        }
+        .flashcard .question {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .flashcard .answer {
+            display: none;
+            color: #2c3e50;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        .flashcard.show-answer .answer {
+            display: block;
+        }
+        .mcq {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: white;
+        }
+        .mcq .question {
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        .mcq .options {
+            margin-left: 20px;
+        }
+        .mcq .option {
+            margin-bottom: 8px;
+        }
+        .mcq .correct {
+            display: none;
+            color: #27ae60;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .mcq.show-correct .correct {
+            display: block;
+        }
+        .troubleshooting {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: white;
+        }
+        .troubleshooting .scenario {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #e74c3c;
+        }
+        .troubleshooting .solution {
+            display: none;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        .troubleshooting.show-solution .solution {
+            display: block;
+        }
+        .quick-tip {
+            background-color: #eaf7ff;
+            border-left: 4px solid #3498db;
+            padding: 10px 15px;
+            margin-bottom: 15px;
+            border-radius: 0 5px 5px 0;
+        }
+        .quick-tip strong {
+            color: #2980b9;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .search-container {
+            margin-bottom: 20px;
+        }
+        #searchInput {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .highlight {
+            background-color: yellow;
+            font-weight: bold;
+        }
+        .controls {
+            margin: 20px 0;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .controls button {
+            margin-top: 0;
+        }
+        @media (max-width: 768px) {
+            .tab-buttons {
+                flex-direction: column;
+            }
+            .tab-button {
+                border-radius: 5px;
+                margin-bottom: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Vitrea® Advanced Visualization Application Server Install Guide Study</h1>
+        <p>Complete interactive study guide with all 50 flashcards, 50 MCQs, and 25 troubleshooting scenarios</p>
+        
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Search through all content...">
+        </div>
+        
+        <div class="tab-container">
+            <div class="tab-buttons">
+                <button class="tab-button active" data-tab="flashcards">Flashcards (50)</button>
+                <button class="tab-button" data-tab="mcqs">Multiple Choice (50)</button>
+                <button class="tab-button" data-tab="troubleshooting">Troubleshooting (25)</button>
+                <button class="tab-button" data-tab="quicktips">Quick Tips</button>
+            </div>
+            
+            <div id="flashcards" class="tab-content active">
+                <h2>Flashcard Questions (50)</h2>
+                <div class="controls">
+                    <button id="showAllFlashcards">Show All Answers</button>
+                    <button id="hideAllFlashcards">Hide All Answers</button>
+                </div>
+                
+                <!-- Flashcard 1-10 -->
+                <div class="flashcard" onclick="this.classList.toggle('show-answer')">
+                    <div class="question">1. What is the copyright date range for the Vitrea® Advanced Visualization Application Server Install Guide?</div>
+                    <div class="answer">Answer: Copyright © 1997 - 2025.</div>
+                </div>
+                
+                <div class="flashcard" onclick="this.classList.toggle('show-answer')">
+                    <div class="question">2. Which software versions is this publication valid for?</div>
+                    <div class="answer">Answer: Vitrea® Advanced Visualization and 7.16.3 and later software versions.</div>
+                </div>
+                
+                <div class="flashcard" onclick="this.classList.toggle('show-answer')">
+                    <div class="question">3. What is required to reproduce or transmit any part of this work (publication)?</div>
+                    <div class="answer">Answer: Permission in writing from Canon Medical.</div>
+                </div>
+                
+                <div class="flashcard" onclick="this.classList.toggle('show-answer')">
+                    <div class="question">4. Where is Vitrea a registered trademark?</div>
+                    <div class="answer">Answer: In the United States, and it may have protection in other countries.</div>
+                </div>
+                
+                <div class="flashcard" onclick="this.classList.toggle('show-answer')">
+                    <div class="question">5. What are the restrictions for software/documentation delivered to the U.S. Department of Defense (DoD)?</div>
+                    <div class="answer">Answer: Use, duplication, or disclosure is subject to restrictions set forth in subparagraph (c)(l)(ii) of DFARS 252.227-7013.</div>
+                </div>
+                
+                <div class="flashcard" onclick="this.classList.toggle('show-answer')">
+                    <div class="question">6. What is Canon Medical's liability regarding software defects or documentation use?</div>
+                    <div class="answer">Answer: Canon Medical shall have no liability of any kind for any direct, indirect, special, incidental or consequential damages.</div>
+                </div>
+                
+                <div class="flashcard" onclick="this.classList.toggle('show-answer')">
+                    <div class="question">7. What type of warranty does Canon Medical make for its software?</div>
+                    <div class="answer">Answer: Canon Medical makes no warranty, express or implied, including but not limited to, any warranty of merchantability or fitness for a particular purpose.</div>
+                </div>
+                
+                <div class="flashcard" onclick="this.classList.toggle('show-answer')">
+                    <div class="question">8. What is the nature of the software and its information (ideas, concepts, know-how) according to the Notice of Confidentiality?</div>
+                    <div class="answer">Answer: They are proprietary, confidential, and trade secret to Canon Medical.</div>
+                </div>
+                
+                <div class="flashcard" onclick="this.classList.toggle('show-answer')">
+                    <div class="question">9. Who can the software and its information be disclosed to?</div>
+                    <div class="answer">Answer: Only authorized representatives of the user's employer, who are contractually obligated not to disclose it without express written consent from Canon Medical.</div>
+                </div>
+                
+                <div class="flashcard" onclick="this.classList.toggle('show-answer')">
+                    <div class="question">10. What actions are users of the software prohibited from attempting regarding Canon Medical's confidential information?</div>
+                    <div class="answer">Answer: Users shall not attempt to discern Canon Medical's confidential and trade secret information, nor reverse compile, disassemble, or otherwise reverse engineer the software.</div>
+                </div>
+                
+                <!-- Flashcard 11-20 -->
+                <div class="flashcard" onclick="this.classList.toggle('show-answer')">
+                    <div class="question">11. What governs the use of this software if there is a conflict between the guide's terms and a written agreement with Canon Medical?</div>
+                    <div class="answer">Answer: The terms of such written or assented agreement shall control.</div>
+                </div>
+                
+                <div class="flashcard" onclick="this.classList.toggle('show-answer')">
+                    <div class="question">12. Who is the authorized sponsor for Vitrea (ARTG 466648) in Australia?</div>
+                    <div class="answer">Answer: Canon Medical Systems ANZ Pty Limited.</div>
+                </div>
+                
+                <div class="flashcard" onclick="this.classList.toggle('show-answer')">
+                    <div class="question">13. What is the ANVISA registration number for Canon Medical System do Brasil?</div>
+                    <div class="answer">Answer: 10295030090.</div>
+                </div>
+                
+                <div class="flashcard" onclick="this.classList.toggle('show-answer')">
+                    <div class="question">14. Who manufactured the Vitrea Advanced Visualization product?</div>
+                    <div class="answer">Answer: Canon Medical Informatics, Inc..</div>
+                </div>
+                
+                <div class="flashcard" onclick="this.classList.toggle('show-answer')">
+                    <div class="question">15. What phone number should be used to report any serious incident related to the device?</div>
+                    <div class="answer">Answer: 1.800.208.3005.</div>
+                </div>
+                
+                <div class="flashcard" onclick="this.classList.toggle('show-answer')">
+                    <div class="question">16. What is the federal law restriction mentioned for this device?</div>
+                    <div class="answer">Answer: Federal law restricts this device to sale by or on the order of a physician, as directed by 21 CFR 801.109(b)(1).</div>
+                </div>
+                
+                <div class="flashcard" onclick="this.classList.toggle('show-answer')">
+                    <div class="question">17. Where can the Unique Device Identifier (UDI) for Vitrea be located?</div>
+                    <div class="answer">Answer: On the Help Central page under the Version Info section.</div>
+                </div>
+                
+                <div class="flashcard" onclick="this.classList.toggle('show-answer')">
+                    <div class="question">18. What information does the UDI contain?</div>
+                    <div class="answer">Answer: Software version information and manufacture date.</div>
+                </div>
+                
+                <div class="flashcard" onclick="this.classList.toggle('show-answer')">
+                    <div class="question">19. What is the purpose of the "Vitrea Release Notes"?</div>
+                    <div class="answer">Answer: They contain late-breaking information not available when the Education and Reference Guide was released.</div>
+                </div>
+                
+                <div class="flashcard" onclick="this.classList.toggle('show-answer')">
+                    <div class="question">20. What are the two enterprise deployment server components whose installation is covered by this document?</div>
+                    <div class="answer">Answer: The Application Server and the Multi Modality Viewer Server.</div>
+                </div>
+                
+                <!-- Flashcard 21-30 -->
+                <div class="flashcard" onclick="this.classList.toggle('show-answer')">
+                    <div class="question">21. What is the primary function of the Application Server in a Vitrea deployment?</div>
+                    <div class="answer">Answer: It allows physicians to use servers to access 2D, 3D, and 4D advanced visualization and can be centrally deployed for remote use by multiple users.</div>
+                </div>
+                
+                <div class="flashcard" onclick="this.classList.toggle('show-answer')">
+                    <div class="question">22. What is the Multi Modality Viewer Server primarily designed for?</div>
+                    <div class="answer">Answer: It is a node that supports multiple users with a simplified feature set.</div>
+                </div>
+                
+                <div class="flashcard" onclick="this.classList.toggle('show-answer')">
+                    <div class="question">23. What type of operating system is this document intended for regarding server software installation?</div>
+                    <div class="answer">Answer: Windows Server operating systems.</div>
+                </div>
+                
+                <div class="flashcard" onclick="this.classList.toggle('show-answer')">
+                    <div class="question">24. What is one key assumption Canon Medical makes about the installer's familiarity?</div>
+                    <div class="answer">Answer: Some familiarity with server Operating Systems, installing and configuring applications, and network troubleshooting.</div>
+                </div>
+                
+                <div class="flashcard" onclick="this.classList.toggle('show-answer')">
+                    <div class="question">25. What are the three mandatory prerequisite documents/procedures to be completed before using this guide?</div>
+                    <div class="answer">Answer: Enterprise Deployment Active Directory Planning Guide, Enterprise Deployment Operating System Setup Guide, and Management Server Installation Guide.</div>
+                </div>
+                
+                <div class="flashcard" onclick="this.classList.toggle('show-answer')">
+                    <div class="question">26. Which SQL Server versions are supported for installation as prerequisites?</div>
+                    <div class="answer">Answer: SQL Server 2016 SP2 Standard Edition, SQL Server 2017 Standard Edition, SQL Server 2019, or SQL Server 2022 Standard Edition, all with latest CUs and GDR.</div>
+                </div>
+                
+                <div class="flashcard" onclick="this.classList.toggle('show-answer')">
+                    <div class="question">27. What is Canon Medical's stance on third-party software running on Application or Multi Modality Viewer Servers?</div>
+                    <div class="answer">Answer: Canon Medical is not responsible for it, and it may lead to inconsistent user experience or defects that Canon Medical may not resolve.</div>
+                </div>
+                
+                <div class="flashcard" onclick="this.classList.toggle('show-answer')">
+                    <div class="question">28. What graphics card mode is required for vGPU in virtualized Application Servers?</div>
+                    <div class="answer">Answer: Windows Display Driver Model (WDDM) mode.</div>
+                </div>
+                
+                <div class="flashcard" onclick="this.classList.toggle('show-answer')">
+                    <div class="question">29. What is Canon Medical's current stance on Multi-factor authentication (MFA) support for Vitrea AV Application Servers?</div>
+                    <div class="answer">Answer: Limited support for SmartCards/CAC/PIV cards, and no support for anything that interrupts the "flow" of user logons or requires authentication via RDWeb or Remote Desktop Gateway.</div>
+                </div>
+                
+                <div class="flashcard" onclick="this.classList.toggle('show-answer')">
+                    <div class="question">30. What is the recommended account type for signing in to install the Application Server software?</div>
+                    <div class="answer">Answer: A domain account with local administrator rights (e.g., Vitrea-Admin), not the built-in Administrator account.</div>
+                </div>
+                
+                <!-- Flashcard 31-40 -->
+                <div class="flashcard" onclick="this.classList.toggle('show-answer')">
+                    <div class="question">31. What is the default Vitrea data install location?</div>
+                    <div class="answer">Answer: The drive with the most free space.</div>
+                </div>
+                
+                <div class="flashcard" onclick="this.classList.toggle('show-answer')">
+                    <div class="question">32. What is the recommended action if a "There is a pending reboot" message displays during installation?</div>
+                    <div class="answer">Answer: Click the Exit button and reboot the system.</div>
+                </div>
+                
+                <div class="flashcard" onclick="this.classList.toggle('show-answer')">
+                    <div class="question">33. What is the default port value for a default SQL instance during database connection configuration?</div>
+                    <div class="answer">Answer: 1433.</div>
+                </div>
+                
+                <div class="flashcard" onclick="this.classList.toggle('show-answer')">
+                    <div class="question">34. What must be added to the Management Service URL field to ensure the Application Server functions correctly with the Management Server?</div>
+                    <div class="answer">Answer: An "s" to change "http" to "https", forming a Fully Qualified Domain Name (FQDN).</div>
+                </div>
+                
+                <div class="flashcard" onclick="this.classList.toggle('show-answer')">
+                    <div class="question">35. How long does it typically take to install the prerequisites and components for Vitrea?</div>
+                    <div class="answer">Answer: About 20-30 minutes.</div>
+                </div>
+                
+                <div class="flashcard" onclick="this.classList.toggle('show-answer')">
+                    <div class="question">36. What does Canon Medical recommend regarding Microsoft Windows monthly updates?</div>
+                    <div class="answer">Answer: Canon Medical recommends installing Microsoft Windows monthly updates.</div>
+                </div>
+                
+                <div class="flashcard" onclick="this.classList.toggle('show-answer')">
+                    <div class="question">37. Why is a system reboot necessary when the time zone changes due to Daylight Saving Time?</div>
+                    <div class="answer">Answer: To ensure the services take into account the hour change in the logging.</div>
+                </div>
+                
+                <div class="flashcard" onclick="this.classList.toggle('show-answer')">
+                    <div class="question">38. What is the minimum CUDA Cores per user for a 512x512 vGPU profile?</div>
+                    <div class="answer">Answer: 900 CUDA Cores per user.</div>
+                </div>
+                
+                <div class="flashcard" onclick="this.classList.toggle('show-answer')">
+                    <div class="question">39. What is the minimum CUDA Cores per user for a 1024x1024 vGPU profile?</div>
+                    <div class="answer">Answer: 1280 CUDA Cores per user.</div>
+                </div>
+                
+                <div class="flashcard" onclick="this.classList.toggle('show-answer')">
+                    <div class="question">40. What type of vGPU profile is required for a Data Center graphics card assigned to a VM?</div>
+                    <div class="answer">Answer: A "Q" profile of at least 4GB framebuffer (xxx-4Q or larger).</div>
+                </div>
+                
+                <!-- Flashcard 41-50 -->
+                <div class="flashcard" onclick="this.classList.toggle('show-answer')">
+                    <div class="question">41. What two types of NVIDIA license systems are mentioned for preventing performance degradation?</div>
+                    <div class="answer">Answer: Delegated License Service (DLS) and Perpetual License(s) + Support, Upgrade and Maintenance program (SUMS).</div>
+                </div>
+                
+                <div class="flashcard" onclick="this.classList.toggle('show-answer')">
+                    <div class="question">42. What happens to the frame rate of Vitrea applications if an NVIDIA vGPU license expires for 20 minutes?</div>
+                    <div class="answer">Answer: The frame rate is capped at 15 frames per second.</div>
+                </div>
+                
+                <div class="flashcard" onclick="this.classList.toggle('show-answer')">
+                    <div class="question">43. What happens to CUDA functionality if an NVIDIA vGPU license expires for 24 hours?</div>
+                    <div class="answer">Answer: CUDA stops working and CUDA API function calls fail.</div>
+                </div>
+                
+                <div class="flashcard" onclick="this.classList.toggle('show-answer')">
+                    <div class="question">44. How can you verify the primary license server hostname for NVIDIA vGPU licensing?</div>
+                    <div class="answer">Answer: Right-click on the Windows desktop, select NVIDIA Control Panel, and then select the "Manage License" task in the Licensing section.</div>
+                </div>
+                
+                <div class="flashcard" onclick="this.classList.toggle('show-answer')">
+                    <div class="question">45. What TLS version is supported on Windows Server 2016/2019/2022 for Vitrea?</div>
+                    <div class="answer">Answer: TLS 1.2.</div>
+                </div>
+                
+                <div class="flashcard" onclick="this.classList.toggle('show-answer')">
+                    <div class="question">46. Where must the SSL/TLS certificate be located in the Windows Certificate Store?</div>
+                    <div class="answer">Answer: Under the Personal Store folder, also called the "My" folder.</div>
+                </div>
+                
+                <div class="flashcard" onclick="this.classList.toggle('show-answer')">
+                    <div class="question">47. What PowerShell command can be used to enable TLS with a certificate hash?</div>
+                    <div class="answer">Answer: <code>.\ConfigureTLS_Enterprise.ps1 -Enable -CertificateHash &lt;thumbprint&gt;</code>.</div>
+                </div>
+                
+                <div class="flashcard" onclick="this.classList.toggle('show-answer')">
+                    <div class="question">48. What should be done to the ExecutionPolicy in PowerShell before running scripts like ConfigureTLS_Enterprise.ps1 if it's set to Restricted?</div>
+                    <div class="answer">Answer: Set it to Unrestricted by typing "Set-ExecutionPolicy UnRestricted", and then set it back to Restricted after the procedure.</div>
+                </div>
+                
+                <div class="flashcard" onclick="this.classList.toggle('show-answer')">
+                    <div class="question">49. How can an administrator minimize the Vitrea application to perform administrative work on the system?</div>
+                    <div class="answer">Answer: From within the Vitrea software, select the double-gear icon in the upper right corner, then select the "Reveal Desktop" option.</div>
+                </div>
+                
+                <div class="flashcard" onclick="this.classList.toggle('show-answer')">
+                    <div class="question">50. What is the purpose of the JITMatrix Filter script?</div>
+                    <div class="answer">Answer: To configure matrix filter support for Just-In-Time processing.</div>
+                </div>
+            </div>
+            
+            <div id="mcqs" class="tab-content">
+                <h2>Multiple Choice Questions (50)</h2>
+                <div class="controls">
+                    <button id="showAllMCQs">Show All Answers</button>
+                    <button id="hideAllMCQs">Hide All Answers</button>
+                </div>
+                
+                <!-- MCQ 1-10 -->
+                <div class="mcq">
+                    <div class="question">1. What is the date of publication for the "VPMC-17208 F Application Server Install Guide"?</div>
+                    <div class="options">
+                        <div class="option">a) 1997-06</div>
+                        <div class="option">b) 2020-06</div>
+                        <div class="option">c) 2025-06</div>
+                        <div class="option">d) 2016-06</div>
+                    </div>
+                    <div class="correct">Correct answer: c) 2025-06</div>
+                    <button onclick="this.parentElement.classList.toggle('show-correct')">Show Answer</button>
+                </div>
+                
+                <div class="mcq">
+                    <div class="question">2. If this software is delivered to any U.S. Government unit or agency other than DoD, which FAR clause governs its Restricted Rights?</div>
+                    <div class="options">
+                        <div class="option">a) DFARS 252.227-7013</div>
+                        <div class="option">b) 18-52.227-86(d)</div>
+                        <div class="option">c) FAR 52.227-19 (b)(3)</div>
+                        <div class="option">d) FAR 252.227-7013</div>
+                    </div>
+                    <div class="correct">Correct answer: c) FAR 52.227-19 (b)(3)</div>
+                    <button onclick="this.parentElement.classList.toggle('show-correct')">Show Answer</button>
+                </div>
+                
+                <div class="mcq">
+                    <div class="question">3. According to the "Limits of Liability and Disclaimer of Warranty," Canon Medical makes no warranty, express or implied, including but not limited to, any warranty of:</div>
+                    <div class="options">
+                        <div class="option">a) Performance or uptime</div>
+                        <div class="option">b) Integration or compatibility</div>
+                        <div class="option">c) Security or data integrity</div>
+                        <div class="option">d) Merchantability or fitness for a particular purpose</div>
+                    </div>
+                    <div class="correct">Correct answer: d) Merchantability or fitness for a particular purpose</div>
+                    <button onclick="this.parentElement.classList.toggle('show-correct')">Show Answer</button>
+                </div>
+                
+                <div class="mcq">
+                    <div class="question">4. The information in this software is considered:</div>
+                    <div class="options">
+                        <div class="option">a) Open-source and freely distributable</div>
+                        <div class="option">b) Public domain</div>
+                        <div class="option">c) Proprietary, confidential, and trade secret</div>
+                        <div class="option">d) Licensed for unlimited copying</div>
+                    </div>
+                    <div class="correct">Correct answer: c) Proprietary, confidential, and trade secret</div>
+                    <button onclick="this.parentElement.classList.toggle('show-correct')">Show Answer</button>
+                </div>
+                
+                <div class="mcq">
+                    <div class="question">5. Who is the UK Responsible Person for Canon Medical Systems?</div>
+                    <div class="options">
+                        <div class="option">a) MDSS GmbH</div>
+                        <div class="option">b) Canon Medical Systems ANZ Pty Limited</div>
+                        <div class="option">c) Canon Medical System do Brasil</div>
+                        <div class="option">d) Canon Medical Systems Limited</div>
+                    </div>
+                    <div class="correct">Correct answer: d) Canon Medical Systems Limited</div>
+                    <button onclick="this.parentElement.classList.toggle('show-correct')">Show Answer</button>
+                </div>
+                
+                <div class="mcq">
+                    <div class="question">6. Which document includes important information regarding general Vitrea Safety and Regulatory considerations?</div>
+                    <div class="options">
+                        <div class="option">a) The Vitrea Administration and Troubleshooting Guide</div>
+                        <div class="option">b) The Management Server Install Guide</div>
+                        <div class="option">c) The ABOUT VITREAMEDICAL IMAGING SOFTWARE DOCUMENT</div>
+                        <div class="option">d) The Enterprise Deployment Operating System Setup Guide</div>
+                    </div>
+                    <div class="correct">Correct answer: c) The ABOUT VITREAMEDICAL IMAGING SOFTWARE DOCUMENT</div>
+                    <button onclick="this.parentElement.classList.toggle('show-correct')">Show Answer</button>
+                </div>
+                
+                <div class="mcq">
+                    <div class="question">7. To display the Global Options menu in Vitrea, which action is required?</div>
+                    <div class="options">
+                        <div class="option">a) Right-click on the main window</div>
+                        <div class="option">b) Click at the top of the window</div>
+                        <div class="option">c) Press F1 key</div>
+                        <div class="option">d) Select 'File' from the menu bar</div>
+                    </div>
+                    <div class="correct">Correct answer: b) Click at the top of the window</div>
+                    <button onclick="this.parentElement.classList.toggle('show-correct')">Show Answer</button>
+                </div>
+                
+                <div class="mcq">
+                    <div class="question">8. A typical Enterprise deployment of Vitrea consists of how many Management Servers?</div>
+                    <div class="options">
+                        <div class="option">a) Zero</div>
+                        <div class="option">b) One</div>
+                        <div class="option">c) Two</div>
+                        <div class="option">d) Multiple (supported)</div>
+                    </div>
+                    <div class="correct">Correct answer: b) One</div>
+                    <button onclick="this.parentElement.classList.toggle('show-correct')">Show Answer</button>
+                </div>
+                
+                <div class="mcq">
+                    <div class="question">9. What is the range of supported SQL Server versions for Vitrea installation?</div>
+                    <div class="options">
+                        <div class="option">a) SQL Server 2012 to 2016</div>
+                        <div class="option">b) SQL Server 2014 to 2017</div>
+                        <div class="option">c) SQL Server 2016 to 2019</div>
+                        <div class="option">d) SQL Server 2016 SP2 to 2022</div>
+                    </div>
+                    <div class="correct">Correct answer: d) SQL Server 2016 SP2 to 2022</div>
+                    <button onclick="this.parentElement.classList.toggle('show-correct')">Show Answer</button>
+                </div>
+                
+                <div class="mcq">
+                    <div class="question">10. Which third-party software application is noted to be unable to launch on an Application Server using Windows Server 2016 or Windows Server 2022?</div>
+                    <div class="options">
+                        <div class="option">a) Mirada XD</div>
+                        <div class="option">b) Cedars applications</div>
+                        <div class="option">c) TomTec 2D Cardiac Performance Analysis</div>
+                        <div class="option">d) VSTP2 Spectral Analysis</div>
+                    </div>
+                    <div class="correct">Correct answer: c) TomTec 2D Cardiac Performance Analysis</div>
+                    <button onclick="this.parentElement.classList.toggle('show-correct')">Show Answer</button>
+                </div>
+                
+                <!-- MCQ 11-20 -->
+                <div class="mcq">
+                    <div class="question">11. What is required to be properly installed on the Application Server for using a secure database connection?</div>
+                    <div class="options">
+                        <div class="option">a) Windows updates</div>
+                        <div class="option">b) Third-party drivers</div>
+                        <div class="option">c) SSL certificates</div>
+                        <div class="option">d) Network security patches</div>
+                    </div>
+                    <div class="correct">Correct answer: c) SSL certificates</div>
+                    <button onclick="this.parentElement.classList.toggle('show-correct')">Show Answer</button>
+                </div>
+                
+                <div class="mcq">
+                    <div class="question">12. When manually running the Prep Script for Vitrea installation failure, which PowerShell command initiates the script?</div>
+                    <div class="options">
+                        <div class="option">a) <code>start-script.ps1</code></div>
+                        <div class="option">b) <code>execute.bat</code></div>
+                        <div class="option">c) <code>.\runscript.bat</code></div>
+                        <div class="option">d) <code>run-prep.cmd</code></div>
+                    </div>
+                    <div class="correct">Correct answer: c) <code>.\runscript.bat</code></div>
+                    <button onclick="this.parentElement.classList.toggle('show-correct')">Show Answer</button>
+                </div>
+                
+                <div class="mcq">
+                    <div class="question">13. After successfully running the Prep Script, which character should be typed to reboot the system when prompted?</div>
+                    <div class="options">
+                        <div class="option">a) Y</div>
+                        <div class="option">b) R</div>
+                        <div class="option">c) S</div>
+                        <div class="option">d) A</div>
+                    </div>
+                    <div class="correct">Correct answer: d) A</div>
+                    <button onclick="this.parentElement.classList.toggle('show-correct')">Show Answer</button>
+                </div>
+                
+                <div class="mcq">
+                    <div class="question">14. What registry key needs to be created to skip the SysPrep process during a failed Vitrea installation attempt?</div>
+                    <div class="options">
+                        <div class="option">a) <code>HKLM/Software/Vital Images/Installer/RunSysPrep</code></div>
+                        <div class="option">b) <code>HKLM/Software/CanonMedical/Installer/NoSysPrep</code></div>
+                        <div class="option">c) <code>HKLM/Software/Vital Images/Installer/SkipSysPrep</code></div>
+                        <div class="option">d) <code>HKLM/Software/Vitrea/Installer/BypassSysPrep</code></div>
+                    </div>
+                    <div class="correct">Correct answer: c) <code>HKLM/Software/Vital Images/Installer/SkipSysPrep</code></div>
+                    <button onclick="this.parentElement.classList.toggle('show-correct')">Show Answer</button>
+                </div>
+                
+                <div class="mcq">
+                    <div class="question">15. What value should be set for the <code>SkipSysPrep</code> registry key?</div>
+                    <div class="options">
+                        <div class="option">a) 0</div>
+                        <div class="option">b) 1</div>
+                        <div class="option">c) True</div>
+                        <div class="option">d) False</div>
+                    </div>
+                    <div class="correct">Correct answer: b) 1</div>
+                    <button onclick="this.parentElement.classList.toggle('show-correct')">Show Answer</button>
+                </div>
+                
+                <div class="mcq">
+                    <div class="question">16. Which option should be selected from the "Select Profile" dropdown menu to install the Application Server software?</div>
+                    <div class="options">
+                        <div class="option">a) Vitrea Enterprise - Management</div>
+                        <div class="option">b) Vitrea Enterprise - Single Server</div>
+                        <div class="option">c) Vitrea Enterprise - Application</div>
+                        <div class="option">d) Vitrea Enterprise - Dedicated MM</div>
+                    </div>
+                    <div class="correct">Correct answer: c) Vitrea Enterprise - Application</div>
+                    <button onclick="this.parentElement.classList.toggle('show-correct')">Show Answer</button>
+                </div>
+                
+                <div class="mcq">
+                    <div class="question">17. When configuring the database connection, if "Use default database instance" is selected, what happens to the "Instance name" field?</div>
+                    <div class="options">
+                        <div class="option">a) It must be manually entered.</div>
+                        <div class="option">b) It prepopulates with a default value.</div>
+                        <div class="option">c) It is disabled.</div>
+                        <div class="option">d) It becomes optional.</div>
+                    </div>
+                    <div class="correct">Correct answer: c) It is disabled.</div>
+                    <button onclick="this.parentElement.classList.toggle('show-correct')">Show Answer</button>
+                </div>
+                
+                <div class="mcq">
+                    <div class="question">18. What is the character limit for the hostname of the SQL Server?</div>
+                    <div class="options">
+                        <div class="option">a) 10 characters</div>
+                        <div class="option">b) 15 characters</div>
+                        <div class="option">c) 20 characters</div>
+                        <div class="option">d) No limit</div>
+                    </div>
+                    <div class="correct">Correct answer: b) 15 characters</div>
+                    <button onclick="this.parentElement.classList.toggle('show-correct')">Show Answer</button>
+                </div>
+                
+                <div class="mcq">
+                    <div class="question">19. After installing Vitrea, what button should be clicked to finalize the installation process?</div>
+                    <div class="options">
+                        <div class="option">a) Finish</div>
+                        <div class="option">b) Complete</div>
+                        <div class="option">c) REBOOT REQUIRED</div>
+                        <div class="option">d) Restart Now</div>
+                    </div>
+                    <div class="correct">Correct answer: c) REBOOT REQUIRED</div>
+                    <button onclick="this.parentElement.classList.toggle('show-correct')">Show Answer</button>
+                </div>
+                
+                <div class="mcq">
+                    <div class="question">20. What type of graphics cards are discussed in the "Verify GPU Data Center Graphics Cards" section for Application Servers?</div>
+                    <div class="options">
+                        <div class="option">a) AMD Radeon</div>
+                        <div class="option">b) Intel Iris</div>
+                        <div class="option">c) NVIDIA Data Center</div>
+                        <div class="option">d) Integrated Graphics</div>
+                    </div>
+                    <div class="correct">Correct answer: c) NVIDIA Data Center</div>
+                    <button onclick="this.parentElement.classList.toggle('show-correct')">Show Answer</button>
+                </div>
+                
+                <!-- MCQ 21-30 -->
+                <div class="mcq">
+                    <div class="question">21. For a 512x512 vGPU profile, what is the required vGPU profile memory?</div>
+                    <div class="options">
+                        <div class="option">a) 2GB profile</div>
+                        <div class="option">b) 4GB profile</div>
+                        <div class="option">c) 8GB profile</div>
+                        <div class="option">d) 16GB profile</div>
+                    </div>
+                    <div class="correct">Correct answer: b) 4GB profile</div>
+                    <button onclick="this.parentElement.classList.toggle('show-correct')">Show Answer</button>
+                </div>
+                
+                <div class="mcq">
+                    <div class="question">22. For a 1024x1024 vGPU profile, what is the minimum required vGPU profile memory?</div>
+                    <div class="options">
+                        <div class="option">a) 4GB profile</div>
+                        <div class="option">b) 8GB profile</div>
+                        <div class="option">c) 12GB profile</div>
+                        <div class="option">d) 16GB profile</div>
+                    </div>
+                    <div class="correct">Correct answer: b) 8GB profile</div>
+                    <button onclick="this.parentElement.classList.toggle('show-correct')">Show Answer</button>
+                </div>
+                
+                <div class="mcq">
+                    <div class="question">23. Which NVIDIA scheduler must be configured for a 1024x1024 vGPU profile?</div>
+                    <div class="options">
+                        <div class="option">a) Fixed Share</div>
+                        <div class="option">b) Best Effort</div>
+                        <div class="option">c) Equal Share</div>
+                        <div class="option">d) Dynamic Share</div>
+                    </div>
+                    <div class="correct">Correct answer: c) Equal Share</div>
+                    <button onclick="this.parentElement.classList.toggle('show-correct')">Show Answer</button>
+                </div>
+                
+                <div class="mcq">
+                    <div class="question">24. What is the oldest supported generation of Data Center GPU validated for use with Vitrea?</div>
+                    <div class="options">
+                        <div class="option">a) Tesla M Generation</div>
+                        <div class="option">b) Tesla P Generation</div>
+                        <div class="option">c) Tesla T Generation</div>
+                        <div class="option">d) Tesla V Generation</div>
+                    </div>
+                    <div class="correct">Correct answer: b) Tesla P Generation</div>
+                    <button onclick="this.parentElement.classList.toggle('show-correct')">Show Answer</button>
+                </div>
+                
+                <div class="mcq">
+                    <div class="question">25. For performance reasons, the quotient of total CUDA cores available on a GRID/Data center GPU divided by the number of VMs assigned must be greater than what value?</div>
+                    <div class="options">
+                        <div class="option">a) 500</div>
+                        <div class="option">b) 700</div>
+                        <div class="option">c) 900</div>
+                        <div class="option">d) 1280</div>
+                    </div>
+                    <div class="correct">Correct answer: c) 900</div>
+                    <button onclick="this.parentElement.classList.toggle('show-correct')">Show Answer</button>
+                </div>
+                
+                <div class="mcq">
+                    <div class="question">26. Which type of NVIDIA license is recommended for customers dealing with critical healthcare, such as strokes or trauma centers?</div>
+                    <div class="options">
+                        <div class="option">a) Term licenses</div>
+                        <div class="option">b) Subscription licenses</div>
+                        <div class="option">c) Perpetual licenses</div>
+                        <div class="option">d) Evaluation licenses</div>
+                    </div>
+                    <div class="correct">Correct answer: c) Perpetual licenses</div>
+                    <button onclick="this.parentElement.classList.toggle('show-correct')">Show Answer</button>
+                </div>
+                
+                <div class="mcq">
+                    <div class="question">27. If a vGPU fails to obtain a license, what is the initial performance degradation seen after 20 minutes?</div>
+                    <div class="options">
+                        <div class="option">a) Frame rate capped at 3 fps</div>
+                        <div class="option">b) CUDA stops working</div>
+                        <div class="option">c) Applications fail to render</div>
+                        <div class="option">d) Frame rate is capped at 15 frames per second</div>
+                    </div>
+                    <div class="correct">Correct answer: d) Frame rate is capped at 15 frames per second</div>
+                    <button onclick="this.parentElement.classList.toggle('show-correct')">Show Answer</button>
+                </div>
+                
+                <div class="mcq">
+                    <div class="question">28. Which component is responsible for NVIDIA vGPU license settings and is to be contacted if the Primary License Server field is missing in the NVIDIA Control Panel?</div>
+                    <div class="options">
+                        <div class="option">a) Canon Medical Support</div>
+                        <div class="option">b) NVIDIA directly</div>
+                        <div class="option">c) Site's VMware administrator</div>
+                        <div class="option">d) SQL Server administrator</div>
+                    </div>
+                    <div class="correct">Correct answer: c) Site's VMware administrator</div>
+                    <button onclick="this.parentElement.classList.toggle('show-correct')">Show Answer</button>
+                </div>
+                
+                <div class="mcq">
+                    <div class="question">29. What is the recommended state for TLS in the Vitrea product for security?</div>
+                    <div class="options">
+                        <div class="option">a) Disabled for troubleshooting</div>
+                        <div class="option">b) Optional based on network</div>
+                        <div class="option">c) Enabled for confidentiality</div>
+                        <div class="option">d) Configured via third-party tools</div>
+                    </div>
+                    <div class="correct">Correct answer: c) Enabled for confidentiality</div>
+                    <button onclick="this.parentElement.classList.toggle('show-correct')">Show Answer</button>
+                </div>
+                
+                <div class="mcq">
+                    <div class="question">30. To enable SSL/TLS, which command runs the PowerShell script after navigating to the correct directory?</div>
+                    <div class="options">
+                        <div class="option">a) <code>Enable-TLS.ps1</code></div>
+                        <div class="option">b) <code>Set-SecureConnection.ps1</code></div>
+                        <div class="option">c) <code>.\ConfigureTLS_Enterprise.ps1 -Enable -CertificateHash &lt;thumbprint&gt;</code></div>
+                        <div class="option">d) <code>Configure-SSL.ps1 -Enable</code></div>
+                    </div>
+                    <div class="correct">Correct answer: c) <code>.\ConfigureTLS_Enterprise.ps1 -Enable -CertificateHash &lt;thumbprint&gt;</code></div>
+                    <button onclick="this.parentElement.classList.toggle('show-correct')">Show Answer</button>
+                </div>
+                
+                <!-- MCQ 31-40 -->
+                <div class="mcq">
+                    <div class="question">31. How often does Canon Medical recommend creating a calendar appointment for digital certificate renewal?</div>
+                    <div class="options">
+                        <div class="option">a) Annually</div>
+                        <div class="option">b) Quarterly</div>
+                        <div class="option">c) One to two months before expiration</div>
+                        <div class="option">d) Six months before expiration</div>
+                    </div>
+                    <div class="correct">Correct answer: c) One to two months before expiration</div>
+                    <button onclick="this.parentElement.classList.toggle('show-correct')">Show Answer</button>
+                </div>
+                
+                <div class="mcq">
+                    <div class="question">32. What is the first step to resolve Vitrea displaying a blank gray screen with a "unable to get issuer certificate" error when TLS is enabled?</div>
+                    <div class="options">
+                        <div class="option">a) Reboot the server</div>
+                        <div class="option">b) Reinstall Vitrea software</div>
+                        <div class="option">c) Disable TLS temporarily</div>
+                        <div class="option">d) Log into servers and access computer certificate stores via certmgr.msc</div>
+                    </div>
+                    <div class="correct">Correct answer: d) Log into servers and access computer certificate stores via certmgr.msc</div>
+                    <button onclick="this.parentElement.classList.toggle('show-correct')">Show Answer</button>
+                </div>
+                
+                <div class="mcq">
+                    <div class="question">33. Where can specific antivirus software exclusions be found?</div>
+                    <div class="options">
+                        <div class="option">a) Vitrea Administration and Troubleshooting Guide</div>
+                        <div class="option">b) Enterprise Deployment Operating System Setup Guide</div>
+                        <div class="option">c) Application Server Install Guide Appendix</div>
+                        <div class="option">d) Canon Medical website</div>
+                    </div>
+                    <div class="correct">Correct answer: b) Enterprise Deployment Operating System Setup Guide</div>
+                    <button onclick="this.parentElement.classList.toggle('show-correct')">Show Answer</button>
+                </div>
+                
+                <div class="mcq">
+                    <div class="question">34. Which PowerShell script is used to test IIS settings for IP address restrictions on the Application Server?</div>
+                    <div class="options">
+                        <div class="option">a) <code>ConfigureIIS.ps1</code></div>
+                        <div class="option">b) <code>RestrictIP.ps1</code></div>
+                        <div class="option">c) <code>TestIIS.ps1</code></div>
+                        <div class="option">d) <code>VerifyIIS.ps1</code></div>
+                    </div>
+                    <div class="correct">Correct answer: c) <code>TestIIS.ps1</code></div>
+                    <button onclick="this.parentElement.classList.toggle('show-correct')">Show Answer</button>
+                </div>
+                
+                <div class="mcq">
+                    <div class="question">35. What is the required command to run the JITMatrix Filter script to configure matrix filter support on the Management Server?</div>
+                    <div class="options">
+                        <div class="option">a) <code>.\ConfigureJiT.ps1 -ApplyDefaults</code></div>
+                        <div class="option">b) <code>.\EnableMatrixFilter.ps1 -All</code></div>
+                        <div class="option">c) <code>.\LimitJitTo512Data.ps1 -ApplyToAllExcept TAVRAdvisor,CTColonCADJIT,CaScoreAdvisor,LungCADAdvisor,LungDensityAdvisor,CTLungTextureAnalysisJIT,CTBoneRemovalJIT,CarotidAutoVesselJIT</code></div>
+                        <div class="option">d) <code>.\SetupJitFilter.ps1 -Enable</code></div>
+                    </div>
+                    <div class="correct">Correct answer: c) <code>.\LimitJitTo512Data.ps1 -ApplyToAllExcept TAVRAdvisor,CTColonCADJIT,CaScoreAdvisor,LungCADAdvisor,LungDensityAdvisor,CTLungTextureAnalysisJIT,CTBoneRemovalJIT,CarotidAutoVesselJIT</code></div>
+                    <button onclick="this.parentElement.classList.toggle('show-correct')">Show Answer</button>
+                </div>
+                
+                <div class="mcq">
+                    <div class="question">36. After configuring Mirada XD 4.2 post-installation, which files need to be copied to each Application Server's <code>C:\ProgramData\Mirada Medical Ltd\Mirada XD</code> folder?</div>
+                    <div class="options">
+                        <div class="option">a) <code>plugin</code> and <code>newEmbeddedWindow.pkg</code></div>
+                        <div class="option">b) <code>MiradaXD.log</code> and <code>config.ini</code></div>
+                        <div class="option">c) <code>scp.xml</code> and <code>xd-system.json</code></div>
+                        <div class="option">d) <code>MiradaMedical.dll</code> and <code>Mirada.exe</code></div>
+                    </div>
+                    <div class="correct">Correct answer: c) <code>scp.xml</code> and <code>xd-system.json</code></div>
+                    <button onclick="this.parentElement.classList.toggle('show-correct')">Show Answer</button>
+                </div>
+                
+                <div class="mcq">
+                    <div class="question">37. What are the three components of .NET Core Runtime that CMI recommends updating if a Microsoft Windows vulnerability announcement occurs?</div>
+                    <div class="options">
+                        <div class="option">a) .NET Framework, .NET SDK, .NET Tools</div>
+                        <div class="option">b) ASP.NET Core Runtime, .NET Desktop Runtime, .NET Runtime</div>
+                        <div class="option">c) .NET Compiler, .NET Debugger, .NET Libraries</div>
+                        <div class="option">d) .NET Core SDK, .NET Core CLI, .NET Core Host</div>
+                    </div>
+                    <div class="correct">Correct answer: b) ASP.NET Core Runtime, .NET Desktop Runtime, .NET Runtime</div>
+                    <button onclick="this.parentElement.classList.toggle('show-correct')">Show Answer</button>
+                </div>
+                
+                <div class="mcq">
+                    <div class="question">38. Which Group Policy setting must be enabled to disable the Thin Client Local Drive Access feature?</div>
+                    <div class="options">
+                        <div class="option">a) Allow direct redirection</div>
+                        <div class="option">b) Do not allow direct redirection</div>
+                        <div class="option">c) Enable client drive mapping</div>
+                        <div class="option">d) Restrict local drives</div>
+                    </div>
+                    <div class="correct">Correct answer: b) Do not allow direct redirection</div>
+                    <button onclick="this.parentElement.classList.toggle('show-correct')">Show Answer</button>
+                </div>
+                
+                <div class="mcq">
+                    <div class="question">39. What is the location where the <code>cedarsInstaller.msi</code> and <code>cedarsVitreaAppInstaller.msi</code> files are found on the product media for installation?</div>
+                    <div class="options">
+                        <div class="option">a) <code>Vitrea_Resources\Optional\Cedars</code></div>
+                        <div class="option">b) <code>Vitrea_Resources\Applications\Cedars</code></div>
+                        <div class="option">c) <code>Vitrea_Resources\Bundle</code></div>
+                        <div class="option">d) <code>Vitrea_Resources\Setup\Cedars</code></div>
+                    </div>
+                    <div class="correct">Correct answer: c) <code>Vitrea_Resources\Bundle</code></div>
+                    <button onclick="this.parentElement.classList.toggle('show-correct')">Show Answer</button>
+                </div>
+                
+                <div class="mcq">
+                    <div class="question">40. What is the port number required for the Cedars License Server configuration?</div>
+                    <div class="options">
+                        <div class="option">a) 6000</div>
+                        <div class="option">b) 6433</div>
+                        <div class="option">c) 6500</div>
+                        <div class="option">d) 6789</div>
+                    </div>
+                    <div class="correct">Correct answer: b) 6433</div>
+                    <button onclick="this.parentElement.classList.toggle('show-correct')">Show Answer</button>
+                </div>
+                
+                <!-- MCQ 41-50 -->
+                <div class="mcq">
+                    <div class="question">41. To install VSTP2 applications using the Command Prompt, after navigating to the Bundle folder, what is the path for <code>DEImageGenerationPlugin.msi</code>?</div>
+                    <div class="options">
+                        <div class="option">a) <code>DEImageGenerationPlugin\install</code></div>
+                        <div class="option">b) <code>DEImageGenerationPlugin\setup</code></div>
+                        <div class="option">c) <code>DEImageGenerationPlugin\3.4\install</code></div>
+                        <div class="option">d) <code>DEImageGenerationPlugin\3.4\install</code></div>
+                    </div>
+                    <div class="correct">Correct answer: d) <code>DEImageGenerationPlugin\3.4\install</code></div>
+                    <button onclick="this.parentElement.classList.toggle('show-correct')">Show Answer</button>
+                </div>
+                
+                <div class="mcq">
+                    <div class="question">42. What is the primary step to enable functionality for <code>AutoMPRSpineJIT</code> and <code>AutoMPRBrainJIT</code> applications after installation?</div>
+                    <div class="options">
+                        <div class="option">a) Run a system checker script</div>
+                        <div class="option">b) Modify registry settings</div>
+                        <div class="option">c) Open a dataset and access Auto Processing Settings</div>
+                        <div class="option">d) Perform a full system reboot</div>
+                    </div>
+                    <div class="correct">Correct answer: c) Open a dataset and access Auto Processing Settings</div>
+                    <button onclick="this.parentElement.classList.toggle('show-correct')">Show Answer</button>
+                </div>
+                
+                <div class="mcq">
+                    <div class="question">43. Which file needs to be selected in the "Add Script" screen to configure the Spectral Analysis application's snapshot converter functionality?</div>
+                    <div class="options">
+                        <div class="option">a) <code>SnapshotConverter.exe</code></div>
+                        <div class="option">b) <code>SpectralConverter.xml</code></div>
+                        <div class="option">c) <code>SnapshotConverterLauncher.groovy</code></div>
+                        <div class="option">d) <code>SpectralAnalysisConfig.bat</code></div>
+                    </div>
+                    <div class="correct">Correct answer: c) <code>SnapshotConverterLauncher.groovy</code></div>
+                    <button onclick="this.parentElement.classList.toggle('show-correct')">Show Answer</button>
+                </div>
+                
+                <div class="mcq">
+                    <div class="question">44. If VSTP2 Spectral Analysis applications were accidentally installed and need to be reverted to VSTP1, which MSI file should be repaired?</div>
+                    <div class="options">
+                        <div class="option">a) <code>SpectralAnalysisInstaller_x64.msi</code></div>
+                        <div class="option">b) <code>DEImageGenerationPlugin.msi</code></div>
+                        <div class="option">c) <code>CMSCWSClinicalApp.msi</code></div>
+                        <div class="option">d) <code>VSTP2_Rollback.msi</code></div>
+                    </div>
+                    <div class="correct">Correct answer: c) <code>CMSCWSClinicalApp.msi</code></div>
+                    <button onclick="this.parentElement.classList.toggle('show-correct')">Show Answer</button>
+                </div>
+                
+                <div class="mcq">
+                    <div class="question">45. What is the next installation step after completing the Application Server setup?</div>
+                    <div class="options">
+                        <div class="option">a) Vitrea Administration and Troubleshooting Guide</div>
+                        <div class="option">b) Install the Multi Modality Viewer Server software (Optional Enterprise Component)</div>
+                        <div class="option">c) Configure client workstations</div>
+                        <div class="option">d) Perform system hardening</div>
+                    </div>
+                    <div class="correct">Correct answer: b) Install the Multi Modality Viewer Server software (Optional Enterprise Component)</div>
+                    <button onclick="this.parentElement.classList.toggle('show-correct')">Show Answer</button>
+                </div>
+                
+                <div class="mcq">
+                    <div class="question">46. What is the maximum number of dedicated Multi Modality Viewer Servers that can be deployed in a Vitrea Enterprise environment?</div>
+                    <div class="options">
+                        <div class="option">a) One</div>
+                        <div class="option">b) Two</div>
+                        <div class="option">c) Four</div>
+                        <div class="option">d) Unlimited</div>
+                    </div>
+                    <div class="correct">Correct answer: b) Two</div>
+                    <button onclick="this.parentElement.classList.toggle('show-correct')">Show Answer</button>
+                </div>
+                
+                <div class="mcq">
+                    <div class="question">47. Which .NET Framework version is a prerequisite for the Multi Modality Viewer Server?</div>
+                    <div class="options">
+                        <div class="option">a) .NET Framework 3.5</div>
+                        <div class="option">b) .NET Framework 4.0</div>
+                        <div class="option">c) .NET Framework 4.8</div>
+                        <div class="option">d) .NET Framework 5.0</div>
+                    </div>
+                    <div class="correct">Correct answer: c) .NET Framework 4.8</div>
+                    <button onclick="this.parentElement.classList.toggle('show-correct')">Show Answer</button>
+                </div>
+                
+                <div class="mcq">
+                    <div class="question">48. What is the recommended RAM for an Application Server Virtualized - CPU Rendered configuration?</div>
+                    <div class="options">
+                        <div class="option">a) 16GB</div>
+                        <div class="option">b) 24GB</div>
+                        <div class="option">c) 32GB</div>
+                        <div class="option">d) 48GB</div>
+                    </div>
+                    <div class="correct">Correct answer: b) 24GB</div>
+                    <button onclick="this.parentElement.classList.toggle('show-correct')">Show Answer</button>
+                </div>
+                
+                <div class="mcq">
+                    <div class="question">49. What is the recommended CPU generation or newer for GPU-rendered Application Server/Multi Modality Viewer Server supporting 512x512 matrix?</div>
+                    <div class="options">
+                        <div class="option">a) Intel Xeon Processor E5/E7 v3</div>
+                        <div class="option">b) Intel Xeon Processor E5/E7 v4</div>
+                        <div class="option">c) Intel Xeon Gold 5000 series</div>
+                        <div class="option">d) AMD EPYC</div>
+                    </div>
+                    <div class="correct">Correct answer: b) Intel Xeon Processor E5/E7 v4</div>
+                    <button onclick="this.parentElement.classList.toggle('show-correct')">Show Answer</button>
+                </div>
+                
+                <div class="mcq">
+                    <div class="question">50. What is the minimum CUDA capability required for Nvidia GPUs and drivers to support Global Illumination Rendering?</div>
+                    <div class="options">
+                        <div class="option">a) CUDA 8</div>
+                        <div class="option">b) CUDA 9</div>
+                        <div class="option">c) CUDA 10</div>
+                        <div class="option">d) CUDA 11</div>
+                    </div>
+                    <div class="correct">Correct answer: c) CUDA 10</div>
+                    <button onclick="this.parentElement.classList.toggle('show-correct')">Show Answer</button>
+                </div>
+            </div>
+            
+            <div id="troubleshooting" class="tab-content">
+                <h2>Troubleshooting Scenarios (25)</h2>
+                <div class="controls">
+                    <button id="showAllTroubleshooting">Show All Solutions</button>
+                    <button id="hideAllTroubleshooting">Hide All Solutions</button>
+                </div>
+                
+                <!-- Scenario 1-10 -->
+                <div class="troubleshooting" onclick="this.classList.toggle('show-solution')">
+                    <div class="scenario">1. The Vitrea software installation fails, and you suspect a Group Policy is preventing the prep script from running successfully.</div>
+                    <div class="solution">
+                        <p><strong>Solution:</strong> <strong>Manually run the Prep Script</strong>. Navigate to <code>E:\Vitrea_Resources\&lt;media contents&gt;\Utilities\OS Configuration Scripts\&lt;your setup OS version&gt;\Prep</code>. Open PowerShell as administrator, <code>cd</code> to that path, and then type <code>.\runscript.bat</code>. If a security warning displays, type <code>R</code> and press Enter. Select the appropriate component (e.g., Application Server). After execution, type <code>A</code> for "Yes to All" to reboot the system. <strong>Then, create the <code>SkipSysPrep</code> registry key</strong> (<code>HKLM/Software/Vital Images/Installer</code>, <code>String Value</code>, <code>SkipSysPrep=1</code>) and reboot. After successful Vitrea installation, remove this key.</p>
+                    </div>
+                </div>
+                
+                <div class="troubleshooting" onclick="this.classList.toggle('show-solution')">
+                    <div class="scenario">2. You are trying to install the Vitrea software, but you are signed in using the built-in Administrator account, and the installation fails because the Username field does not authenticate.</div>
+                    <div class="solution">
+                        <p><strong>Solution:</strong> <strong>Ensure you are signed in using a domain account with local administrator rights (e.g., Vitrea-Admin)</strong>. The built-in Administrator account will not authenticate as it is a local administrator, not a domain administrator.</p>
+                    </div>
+                </div>
+                
+                <div class="troubleshooting" onclick="this.classList.toggle('show-solution')">
+                    <div class="scenario">3. During the Vitrea installation, a message displays stating, "There is a pending reboot. Please reboot the system now otherwise installation may not succeed."</div>
+                    <div class="solution">
+                        <p><strong>Solution:</strong> Canon Medical recommends you <strong>click the Exit button and reboot the system</strong> before attempting the installation again.</p>
+                    </div>
+                </div>
+                
+                <div class="troubleshooting" onclick="this.classList.toggle('show-solution')">
+                    <div class="scenario">4. The Vitrea software installation process is showing Command Prompt screens, and you are unsure if you should interact with them.</div>
+                    <div class="solution">
+                        <p><strong>Solution:</strong> <strong>Do not interact with the Command Prompt screens</strong>. They will close automatically when the required processing is complete.</p>
+                    </div>
+                </div>
+                
+                <div class="troubleshooting" onclick="this.classList.toggle('show-solution')">
+                    <div class="scenario">5. After entering SQL Server connection details, the verification fails when you click the TEST button.</div>
+                    <div class="solution">
+                        <p><strong>Solution:</strong> <strong>Click the BACK button to return to the Configure the database connection screen and re-enter the hostname, instance name (if applicable), port, and database name</strong> (steps 6-10).</p>
+                    </div>
+                </div>
+                
+                <div class="troubleshooting" onclick="this.classList.toggle('show-solution')">
+                    <div class="scenario">6. You need to confirm that your Data Center GPU is compliant and configured for vGPU in a virtualized Application Server, but you are receiving an error.</div>
+                    <div class="solution">
+                        <p><strong>Solution:</strong> Refer to the provided location (implied external document) to determine if your card is compliant. The error displays because <strong>the vGPU requires Tesla Graphics cards to be configured in Windows Display Driver Model (WDDM) mode</strong>. Consult the "Setting TCC Mode for Tesla Products" article for more information.</p>
+                    </div>
+                </div>
+                
+                <div class="troubleshooting" onclick="this.classList.toggle('show-solution')">
+                    <div class="scenario">7. The performance of your Vitrea applications using NVIDIA vGPU is degrading over time, and you suspect a licensing issue.</div>
+                    <div class="solution">
+                        <p><strong>Solution:</strong> Verify the NVIDIA vGPU licensing. <strong>Check the NVIDIA Control Panel (Manage License task) to ensure the Primary License Server field contains the correct hostname</strong>. If it's missing, contact the site's VMware administrator. Remember that performance degrades (e.g., frame rate capped at 15 fps after 20 minutes, CUDA stops working after 24 hours) if a license is not obtained.</p>
+                    </div>
+                </div>
+                
+                <div class="troubleshooting" onclick="this.classList.toggle('show-solution')">
+                    <div class="scenario">8. You need to enable SSL/TLS for your Vitrea deployment, but your PowerShell ExecutionPolicy is set to Restricted.</div>
+                    <div class="solution">
+                        <p><strong>Solution:</strong> Before running the <code>ConfigureTLS_Enterprise.ps1</code> script, <strong>set the ExecutionPolicy to Unrestricted by typing <code>Set-ExecutionPolicy UnRestricted</code> and pressing Enter</strong>. After completing the TLS configuration procedure, remember to set the ExecutionPolicy back to Restricted.</p>
+                    </div>
+                </div>
+                
+                <div class="troubleshooting" onclick="this.classList.toggle('show-solution')">
+                    <div class="scenario">9. You are attempting to run the <code>ConfigureTLS_Enterprise.ps1</code> script, and you are using a certificate thumbprint that contains spaces.</div>
+                    <div class="solution">
+                        <p><strong>Solution:</strong> <strong>Ensure the thumbprint hash you use does not contain any spaces in its value</strong>. Update the hash to remove spaces (e.g., <code>bdea4c20896eb0a9adce9c97314d11887782c330</code> instead of <code>bd ea 4c 20 ...</code>).</p>
+                    </div>
+                </div>
+                
+                <div class="troubleshooting" onclick="this.classList.toggle('show-solution')">
+                    <div class="scenario">10. You are unable to open the Certificate Store under the Local Computer Certificate Store as required for SSL/TLS configuration.</div>
+                    <div class="solution">
+                        <p><strong>Solution:</strong> Ensure you are explicitly opening the <strong>Local Computer Certificate Store</strong> by running <code>certlm.msc</code> from the Start menu.</p>
+                    </div>
+                </div>
+                
+                <!-- Scenario 11-20 -->
+                <div class="troubleshooting" onclick="this.classList.toggle('show-solution')">
+                    <div class="scenario">11. The Vitrea software displays a blank gray screen on startup, and the Session Helper log shows "Error: unable to get issuer certificate" when TLS is enabled.</div>
+                    <div class="solution">
+                        <p><strong>Solution:</strong> This can occur if the system has more than one digital certificate trust chain from the CA and one is expired. <strong>Log into all Management and Application Servers as an administrator</strong>. Access the computer certificate stores (<code>certmgr.msc</code>). Expand "Trusted Root Certification Authorities" and select "Certificates". <strong>Remove any expired certificates for the issuing CA, but do not remove valid ones</strong>. Restart any server where certificates were removed. If the certificate is restored, contact the customer's Active Directory Administrator.</p>
+                    </div>
+                </div>
+                
+                <div class="troubleshooting" onclick="this.classList.toggle('show-solution')">
+                    <div class="scenario">12. You are performing administrative work on a Vitrea system, but the Vitrea application is running in kiosk mode, preventing access to the Windows desktop.</div>
+                    <div class="solution">
+                        <p><strong>Solution:</strong> From within the Vitrea software, <strong>select the double-gear icon in the upper right corner, then select the "Reveal Desktop" option</strong>. This launches Windows Explorer and reveals the Start menu. The system will reset to defaults when the Kiosk session is closed.</p>
+                    </div>
+                </div>
+                
+                <div class="troubleshooting" onclick="this.classList.toggle('show-solution')">
+                    <div class="scenario">13. You need to test IIS settings configured to restrict IP addresses on an Application Server after setting them up on the Management Server.</div>
+                    <div class="solution">
+                        <p><strong>Solution:</strong> <strong>Copy the <code>TestIIS.ps1</code> script from the Management Server to the Application Server</strong>. Open PowerShell as Administrator, <code>cd</code> to the script's location, and <strong>type <code>.\TestIIS.ps1 -ManagementIp &lt;IP address of the Management Server&gt;</code> and press Enter</strong>. Verify that IIS endpoints are allowed and there are no unexpected failures.</p>
+                    </div>
+                </div>
+                
+                <div class="troubleshooting" onclick="this.classList.toggle('show-solution')">
+                    <div class="scenario">14. You have deployed an Application Server and need to configure matrix filter support for Just-In-Time (JIT) processing.</div>
+                    <div class="solution">
+                        <p><strong>Solution:</strong> Connect to the Management Server and open Windows PowerShell with Administrator rights. <strong>Navigate to <code>E:\Vital_Resources\Vitrea-[version number]\Utilities\Scripts\ConfigureJiT</code></strong>. Enter the command: <code>.\LimitJitTo512Data.ps1 -ApplyToAllExcept TAVRAdvisor,CTColonCADJIT,CaScoreAdvisor,LungCADAdvisor,LungDensityAdvisor,CTLungTextureAnalysisJIT,CTBoneRemovalJIT,CarotidAutoVesselJIT</code> and press Enter.</p>
+                    </div>
+                </div>
+                
+                <div class="troubleshooting" onclick="this.classList.toggle('show-solution')">
+                    <div class="scenario">15. You encounter an "The application is currently unlicensed" error when trying to launch Mirada XD Administration.</div>
+                    <div class="solution">
+                        <p><strong>Solution:</strong> <strong>Navigate to <code>C:\Program Files\Mirada Medical\Mirada XD\bin</code> folder</strong>. Copy the <code>plugin</code>, <code>plugin.xml.hmac</code>, and <code>newEmbeddedWindow.pkg</code> files to any location outside of the current one. After completing the administration tool tasks, move these files back to the original <code>bin</code> folder.</p>
+                    </div>
+                </div>
+                
+                <div class="troubleshooting" onclick="this.classList.toggle('show-solution')">
+                    <div class="scenario">16. You need to update the .NET Core Runtime components due to a Microsoft Windows vulnerability announcement, and you want to ensure you download the correct versions.</div>
+                    <div class="solution">
+                        <p><strong>Solution:</strong> <strong>Open Control Panel > Programs > Programs and Features to confirm existing runtime versions</strong>. Then, access <code>https://dotnet.microsoft.com/en-us/download/dotnet</code>. In the Version column, select the corresponding release version (e.g., .NET 6, .NET 8) to find newer security patches. <strong>Only install the minor version updates from the same "family"</strong>. Ensure you install all three Runtime components (.NET Runtime, ASP.NET Core Runtime, .NET Desktop Runtime). Reboot the system afterwards.</p>
+                    </div>
+                </div>
+                
+                <div class="troubleshooting" onclick="this.classList.toggle('show-solution')">
+                    <div class="scenario">17. Client Computer Local Drives are visible in the Save File screen from a remote session, and you need to disable this Thin Client Local Drive Access feature.</div>
+                    <div class="solution">
+                        <p><strong>Solution:</strong> On the Application Server, <strong>open Group Policy Management</strong> (via Start menu search for Administrative Tools). Expand <code>Forest > Domains > Group Policy Objects</code>. Right-click the <code>Vitrea Application Servers Group Policy Object</code> and select Edit. Navigate to <code>Computer Configuration > Policies > Administrative Templates > Windows Components > Remote Desktop Services > Remote Desktop Session Host > Drive and Resource Redirection</code>. <strong>Double-click "Do not allow direct redirection" and select the "Enabled" radio button to disable the feature</strong>, then click OK.</p>
+                    </div>
+                </div>
+                
+                <div class="troubleshooting" onclick="this.classList.toggle('show-solution')">
+                    <div class="scenario">18. You have purchased DEIImageGenerationPlugin 3.4.0, Spectral Analysis, Spectral Composition Analysis, and Spectral Stone Analysis (VSTP2 applications), but they were not installed during the initial software installation.</div>
+                    <div class="solution">
+                        <p><strong>Solution:</strong> <strong>Sign in as an administrator</strong>. On the Application Server, open Command Prompt as Administrator. <strong>Navigate to the Vitrea installation folder, then the <code>Bundle</code> folder</strong>. From the <code>Bundle</code> folder, open <code>DEImageGenerationPlugin\3.4\install</code> and type <code>DEImageGenerationPlugin.msi</code> to install it. Then, type <code>CD ..\..\..</code> to return to the <code>Bundle</code> folder and install <code>SpectralAnalysisInstaller_x64.msi</code>, <code>SpectralCompositionAnalysisInstaller_x64.msi</code>, and <code>SpectralStoneAnalysisInstaller_x64.msi</code>.</p>
+                    </div>
+                </div>
+                
+                <div class="troubleshooting" onclick="this.classList.toggle('show-solution')">
+                    <div class="scenario">19. You accidentally installed VSTP2 Spectral Analysis applications without purchasing them, and you need to revert to VSTP1 Spectral Analysis applications.</div>
+                    <div class="solution">
+                        <p><strong>Solution:</strong> <strong>Sign into the system as an administrator</strong>. On the Application Server, open Command Prompt as Administrator. Navigate to the Vitrea installation folder, then the <code>Bundle</code> folder. <strong>Type <code>CMSCWSClinicalApp.msi</code> and follow the prompts for Repair</strong>. Click Yes to restart your system when prompted.</p>
+                    </div>
+                </div>
+                
+                <div class="troubleshooting" onclick="this.classList.toggle('show-solution')">
+                    <div class="scenario">20. After installing VSTP2 Spectral Analysis, you need to set up the Hanging Rule Input and Auto Processing Settings, but the export destination is not available.</div>
+                    <div class="solution">
+                        <p><strong>Solution:</strong> <strong>Ensure you have completed the "Attach an Archive" procedure in the Management Server Install Guide</strong>. This is required for the export destination to be selectable in the Hanging Rule Input and Auto Processing Settings screen.</p>
+                    </div>
+                </div>
+                
+                <!-- Scenario 21-25 -->
+                <div class="troubleshooting" onclick="this.classList.toggle('show-solution')">
+                    <div class="scenario">21. You are deploying virtual Application Servers, and the Vitrea software is running inefficiently with a warning in System Health about too many sockets.</div>
+                    <div class="solution">
+                        <p><strong>Solution:</strong> <strong>When deploying virtual Application Servers, ensure you set a maximum of 1 or 2 sockets for each guest</strong>. The default is often the same number of sockets as vCPUs (e.g., 8 sockets and 8 cores), which should be changed to 1 socket and 8 cores for efficiency.</p>
+                    </div>
+                </div>
+                
+                <div class="troubleshooting" onclick="this.classList.toggle('show-solution')">
+                    <div class="scenario">22. You plan to use Global Illumination with Vitrea, but the rendering is not working as expected.</div>
+                    <div class="solution">
+                        <p><strong>Solution:</strong> Be aware that <strong>Global Illumination rendering requires an NVIDIA GPU</strong>. CPU-based rendering is not supported for GIR. Ensure your GPU meets the minimum requirements (e.g., CUDA10-minimum capability).</p>
+                    </div>
+                </div>
+                
+                <div class="troubleshooting" onclick="this.classList.toggle('show-solution')">
+                    <div class="scenario">23. Vitrea Advanced Visualization is not running or performing correctly, and you suspect an issue with CPU instruction set extensions.</div>
+                    <div class="solution">
+                        <p><strong>Solution:</strong> <strong>Run the <code>Enumerate CPU Instructions</code> PowerShell script to retrieve each machine's exposed extensions</strong>. Verify that the required extensions (SSE, SSE2, SSE3, SSSE3, SSE4.1, and SSE4.2) are available. If not, <strong>work with the customer site's Hypervisor administrator to ensure the Guest has the proper EVC CPU mode enabled</strong>.</p>
+                    </div>
+                </div>
+                
+                <div class="troubleshooting" onclick="this.classList.toggle('show-solution')">
+                    <div class="scenario">24. You notice inconsistent performance and user experience in your vGPU deployment.</div>
+                    <div class="solution">
+                        <p><strong>Solution:</strong> Ensure that the <strong>NVIDIA vGPUManager is set to "Fixed share" scheduling (recommended) or "Equal share" (acceptable)</strong>. The "Best effort" scheduler (default) is not supported and can lead to inconsistent performance.</p>
+                    </div>
+                </div>
+                
+                <div class="troubleshooting" onclick="this.classList.toggle('show-solution')">
+                    <div class="scenario">25. You need to confirm the status of security and best practice configurations set by the system hardening script after Vitrea installation.</div>
+                    <div class="solution">
+                        <p><strong>Solution:</strong> <strong>Open the <code>SysChkrReport {machinename,date,time}.html</code> file in any Internet browser</strong>. This report confirms the status of security and best practice configurations, displaying "OK" in green or "Not OK" in red. If you opted out of running the script during installation, you can run <code>VitreaSystemChecker.ps1</code> manually from <code>E:\Vitrea_Resources\&lt;media contents&gt;\Utilities\Scripts\SystemChecker</code>.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="quicktips" class="tab-content">
+                <h2>Quick Tips</h2>
+                
+                <div class="quick-tip">
+                    <strong>Copyright and Reproduction:</strong> No part of the "Vitrea® Advanced Visualization Application Server Install Guide" may be reproduced, stored, or transmitted without <strong>written permission from Canon Medical</strong>.
+                </div>
+                
+                <div class="quick-tip">
+                    <strong>Trademarks:</strong> <strong>Vitrea is a registered trademark</strong> in the United States and may have protection in other countries. All other marks are property of their respective owners.
+                </div>
+                
+                <div class="quick-tip">
+                    <strong>Liability & Warranty:</strong> <strong>Canon Medical has no liability</strong> for damages due to software defects or documentation use and makes <strong>no express or implied warranty</strong>.
+                </div>
+                
+                <div class="quick-tip">
+                    <strong>Confidentiality:</strong> The software and its information (ideas, concepts, know-how) are <strong>proprietary, confidential, and trade secret to Canon Medical</strong>. Do not disclose to unauthorized persons or reverse engineer the software.
+                </div>
+                
+                <div class="quick-tip">
+                    <strong>Software License:</strong> Use of the software is strictly <strong>according to the terms of its license</strong>.
+                </div>
+                
+                <div class="quick-tip">
+                    <strong>Serious Incidents:</strong> Any serious incident related to the device should be <strong>reported to Canon Medical at 1.800.208.3005</strong> and the competent authority.
+                </div>
+                
+                <div class="quick-tip">
+                    <strong>Federal Law Restriction:</strong> This device's sale is <strong>restricted by federal law to physicians' orders</strong>.
+                </div>
+                
+                <div class="quick-tip">
+                    <strong>UDI Location:</strong> The Vitrea Unique Device Identifier (UDI) is found on the <strong>Help Central page under the Version Info section</strong>.
+                </div>
+                
+                <div class="quick-tip">
+                    <strong>Intended Audience:</strong> This guide is for customers with <strong>familiarity in server OS, application installation, and network troubleshooting</strong> on Windows Server operating systems.
+                </div>
+                
+                <div class="quick-tip">
+                    <strong>Deployment Components:</strong> A typical enterprise deployment includes <strong>one Management Server, one or more Application Servers, and one or two Multi Modality Viewer Servers</strong>.
+                </div>
+                
+                <div class="quick-tip">
+                    <strong>Installation Per Server:</strong> You install <strong>either Application Server or Multi Modality Viewer Server software on each non-Management Server</strong>, never both on the same system.
+                </div>
+                
+                <div class="quick-tip">
+                    <strong>Third-Party Software:</strong> Canon Medical is <strong>not responsible for third-party software's performance impact</strong> on Vitrea servers.
+                </div>
+                
+                <div class="quick-tip">
+                    <strong>Antivirus Policy:</strong> <strong>Review the "Canon Medical Antivirus Policy"</strong> in the Enterprise Deployment Operating System Setup Guide, as improper AV exclusions can be detrimental to performance.
+                </div>
+                
+                <div class="quick-tip">
+                    <strong>Virtualized Application Servers with GPUs:</strong> vGPU requires Tesla Graphics cards to be configured in <strong>Windows Display Driver Model (WDDM) mode</strong>.
+                </div>
+                
+                <div class="quick-tip">
+                    <strong>Multi-factor Authentication (MFA):</strong> Canon Medical has <strong>limited support for SmartCards/CAC/PIV</strong> and <strong>no support for MFA that interrupts user logons</strong> or requires RDWeb/Remote Desktop Gateway authentication.
+                </div>
+                
+                <div class="quick-tip">
+                    <strong>Installation User Account:</strong> <strong>Always sign in with a domain account with local administrator rights (e.g., Vitrea-Admin)</strong> for installation; the built-in Administrator account will fail.
+                </div>
+                
+                <div class="quick-tip">
+                    <strong>Pending Reboot:</strong> If prompted about a pending reboot, <strong>reboot the system before continuing installation</strong>.
+                </div>
+                
+                <div class="quick-tip">
+                    <strong>Command Prompt during Install:</strong> <strong>Do not interact with Command Prompt screens</strong> during installation; they close automatically.
+                </div>
+                
+                <div class="quick-tip">
+                    <strong>SQL Connectivity Test:</strong> <strong>Click the TEST button</strong> to verify SQL connectivity, though it does not validate the database name.
+                </div>
+                
+                <div class="quick-tip">
+                    <strong>Management Service URL:</strong> Ensure the Management Service URL uses an <strong>FQDN and "https"</strong>.
+                </div>
+                
+                <div class="quick-tip">
+                    <strong>Windows Updates:</strong> Canon Medical <strong>recommends installing Microsoft Windows monthly updates</strong>.
+                </div>
+                
+                <div class="quick-tip">
+                    <strong>Time Zone Change:</strong> <strong>Reboot the system after a time zone change</strong> (e.g., Daylight Saving Time) for services to account for the hour change.
+                </div>
+                
+                <div class="quick-tip">
+                    <strong>NVIDIA vGPU Licensing:</strong> <strong>NVIDIA Virtual GPU Software License Server is required</strong>. Perpetual licenses with SUMS are recommended for critical healthcare settings to prevent performance degradation from expired licenses.
+                </div>
+                
+                <div class="quick-tip">
+                    <strong>TLS Requirement:</strong> <strong>Canon Medical requires TLS to be enabled</strong> in the Vitrea product for security (TLS 1.2 on supported Windows Server versions).
+                </div>
+                
+                <div class="quick-tip">
+                    <strong>Certificate Thumbprint:</strong> When running <code>ConfigureTLS_Enterprise.ps1</code>, ensure the <strong>thumbprint hash does not contain any spaces</strong>.
+                </div>
+                
+                <div class="quick-tip">
+                    <strong>Certificate Expiration:</strong> Canon Medical recommends creating a calendar appointment <strong>one to two months before digital certificate expiration</strong> for renewal planning.
+                </div>
+                
+                <div class="quick-tip">
+                    <strong>System Hardening Script:</strong> Canon Medical <strong>recommends running the system hardening script</strong>; it's installed by default during Vitrea installation.
+                </div>
+                
+                <div class="quick-tip">
+                    <strong>CPU Requirements:</strong> CPUs supporting <strong>Advanced Vector Extensions 2 (AVX2) extensions are required</strong> for several applications.
+                </div>
+                
+                <div class="quick-tip">
+                    <strong>Virtualized CPU Rendering Sockets:</strong> For virtual Application Servers, set a maximum of <strong>1 or 2 sockets for each guest</strong> (e.g., 1 socket and 8 cores, not 8 sockets and 8 cores) to prevent inefficient running.
+                </div>
+                
+                <div class="quick-tip">
+                    <strong>CPU Rendering Limitations:</strong> CPU rendering is <strong>not recommended</strong> if using TOMTEC, Global Illumination, or Olea 3D workflows, and generally has lower performance than GPU rendering.
+                </div>
+                
+                <div class="quick-tip">
+                    <strong>Hypervisor Requirements:</strong> VMware® vSphere 7.0 or newer with VMware Tools 11.3 or newer, and VMXNET3 drivers. <strong>Avoid VMware Tools 12.5 due to an OpenGL crashing issue</strong>.
+                </div>
+                
+                <div class="quick-tip">
+                    <strong>Monitor Configurations:</strong> Multiple monitor configurations are supported on two homogeneous monitors. <strong>All connected monitors must be configured with the same resolution, DPI, and orientation settings</strong>.
+                </div>
+                
+                <div class="quick-tip">
+                    <strong>Operating System Language:</strong> <strong>Only English Operating Systems are supported</strong>.
+                </div>
+                
+                <div class="quick-tip">
+                    <strong>Client Connection:</strong> Use of <strong>VDI or double remote desktop sessions is not supported</strong> for accessing Vitrea software. A <strong>wired connection of 1Gb/s or greater is recommended</strong>.
+                </div>
+                
+                <div class="quick-tip">
+                    <strong>Multi Modality Viewer Server Limits:</strong> A maximum of <strong>four concurrent users</strong> are allowed, and a maximum of <strong>two dedicated Multi Modality Viewer Servers</strong> can be deployed.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching functionality
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.addEventListener('click', () => {
+                // Remove active class from all buttons and content
+                document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                
+                // Add active class to clicked button and corresponding content
+                button.classList.add('active');
+                const tabId = button.getAttribute('data-tab');
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+        
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            if (searchTerm.length < 2) {
+                // Clear highlights if search term is too short
+                document.querySelectorAll('.highlight').forEach(el => {
+                    el.classList.remove('highlight');
+                });
+                // Show all content again
+                document.querySelectorAll('.flashcard, .mcq, .troubleshooting, .quick-tip').forEach(el => {
+                    el.style.display = '';
+                });
+                return;
+            }
+            
+            // Search through all content
+            const contentElements = document.querySelectorAll('.flashcard, .mcq, .troubleshooting, .quick-tip');
+            contentElements.forEach(element => {
+                const text = element.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    element.style.display = ''; // Show matching elements
+                    
+                    // Highlight the matching text (simple implementation)
+                    const regex = new RegExp(searchTerm, 'gi');
+                    element.innerHTML = element.innerHTML.replace(regex, match => 
+                        `<span class="highlight">${match}</span>`
+                    );
+                } else {
+                    element.style.display = 'none'; // Hide non-matching elements
+                }
+            });
+        });
+        
+        // Show all flashcards answers
+        document.getElementById('showAllFlashcards').addEventListener('click', () => {
+            document.querySelectorAll('#flashcards .flashcard').forEach(card => {
+                card.classList.add('show-answer');
+            });
+        });
+        
+        // Hide all flashcards answers
+        document.getElementById('hideAllFlashcards').addEventListener('click', () => {
+            document.querySelectorAll('#flashcards .flashcard').forEach(card => {
+                card.classList.remove('show-answer');
+            });
+        });
+        
+        // Show all MCQ answers
+        document.getElementById('showAllMCQs').addEventListener('click', () => {
+            document.querySelectorAll('#mcqs .mcq').forEach(mcq => {
+                mcq.classList.add('show-correct');
+            });
+        });
+        
+        // Hide all MCQ answers
+        document.getElementById('hideAllMCQs').addEventListener('click', () => {
+            document.querySelectorAll('#mcqs .mcq').forEach(mcq => {
+                mcq.classList.remove('show-correct');
+            });
+        });
+        
+        // Show all troubleshooting solutions
+        document.getElementById('showAllTroubleshooting').addEventListener('click', () => {
+            document.querySelectorAll('#troubleshooting .troubleshooting').forEach(item => {
+                item.classList.add('show-solution');
+            });
+        });
+        
+        // Hide all troubleshooting solutions
+        document.getElementById('hideAllTroubleshooting').addEventListener('click', () => {
+            document.querySelectorAll('#troubleshooting .troubleshooting').forEach(item => {
+                item.classList.remove('show-solution');
+            });
+        });
+    </script>
+</body>
+</html>
