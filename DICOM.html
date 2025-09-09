@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete DICOM Overview - Canon Medical Systems</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --canon-red: #E3000F;
+            --canon-dark-red: #9D0015;
+            --canon-gray: #4D4D4D;
+            --canon-light-gray: #F2F2F2;
+            --canon-blue: #006AB4;
+            --canon-light-blue: #E6F2F9;
+            --canon-green: #4CAF50;
+            --canon-purple: #9C27B0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--canon-light-gray);
+            color: var(--canon-gray);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 280px;
+            background: linear-gradient(to bottom, var(--canon-red), var(--canon-dark-red));
+            color: white;
+            padding: 20px 0;
+            overflow-y: auto;
+            box-shadow: 3px 0 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+        }
+        
+        .logo {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 20px;
+        }
+        
+        .logo h1 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+        
+        .logo p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .toc {
+            list-style: none;
+        }
+        
+        .toc li {
+            margin-bottom: 5px;
+        }
+        
+        .toc a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 12px 20px;
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+        }
+        
+        .toc a:hover, .toc a.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-left: 4px solid white;
+        }
+        
+        .toc a i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            margin-left: 280px;
+            overflow-y: auto;
+        }
+        
+        .slide {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+            display: none;
+        }
+        
+        .slide.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .slide-header {
+            border-bottom: 2px solid var(--canon-red);
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .slide-header h2 {
+            color: var(--canon-red);
+            font-size: 1.8rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .slide-header h2 i {
+            margin-right: 10px;
+        }
+        
+        .slide-content {
+            padding: 10px 0;
+        }
+        
+        /* Navigation Controls */
+        .nav-controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        .btn {
+            background-color: var(--canon-red);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: var(--canon-dark-red);
+        }
+        
+        .btn i {
+            margin-right: 8px;
+        }
+        
+        .btn-prev i {
+            margin-right: 8px;
+        }
+        
+        .btn-next i {
+            margin-left: 8px;
+        }
+        
+        /* Content Styling */
+        h3 {
+            color: var(--canon-blue);
+            margin: 20px 0 10px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        ul, ol {
+            padding-left: 20px;
+            margin: 15px 0;
+        }
+        
+        li {
+            margin-bottom: 8px;
+        }
+        
+        .card {
+            background-color: var(--canon-light-gray);
+            border-left: 4px solid var(--canon-blue);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        .card-green {
+            border-left-color: var(--canon-green);
+        }
+        
+        .card-purple {
+            border-left-color: var(--canon-purple);
+        }
+        
+        .tag-example {
+            font-family: monospace;
+            background-color: #f5f5f5;
+            padding: 5px 10px;
+            border-radius: 4px;
+            display: inline-block;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+        }
+        
+        .diagram {
+            width: 100%;
+            max-width: 600px;
+            margin: 20px auto;
+            display: block;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: white;
+        }
+        
+        .code-block {
+            background-color: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+        
+        .two-column {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .col {
+            flex: 1;
+        }
+        
+        .highlight {
+            background-color: #fff9e6;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-weight: bold;
+            color: var(--canon-red);
+        }
+        
+        .timeline {
+            position: relative;
+            margin: 30px 0;
+            padding-left: 30px;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background-color: var(--canon-red);
+        }
+        
+        .timeline-item {
+            margin-bottom: 20px;
+            position: relative;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -36px;
+            top: 5px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background-color: var(--canon-blue);
+            border: 3px solid var(--canon-light-gray);
+        }
+        
+        .timeline-year {
+            font-weight: bold;
+            color: var(--canon-red);
+            margin-bottom: 5px;
+        }
+        
+        /* Glossary Table */
+        .glossary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        .glossary-table th, .glossary-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .glossary-table th {
+            background-color: var(--canon-light-blue);
+            color: var(--canon-blue);
+        }
+        
+        .glossary-table tr:hover {
+            background-color: rgba(0, 106, 180, 0.05);
+        }
+        
+        /* DICOM Tag Styling */
+        .dicom-tag {
+            font-family: monospace;
+            background-color: #f0f8ff;
+            padding: 3px 8px;
+            border-radius: 4px;
+            border: 1px solid #cde;
+            margin: 2px;
+            display: inline-block;
+        }
+        
+        /* Workflow Diagram */
+        .workflow-diagram {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .workflow-step {
+            text-align: center;
+            width: 20%;
+            padding: 15px;
+            background-color: var(--canon-light-blue);
+            border-radius: 8px;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        }
+        
+        .workflow-arrow {
+            position: absolute;
+            top: 50%;
+            font-size: 24px;
+            color: var(--canon-red);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1000px) {
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+            
+            .two-column {
+                flex-direction: column;
+            }
+            
+            .workflow-diagram {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .workflow-step {
+                width: 100%;
+                margin-bottom: 20px;
+            }
+            
+            .workflow-arrow {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <div class="sidebar">
+            <div class="logo">
+                <h1>Canon Medical Systems</h1>
+                <p>Complete DICOM Overview</p>
+            </div>
+            
+            <ul class="toc">
+                <li><a href="#title" class="active"><i class="fas fa-home"></i> Title Slide</a></li>
+                <li><a href="#toc"><i class="fas fa-list"></i> Table of Contents</a></li>
+                <li><a href="#what-is-dicom"><i class="fas fa-info-circle"></i> What is DICOM?</a></li>
+                <li><a href="#history"><i class="fas fa-history"></i> History</a></li>
+                <li><a href="#standard"><i class="fas fa-book"></i> DICOM Standard</a></li>
+                <li><a href="#communication"><i class="fas fa-exchange-alt"></i> Communication Protocol</a></li>
+                <li><a href="#data-format"><i class="fas fa-file-code"></i> Data Format</a></li>
+                <li><a href="#data-structure"><i class="fas fa-sitemap"></i> Data Structure</a></li>
+                <li><a href="#services"><i class="fas fa-cogs"></i> DICOM Services</a></li>
+                <li><a href="#structured-reporting"><i class="fas fa-file-medical-alt"></i> Structured Reporting</a></li>
+                <li><a href="#workflow"><i class="fas fa-tasks"></i> Workflow Management</a></li>
+                <li><a href="#summary"><i class="fas fa-check-circle"></i> Summary</a></li>
+            </ul>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Title Slide -->
+            <div id="title" class="slide active">
+                <div class="slide-header">
+                    <h2><i class="fas fa-x-ray"></i> Complete DICOM Overview</h2>
+                </div>
+                <div class="slide-content">
+                    <div style="text-align: center; margin: 40px 0;">
+                        <h1 style="font-size: 2.5rem; color: var(--canon-red);">DICOM Fundamentals & Overview</h1>
+                        <p style="font-size: 1.2rem; margin: 20px 0;">Digital Imaging and Communications in Medicine</p>
+                        <div style="margin: 40px 0;">
+                            <h3>Canon Medical Systems Corporation</h3>
+                            <p>Healthcare IT Development Center</p>
+                            <p>V4FA23-005</p>
+                        </div>
+                        <div style="margin-top: 50px;">
+                            <p>Combined content from all DICOM presentations</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="nav-controls">
+                    <div></div>
+                    <button class="btn" onclick="showSlide('toc')">
+                        Next <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Table of Contents -->
+            <div id="toc" class="slide">
+                <div class="slide-header">
+                    <h2><i class="fas fa-list"></i> Table of Contents</h2>
+                </div>
+                <div class="slide-content">
+                    <ol style="font-size: 1.2rem; line-height: 2.5;">
+                        <li>What is DICOM?</li>
+                        <li>History of DICOM</li>
+                        <li>DICOM 3.0 Standard</li>
+                        <li>DICOM Communication Protocol</li>
+                        <li>DICOM Data Format</li>
+                        <li>DICOM Data Structure</li>
+                        <li>DICOM Services</li>
+                        <li>DICOM Structured Reporting</li>
+                        <li>DICOM Workflow Management</li>
+                        <li>Summary</li>
+                    </ol>
+                </div>
+                <div class="nav-controls">
+                    <button class="btn" onclick="showSlide('title')">
+                        <i class="fas fa-arrow-left"></i> Previous
+                    </button>
+                    <button class="btn" onclick="showSlide('what-is-dicom')">
+                        Next <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- What is DICOM? -->
+            <div id="what-is-dicom" class="slide">
+                <div class="slide-header">
+                    <h2><i class="fas fa-info-circle"></i> What is DICOM?</h2>
+                </div>
+                <div class="slide-content">
+                    <div class="card">
+                        <p><strong>D</strong>igital <strong>I</strong>maging and <strong>Co</strong>mmunications in <strong>M</strong>edicine</p>
+                    </div>
+                    
+                    <p>Detailed specification for transferring medical images and related information between computers</p>
+                    
+                    <div class="two-column">
+                        <div class="col">
+                            <h3>Key Points:</h3>
+                            <ul>
+                                <li>It is a standard, not a product</li>
+                                <li>Enables cross-vendor connectivity</li>
+                                <li>Facilitates interchange of medical information</li>
+                                <li>Sets foundation for interoperability between devices</li>
+                                <li>Complies to ISO 12052:2017</li>
+                            </ul>
+                        </div>
+                        <div class="col">
+                            <h3>What DICOM Defines:</h3>
+                            <ul>
+                                <li>Data format (images, orders, exams, reports)</li>
+                                <li>Tags</li>
+                                <li>Communication protocol</li>
+                                <li>Portable media</li>
+                                <li>Security</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h4>DICOM Standard Structure:</h4>
+                        <ul>
+                            <li>Parts 1 through 22 (as of October 2023)</li>
+                            <li>Parts 9 and 13 were abolished</li>
+                            <li>Supplements add information to the standard</li>
+                            <li>Correction Proposals (CPs) correct the standard</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="nav-controls">
+                    <button class="btn" onclick="showSlide('toc')">
+                        <i class="fas fa-arrow-left"></i> Previous
+                    </button>
+                    <button class="btn" onclick="showSlide('history')">
+                        Next <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- History -->
+            <div id="history" class="slide">
+                <div class="slide-header">
+                    <h2><i class="fas fa-history"></i> History of DICOM</h2>
+                </div>
+                <div class="slide-content">
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-year">1983</div>
+                            <p>American College of Radiology (ACR) & National Electrical Manufacturers Association (NEMA) form a joint committee to develop a standard interface between diagnostic imaging equipment</p>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-year">1985</div>
+                            <p>ACR-NEMA Version 1.0 released</p>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-year">1988</div>
+                            <p>ACR-NEMA Version 2.0 released</p>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-year">1993</div>
+                            <p>DICOM Version 3.0 started - Applicable to a network environment</p>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h4>Revision Process:</h4>
+                        <p>DICOM Committee meets 5 times annually to vote on CPs and Supplements. Changes are incorporated into DICOM standards upon vote approval by DICOM Committee members.</p>
+                    </div>
+                </div>
+                <div class="nav-controls">
+                    <button class="btn" onclick="showSlide('what-is-dicom')">
+                        <i class="fas fa-arrow-left"></i> Previous
+                    </button>
+                    <button class="btn" onclick="showSlide('standard')">
+                        Next <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- DICOM Standard -->
+            <div id="standard" class="slide">
+                <div class="slide-header">
+                    <h2><i class="fas fa-book"></i> DICOM 3.0 Standard</h2>
+                </div>
+                <div class="slide-content">
+                    <h3>Parts of DICOM Standard:</h3>
+                    
+                    <div class="two-column">
+                        <div class="col">
+                            <ul>
+                                <li>PS 3.1: Introduction and Overview</li>
+                                <li>PS 3.2: Conformance</li>
+                                <li>PS 3.3: Information Object Definitions</li>
+                                <li>PS 3.4: Service Class Specifications</li>
+                                <li>PS 3.5: Data Structure and Encoding</li>
+                                <li>PS 3.6: Data Dictionary</li>
+                                <li>PS 3.7: Message Exchange</li>
+                                <li>PS 3.8: Network Communication Support</li>
+                                <li>PS 3.9: Retired (Point-to-Point)</li>
+                            </ul>
+                        </div>
+                        <div class="col">
+                            <ul>
+                                <li>PS 3.10: Media Storage and File Format</li>
+                                <li>PS 3.11: Media Storage Application Profiles</li>
+                                <li>PS 3.12: Storage Functions and Media Formats</li>
+                                <li>PS 3.13: Retired (Print Management)</li>
+                                <li>PS 3.14: Grayscale Standard Display Function</li>
+                                <li>PS 3.15: Security and System Management</li>
+                                <li>PS 3.16: Content Mapping Resource</li>
+                                <li>PS 3.17: Explanatory Information</li>
+                                <li>PS 3.18: Web Access to DICOM (WADO)</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h4>Key Documentation Structure:</h4>
+                        <ul>
+                            <li>PS 3.3: Specifies all the IODs (images, overlays, print objects)</li>
+                            <li>PS 3.4: Defines all the Service Classes and SOPs (Store, Query, Retrieve, Print)</li>
+                            <li>PS 3.5: Defines the data structure and encoding rules</li>
+                            <li>PS 3.6: Registry of all DICOM data elements and UIDs</li>
+                            <li>PS 3.10: Storage Media and File Format</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="nav-controls">
+                    <button class="btn" onclick="showSlide('history')">
+                        <i class="fas fa-arrow-left"></i> Previous
+                    </button>
+                    <button class="btn" onclick="showSlide('communication')">
+                        Next <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Communication Protocol -->
+            <div id="communication" class="slide">
+                <div class="slide-header">
+                    <h2><i class="fas fa-exchange-alt"></i> DICOM Communication Protocol</h2>
+                </div>
+                <div class="slide-content">
+                    <h3>Main Concepts:</h3>
+                    <div class="two-column">
+                        <div class="col">
+                            <div class="card">
+                                <h4>SCU (Service Class User)</h4>
+                                <p>Request side in DICOM Communication</p>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card">
+                                <h4>SCP (Service Class Provider)</h4>
+                                <p>Service providing side in DICOM Communication</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h3>Protocol Steps:</h3>
+                    <ol>
+                        <li>Association Request (A-ASSOCIATION-RQ)</li>
+                        <li>DICOM Message/Data Transfer (C-STORE, C-FIND, etc.)</li>
+                        <li>Association Release (A-RELEASE-RQ/RSP)</li>
+                    </ol>
+                    
+                    <h3>Service Classes:</h3>
+                    <div class="two-column">
+                        <div class="col">
+                            <ul>
+                                <li>Verification</li>
+                                <li>Storage</li>
+                                <li>Storage Commitment</li>
+                                <li>Query/Retrieve</li>
+                            </ul>
+                        </div>
+                        <div class="col">
+                            <ul>
+                                <li>Modality Worklist Management (MWM)</li>
+                                <li>Modality Performed Procedure Step (MPPS)</li>
+                                <li>Print Management</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <h3>Required Information:</h3>
+                    <ul>
+                        <li>Data Encoding (Big/Little Endian, Compression)</li>
+                        <li>AE Title (Application Entity Title) - max 16 bytes, unique on network</li>
+                    </ul>
+                </div>
+                <div class="nav-controls">
+                    <button class="btn" onclick="showSlide('standard')">
+                        <i class="fas fa-arrow-left"></i> Previous
+                    </button>
+                    <button class="btn" onclick="showSlide('data-format')">
+                        Next <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Data Format -->
+            <div id="data-format" class="slide">
+                <div class="slide-header">
+                    <h2><i class="fas fa-file-code"></i> DICOM Data Format</h2>
+                </div>
+                <div class="slide-content">
+                    <p>DICOM files contain both metadata and image pixel data in a set.</p>
+                    
+                    <div class="card">
+                        <h4>Metadata includes:</h4>
+                        <ul>
+                            <li>Patient information</li>
+                            <li>Examination information</li>
+                            <li>Imaging information</li>
+                        </ul>
+                    </div>
+                    
+                    <h3>Data Elements:</h3>
+                    <p>Each piece of information is identified by a tag consisting of Group and Element numbers (hexadecimal).</p>
+                    
+                    <div class="code-block">
+                        // Example DICOM Tags<br>
+                        (0010,0010) Patient's Name<br>
+                        (0010,0020) Patient ID<br>
+                        (0010,0030) Patient's Birth Date
+                    </div>
+                    
+                    <h3>Value Representation (VR):</h3>
+                    <p>Defines the format of the Value Field. May be explicit or implicit.</p>
+                    
+                    <div class="two-column">
+                        <div class="col">
+                            <div class="card">
+                                <h4>VR Types:</h4>
+                                <ul>
+                                    <li>Fixed formats: AE, PN, UI</li>
+                                    <li>Math formats: FD, UL</li>
+                                    <li>Character strings: CS, ST</li>
+                                    <li>Other: OB, OW</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card">
+                                <h4>Explicit vs. Implicit VR:</h4>
+                                <p><strong>Explicit VR</strong>: VR is sent in the data element</p>
+                                <p><strong>Implicit VR</strong>: VR is not sent (defined in PS 3.6)</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h3>Transfer Syntax:</h3>
+                    <p>Encoding used to send data over the network:</p>
+                    <ul>
+                        <li>Implicit VR Little Endian (Default for Network)</li>
+                        <li>Explicit VR Little Endian (Default for Media Storage)</li>
+                        <li>Explicit VR Big Endian</li>
+                        <li>Others with compression (Lossless, Lossy)</li>
+                    </ul>
+                </div>
+                <div class="nav-controls">
+                    <button class="btn" onclick="showSlide('communication')">
+                        <i class="fas fa-arrow-left"></i> Previous
+                    </button>
+                    <button class="btn" onclick="showSlide('data-structure')">
+                        Next <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Data Structure -->
+            <div id="data-structure" class="slide">
+                <div class="slide-header">
+                    <h2><i class="fas fa-sitemap"></i> DICOM Data Structure</h2>
+                </div>
+                <div class="slide-content">
+                    <h3>Hierarchical Structure:</h3>
+                    <div class="code-block">
+                        Patient<br>
+                        └ Study<br>
+                        　　└ Series<br>
+                        　　　　└ Image
+                    </div>
+                    
+                    <h3>Key Concepts:</h3>
+                    <div class="two-column">
+                        <div class="col">
+                            <div class="card">
+                                <h4>IE (Information Entity)</h4>
+                                <p>Defines properties and attributes related to classifications (Patient, Study, Series, Image)</p>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card">
+                                <h4>IOD (Information Object Definition)</h4>
+                                <p>Combination of IEs for each modality (e.g., CT Image IOD, MR Image IOD)</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h3>Module Attributes:</h3>
+                    <p>Each IE consists of modules with specific attributes:</p>
+                    
+                    <div class="card">
+                        <h4>Attribute Types:</h4>
+                        <ul>
+                            <li><span class="highlight">Type 1</span>: Mandatory - must be included with a value</li>
+                            <li><span class="highlight">Type 1C</span>: Conditional - required if conditions are met</li>
+                            <li><span class="highlight">Type 2</span>: Mandatory but can be empty</li>
+                            <li><span class="highlight">Type 2C</span>: Conditional Type 2</li>
+                            <li><span class="highlight">Type 3</span>: Optional</li>
+                        </ul>
+                    </div>
+                    
+                    <h3>Character Sets:</h3>
+                    <p>DICOM supports various character sets for text representation:</p>
+                    <ul>
+                        <li>Single-Byte Character Sets without Code Extensions</li>
+                        <li>Single-Byte Character Sets with Code Extensions</li>
+                        <li>Multi-Byte Character Sets with Code Extensions</li>
+                        <li>Multi-Byte Character Sets without Code Extensions</li>
+                    </ul>
+                </div>
+                <div class="nav-controls">
+                    <button class="btn" onclick="showSlide('data-format')">
+                        <i class="fas fa-arrow-left"></i> Previous
+                    </button>
+                    <button class="btn" onclick="showSlide('services')">
+                        Next <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Services -->
+            <div id="services" class="slide">
+                <div class="slide-header">
+                    <h2><i class="fas fa-cogs"></i> DICOM Services</h2>
+                </div>
+                <div class="slide-content">
+                    <h3>Service Classes:</h3>
+                    <p>Set of Service Class definitions which provide an abstract definition of actions applied to Information Objects.</p>
+                    
+                    <div class="card">
+                        <h4>Most Common Services:</h4>
+                        <ul>
+                            <li>Verification</li>
+                            <li>Storage</li>
+                            <li>Query/Retrieve</li>
+                            <li>Print Management</li>
+                            <li>Modality Worklist Management (MWM)</li>
+                            <li>Modality Performed Procedure Step (MPPS)</li>
+                            <li>Storage Commitment</li>
+                            <li>Instance Availability Notification</li>
+                        </ul>
+                    </div>
+                    
+                    <h3>Service Object Pair (SOP):</h3>
+                    <p>Combination of IOD (Information Object) and Service Class.</p>
+                    
+                    <div class="two-column">
+                        <div class="col">
+                            <div class="card">
+                                <h4>SCU (Service Class User)</h4>
+                                <p>Client that requests a service</p>
+                                <p>Example: CT Scanner sending images</p>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card">
+                                <h4>SCP (Service Class Provider)</h4>
+                                <p>Server that provides a service</p>
+                                <p>Example: PACS receiving images</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h3>DICOM Communication Protocol:</h3>
+                    <ol>
+                        <li>Association Request (A-ASSOCIATION-RQ)</li>
+                        <li>DICOM Message/Data Transfer (C-STORE, C-FIND, etc.)</li>
+                        <li>Association Release (A-RELEASE-RQ/RSP)</li>
+                    </ol>
+                </div>
+                <div class="nav-controls">
+                    <button class="btn" onclick="showSlide('data-structure')">
+                        <i class="fas fa-arrow-left"></i> Previous
+                    </button>
+                    <button class="btn" onclick="showSlide('structured-reporting')">
+                        Next <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Structured Reporting -->
+            <div id="structured-reporting" class="slide">
+                <div class="slide-header">
+                    <h2><i class="fas fa-file-medical-alt"></i> DICOM Structured Reporting</h2>
+                </div>
+                <div class="slide-content">
+                    <h3>Structured Reporting (SR):</h3>
+                    <p>DICOM SR provides a standardized way to create, exchange, and manage structured medical reports.</p>
+                    
+                    <div class="card">
+                        <h4>SR Key Concepts:</h4>
+                        <ul>
+                            <li>Document Root Node: Top-level container for the report</li>
+                            <li>Content Nodes: Individual pieces of information (text, codes, measurements, etc.)</li>
+                            <li>Relationship Types: Defines how content nodes relate to each other</li>
+                            <li>By-value vs. By-reference: How content is included in the report</li>
+                        </ul>
+                    </div>
+                    
+                    <h3>SR Information Model:</h3>
+                    <div class="code-block">
+                        Document Root Node CONTAINER "Chest X-ray" (Document Title)<br>
+                        ├── Has Observation Context<br>
+                        ├── Content Node PNAME "Recording Observer = Smith^John^^Dr^"<br>
+                        ├── Content Node CODE "finding = mass"<br>
+                        ├── Heading Node CONTAINER "Conclusions"<br>
+                        │   └── Content Node CODE "conclusion = probable malignancy"<br>
+                        ├── Heading Node CONTAINER "Specific Image Findings"<br>
+                        │   ├── Content node SCOORD "best illustration of findings"<br>
+                        │   ├── Leaf Node IMAGE "Baseline"<br>
+                        │   └── Leaf Node NUM "diameter = 1.3 cm"<br>
+                        └── Content Node UIDREF "Study Instance UID of Evidence = 1.2.3.4.5.6.7.100"
+                    </div>
+                    
+                    <h3>Codes in SR:</h3>
+                    <p>SR uses standardized codes to ensure consistency and interoperability:</p>
+                    
+                    <div class="two-column">
+                        <div class="col">
+                            <div class="card card-green">
+                                <h4>Code Systems:</h4>
+                                <ul>
+                                    <li>SNOMED: Systematized Nomenclature for Human and Veterinary Medicine</li>
+                                    <li>LOINC: Logical Observation Identifiers, Names and Codes</li>
+                                    <li>CPT: Current Procedural Terminology</li>
+                                    <li>ICD-9/10: International Classification of Diseases</li>
+                                    <li>BI-RADS: Breast Imaging Reporting and Data System</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card card-green">
+                                <h4>Code Structure:</h4>
+                                <ul>
+                                    <li>Coding Scheme: Identifier for the code system</li>
+                                    <li>Code Value: Specific code within the system</li>
+                                    <li>Code Meaning: Human-readable description</li>
+                                    <li>Scheme Version: Version of the coding system</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h3>SR Benefits:</h3>
+                    <ul>
+                        <li>Standardized reporting format across systems and institutions</li>
+                        <li>Structured data that can be processed by computers</li>
+                        <li>Improved data mining and research capabilities</li>
+                        <li>Enhanced integration with EHR systems</li>
+                    </ul>
+                </div>
+                <div class="nav-controls">
+                    <button class="btn" onclick="showSlide('services')">
+                        <i class="fas fa-arrow-left"></i> Previous
+                    </button>
+                    <button class="btn" onclick="showSlide('workflow')">
+                        Next <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Workflow Management -->
+            <div id="workflow" class="slide">
+                <div class="slide-header">
+                    <h2><i class="fas fa-tasks"></i> DICOM Workflow Management</h2>
+                </div>
+                <div class="slide-content">
+                    <h3>Key DICOM Workflow Services:</h3>
+                    
+                    <div class="workflow-diagram">
+                        <div class="workflow-step">
+                            <i class="fas fa-list-alt fa-3x" style="color: var(--canon-blue);"></i>
+                            <h4>Modality Worklist</h4>
+                            <p>Provide demographics and order details</p>
+                        </div>
+                        <div class="workflow-arrow" style="left: 20%;">→</div>
+                        <div class="workflow-step">
+                            <i class="fas fa-clipboard-check fa-3x" style="color: var(--canon-green);"></i>
+                            <h4>MPPS</h4>
+                            <p>Logging/tracking of procedure status</p>
+                        </div>
+                        <div class="workflow-arrow" style="left: 40%;">→</div>
+                        <div class="workflow-step">
+                            <i class="fas fa-database fa-3x" style="color: var(--canon-red);"></i>
+                            <h4>Storage Commitment</h4>
+                            <p>Confirmation of data storage</p>
+                        </div>
+                        <div class="workflow-arrow" style="left: 60%;">→</div>
+                        <div class="workflow-step">
+                            <i class="fas fa-bell fa-3x" style="color: var(--canon-purple);"></i>
+                            <h4>Instance Availability</h4>
+                            <p>Notification of data availability</p>
+                        </div>
+                        <div class="workflow-arrow" style="left: 80%;">→</div>
+                        <div class="workflow-step">
+                            <i class="fas fa-check-circle fa-3x" style="color: var(--canon-green);"></i>
+                            <h4>Workflow Complete</h4>
+                            <p>Integrated acquisition workflow</p>
+                        </div>
+                    </div>
+                    
+                    <h3>Modality Worklist (MWL):</h3>
+                    <div class="card">
+                        <h4>Functionality:</h4>
+                        <ul>
+                            <li>Provides demographics and order details to modalities</li>
+                            <li>SCP: Usually RIS, sometimes PACS or third-party box</li>
+                            <li>SCU: Usually modality or imaging system</li>
+                            <li>Query can include filters (date/time, patient name, accession #, etc.)</li>
+                        </ul>
+                    </div>
+                    
+                    <h3>Modality Performed Procedure Step (MPPS):</h3>
+                    <div class="card card-green">
+                        <h4>Status Tracking:</h4>
+                        <ul>
+                            <li><strong>In Progress</strong>: Indicates procedure step is in progress</li>
+                            <li><strong>Completed</strong>: Indicates procedure step has been completed</li>
+                            <li><strong>Discontinued</strong>: Indicates procedure step was discontinued</li>
+                            <li>Includes tracking attributes (Accession#, SPS ID, Study UID, etc.)</li>
+                        </ul>
+                    </div>
+                    
+                    <h3>Storage Commitment:</h3>
+                    <div class="card card-purple">
+                        <h4>Functionality:</h4>
+                        <ul>
+                            <li>Provides confirmation of data storage</li>
+                            <li>SCP: Usually PACS</li>
+                            <li>SCU: Usually modality, workstation, or another PACS</li>
+                            <li>Request specifies list of Data Object UIDs</li>
+                            <li>Response confirms storage or provides failure reason</li>
+                        </ul>
+                    </div>
+                    
+                    <h3>Instance Availability Notification:</h3>
+                    <div class="card">
+                        <h4>Functionality:</h4>
+                        <ul>
+                            <li>Provides notification of availability of imaging data</li>
+                            <li>SCU: Usually PACS or other devices supporting Retrieve</li>
+                            <li>SCP: Usually RIS, reporting system, or workflow manager</li>
+                            <li>Notification includes object UIDs and availability status</li>
+                        </ul>
+                    </div>
+                    
+                    <h3>Benefits of DICOM Workflow Management:</h3>
+                    <ul>
+                        <li>Reduced data entry errors and time</li>
+                        <li>Accurate, detailed data on performed steps</li>
+                        <li>Reduces lost data through storage commitment</li>
+                        <li>Enables timely reading workflow and fast reporting</li>
+                        <li>Improves overall efficiency in medical imaging departments</li>
+                    </ul>
+                </div>
+                <div class="nav-controls">
+                    <button class="btn" onclick="showSlide('structured-reporting')">
+                        <i class="fas fa-arrow-left"></i> Previous
+                    </button>
+                    <button class="btn" onclick="showSlide('summary')">
+                        Next <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Summary -->
+            <div id="summary" class="slide">
+                <div class="slide-header">
+                    <h2><i class="fas fa-check-circle"></i> Summary</h2>
+                </div>
+                <div class="slide-content">
+                    <div class="card">
+                        <h3>Key Points:</h3>
+                        <ul>
+                            <li>DICOM is a standard that enables cross-vendor connectivity for medical imaging</li>
+                            <li>Defines data formats, communication protocols, and services</li>
+                            <li>Uses a hierarchical structure with IODs, IEs, Modules, and Attributes</li>
+                            <li>Relies on UIDs for global uniqueness of objects</li>
+                            <li>Uses Service-Object Pairs (SOPs) to define interactions between systems</li>
+                            <li>Structured Reporting provides standardized reporting format</li>
+                            <li>Workflow Management services optimize imaging department operations</li>
+                        </ul>
+                    </div>
+                    
+                    <h3>Benefits of DICOM:</h3>
+                    <ul>
+                        <li>Interoperability between vendors</li>
+                        <li>Consistent data representation</li>
+                        <li>Standardized communication</li>
+                        <li>Extensibility for new modalities and use cases</li>
+                        <li>Improved workflow efficiency</li>
+                        <li>Enhanced data mining and research capabilities</li>
+                    </ul>
+                    
+                    <div class="card">
+                        <h4>References:</h4>
+                        <ul>
+                            <li>DICOM PS 3.x - http://medical.nema.org/dicom/2007</li>
+                            <li>NEMA - http://medical.nema.org</li>
+                            <li>Wikipedia - http://en.wikipedia.org/wiki/Digital_Imaging_and_Communications_in_Medicine</li>
+                            <li>Ringholm - http://www.ringholm.de/docs/02010_en.htm</li>
+                            <li>IHE Radiology Tech Framework - www.ihe.net/tf</li>
+                        </ul>
+                    </div>
+                    
+                    <div style="text-align: center; margin: 30px 0;">
+                        <h3 style="color: var(--canon-red);">Thank You</h3>
+                        <p>Canon Medical Systems Corporation | Healthcare IT Development Center</p>
+                    </div>
+                </div>
+                <div class="nav-controls">
+                    <button class="btn" onclick="showSlide('workflow')">
+                        <i class="fas fa-arrow-left"></i> Previous
+                    </button>
+                    <button class="btn" onclick="showSlide('title')">
+                        <i class="fas fa-home"></i> Home
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Function to show a specific slide and hide others
+        function showSlide(slideId) {
+            // Hide all slides
+            document.querySelectorAll('.slide').forEach(slide => {
+                slide.classList.remove('active');
+            });
+            
+            // Show the requested slide
+            document.getElementById(slideId).classList.add('active');
+            
+            // Update active navigation link
+            document.querySelectorAll('.toc a').forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + slideId) {
+                    link.classList.add('active');
+                }
+            });
+            
+            // Scroll to top of main content
+            document.querySelector('.main-content').scrollTop = 0;
+        }
+        
+        // Add click event listeners to navigation links
+        document.querySelectorAll('.toc a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const slideId = this.getAttribute('href').substring(1);
+                showSlide(slideId);
+            });
+        });
+    </script>
+</body>
+</html>

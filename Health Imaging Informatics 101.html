@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health Imaging Informatics 101</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --canon-red: #E4002B;
+            --canon-gray: #5B6770;
+            --canon-light: #F2F2F2;
+            --canon-dark: #2C2C2C;
+            --shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f7f7f7;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--canon-red) 0%, #B30021 100%);
+            color: white;
+            padding: 25px 0;
+            text-align: center;
+            border-bottom: 5px solid var(--canon-gray);
+            box-shadow: var(--shadow);
+        }
+        
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .tabs {
+            display: flex;
+            background-color: var(--canon-dark);
+            overflow-x: auto;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .tab-button {
+            padding: 15px 25px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        
+        .tab-button:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .tab-button.active {
+            background-color: var(--canon-red);
+            font-weight: bold;
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 30px;
+            background-color: white;
+            border-radius: 0 0 8px 8px;
+            box-shadow: var(--shadow);
+            min-height: 500px;
+        }
+        
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            padding: 20px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 4px solid var(--canon-red);
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+        }
+        
+        .card h3 {
+            color: var(--canon-red);
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+        
+        .card p {
+            color: var(--canon-gray);
+            margin-bottom: 15px;
+        }
+        
+        .persona-card {
+            display: flex;
+            flex-direction: column;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+        
+        .persona-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .persona-header {
+            background-color: var(--canon-red);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .persona-body {
+            padding: 20px;
+        }
+        
+        .persona-body p {
+            margin-bottom: 15px;
+        }
+        
+        .search-container {
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .search-container input {
+            width: 100%;
+            padding: 12px 20px;
+            border: 1px solid #ddd;
+            border-radius: 30px;
+            font-size: 1rem;
+            box-shadow: var(--shadow);
+        }
+        
+        .search-container i {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--canon-gray);
+        }
+        
+        footer {
+            background-color: var(--canon-dark);
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+        }
+        
+        .definition-category {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .definition-category h3 {
+            color: var(--canon-red);
+            margin-bottom: 15px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid var(--canon-gray);
+            display: inline-block;
+        }
+        
+        .workflow {
+            margin: 30px 0;
+            padding: 20px;
+            background-color: var(--canon-light);
+            border-radius: 8px;
+        }
+        
+        .workflow h3 {
+            color: var(--canon-red);
+            margin-bottom: 15px;
+        }
+        
+        .workflow-step {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+        }
+        
+        .step-number {
+            background-color: var(--canon-red);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .systems-used {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .system-tag {
+            background-color: var(--canon-light);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            color: var(--canon-dark);
+            border: 1px solid #ddd;
+        }
+        
+        .persona-detail {
+            margin-bottom: 30px;
+        }
+        
+        .persona-detail h3 {
+            color: var(--canon-red);
+            margin-bottom: 15px;
+        }
+        
+        @media (max-width: 768px) {
+            .card-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .tab-button {
+                padding: 12px 15px;
+                font-size: 0.9rem;
+            }
+            
+            header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Health Imaging Informatics 101</h1>
+            <p>Understanding the terms, technologies, and user stories in medical imaging informatics</p>
+        </div>
+    </header>
+    
+    <div class="tabs">
+        <button class="tab-button active" onclick="openTab('definitions')"><i class="fas fa-book"></i> Definitions</button>
+        <button class="tab-button" onclick="openTab('user-stories')"><i class="fas fa-users"></i> User Stories</button>
+        <button class="tab-button" onclick="openTab('overview')"><i class="fas fa-info-circle"></i> HIT & HII Overview</button>
+        <button class="tab-button" onclick="openTab('technologies')"><i class="fas fa-microchip"></i> Key Technologies</button>
+    </div>
+    
+    <div class="container">
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Search terms and concepts...">
+            <i class="fas fa-search"></i>
+        </div>
+        
+        <div id="definitions" class="tab-content active">
+            <h2>Imaging Informatics Terms</h2>
+            <p>Terms commonly used within Imaging Informatics. Many of these terms can be found on sites such as <a href="http://healthinformatics.wikispaces.com" target="_blank">healthinformatics.wikispaces.com</a>.</p>
+            
+            <div class="definition-category">
+                <h3>Electronic Health Records</h3>
+                <div class="card-container">
+                    <div class="card">
+                        <h3>EMR – Electronic Medical Record</h3>
+                        <p>An EMR contains the electronic record of health-related information on an individual. The overall goal of an EMR is to eventually rid practices of using paper medical records.</p>
+                        <p>Not only is the EMR used to document patient care, but the record is also used for financial and legal information, as well as research and quality improvement purposes.</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h3>EHR – Electronic Health Record</h3>
+                        <p>The EHR is an aggregate electronic record of health-related information on an individual. It is created and gathered cumulatively across more than one healthcare organization and is managed and consulted by licensed clinicians and staff.</p>
+                        <p>By this definition, an EHR is an EMR with integration to other providers' systems.</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h3>PHR – Personal Health Record</h3>
+                        <p>PHR systems enable patients to maintain their own health records. An ideal PHR would provide a complete and accurate summary of the health and medical history of an individual.</p>
+                        <p>It would accomplish this by gathering data from many sources and making information accessible online to users with the necessary credentials.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="definition-category">
+                <h3>Healthcare Systems</h3>
+                <div class="card-container">
+                    <div class="card">
+                        <h3>HIS – Hospital Information System</h3>
+                        <p>The IT applications and systems used to manage hospital operations (e.g., patient financials, registration, scheduling, general financials, back-office systems and order communications).</p>
+                        <p>HIS is a general term encompassing many types of systems, e.g. a RIS is a type of HIS.</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h3>HIE – Health Information Exchange</h3>
+                        <p>Refers to efforts within regions and communities to integrate various clinical systems such that the information within them can move between the different systems.</p>
+                        <p>With respect to medical imaging, this would enable a provider to access all of a patients studies even if they were acquired and managed at different hospitals in the area.</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h3>IDN – Integrated Delivery Network</h3>
+                        <p>An IDN is an organization or group of healthcare providers, which, through ownership or formal agreements, aligns local facilities and manages them with one governing board.</p>
+                        <p>IDNs often include hospitals, clinics, imaging centers, nursing homes, and other medical care facilities.</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h3>ACO – Accountable Care Organization</h3>
+                        <p>An ACO is a provider-based structure in the US, which links reimbursements for care to quality metrics and reductions to the total cost of care.</p>
+                        <p>There are three core principles for ACOs: provider-led organizations, payments linked to quality and cost reduction, and performance metrics.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="definition-category">
+                <h3>Imaging Systems</h3>
+                <div class="card-container">
+                    <div class="card">
+                        <h3>PACS – Picture Archive/Communication System</h3>
+                        <p>PACS are systems dedicated to the storage, retrieval, distribution and presentation of images. Typically PACS are turn-key radiology systems that include an archive, radiology diagnostic workstation, radiology work list and enterprise viewer.</p>
+                        <p>A typical PACS network is comprised of a central server that stores a database containing images connected to one or more clients.</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h3>RIS – Radiology Information System</h3>
+                        <p>These systems became popular for their ability to provide radiology billing services, appointment scheduling as well as reporting and patient database storage.</p>
+                        <p>Today RIS capabilities are often provided by PACS and/or EMR vendors.</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h3>VNA – Vendor Neutral Archive</h3>
+                        <p>Products that specialize in the archiving of DICOM images and other related data. "Vendor Neutral" refers to the focus on standards compliance and interoperability with all other standards compliant systems.</p>
+                        <p>While PACS sales have primarily been driven by the radiology department, VNA sales are primarily driven by IT in an effort to reduce storage costs.</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h3>DICOM – Digital Imaging and Communications in Medicine</h3>
+                        <p>The primary standard used in medical imaging. It is designed to ensure the interoperability of various systems by standardizing the way digital imaging is stored, printed, handled and transmitted.</p>
+                        <p>The DICOM standard was first developed in 1985 and renamed DICOM in 1993 with version 3.0.</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h3>Universal Viewer</h3>
+                        <p>A universal viewer provides general medical image and document access across a diverse medical enterprise environment. Typically launched from EMR, universal viewers connect to multiple data sources to gather and present a consolidated view of a patient.</p>
+                        <p>Because the users are so diverse, the functionality of a universal viewer is kept very simple – aimed towards quick information review in context with an exam report.</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h3>ZFC – Zero Footprint Client</h3>
+                        <p>ZFC refers to software products that do not require a local install for users to access. True ZFC systems require only HTML and Javascript and run on any web browser.</p>
+                        <p>This delivers a controlled environment and helps ensure service levels can be met, but makes upgrades challenging for vendors.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="definition-category">
+                <h3>Order Entry & Decision Support</h3>
+                <div class="card-container">
+                    <div class="card">
+                        <h3>CPOE – Computerized Physician Order Entry</h3>
+                        <p>CPOE allows doctors to electronically prescribe medical orders for their patients. This could be any form of medical orders, i.e. prescriptions, lab tests, referrals, etc.</p>
+                        <p>With proper use CPOE can reduce errors by minimizing the ambiguity of hand-written orders, but a much greater benefit is seen with the combination of CPOE and clinical decision support tools.</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h3>DSS – Decision Support System</h3>
+                        <p>An interactive computer-based system intended to help decision makers use communications technologies, data, documents, knowledge and/or models to identify and solve problems.</p>
+                        <p>For example: help a physician prescribing a diagnostic test by providing them 'best practices' guidance for the specific disease or symptoms.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="definition-category">
+                <h3>Infrastructure & Networking</h3>
+                <div class="card-container">
+                    <div class="card">
+                        <h3>Virtualization</h3>
+                        <p>Virtualization allows a physical resource to appear as one or more logical resources. This can apply to any type of computing resource, e.g. storage, but most often refers to server virtualization.</p>
+                        <p>Server virtualization transparently divides a computer into multiple "virtual" computers. This allows IT to break free from the "one application, one server" rule.</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h3>VDI – Virtual Desktop Infrastructure</h3>
+                        <p>Virtual desktop infrastructure (VDI) is the practice of hosting a desktop operating system within a virtual machine running on a centralized server.</p>
+                        <p>VDI is a variation on the client/server computing model, sometimes referred to as server-based computing.</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h3>SAN – Storage Area Network</h3>
+                        <p>A Storage Area Network (SAN) is a networked group of storage devices that can be accessed by multiple computers as if they were directly connected to the computer.</p>
+                        <p>Storage in a SAN is virtualized – logical drives are defined that may cross one or more physical device boundaries.</p>
+                    </div>
+                    
+                    <div class="card">
+                        <h3>NAS – Network Attached Storage</h3>
+                        <p>Network Attached Storage (NAS) is a group of disks that is network accessible and provides both storage and file system definition.</p>
+                        <p>Computers connect to NAS via file shares over the network. Unlike SAN, the operating system does not see it as locally attached.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="user-stories" class="tab-content">
+            <h2>User Stories</h2>
+            <p>Introducing HIT through user stories of healthcare professionals and their interactions with imaging informatics systems.</p>
+            
+            <div class="persona-detail">
+                <h3>Penny Lin - CT Technologist</h3>
+                <p>Penny has worked at this hospital since getting her CT certification four years ago. She was one of the "all stars" as radiologists really liked her work. She spends about 40% of her time actually at the modality, and 60% doing 3D work.</p>
+                
+                <div class="workflow">
+                    <h3>Penny's Workflow</h3>
+                    <div class="workflow-step">
+                        <div class="step-number">1</div>
+                        <div>
+                            <p>Starts her day at 8am. Logs into the EMR system to see her schedule for the day.</p>
+                            <div class="systems-used">
+                                <span class="system-tag">EMR</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-number">2</div>
+                        <div>
+                            <p>Retrieves the patient from the Radiology waiting room and explains the scan procedure.</p>
+                        </div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-number">3</div>
+                        <div>
+                            <p>Looks up the patient on the Modality Work List from the CT scan console, opens the RIS to initiate the exam, and begins the scan.</p>
+                            <div class="systems-used">
+                                <span class="system-tag">Modality Work List</span>
+                                <span class="system-tag">RIS</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-number">4</div>
+                        <div>
+                            <p>Once the scan is complete, ends the exam in RIS, and sends thin slices to VitreaAdvanced and thick slices to the PACS.</p>
+                            <div class="systems-used">
+                                <span class="system-tag">RIS</span>
+                                <span class="system-tag">VitreaAdvanced</span>
+                                <span class="system-tag">PACS</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-number">5</div>
+                        <div>
+                            <p>Reviews the images to confirm the quality of the scan.</p>
+                        </div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-number">6</div>
+                        <div>
+                            <p>Checks her RIS work list and identifies the next study for a 3D workup.</p>
+                            <div class="systems-used">
+                                <span class="system-tag">RIS</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-number">7</div>
+                        <div>
+                            <p>Launches the study in VitreaAdvanced, her 3D Advanced Visualization tool and begins a cardiac workup.</p>
+                            <div class="systems-used">
+                                <span class="system-tag">VitreaAdvanced</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-number">8</div>
+                        <div>
+                            <p>Creates evidence in the form of snapshots and batches, then sends them to PACS for the radiologist to review.</p>
+                            <div class="systems-used">
+                                <span class="system-tag">PACS</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="persona-detail">
+                <h3>Cerene Hebert - PACS Admin</h3>
+                <p>Cerene started as an X-ray tech, and then got her CT certification shortly after. When the hospital needed a PACS Admin four years ago, she was chosen because of her clinical background and especially because of her reputation in the Radiology department.</p>
+                <p>She had no IT experience initially but learned to handle database, networking, and user interface issues through asking questions and reasoning through key clinical scenarios.</p>
+            </div>
+            
+            <div class="persona-detail">
+                <h3>Alan Dwight - Radiologist</h3>
+                <p>Alan decided on radiology because he liked the variety of cases he'll encounter, and the pay. He appreciates the benefits of being digital, such as being able to take night-call work from home rather than driving in.</p>
+                
+                <div class="workflow">
+                    <h3>Alan's Workflow</h3>
+                    <div class="workflow-step">
+                        <div class="step-number">1</div>
+                        <div>
+                            <p>Arrives in the morning and heads to the reading room.</p>
+                        </div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-number">2</div>
+                        <div>
+                            <p>Pulls work from his RIS work list and launches direct into PACS to view the thick slices and in the case of a 3D study, evidence created by Penny.</p>
+                            <div class="systems-used">
+                                <span class="system-tag">RIS</span>
+                                <span class="system-tag">PACS</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-number">3</div>
+                        <div>
+                            <p>Typically spends around 2-3 minutes on 2D cases, and 5-10 minutes on 3D. Uses dictation software to stay productive.</p>
+                        </div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-number">4</div>
+                        <div>
+                            <p>As he reads studies, he scans for incidental findings and may send cases back for additional workup if needed.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="persona-detail">
+                <h3>Tom Terrance - IT Specialist</h3>
+                <p>Tom is the senior IT specialist responsible for all Enterprise Imaging. He was recruited by the CIO as a hands-on architect for the imaging strategy. He handles technical problems that come up, whether during the day or after-hours at night.</p>
+                
+                <div class="workflow">
+                    <h3>Tom's "Go-Live" Day</h3>
+                    <div class="workflow-step">
+                        <div class="step-number">1</div>
+                        <div>
+                            <p>Rolling out VitreaView, a Universal Viewer. The imaging integration was fairly smooth with this product.</p>
+                        </div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-number">2</div>
+                        <div>
+                            <p>Spent time with the owners of other enterprise systems, such as the EMR (embedding links to the new tool), and Active Directory (so users can avoid frequent login prompts).</p>
+                            <div class="systems-used">
+                                <span class="system-tag">EMR</span>
+                                <span class="system-tag">Active Directory</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-number">3</div>
+                        <div>
+                            <p>Actively monitoring the uptake of the new system, seeing how many users are accessing the system, and watching launch times closely to see if he needs to spin up additional virtual servers.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="persona-detail">
+                <h3>Alia Syed - Clinician (Hospitalist)</h3>
+                <p>Alia is a clinician who changed jobs from being an Internist with crazy hours to a salaried 7:30am-4:00 position as a Hospitalist. She enjoys seeing patients through their hospital stay and is part physician and part administrator.</p>
+                
+                <div class="workflow">
+                    <h3>Alia's Patient Encounter</h3>
+                    <div class="workflow-step">
+                        <div class="step-number">1</div>
+                        <div>
+                            <p>Typically sees 20-30 patients in a day, spending roughly 10 minutes in the room with each patient.</p>
+                        </div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-number">2</div>
+                        <div>
+                            <p>Uses the new Universal Viewer link from her EMR to pull up images alongside the report.</p>
+                            <div class="systems-used">
+                                <span class="system-tag">Universal Viewer</span>
+                                <span class="system-tag">EMR</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-number">3</div>
+                        <div>
+                            <p>Shows images to patients to help them understand their condition and discuss next steps.</p>
+                        </div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-number">4</div>
+                        <div>
+                            <p>Places orders within the EMR using CPOE.</p>
+                            <div class="systems-used">
+                                <span class="system-tag">EMR</span>
+                                <span class="system-tag">CPOE</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="persona-detail">
+                <h3>Wayne Sharpe - Surgical Oncologist</h3>
+                <p>Wayne is one of the highest profile physicians at the hospital. His 5 year general surgery residency was followed by with a 2 year surgical oncology fellowship. He chose oncology for the challenge and cares deeply about his patients.</p>
+                
+                <div class="workflow">
+                    <h3>Wayne's Rounds</h3>
+                    <div class="workflow-step">
+                        <div class="step-number">1</div>
+                        <div>
+                            <p>Makes rounds once a day, checking the progress and recovery of surgical patients.</p>
+                        </div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-number">2</div>
+                        <div>
+                            <p>Carries his iPad mini with him constantly – as he approaches a room, he'll pull up the patient record on the EMR and scroll to the most recent notes.</p>
+                            <div class="systems-used">
+                                <span class="system-tag">iPad</span>
+                                <span class="system-tag">EMR</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-number">3</div>
+                        <div>
+                            <p>Checks if post-op imaging is available, and pulls up the images using the Universal Viewer to share with residents and occasionally patients.</p>
+                            <div class="systems-used">
+                                <span class="system-tag">Universal Viewer</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="workflow-step">
+                        <div class="step-number">4</div>
+                        <div>
+                            <p>Shows before/after comparisons to well-informed patients who request to see their images.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="overview" class="tab-content">
+            <h2>Health Information Technology & Informatics</h2>
+            
+            <div class="card">
+                <h3>Health Information Technology (HIT)</h3>
+                <p>HIT is a general term encompassing the management of health information through networked computerized systems enabling secure exchange between consumers, providers, government and quality entities, and insurers.</p>
+                <p>HIT is increasingly viewed as the most promising tool for improving the overall quality, safety and efficiency of the health delivery system. Broad and consistent utilization of HIT will:</p>
+                <ul>
+                    <li>Improve health care quality</li>
+                    <li>Prevent medical errors</li>
+                    <li>Reduce health care costs</li>
+                    <li>Increase administrative efficiencies</li>
+                    <li>Decrease paperwork</li>
+                    <li>Expand access to affordable care</li>
+                </ul>
+            </div>
+            
+            <div class="card" style="margin-top: 30px;">
+                <h3>Health Imaging Informatics (HII)</h3>
+                <p>Also known as Radiology Informatics or Medical Imaging Informatics, is a subspecialty of Biomedical Informatics that aims to improve the efficiency, accuracy, usability and reliability of medical imaging services within the healthcare enterprise.</p>
+                <p>This discipline is devoted to the study of how information about and contained within medical images is retrieved, analyzed, enhanced, and exchanged throughout the medical enterprise.</p>
+            </div>
+            
+            <div class="card" style="margin-top: 30px;">
+                <h3>Goals of this Presentation</h3>
+                <ul>
+                    <li>Define HIT and HII</li>
+                    <li>Introduce the personas most typically associated with HIT and HII and the tools they use on a daily basis</li>
+                    <li>Identify and define terms and systems frequently used with HIT and HII and tie back to user personas where appropriate</li>
+                </ul>
+                <p style="margin-top: 15px; font-style: italic;">Note: Many of the definitions provided for terms in this presentation have been aggregated from information found on public websites and not exhaustively sourced. As such, this presentation is intended for internal use only.</p>
+            </div>
+        </div>
+        
+        <div id="technologies" class="tab-content">
+            <h2>Key Technologies in Imaging Informatics</h2>
+            
+            <div class="card-container">
+                <div class="card">
+                    <h3>DICOM</h3>
+                    <p>Digital Imaging and Communications in Medicine is the primary standard used in medical imaging. It is designed to ensure the interoperability of various systems by standardizing the way digital imaging is stored, printed, handled and transmitted.</p>
+                    <p>The DICOM standard, initially named "ACR/NEMA 300", was first developed in 1985. It was renamed DICOM in 1993 with version 3.0.</p>
+                </div>
+                
+                <div class="card">
+                    <h3>Cloud Computing</h3>
+                    <p>Internet-based computing, whereby shared resources, software, and information are provided to computers and other devices on demand, like the electricity grid.</p>
+                    <p>NIST Key characteristics of cloud: On-demand self-service, broad network access, resource pooling, location independence, rapid elasticity, and measured service.</p>
+                </div>
+                
+                <div class="card">
+                    <h3>Virtualization</h3>
+                    <p>Allows a physical resource to appear as one or more logical resources. This can apply to any type of computing resource, e.g. storage, but most often refers to server virtualization.</p>
+                    <p>Server virtualization transparently divides a computer into multiple "virtual" computers. This allows IT to break free from the "one application, one server" rule.</p>
+                </div>
+                
+                <div class="card">
+                    <h3>Universal Viewer</h3>
+                    <p>Provides general medical image and document access across a diverse medical enterprise environment. Typically launched from EMR, universal viewers connect to multiple data sources to gather and present a consolidated view of a patient.</p>
+                    <p>Because the users are so diverse, the functionality of a universal viewer is kept very simple – aimed towards quick information review in context with an exam report.</p>
+                </div>
+                
+                <div class="card">
+                    <h3>Context Launching</h3>
+                    <p>Refers to the integration between two applications such that the context is passed from the launching application (such as a PACS) to the launched application (such as Vitrea).</p>
+                    <p>Context typically includes user name, patient demographics and study identifiers. This saves users time so they don't have to log in to the launched application and search for the patient/study.</p>
+                </div>
+                
+                <div class="card">
+                    <h3>Software Rendering</h3>
+                    <p>Advanced computer graphics applications, such as 3D medical imaging, traditionally require a powerful graphics card (GPU). Recent improvements in CPU processing power make it possible for applications to handle advanced graphics processing without a GPU.</p>
+                    <p>This CPU-based rendering is also referred to as software rendering.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>Health Imaging Informatics 101 - Internal Use Only</p>
+            <p>Information aggregated from public sources for educational purposes</p>
+        </div>
+    </footer>
+
+    <script>
+        function openTab(tabName) {
+            // Hide all tab contents
+            var tabContents = document.getElementsByClassName("tab-content");
+            for (var i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove("active");
+            }
+            
+            // Remove active class from all tab buttons
+            var tabButtons = document.getElementsByClassName("tab-button");
+            for (var i = 0; i < tabButtons.length; i++) {
+                tabButtons[i].classList.remove("active");
+            }
+            
+            // Show the selected tab content and set the button as active
+            document.getElementById(tabName).classList.add("active");
+            event.currentTarget.classList.add("active");
+        }
+        
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('keyup', function() {
+            let searchText = this.value.toLowerCase();
+            let cards = document.querySelectorAll('.card, .persona-card, .persona-detail');
+            let definitionCategories = document.querySelectorAll('.definition-category');
+            
+            cards.forEach(card => {
+                let text = card.textContent.toLowerCase();
+                if (text.includes(searchText)) {
+                    card.style.display = 'block';
+                    card.parentElement.style.display = 'block';
+                    
+                    // Make sure parent category is visible
+                    let category = card.closest('.definition-category');
+                    if (category) {
+                        category.style.display = 'block';
+                    }
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+            
+            // Also search in definition category headers
+            definitionCategories.forEach(category => {
+                let heading = category.querySelector('h3').textContent.toLowerCase();
+                if (heading.includes(searchText)) {
+                    category.style.display = 'block';
+                }
+            });
+            
+            // Also search in persona details
+            let personaDetails = document.querySelectorAll('.persona-detail');
+            personaDetails.forEach(detail => {
+                let text = detail.textContent.toLowerCase();
+                if (text.includes(searchText)) {
+                    detail.style.display = 'block';
+                } else {
+                    detail.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

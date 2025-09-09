@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vitrea Advanced Visualization – Technical Training Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #c41017; /* Canon Dark Red */
+            --accent-color: #ed1c24; /* Canon Red */
+            --text-color: #333;
+            --background-color: #f9f9f9;
+            --card-bg: #fff;
+            --border-color: #e0e0e0;
+            --header-gradient: linear-gradient(135deg, var(--primary-color), #0066cc);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+        
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        /* Header */
+        header {
+            background: var(--header-gradient);
+            color: white;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo {
+            height: 50px;
+        }
+        
+        .header-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+        
+        .linkedin-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: white;
+            text-decoration: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            background-color: rgba(255, 255, 255, 0.2);
+            transition: background-color 0.3s;
+        }
+        
+        .linkedin-profile:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+        
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 280px;
+            background: var(--header-gradient);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 3px 0 10px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+            margin-top: 80px;
+        }
+        
+        .sidebar-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        .sidebar-header h2 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.4rem;
+        }
+        
+        .sidebar-header h2 i {
+            color: white;
+        }
+        
+        .nav-item {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+        }
+        
+        .nav-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-left: 4px solid var(--accent-color);
+        }
+        
+        .nav-item.active {
+            background-color: rgba(255, 255, 255, 0.15);
+            border-left: 4px solid var(--accent-color);
+        }
+        
+        .nav-item i {
+            width: 24px;
+            text-align: center;
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            padding: 30px;
+            padding-top: 110px;
+        }
+        
+        .welcome-banner {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border-left: 5px solid var(--primary-color);
+        }
+        
+        .welcome-banner h2 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        
+        .welcome-banner p {
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        /* Content Cards */
+        .content-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-top: 4px solid var(--primary-color);
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card-header {
+            padding: 15px 20px;
+            background: #f8f8f8;
+            color: var(--primary-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .card-header h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+        
+        .card-body {
+            padding: 20px;
+        }
+        
+        .resource-list {
+            list-style: none;
+        }
+        
+        .resource-item {
+            padding: 12px 0;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .resource-item:last-child {
+            border-bottom: none;
+        }
+        
+        .resource-link {
+            color: var(--text-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+            transition: color 0.3s;
+        }
+        
+        .resource-link:hover {
+            color: var(--primary-color);
+        }
+        
+        .resource-link i {
+            color: var(--primary-color);
+            width: 20px;
+            text-align: center;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: var(--accent-color);
+        }
+        
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+        
+        .btn-outline:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #777;
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border-color);
+            margin-top: 30px;
+        }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 20px;
+            position: relative;
+        }
+        
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #777;
+        }
+        
+        .modal-header {
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 220px;
+            }
+            
+            .main-content {
+                margin-left: 220px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+                padding: 1rem;
+            }
+            
+            .container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                margin-top: 0;
+                margin-bottom: 20px;
+            }
+            
+            .main-content {
+                margin-left: 0;
+                padding-top: 180px;
+            }
+            
+            .content-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="logo-container">
+            <img src="https://global.canon/en/corporate/logo/img/logo_01.png" alt="Canon Medical Logo" class="logo">
+            <div class="header-title">Vitrea Advanced Visualization</div>
+        </div>
+        <a href="https://www.linkedin.com/in/shailendrakumar-shashikant-jariwala-3450148/" class="linkedin-profile" target="_blank">
+            <i class="fab fa-linkedin"></i>
+            Shailendrakumar Jariwala
+        </a>
+    </header>
+    
+    <div class="container">
+        <!-- Sidebar Navigation -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fas fa-heartbeat"></i> Technical Training Dashboard</h2>
+            </div>
+            
+            <div class="nav-item active" data-category="dashboard">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </div>
+            
+            <div class="nav-item" data-category="agenda">
+                <i class="fas fa-book"></i>
+                <span>Agenda & Statistics</span>
+            </div>
+            
+            <div class="nav-item" data-category="quickstart">
+                <i class="fas fa-play-circle"></i>
+                <span>Quick Start Guides</span>
+            </div>
+            
+            <div class="nav-item" data-category="enterprise">
+                <i class="fas fa-server"></i>
+                <span>Enterprise Installation</span>
+            </div>
+            
+            <div class="nav-item" data-category="workstation">
+                <i class="fas fa-desktop"></i>
+                <span>Workstation</span>
+            </div>
+            
+            <div class="nav-item" data-category="extend">
+                <i class="fas fa-expand"></i>
+                <span>Extend</span>
+            </div>
+            
+            <div class="nav-item" data-category="administration">
+                <i class="fas fa-cogs"></i>
+                <span>Administration</span>
+            </div>
+            
+            <div class="nav-item" data-category="troubleshooting">
+                <i class="fas fa-bug"></i>
+                <span>Troubleshooting</span>
+            </div>
+            
+            <div class="nav-item" data-category="integration">
+                <i class="fas fa-plug"></i>
+                <span>Integration</span>
+            </div>
+            
+            <div class="nav-item" data-category="releasenotes">
+                <i class="fas fa-sticky-note"></i>
+                <span>Release Notes</span>
+            </div>
+            
+            <div class="nav-item" data-category="technical">
+                <i class="fas fa-clipboard-list"></i>
+                <span>Technical Specifications</span>
+            </div>
+            
+            <div class="nav-item" data-category="security">
+                <i class="fas fa-shield-alt"></i>
+                <span>Cybersecurity</span>
+            </div>
+            
+            <div class="nav-item" data-category="casestudies">
+                <i class="fas fa-file-medical"></i>
+                <span>Case Studies</span>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Welcome Banner -->
+            <div class="welcome-banner">
+                <h2>Welcome to Vitrea Advanced Visualization Technical Training</h2>
+                <p>This dashboard provides access to all training materials, guides, and resources for Canon Medical's Vitrea Advanced Visualization platform. Select a category from the sidebar to explore resources.</p>
+            </div>
+            
+            <!-- Content Cards -->
+            <div class="content-cards">
+                <!-- Agenda Card -->
+                <div class="card" data-category="agenda">
+                    <div class="card-header">
+                        <h3><i class="fas fa-book"></i> Agenda & Statistics</h3>
+                    </div>
+                    <div class="card-body">
+                        <ul class="resource-list">
+                            <li class="resource-item">
+                                <a href="https://sjariwala14.github.io/VitreaTT/Agendaindex.HTML" class="resource-link" target="_blank">
+                                    <i class="fas fa-link"></i>
+                                    Agenda Index
+                                </a>
+                            </li>
+                            <li class="resource-item">
+                                <a href="https://sjariwala14.github.io/VitreaTT/Facts%20and%20Statistics.HTML" class="resource-link" target="_blank">
+                                    <i class="fas fa-chart-bar"></i>
+                                    Facts and Statistics
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Quick Start Card -->
+                <div class="card" data-category="quickstart">
+                    <div class="card-header">
+                        <h3><i class="fas fa-play-circle"></i> Quick Start Guides</h3>
+                    </div>
+                    <div class="card-body">
+                        <ul class="resource-list">
+                            <li class="resource-item">
+                                <a href="https://sjariwala14.github.io/VitreaTT/Interactive%20Quick%20Start%20Guide" class="resource-link" target="_blank">
+                                    <i class="fas fa-rocket"></i>
+                                    Interactive Quick Start Guide
+                                </a>
+                            </li>
+                            <li class="resource-item">
+                                <a href="https://sjariwala14.github.io/VitreaTT/Vitrea%20Enterprise%20Upgrade%20Supplemental%20Guide" class="resource-link" target="_blank">
+                                    <i class="fas fa-level-up-alt"></i>
+                                    Enterprise Upgrade Supplemental Guide
+                                </a>
+                            </li>
+                            <li class="resource-item">
+                                <a href="https://sjariwala14.github.io/VitreaTT/Installing%20and%20Using%20the%20Bench%20Tests%20Tool%20Guide" class="resource-link" target="_blank">
+                                    <i class="fas fa-tools"></i>
+                                    Bench Tests Tool Guide
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Workstation Card -->
+                <div class="card" data-category="workstation">
+                    <div class="card-header">
+                        <h3><i class="fas fa-desktop"></i> Workstation</h3>
+                    </div>
+                    <div class="card-body">
+                        <ul class="resource-list">
+                            <li class="resource-item">
+                                <a href="https://sjariwala14.github.io/VitreaTT/WS%20FLASHCARD" class="resource-link" target="_blank">
+                                    <i class="fas fa-id-card"></i>
+                                    Workstation Flashcard
+                                </a>
+                            </li>
+                            <li class="resource-item">
+                                <a href="https://sjariwala14.github.io/VitreaTT/Workstation%20Checklist" class="resource-link" target="_blank">
+                                    <i class="fas fa-list-check"></i>
+                                    Workstation Checklist
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Extend Card -->
+                <div class="card" data-category="extend">
+                    <div class="card-header">
+                        <h3><i class="fas fa-expand"></i> Extend</h3>
+                    </div>
+                    <div class="card-body">
+                        <ul class="resource-list">
+                            <li class="resource-item">
+                                <a href="https://sjariwala14.github.io/VitreaTT/Extend%20Checklist%202" class="resource-link" target="_blank">
+                                    <i class="fas fa-list-check"></i>
+                                    Extend Checklist 2
+                                </a>
+                            </li>
+                            <li class="resource-item">
+                                <a href="https://sjariwala14.github.io/VitreaTT/Extend%20Checklist%203" class="resource-link" target="_blank">
+                                    <i class="fas fa-list-check"></i>
+                                    Extend Checklist 3
+                                </a>
+                            </li>
+                            <li class="resource-item">
+                                <a href="https://sjariwala14.github.io/VitreaTT/Extend%20flash%20card.html" class="resource-link" target="_blank">
+                                    <i class="fas fa-id-card"></i>
+                                    Extend Flashcard
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Administration Card -->
+                <div class="card" data-category="administration">
+                    <div class="card-header">
+                        <h3><i class="fas fa-cogs"></i> Administration</h3>
+                    </div>
+                    <div class="card-body">
+                        <ul class="resource-list">
+                            <li class="resource-item">
+                                <a href="https://sjariwala14.github.io/VitreaTT/Flash%20Card%20Admin" class="resource-link" target="_blank">
+                                    <i class="fas fa-id-card"></i>
+                                    Administration Flashcard
+                                </a>
+                            </li>
+                            <li class="resource-item">
+                                <a href="https://sjariwala14.github.io/VitreaTT/M1" class="resource-link" target="_blank">
+                                    <i class="fas fa-file-alt"></i>
+                                    Administration Module 1
+                                </a>
+                            </li>
+                            <li class="resource-item">
+                                <a href="https://sjariwala14.github.io/VitreaTT/M2" class="resource-link" target="_blank">
+                                    <i class="fas fa-file-alt"></i>
+                                    Administration Module 2
+                                </a>
+                            </li>
+                            <li class="resource-item">
+                                <a href="https://sjariwala14.github.io/VitreaTT/Administrator%20Lite%20PPT.html" class="resource-link" target="_blank">
+                                    <i class="fas fa-presentation"></i>
+                                    Administrator Lite PPT
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Release Notes Card -->
+                <div class="card" data-category="releasenotes">
+                    <div class="card-header">
+                        <h3><i class="fas fa-sticky-note"></i> Release Notes</h3>
+                    </div>
+                    <div class="card-body">
+                        <ul class="resource-list">
+                            <li class="resource-item">
+                                <a href="https://sjariwala14.github.io/VitreaTT/Release%20notes%20-%20Final" class="resource-link" target="_blank">
+                                    <i class="fas fa-file-alt"></i>
+                                    Release Notes - Final
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Case Studies Card -->
+                <div class="card" data-category="casestudies">
+                    <div class="card-header">
+                        <h3><i class="fas fa-file-medical"></i> Case Studies</h3>
+                    </div>
+                    <div class="card-body">
+                        <ul class="resource-list">
+                            <li class="resource-item">
+                                <a href="https://sjariwala14.github.io/VitreaTT/AV_Case%20Study.html" class="resource-link" target="_blank">
+                                    <i class="fas fa-stethoscope"></i>
+                                    Advanced Visualization Case Study
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Cybersecurity Card -->
+                <div class="card" data-category="security">
+                    <div class="card-header">
+                        <h3><i class="fas fa-shield-alt"></i> Cybersecurity</h3>
+                    </div>
+                    <div class="card-body">
+                        <ul class="resource-list">
+                            <li class="resource-item">
+                                <a href="https://sjariwala14.github.io/VitreaTT/Shared%20Cybersecurity%20Responsibility" class="resource-link" target="_blank">
+                                    <i class="fas fa-handshake"></i>
+                                    Shared Responsibility Guidelines
+                                </a>
+                            </li>
+                            <li class="resource-item">
+                                <a href="https://sjariwala14.github.io/VitreaTT/Digital%20Certificates,%20TLS,%20and%20SQL%20Encryption%20Guide" class="resource-link" target="_blank">
+                                    <i class="fas fa-lock"></i>
+                                    Digital Certificates & TLS Guide
+                                </a>
+                            </li>
+                            <li class="resource-item">
+                                <a href="https://sjariwala14.github.io/VitreaTT/TLS%20Digital%20Certificate%20Configuration" class="resource-link" target="_blank">
+                                    <i class="fas fa-lock"></i>
+                                    TLS Digital Certificate Configuration
+                                </a>
+                            </li>
+                            <li class="resource-item">
+                                <a href="https://sjariwala14.github.io/VitreaTT/Security%20Questions%20and%20Responses.html" class="resource-link" target="_blank">
+                                    <i class="fas fa-question-circle"></i>
+                                    RFP Security Questions
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer">
+                <p>Vitrea Advanced Visualization Technical Training Dashboard © 2023 | Canon Medical Systems</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Enterprise Installation -->
+    <div class="modal" id="enterpriseModal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <div class="modal-header">
+                <h2>Enterprise Installation Resources</h2>
+            </div>
+            <div class="modal-body">
+                <ul class="resource-list">
+                    <li class="resource-item">
+                        <a href="https://sjariwala14.github.io/VitreaTT/ESS%20Checklist" class="resource-link" target="_blank">
+                            <i class="fas fa-tasks"></i>
+                            Single Server Checklist
+                        </a>
+                    </li>
+                    <li class="resource-item">
+                        <a href="https://sjariwala14.github.io/VitreaTT/Interactive%20Troubleshooting%20Guide%20&%20Knowledge%20Base" class="resource-link" target="_blank">
+                            <i class="fas fa-search"></i>
+                            Interactive Troubleshooting Guide
+                        </a>
+                    </li>
+                    <li class="resource-item">
+                        <a href="https://sjariwala14.github.io/VitreaTT/ADFlash%20Card.html" class="resource-link" target="_blank">
+                            <i class="fas fa-id-card"></i>
+                            Active Directory Planning Guide
+                        </a>
+                    </li>
+                    <li class="resource-item">
+                        <a href="https://sjariwala14.github.io/VitreaTT/FinalOS" class="resource-link" target="_blank">
+                            <i class="fas fa-cog"></i>
+                            OS Setup Guide
+                        </a>
+                    </li>
+                    <li class="resource-item">
+                        <a href="https://sjariwala14.github.io/VitreaTT/SQL%20Checklist" class="resource-link" target="_blank">
+                            <i class="fas fa-database"></i>
+                            SQL Server Setup Guide
+                        </a>
+                    </li>
+                    <li class="resource-item">
+                        <a href="https://sjariwala14.github.io/VitreaTT/SQL%20Flash%20Card" class="resource-link" target="_blank">
+                            <i class="fas fa-id-card"></i>
+                            SQL Flash Card
+                        </a>
+                    </li>
+                    <li class="resource-item">
+                        <a href="https://sjariwala14.github.io/VitreaTT/Application%20Flash%20Card" class="resource-link" target="_blank">
+                            <i class="fas fa-id-card"></i>
+                            Application Server Flash Card
+                        </a>
+                    </li>
+                    <li class="resource-item">
+                        <a href="https://sjariwala14.github.io/VitreaTT/Application%20Checklist" class="resource-link" target="_blank">
+                            <i class="fas fa-tasks"></i>
+                            Application Server Checklist
+                        </a>
+                    </li>
+                    <li class="resource-item">
+                        <a href="https://sjariwala14.github.io/VitreaTT/Thin%20Client%20checklist" class="resource-link" target="_blank">
+                            <i class="fas fa-list-check"></i>
+                            Thin Client Checklist
+                        </a>
+                    </li>
+                    <li class="resource-item">
+                        <a href="https://sjariwala14.github.io/VitreaTT/Thin%20client%20FlashCard.html" class="resource-link" target="_blank">
+                            <i class="fas fa-id-card"></i>
+                            Thin Client Flash Card
+                        </a>
+                    </li>
+                    <li class="resource-item">
+                        <a href="https://sjariwala14.github.io/VitreaTT/MMChecklist" class="resource-link" target="_blank">
+                            <i class="fas fa-tasks"></i>
+                            Multiple Monitor Checklist
+                        </a>
+                    </li>
+                    <li class="resource-item">
+                        <a href="https://sjariwala14.github.io/VitreaTT/MMFlash%20Card" class="resource-link" target="_blank">
+                            <i class="fas fa-id-card"></i>
+                            Multiple Monitor Flash Card
+                        </a>
+                    </li>
+                    <li class="resource-item">
+                        <a href="https://sjariwala14.github.io/VitreaTT/Mgmtchecklist" class="resource-link" target="_blank">
+                            <i class="fas fa-tasks"></i>
+                            Management Server Checklist
+                        </a>
+                    </li>
+                    <li class="resource-item">
+                        <a href="https://sjariwala14.github.io/VitreaTT/MgmtFlashCard" class="resource-link" target="_blank">
+                            <i class="fas fa-id-card"></i>
+                            Management Server Flash Card
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Troubleshooting -->
+    <div class="modal" id="troubleshootingModal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <div class="modal-header">
+                <h2>Troubleshooting Resources</h2>
+            </div>
+            <div class="modal-body">
+                <ul class="resource-list">
+                    <li class="resource-item">
+                        <a href="https://sjariwala14.github.io/VitreaTT/T%20Flash%20Card.html" class="resource-link" target="_blank">
+                            <i class="fas fa-id-card"></i>
+                            Troubleshooting Flash Card
+                        </a>
+                    </li>
+                    <li class="resource-item">
+                        <a href="https://sjariwala14.github.io/VitreaTT/TroubleshootingM1.html" class="resource-link" target="_blank">
+                            <i class="fas fa-file-alt"></i>
+                            Troubleshooting Module 1
+                        </a>
+                    </li>
+                    <li class="resource-item">
+                        <a href="https://sjariwala14.github.io/VitreaTT/TroubleshootingM2.html" class="resource-link" target="_blank">
+                            <i class="fas fa-file-alt"></i>
+                            Troubleshooting Module 2
+                        </a>
+                    </li>
+                    <li class="resource-item">
+                        <a href="https://sjariwala14.github.io/VitreaTT/TroubleshootingM3%20final.html" class="resource-link" target="_blank">
+                            <i class="fas fa-file-alt"></i>
+                            Troubleshooting Module 3
+                        </a>
+                    </li>
+                    <li class="resource-item">
+                        <a href="https://sjariwala14.github.io/VitreaTT/Final%20Troubleshooting%20v2.html" class="resource-link" target="_blank">
+                            <i class="fas fa-file-alt"></i>
+                            Final Troubleshooting v2
+                        </a>
+                    </li>
+                    <li class="resource-item">
+                        <a href="https://sjariwala14.github.io/VitreaTT/Troubleshooting%20Lite%20PPT.html" class="resource-link" target="_blank">
+                            <i class="fas fa-presentation"></i>
+                            Troubleshooting Lite PPT
+                        </a>
+                    </li>
+                    <li class="resource-item">
+                        <a href="https://sjariwala14.github.io/VitreaTT/Vitrea%20Advanced%20Visualization%20-%20Complete%20Troubleshooting%20Guide%20_Updated.html" class="resource-link" target="_blank">
+                            <i class="fas fa-book"></i>
+                            Complete Troubleshooting Guide
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Integration -->
+    <div class="modal" id="integrationModal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <div class="modal-header">
+                <h2>Integration Resources</h2>
+            </div>
+            <div class="modal-body">
+                <ul class="resource-list">
+                    <li class="resource-item">
+                        <a href="https://sjariwala14.github.io/VitreaTT/VPMC-17219E%20External%20Integrations%20Setup%20Guide" class="resource-link" target="_blank">
+                            <i class="fas fa-cogs"></i>
+                            External Integrations Setup Guide
+                        </a>
+                    </li>
+                    <li class="resource-item">
+                        <a href="https://sjariwala14.github.io/VitreaTT/PACSFlash%20Card1.html" class="resource-link" target="_blank">
+                            <i class="fas fa-id-card"></i>
+                            PACS Flash Card
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Technical Specifications -->
+    <div class="modal" id="technicalModal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <div class="modal-header">
+                <h2>Technical Specifications</h2>
+            </div>
+            <div class="modal-body">
+                <ul class="resource-list">
+                    <li class="resource-item">
+                        <a href="https://sjariwala14.github.io/VitreaTT/Build%20of%20Materials%205%20.html" class="resource-link" target="_blank">
+                            <i class="fas fa-box"></i>
+                            Build of Materials
+                        </a>
+                    </li>
+                    <li class="resource-item">
+                        <a href="https://sjariwala14.github.io/VitreaTT/Calculator.html" class="resource-link" target="_blank">
+                            <i class="fas fa-calculator"></i>
+                            Calculator
+                        </a>
+                    </li>
+                    <li class="resource-item">
+                        <a href="https://sjariwala14.github.io/VitreaTT/Cloud%20Deployment%20.html" class="resource-link" target="_blank">
+                            <i class="fas fa-cloud"></i>
+                            Cloud Deployment
+                        </a>
+                    </li>
+                    <li class="resource-item">
+                        <a href="https://sjariwala14.github.io/VitreaTT/Technical%20Specification%20Updated2.html" class="resource-link" target="_blank">
+                            <i class="fas fa-file-alt"></i>
+                            Technical Specification
+                        </a>
+                    </li>
+                    <li class="resource-item">
+                        <a href="https://sjariwala14.github.io/VitreaTT/Installation%20Planning%20form.html" class="resource-link" target="_blank">
+                            <i class="fas fa-clipboard-list"></i>
+                            Installation Planning Form
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const navItems = document.querySelectorAll('.nav-item');
+            const cards = document.querySelectorAll('.card');
+            const enterpriseModal = document.getElementById('enterpriseModal');
+            const troubleshootingModal = document.getElementById('troubleshootingModal');
+            const integrationModal = document.getElementById('integrationModal');
+            const technicalModal = document.getElementById('technicalModal');
+            const closeModalButtons = document.querySelectorAll('.modal-close');
+            
+            // Navigation filtering
+            navItems.forEach(item => {
+                item.addEventListener('click', function() {
+                    const category = this.getAttribute('data-category');
+                    
+                    // Update active nav item
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Show modals for categories with many resources
+                    if (category === 'enterprise') {
+                        enterpriseModal.style.display = 'flex';
+                    } else if (category === 'troubleshooting') {
+                        troubleshootingModal.style.display = 'flex';
+                    } else if (category === 'integration') {
+                        integrationModal.style.display = 'flex';
+                    } else if (category === 'technical') {
+                        technicalModal.style.display = 'flex';
+                    } else {
+                        // Show/hide cards based on category
+                        if (category === 'dashboard') {
+                            cards.forEach(card => card.style.display = 'block');
+                        } else {
+                            cards.forEach(card => {
+                                if (card.getAttribute('data-category') === category) {
+                                    card.style.display = 'block';
+                                } else {
+                                    card.style.display = 'none';
+                                }
+                            });
+                        }
+                    }
+                });
+            });
+            
+            // Close modal functionality
+            closeModalButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    enterpriseModal.style.display = 'none';
+                    troubleshootingModal.style.display = 'none';
+                    integrationModal.style.display = 'none';
+                    technicalModal.style.display = 'none';
+                });
+            });
+            
+            window.addEventListener('click', function(e) {
+                if (e.target === enterpriseModal) {
+                    enterpriseModal.style.display = 'none';
+                } else if (e.target === troubleshootingModal) {
+                    troubleshootingModal.style.display = 'none';
+                } else if (e.target === integrationModal) {
+                    integrationModal.style.display = 'none';
+                } else if (e.target === technicalModal) {
+                    technicalModal.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Terminology for Technical Support Engineers</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .nav-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-btn:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+        
+        .nav-btn.active {
+            background-color: #2c3e50;
+        }
+        
+        .content-section {
+            display: none;
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+        }
+        
+        .content-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .section-title {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #3498db;
+        }
+        
+        .term-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .term-card {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 4px solid #3498db;
+            cursor: pointer;
+        }
+        
+        .term-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .term-title {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+        
+        .term-definition {
+            color: #555;
+            margin-bottom: 15px;
+        }
+        
+        .term-example {
+            background-color: #e8f4fc;
+            padding: 12px;
+            border-radius: 6px;
+            font-style: italic;
+            border-left: 3px solid #3498db;
+        }
+        
+        .quiz-container {
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+        
+        .quiz-question {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+        
+        .quiz-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        @media (max-width: 768px) {
+            .quiz-options {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .quiz-option {
+            padding: 15px;
+            background-color: #f8f9fa;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .quiz-option:hover {
+            background-color: #e8f4fc;
+            border-color: #3498db;
+        }
+        
+        .quiz-option.selected {
+            background-color: #3498db;
+            color: white;
+            border-color: #2980b9;
+        }
+        
+        .quiz-navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .quiz-btn {
+            padding: 12px 25px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+        
+        .quiz-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        .quiz-btn:disabled {
+            background-color: #bdc3c7;
+            cursor: not-allowed;
+        }
+        
+        .quiz-progress {
+            font-weight: 500;
+            color: #7f8c8d;
+        }
+        
+        .search-container {
+            margin-bottom: 25px;
+        }
+        
+        .search-box {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 30px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+        
+        .search-box:focus {
+            border-color: #3498db;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Medical Terminology for Technical Support Engineers</h1>
+            <p class="subtitle">Essential terms for interacting with clinical customers and stakeholders</p>
+        </header>
+        
+        <div class="navigation">
+            <button class="nav-btn active" data-target="positioning">Positioning Terminology</button>
+            <button class="nav-btn" data-target="body-structure">Body Structure Terminology</button>
+            <button class="nav-btn" data-target="miscellaneous">Miscellaneous Terminology</button>
+            <button class="nav-btn" data-target="quiz">Test Your Knowledge</button>
+        </div>
+        
+        <div class="search-container">
+            <input type="text" class="search-box" placeholder="Search for medical terms...">
+        </div>
+        
+        <div id="positioning" class="content-section active">
+            <h2 class="section-title">Positioning Terminology</h2>
+            <div class="term-grid">
+                <div class="term-card">
+                    <h3 class="term-title">Anterior</h3>
+                    <p class="term-definition">Of or involving the front of the main body.</p>
+                    <div class="term-example">
+                        <p>Clicking on the "A" in the 3D viewport aligns the image in an anterior position.</p>
+                    </div>
+                </div>
+                
+                <div class="term-card">
+                    <h3 class="term-title">Posterior</h3>
+                    <p class="term-definition">Of or involving the back of the main body.</p>
+                    <div class="term-example">
+                        <p>Clicking on the "P" aligns the 3D image in a posterior position.</p>
+                    </div>
+                </div>
+                
+                <div class="term-card">
+                    <h3 class="term-title">Inferior</h3>
+                    <p class="term-definition">Indicating lower than a given reference point.</p>
+                    <div class="term-example">
+                        <p>Clicking "I" views the image from an inferior aspect of the patient.</p>
+                    </div>
+                </div>
+                
+                <div class="term-card">
+                    <h3 class="term-title">Superior</h3>
+                    <p class="term-definition">Indicating higher than a given reference point.</p>
+                    <div class="term-example">
+                        <p>Clicking "S" views the image from a superior aspect of the patient.</p>
+                    </div>
+                </div>
+                
+                <div class="term-card">
+                    <h3 class="term-title">Right Lateral</h3>
+                    <p class="term-definition">Pertaining to the right side of the body.</p>
+                    <div class="term-example">
+                        <p>Clicking "R" aligns the image in a right lateral position.</p>
+                    </div>
+                </div>
+                
+                <div class="term-card">
+                    <h3 class="term-title">Left Lateral</h3>
+                    <p class="term-definition">Pertaining to the left side of the body.</p>
+                    <div class="term-example">
+                        <p>Clicking "L" aligns the image in a left lateral position.</p>
+                    </div>
+                </div>
+                
+                <div class="term-card">
+                    <h3 class="term-title">Supine</h3>
+                    <p class="term-definition">Posterior recumbent body position where the patient lies on their back.</p>
+                    <div class="term-example">
+                        <p>In Vitrea, determine if a patient is supine by looking at the axial MPR.</p>
+                    </div>
+                </div>
+                
+                <div class="term-card">
+                    <h3 class="term-title">Prone</h3>
+                    <p class="term-definition">Anterior recumbent body position where the patient lies on their stomach.</p>
+                    <div class="term-example">
+                        <p>In Vitrea, determine if a patient is prone by looking at the axial MPR.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="body-structure" class="content-section">
+            <h2 class="section-title">Body Structure Terminology</h2>
+            <div class="term-grid">
+                <div class="term-card">
+                    <h3 class="term-title">Carotid</h3>
+                    <p class="term-definition">Arteries that supply blood to the head and neck.</p>
+                    <div class="term-example">
+                        <p>The common carotid artery divides into external and internal carotid arteries.</p>
+                    </div>
+                </div>
+                
+                <div class="term-card">
+                    <h3 class="term-title">Cardiac</h3>
+                    <p class="term-definition">Having to do with the heart.</p>
+                    <div class="term-example">
+                        <p>Vitrea AV includes Cardiac Arteries, Cardiac CA Scoring, and Cardiac Functional Analysis applications.</p>
+                    </div>
+                </div>
+                
+                <div class="term-card">
+                    <h3 class="term-title">Coronary</h3>
+                    <p class="term-definition">Relating to arteries which surround and supply the heart.</p>
+                    <div class="term-example">
+                        <p>The Cardiac Arteries Application looks for plaque in the coronary arteries.</p>
+                    </div>
+                </div>
+                
+                <div class="term-card">
+                    <h3 class="term-title">Aorta</h3>
+                    <p class="term-definition">The major artery that carries oxygenated blood from the heart.</p>
+                    <div class="term-example">
+                        <p>Vitrea AV applications like Vascular Aorta and Vascular TAVR assess the aorta.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="miscellaneous" class="content-section">
+            <h2 class="section-title">Miscellaneous Terminology</h2>
+            <div class="term-grid">
+                <div class="term-card">
+                    <h3 class="term-title">Perfusion</h3>
+                    <p class="term-definition">The passage of blood through blood vessels in an organ.</p>
+                    <div class="term-example">
+                        <p>Vitrea AV measures perfusion in Brain Perfusion CT or Body Perfusion CT applications.</p>
+                    </div>
+                </div>
+                
+                <div class="term-card">
+                    <h3 class="term-title">Subtraction</h3>
+                    <p class="term-definition">Removal of specific anatomical structures to see vessels.</p>
+                    <div class="term-example">
+                        <p>Vitrea AV has Head Subtraction and Coronary Subtraction applications.</p>
+                    </div>
+                </div>
+                
+                <div class="term-card">
+                    <h3 class="term-title">ROI</h3>
+                    <p class="term-definition">Region of Interest: An area on a study that the user is interested in.</p>
+                    <div class="term-example">
+                        <p>ROIs can be elliptical or freehand and drawn in any Vitrea AV application.</p>
+                    </div>
+                </div>
+                
+                <div class="term-card">
+                    <h3 class="term-title">Segmentation</h3>
+                    <p class="term-definition">The removal of specific anatomical structures using software.</p>
+                    <div class="term-example">
+                        <p>Users might segment the liver to get a volume, removing it from the rest of the study.</p>
+                    </div>
+                </div>
+                
+                <div class="term-card">
+                    <h3 class="term-title">DICOM</h3>
+                    <p class="term-definition">Digital Imaging and Communication System standard.</p>
+                    <div class="term-example">
+                        <p>DICOM is the standard for communication and management of medical imaging information.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="quiz" class="content-section">
+            <h2 class="section-title">Test Your Medical Terminology Knowledge</h2>
+            <div class="quiz-container">
+                <div class="quiz-question" id="current-question">
+                    Which term refers to "Of or involving the front of the main body"?
+                </div>
+                
+                <div class="quiz-options">
+                    <div class="quiz-option" data-value="A">Posterior</div>
+                    <div class="quiz-option" data-value="B">Anterior</div>
+                    <div class="quiz-option" data-value="C">Inferior</div>
+                    <div class="quiz-option" data-value="D">Lateral</div>
+                </div>
+                
+                <div class="quiz-navigation">
+                    <button class="quiz-btn" id="prev-btn" disabled>Previous</button>
+                    <span class="quiz-progress">Question 1 of 5</span>
+                    <button class="quiz-btn" id="next-btn">Next</button>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>Medical Terminology for Technical Support Engineers | Based on presentation from 1 Oct. 2017</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Navigation functionality
+            const navButtons = document.querySelectorAll('.nav-btn');
+            const contentSections = document.querySelectorAll('.content-section');
+            
+            navButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    const target = button.getAttribute('data-target');
+                    
+                    // Update active button
+                    navButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    
+                    // Show corresponding section
+                    contentSections.forEach(section => {
+                        section.classList.remove('active');
+                        if (section.id === target) {
+                            section.classList.add('active');
+                        }
+                    });
+                });
+            });
+            
+            // Search functionality
+            const searchBox = document.querySelector('.search-box');
+            const termCards = document.querySelectorAll('.term-card');
+            
+            searchBox.addEventListener('input', () => {
+                const searchTerm = searchBox.value.toLowerCase();
+                
+                termCards.forEach(card => {
+                    const termText = card.textContent.toLowerCase();
+                    if (termText.includes(searchTerm)) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+            
+            // Quiz functionality
+            const quizOptions = document.querySelectorAll('.quiz-option');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const questionElement = document.getElementById('current-question');
+            const progressElement = document.querySelector('.quiz-progress');
+            
+            const questions = [
+                {
+                    question: 'Which term refers to "Of or involving the front of the main body"?',
+                    options: ['Posterior', 'Anterior', 'Inferior', 'Lateral'],
+                    correct: 1
+                },
+                {
+                    question: 'What does "Cardiac" refer to?',
+                    options: ['The brain', 'The heart', 'The kidneys', 'The liver'],
+                    correct: 1
+                },
+                {
+                    question: 'Which application would you use to look at the bowel?',
+                    options: ['Cardiac Arteries', 'Colon Analysis', 'Brain Perfusion', 'Vascular Run-off'],
+                    correct: 1
+                },
+                {
+                    question: 'What does DICOM stand for?',
+                    options: [
+                        'Digital Imaging and Communication System',
+                        'Digital Icon Communication System',
+                        'Data Imaging and Communication Standard',
+                        'Diagnostic Image Communication Method'
+                    ],
+                    correct: 0
+                },
+                {
+                    question: 'Which term refers to "The passage of blood through blood vessels"?',
+                    options: ['Perfusion', 'Subtraction', 'Segmentation', 'Contrast'],
+                    correct: 0
+                }
+            ];
+            
+            let currentQuestion = 0;
+            let userAnswers = new Array(questions.length).fill(null);
+            
+            function loadQuestion() {
+                const question = questions[currentQuestion];
+                questionElement.textContent = question.question;
+                
+                const optionElements = document.querySelectorAll('.quiz-option');
+                optionElements.forEach((option, index) => {
+                    option.textContent = question.options[index];
+                    option.dataset.value = String.fromCharCode(65 + index); // A, B, C, D
+                    
+                    if (userAnswers[currentQuestion] === index) {
+                        option.classList.add('selected');
+                    } else {
+                        option.classList.remove('selected');
+                    }
+                });
+                
+                progressElement.textContent = `Question ${currentQuestion + 1} of ${questions.length}`;
+                
+                prevBtn.disabled = currentQuestion === 0;
+                nextBtn.textContent = currentQuestion === questions.length - 1 ? 'Finish' : 'Next';
+            }
+            
+            quizOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    const selectedValue = option.dataset.value;
+                    const selectedIndex = selectedValue.charCodeAt(0) - 65; // Convert A, B, C, D to 0, 1, 2, 3
+                    
+                    userAnswers[currentQuestion] = selectedIndex;
+                    
+                    // Update UI
+                    quizOptions.forEach(opt => opt.classList.remove('selected'));
+                    option.classList.add('selected');
+                });
+            });
+            
+            prevBtn.addEventListener('click', () => {
+                if (currentQuestion > 0) {
+                    currentQuestion--;
+                    loadQuestion();
+                }
+            });
+            
+            nextBtn.addEventListener('click', () => {
+                if (currentQuestion < questions.length - 1) {
+                    currentQuestion++;
+                    loadQuestion();
+                } else {
+                    // Calculate score
+                    let score = 0;
+                    userAnswers.forEach((answer, index) => {
+                        if (answer === questions[index].correct) {
+                            score++;
+                        }
+                    });
+                    
+                    // Show results
+                    questionElement.textContent = `Quiz completed! Your score: ${score}/${questions.length}`;
+                    
+                    // Hide options and navigation
+                    document.querySelector('.quiz-options').style.display = 'none';
+                    document.querySelector('.quiz-navigation').style.display = 'none';
+                }
+            });
+            
+            // Initialize the quiz
+            loadQuestion();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vitrea Advanced Visualization 7.16 - DICOM Conformance Statement</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --canon-red: #e60028;
+            --canon-dark: #333333;
+            --canon-light: #f5f5f5;
+            --border-color: #ddd;
+            --highlight-bg: #fff4f5;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            display: flex;
+            min-height: 100vh;
+            background-color: var(--canon-light);
+            color: var(--canon-dark);
+        }
+        
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 300px;
+            background: white;
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar-header {
+            padding: 20px;
+            background: var(--canon-red);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .sidebar-header h2 {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .toggle-sidebar {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        
+        .toc {
+            padding: 15px;
+        }
+        
+        .toc ul {
+            list-style: none;
+        }
+        
+        .toc li {
+            margin: 8px 0;
+        }
+        
+        .toc a {
+            color: var(--canon-dark);
+            text-decoration: none;
+            display: block;
+            padding: 8px 12px;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+        
+        .toc a:hover {
+            background-color: rgba(230, 0, 40, 0.1);
+            color: var(--canon-red);
+        }
+        
+        .toc .active {
+            background-color: rgba(230, 0, 40, 0.15);
+            color: var(--canon-red);
+            font-weight: 600;
+            border-left: 3px solid var(--canon-red);
+        }
+        
+        .toc .sub-item {
+            padding-left: 30px;
+            font-size: 0.9em;
+        }
+        
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 30px;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo {
+            height: 50px;
+            margin-right: 15px;
+        }
+        
+        .document-title {
+            color: var(--canon-red);
+        }
+        
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: white;
+            border-radius: 4px;
+            padding: 8px 15px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .search-box input {
+            border: none;
+            outline: none;
+            padding: 5px;
+            width: 200px;
+        }
+        
+        .content-section {
+            margin-bottom: 40px;
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .content-section h2 {
+            color: var(--canon-red);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .content-section h3 {
+            margin: 15px 0 10px;
+            color: var(--canon-dark);
+        }
+        
+        .content-section h4 {
+            margin: 12px 0 8px;
+            color: #555;
+        }
+        
+        .content-section p {
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        
+        .note {
+            background-color: var(--highlight-bg);
+            border-left: 4px solid var(--canon-red);
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            font-size: 0.9em;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        th {
+            background-color: var(--canon-red);
+            color: white;
+            font-weight: 600;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+            border-top: 1px solid var(--border-color);
+            color: #777;
+            font-size: 14px;
+        }
+        
+        .sop-classes {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .sop-class {
+            background: white;
+            padding: 15px;
+            border-radius: 6px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border-left: 3px solid var(--canon-red);
+        }
+        
+        .sop-class h4 {
+            margin-top: 0;
+            color: var(--canon-red);
+        }
+        
+        /* Responsive */
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 250px;
+            }
+            
+            .search-box input {
+                width: 150px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+            }
+            
+            .toc {
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.3s ease;
+            }
+            
+            .toc.show {
+                max-height: 300px;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+            
+            .header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .logo-container {
+                margin-bottom: 15px;
+            }
+            
+            .search-box {
+                width: 100%;
+                margin-top: 15px;
+            }
+            
+            .search-box input {
+                width: 100%;
+            }
+        }
+        
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--canon-red);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1000;
+        }
+        
+        .back-to-top.show {
+            opacity: 1;
+        }
+        
+        .content-nav {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-color);
+        }
+        
+        .content-nav button {
+            background: var(--canon-red);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+        
+        .content-nav button:hover {
+            background: #c1001f;
+        }
+        
+        .content-nav button i {
+            margin: 0 5px;
+        }
+        
+        .icon-tag {
+            display: inline-flex;
+            align-items: center;
+            background: var(--highlight-bg);
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin: 0 2px;
+            font-size: 0.9em;
+        }
+        
+        .icon-tag i {
+            margin-right: 5px;
+            color: var(--canon-red);
+        }
+        
+        .tag {
+            display: inline-block;
+            background: var(--highlight-bg);
+            color: var(--canon-red);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            margin: 0 2px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h2>Document Navigation</h2>
+            <button class="toggle-sidebar" id="toggleSidebar">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        <div class="toc" id="toc">
+            <ul>
+                <li><a href="#document-history" class="active">1. Document History</a></li>
+                <li><a href="#overview">2. Conformance Statement Overview</a></li>
+                <li><a href="#introduction">3. Introduction</a>
+                    <ul>
+                        <li><a href="#audience" class="sub-item">3.1 Audience</a></li>
+                        <li><a href="#remarks" class="sub-item">3.2 Remarks</a></li>
+                        <li><a href="#terms" class="sub-item">3.3 Terms and Abbreviations</a></li>
+                        <li><a href="#references" class="sub-item">3.4 References</a></li>
+                        <li><a href="#basics" class="sub-item">3.5 Basics of DICOM Communication</a></li>
+                    </ul>
+                </li>
+                <li><a href="#data-flow">4. Vitrea Software Application Data Flow</a>
+                    <ul>
+                        <li><a href="#implementation-model" class="sub-item">4.1 Implementation Model</a></li>
+                        <li><a href="#functional-definition" class="sub-item">4.1.1 Functional Definition of AEs</a></li>
+                    </ul>
+                </li>
+                <li><a href="#ae-specifications">5. AE Specifications</a>
+                    <ul>
+                        <li><a href="#echo-scp" class="sub-item">5.1 ECHO-SCP</a></li>
+                        <li><a href="#echo-scu" class="sub-item">5.2 ECHO-SCU</a></li>
+                        <li><a href="#find-scu" class="sub-item">5.3 FIND-SCU</a></li>
+                        <li><a href="#find-scp" class="sub-item">5.4 FIND-SCP</a></li>
+                        <li><a href="#move-scu" class="sub-item">5.5 MOVE-SCU</a></li>
+                    </ul>
+                </li>
+                <li><a href="#media-interchange">6. Media Interchange</a></li>
+                <li><a href="#network-interfaces">7. Network Interfaces</a></li>
+                <li><a href="#configuration">8. Configuration</a></li>
+                <li><a href="#character-sets">9. Support of Character Sets</a></li>
+                <li><a href="#security">10. Security</a></li>
+                <li><a href="#iod-contents">11. IOD Contents</a></li>
+                <li><a href="#data-dictionary">12. Data Dictionary of Private Attributes</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="header">
+            <div class="logo-container">
+                <!-- Canon logo placeholder -->
+                <div class="logo" style="background-color: #e60028; width: 150px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">CANON</div>
+                <div>
+                    <h1>Vitrea Advanced Visualization 7.16</h1>
+                    <p class="document-title">DICOM Conformance Statement</p>
+                </div>
+            </div>
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search document..." id="searchInput">
+            </div>
+        </div>
+
+        <!-- Content Sections -->
+        <div class="content-section" id="document-history">
+            <h2>1. Document History</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Revision</th>
+                        <th>Date</th>
+                        <th>Author</th>
+                        <th>Changes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>A</td>
+                        <td>9-Apr-2024</td>
+                        <td>Peter N. Dobbs</td>
+                        <td>Initial release for Vitrea 7.16</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="content-nav">
+                <div></div>
+                <button onclick="scrollToSection('overview')">Next: Conformance Statement Overview <i class="fas fa-arrow-right"></i></button>
+            </div>
+        </div>
+
+        <div class="content-section" id="overview">
+            <h2>2. Conformance Statement Overview</h2>
+            <p>This conformance statement applies to the Vitrea software product.</p>
+            <p>This application supports image receives across the network from other systems for 2D and 3D viewing. The SOP Classes in Table 1-1 can be received and stored, Table 1-3 defines the SOP Classes to be loaded and viewed in the 3D applications.</p>
+            
+            <h3>Table 2-1 Network Services</h3>
+            <div style="overflow-x: auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>SOP Classes</th>
+                            <th>User of Service (SCU)</th>
+                            <th>Provider of Service (SCP)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Verification</td>
+                            <td>Yes</td>
+                            <td>Yes</td>
+                        </tr>
+                        <tr>
+                            <td>CT Image Storage</td>
+                            <td>Yes</td>
+                            <td>Yes</td>
+                        </tr>
+                        <tr>
+                            <td>Enhanced CT Image Storage</td>
+                            <td>Yes</td>
+                            <td>Yes</td>
+                        </tr>
+                        <tr>
+                            <td>MR Image Storage</td>
+                            <td>Yes</td>
+                            <td>Yes</td>
+                        </tr>
+                        <tr>
+                            <td>Enhanced MR Image Storage</td>
+                            <td>Yes</td>
+                            <td>Yes</td>
+                        </tr>
+                        <tr>
+                            <td>Secondary Capture Image Storage</td>
+                            <td>Yes</td>
+                            <td>Yes</td>
+                        </tr>
+                        <tr>
+                            <td>Grayscale Softcopy Presentation State Storage</td>
+                            <td>Yes</td>
+                            <td>Yes</td>
+                        </tr>
+                        <tr>
+                            <td>Study Root Q/R – FIND</td>
+                            <td>Yes</td>
+                            <td>Yes</td>
+                        </tr>
+                        <tr>
+                            <td>Study Root Q/R – MOVE</td>
+                            <td>Yes</td>
+                            <td>Yes</td>
+                        </tr>
+                        <tr>
+                            <td>Basic Grayscale Print Management</td>
+                            <td>Yes</td>
+                            <td>Yes</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <h3>Table 2-2 Media Services</h3>
+            <div style="overflow-x: auto;">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Media Storage Application Profile</th>
+                            <th>Write Files (FSC or FSU)</th>
+                            <th>Read Files (FSR)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Compact Disk – Recordable</td>
+                            <td>Yes</td>
+                            <td>Yes</td>
+                        </tr>
+                        <tr>
+                            <td>CT/MR Studies on CD-R</td>
+                            <td>Yes</td>
+                            <td>Yes</td>
+                        </tr>
+                        <tr>
+                            <td>General Purpose CD-R</td>
+                            <td>Yes</td>
+                            <td>Yes</td>
+                        </tr>
+                        <tr>
+                            <td>DVD</td>
+                            <td>Yes</td>
+                            <td>Yes</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="content-nav">
+                <button onclick="scrollToSection('document-history')"><i class="fas fa-arrow-left"></i> Previous: Document History</button>
+                <button onclick="scrollToSection('introduction')">Next: Introduction <i class="fas fa-arrow-right"></i></button>
+            </div>
+        </div>
+
+        <div class="content-section" id="introduction">
+            <h2>3. Introduction</h2>
+            
+            <div id="audience">
+                <h3>3.1 Audience</h3>
+                <p>This document is written for the people that need to understand how the Vitrea Software will integrate into their healthcare facility. This includes both those responsible for overall imaging network policy and architecture, as well as integrators who need to have a detailed understanding of the DICOM features of the product.</p>
+            </div>
+            
+            <div id="remarks">
+                <h3>3.2 Remarks</h3>
+                <p>The scope of this DICOM Conformance Statement is to facilitate integration between the Vitrea Software and other DICOM products. The Conformance Statement should be read and understood in conjunction with the DICOM Standard.</p>
+                <div class="note">
+                    <p><strong>Note:</strong> DICOM by itself does not guarantee interoperability. The Conformance Statements, however, facilitate a first-level comparison for interoperability between different applications supporting compatible DICOM functionality.</p>
+                </div>
+            </div>
+            
+            <div id="terms">
+                <h3>3.3 Terms and Abbreviations</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Term</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Abstract Syntax</td>
+                            <td>the information agreed to be exchanged between applications, generally equivalent to a Service/Object Pair (SOP) Class</td>
+                        </tr>
+                        <tr>
+                            <td>Application Entity (AE)</td>
+                            <td>an end point of a DICOM information exchange, including the DICOM network or media interface software</td>
+                        </tr>
+                        <tr>
+                            <td>Application Entity Title</td>
+                            <td>the externally known name of an Application Entity, used to identify a DICOM application to other DICOM applications on the network</td>
+                        </tr>
+                        <tr>
+                            <td>DICOM</td>
+                            <td>Digital Imaging and Communications in Medicine - a global Information-Technology standard used in all hospitals worldwide</td>
+                        </tr>
+                        <tr>
+                            <td>Service Class Provider (SCP)</td>
+                            <td>role of an Application Entity that provides a DICOM network service; typically, a server</td>
+                        </tr>
+                        <tr>
+                            <td>Service Class User (SCU)</td>
+                            <td>role of an Application Entity that uses a DICOM network service; typically, a client</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="tag"><i class="fas fa-info-circle"></i> Additional terms are defined in the complete document</p>
+            </div>
+            
+            <div id="references">
+                <h3>3.4 References</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Reference ID</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>NEMA PS3</td>
+                            <td>DICOM Standard, available free at http://medical.nema.org/</td>
+                        </tr>
+                        <tr>
+                            <td>IHE</td>
+                            <td>IHE, further information available at http://www.ihe.net/</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div id="basics">
+                <h3>3.5 Basics of DICOM Communication</h3>
+                <p>This section describes terminology used in this Conformance Statement for the non-specialist. The key terms used in the Conformance Statement are highlighted in italics below.</p>
+                <p>Two Application Entities (devices) that want to communicate with each other over a network using DICOM protocol must first agree on several things during an initial network "handshake".</p>
+                <div class="note">
+                    <p><strong>Key Concept:</strong> DICOM specifies a number of network services and types of information objects, each of which is called an Abstract Syntax for the Negotiation.</p>
+                </div>
+            </div>
+            
+            <div class="content-nav">
+                <button onclick="scrollToSection('overview')"><i class="fas fa-arrow-left"></i> Previous: Conformance Statement Overview</button>
+                <button onclick="scrollToSection('data-flow')">Next: Application Data Flow <i class="fas fa-arrow-right"></i></button>
+            </div>
+        </div>
+
+        <div class="content-section" id="data-flow">
+            <h2>4. Vitrea Software Application Data Flow</h2>
+            
+            <p>The architectural model of Vitrea includes a single workstation with network client viewers. A Vitrea File Share resides in an accessible location so that any configured part of the solution can access the data.</p>
+            
+            <div id="implementation-model">
+                <h3>4.1 Implementation Model</h3>
+                <p>The implementation consists of a set of applications which provide a user interface, internal database and network listeners that spawn additional threads or processes as necessary to handle incoming connections.</p>
+                
+                <p>Conceptually the network services may be modeled as the following separate AEs, though in fact some AEs share (configurable) AE Titles:</p>
+                
+                <div class="sop-classes">
+                    <div class="sop-class">
+                        <h4>ECHO-SCU</h4>
+                        <p>Sends verification requests</p>
+                    </div>
+                    <div class="sop-class">
+                        <h4>ECHO-SCP</h4>
+                        <p>Responds to verification requests</p>
+                    </div>
+                    <div class="sop-class">
+                        <h4>FIND-SCU</h4>
+                        <p>Queries remote entities for lists of studies, series and instances</p>
+                    </div>
+                    <div class="sop-class">
+                        <h4>FIND-SCP</h4>
+                        <p>Processes queries from remote entities</p>
+                    </div>
+                    <div class="sop-class">
+                        <h4>MOVE-SCU</h4>
+                        <p>Retrieves studies, series and instances from remote entities</p>
+                    </div>
+                    <div class="sop-class">
+                        <h4>MOVE-SCP</h4>
+                        <p>Processes retrieve requests from remote entities</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="functional-definition">
+                <h3>4.1.1 Functional Definition of AE's</h3>
+                
+                <h4>ECHO-SCP</h4>
+                <p>ECHO-SCP waits in the background for connections, will accept associations with Presentation Contexts for SOP Class of the Verification Service Class, and will respond successfully to echo requests.</p>
+                
+                <h4>ECHO-SCU</h4>
+                <p>ECHO-SCU is activated through the user interface when a user requests an echo to a remote AE. An echo is performed to that remote AE, verifying basic DICOM connectivity and displaying results.</p>
+                
+                <h4>FIND-SCU</h4>
+                <p>FIND-SCU is activated through the user interface when a user selects a remote AE to query (from a pre-configured list), then initiates a query. Queries are performed at the study level.</p>
+                
+                <p class="tag"><i class="fas fa-file-alt"></i> Additional AE definitions continue in the complete document</p>
+            </div>
+            
+            <div class="content-nav">
+                <button onclick="scrollToSection('introduction')"><i class="fas fa-arrow-left"></i> Previous: Introduction</button>
+                <button onclick="scrollToSection('ae-specifications')">Next: AE Specifications <i class="fas fa-arrow-right"></i></button>
+            </div>
+        </div>
+
+        <div class="content-section" id="ae-specifications">
+            <h2>5. AE Specifications</h2>
+            
+            <div id="echo-scp">
+                <h3>5.1 ECHO-SCP</h3>
+                
+                <h4>5.1.1 SOP Classes</h4>
+                <p>ECHO-SCP provides Standard Conformance to the following SOP Class(es):</p>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>SOP Class Name</th>
+                            <th>SOP Class UID</th>
+                            <th>SCU</th>
+                            <th>SCP</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Verification SOP Class</td>
+                            <td>1.2.840.10008.1.1</td>
+                            <td>No</td>
+                            <td>Yes</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <h4>5.1.2 Association Policies</h4>
+                <p>ECHO-SCP accepts but never initiates associations.</p>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Maximum PDU size received</th>
+                            <th>Unlimited</th>
+                        </tr>
+                    </thead>
+                </table>
+                
+                <h4>5.1.3 Association Acceptance Policy</h4>
+                <p>When ECHO-SCP accepts an association, it will respond to echo requests. If the Called AE Title does not match the pre-configured AE Title of the application, the association will be rejected.</p>
+            </div>
+            
+            <div id="echo-scu">
+                <h3>5.2 ECHO-SCU</h3>
+                
+                <h4>5.2.1 SOP Classes</h4>
+                <p>ECHO-SCU provides Standard Conformance to the following SOP Class(es):</p>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>SOP Class Name</th>
+                            <th>SOP Class UID</th>
+                            <th>SCU</th>
+                            <th>SCP</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Verification SOP Class</td>
+                            <td>1.2.840.10008.1.1</td>
+                            <td>Yes</td>
+                            <td>No</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div id="find-scu">
+                <h3>5.3 FIND-SCU</h3>
+                
+                <h4>5.3.1 SOP Classes</h4>
+                <p>FIND-SCU provides Standard Conformance to the following SOP Class(es):</p>
+                
+                <table>
+                    <thead>
+                        <tr>
+                            <th>SOP Class Name</th>
+                            <th>SOP Class UID</th>
+                            <th>SCU</th>
+                            <th>SCP</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Study Root Query/Retrieve Information Model – FIND</td>
+                            <td>1.2.840.10008.5.1.4.1.2.2.1</td>
+                            <td>Yes</td>
+                            <td>No</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <p class="tag"><i class="fas fa-file-alt"></i> Additional AE specifications continue in the complete document</p>
+            
+            <div class="content-nav">
+                <button onclick="scrollToSection('data-flow')"><i class="fas fa-arrow-left"></i> Previous: Application Data Flow</button>
+                <button onclick="scrollToSection('media-interchange')">Next: Media Interchange <i class="fas fa-arrow-right"></i></button>
+            </div>
+        </div>
+
+        <div class="content-section" id="media-interchange">
+            <h2>6. Media Interchange</h2>
+            
+            <h3>6.1 Implementation Model</h3>
+            
+            <h4>6.1.1 Application Data Flow</h4>
+            <p>The application provides a user interface and media support as a File Set Reader.</p>
+            
+            <h4>6.1.2 Functional Definitions of AE's</h4>
+            
+            <div class="sop-classes">
+                <div class="sop-class">
+                    <h4>MEDIA-FSR</h4>
+                    <p>Loads a user-selected PS 3.10 compliant file, which may be a DICOMDIR or an instance object</p>
+                </div>
+                <div class="sop-class">
+                    <h4>MEDIA-FSC</h4>
+                    <p>Generates PS 3.12 compliant media according to one of the General Purpose Media Application Profiles</p>
+                </div>
+            </div>
+            
+            <h3>6.2 AE Specifications</h3>
+            
+            <h4>6.2.1 MEDIA-FSR</h4>
+            <p>MEDIA-FSR provides standard conformance to the Media Storage Service Class.</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Application Profiles Supported</th>
+                        <th>Real World Activity</th>
+                        <th>Role</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>STD-GEN-CD</td>
+                        <td>Load dataset</td>
+                        <td>FSR</td>
+                    </tr>
+                    <tr>
+                        <td>STD-CTMR-CD</td>
+                        <td>Load dataset</td>
+                        <td>FSR</td>
+                    </tr>
+                    <tr>
+                        <td>STD-CTMR-DVD</td>
+                        <td>Load dataset</td>
+                        <td>FSR</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="content-nav">
+                <button onclick="scrollToSection('ae-specifications')"><i class="fas fa-arrow-left"></i> Previous: AE Specifications</button>
+                <button onclick="scrollToSection('network-interfaces')">Next: Network Interfaces <i class="fas fa-arrow-right"></i></button>
+            </div>
+        </div>
+
+        <!-- Additional sections would follow the same pattern -->
+        
+        <div class="content-section" id="data-dictionary">
+            <h2>12. Data Dictionary of Private Attributes</h2>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tag</th>
+                        <th>Attribute Name</th>
+                        <th>VR</th>
+                        <th>VM</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>(5653,00xx)</td>
+                        <td>Private Creator</td>
+                        <td>LO</td>
+                        <td>1</td>
+                    </tr>
+                    <tr>
+                        <td>(5653,xx10)</td>
+                        <td>Saved Workflow</td>
+                        <td>OB</td>
+                        <td>1</td>
+                    </tr>
+                    <tr>
+                        <td>(5653,xx11)</td>
+                        <td>Saved Workflow File Name</td>
+                        <td>LO</td>
+                        <td>1</td>
+                    </tr>
+                    <tr>
+                        <td>(5653,xx12)</td>
+                        <td>Saved Workflow File Data</td>
+                        <td>OB</td>
+                        <td>1</td>
+                    </tr>
+                    <tr>
+                        <td>(5653,xx13)</td>
+                        <td>Saved Workflow File Length</td>
+                        <td>SL</td>
+                        <td>1</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="content-nav">
+                <button onclick="scrollToSection('iod-contents')"><i class="fas fa-arrow-left"></i> Previous: IOD Contents</button>
+                <div></div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Copyright © 2022 Canon Medical Informatics Inc, All Rights Reserved</p>
+            <p>Document ID: VLC-11218 A</p>
+            <p>Canon Medical Informatics, Inc. | 5850 Opus Parkway, Suite 300 | Minnetonka, MN, 55343 | USA</p>
+        </div>
+    </div>
+
+    <!-- Back to Top Button -->
+    <div class="back-to-top" id="backToTop">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <script>
+        // Toggle sidebar on mobile
+        document.getElementById('toggleSidebar').addEventListener('click', function() {
+            document.getElementById('toc').classList.toggle('show');
+        });
+        
+        // Smooth scrolling for navigation links
+        function scrollToSection(sectionId) {
+            const targetElement = document.querySelector(sectionId);
+            
+            window.scrollTo({
+                top: targetElement.offsetTop - 20,
+                behavior: 'smooth'
+            });
+            
+            // Update active class
+            document.querySelectorAll('.toc a').forEach(a => a.classList.remove('active'));
+            document.querySelector(`.toc a[href="${sectionId}"]`).classList.add('active');
+        }
+        
+        document.querySelectorAll('.toc a').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                scrollToSection(targetId);
+            });
+        });
+        
+        // Show/hide back to top button
+        const backToTopButton = document.getElementById('backToTop');
+        
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                backToTopButton.classList.add('show');
+            } else {
+                backToTopButton.classList.remove('show');
+            }
+        });
+        
+        // Back to top functionality
+        backToTopButton.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+        
+        // Simple search functionality
+        const searchInput = document.getElementById('searchInput');
+        
+        searchInput.addEventListener('keyup', function() {
+            const searchTerm = this.value.toLowerCase();
+            
+            if (searchTerm.length > 2) {
+                const elements = document.querySelectorAll('.content-section');
+                elements.forEach(element => {
+                    if (element.textContent.toLowerCase().includes(searchTerm)) {
+                        element.style.display = 'block';
+                    } else {
+                        element.style.display = 'none';
+                    }
+                });
+            } else {
+                document.querySelectorAll('.content-section').forEach(element => {
+                    element.style.display = 'block';
+                });
+            }
+        });
+        
+        // Update active nav link on scroll
+        window.addEventListener('scroll', function() {
+            const sections = document.querySelectorAll('.content-section');
+            const navLinks = document.querySelectorAll('.toc a');
+            
+            let currentSection = '';
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (pageYOffset >= sectionTop - 100) {
+                    currentSection = section.getAttribute('id');
+                }
+            });
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + currentSection) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
