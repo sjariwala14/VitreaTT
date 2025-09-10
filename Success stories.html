@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canon Medical Success Stories</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #0066cc 0%, #003366 100%);
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 5px solid #d4af37;
+        }
+        
+        .logo {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .logo h1 {
+            font-size: 2.5rem;
+            margin-left: 15px;
+        }
+        
+        .logo-icon {
+            font-size: 2.8rem;
+            color: #d4af37;
+        }
+        
+        header p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .filter-buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .filter-btn {
+            padding: 10px 20px;
+            background-color: #e9ecef;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .filter-btn:hover, .filter-btn.active {
+            background-color: #0066cc;
+            color: white;
+        }
+        
+        .stories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .story-card {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .story-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-header {
+            background-color: #0066cc;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .card-body {
+            padding: 20px;
+        }
+        
+        .card-body h3 {
+            color: #0066cc;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 10px;
+        }
+        
+        .card-body p {
+            margin-bottom: 15px;
+            color: #555;
+        }
+        
+        .card-footer {
+            padding: 15px 20px;
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .read-more {
+            color: #0066cc;
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+        
+        .read-more i {
+            margin-left: 5px;
+            transition: transform 0.3s ease;
+        }
+        
+        .read-more:hover i {
+            transform: translateX(5px);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        
+        .modal-content {
+            background-color: white;
+            max-width: 800px;
+            margin: 40px auto;
+            border-radius: 10px;
+            padding: 30px;
+            position: relative;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5rem;
+            color: #777;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        
+        .close-modal:hover {
+            color: #d32f2f;
+        }
+        
+        .modal-header {
+            background-color: #0066cc;
+            color: white;
+            padding: 20px;
+            margin: -30px -30px 20px -30px;
+            border-radius: 10px 10px 0 0;
+        }
+        
+        .modal-body {
+            padding: 20px 0;
+        }
+        
+        .quote {
+            background-color: #f8f9fa;
+            border-left: 4px solid #d4af37;
+            padding: 20px;
+            margin: 20px 0;
+            font-style: italic;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin: 25px 0;
+            gap: 15px;
+        }
+        
+        .stat-box {
+            background: linear-gradient(135deg, #0066cc 0%, #003366 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        .stat-box h4 {
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+        
+        footer {
+            background-color: #003366;
+            color: white;
+            text-align: center;
+            padding: 30px 0;
+            margin-top: 50px;
+        }
+        
+        @media (max-width: 768px) {
+            .stories-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <i class="fas fa-hospital logo-icon"></i>
+                <h1>Canon Medical</h1>
+            </div>
+            <p>Transforming healthcare through innovative imaging solutions</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="filter-buttons">
+            <button class="filter-btn active" data-filter="all">All Stories</button>
+            <button class="filter-btn" data-filter="viewer">Enterprise Viewer</button>
+            <button class="filter-btn" data-filter="imaging">Medical Imaging</button>
+            <button class="filter-btn" data-filter="workflow">Workflow Solutions</button>
+        </div>
+
+        <div class="stories-grid">
+            <!-- Summit Medical Group -->
+            <div class="story-card" data-category="viewer">
+                <div class="card-header">
+                    <h2>Summit Medical Group</h2>
+                </div>
+                <div class="card-body">
+                    <h3>Expanding Imaging Outside of Radiology</h3>
+                    <p>Summit Medical Group needed to expand imaging access beyond radiology to improve healthcare outcomes across their organization.</p>
+                    <p>They selected Canon Medical's Vitrea View enterprise viewer for its user-centric design and ability to view almost any image type from anywhere.</p>
+                </div>
+                <div class="card-footer">
+                    <a href="#" class="read-more" data-story="summit">Read More <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+
+            <!-- King Edward VII's Hospital -->
+            <div class="story-card" data-category="imaging">
+                <div class="card-header">
+                    <h2>King Edward VII's Hospital</h2>
+                </div>
+                <div class="card-body">
+                    <h3>Rapid, Consistent Delivery of Diagnostic Information</h3>
+                    <p>This prestigious private hospital needed to replace their aging PACS and provide uniform access to imaging across all service areas.</p>
+                    <p>Canon Medical implemented a complete enterprise imaging solution within just three months.</p>
+                </div>
+                <div class="card-footer">
+                    <a href="#" class="read-more" data-story="king">Read More <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+
+            <!-- Johns Hopkins Medicine -->
+            <div class="story-card" data-category="viewer">
+                <div class="card-header">
+                    <h2>Johns Hopkins Medicine</h2>
+                </div>
+                <div class="card-body">
+                    <h3>Direct Access to Full Patient Imaging History</h3>
+                    <p>JHM needed to provide clinicians with enterprise-wide access to medical images directly through their EMR system.</p>
+                    <p>Canon Medical's solution enabled quick access to all studies regardless of their location within the JHM enterprise.</p>
+                </div>
+                <div class="card-footer">
+                    <a href="#" class="read-more" data-story="hopkins">Read More <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+
+            <!-- Hackensack University Medical Center -->
+            <div class="story-card" data-category="workflow">
+                <div class="card-header">
+                    <h2>HackensackUMC</h2>
+                </div>
+                <div class="card-body">
+                    <h3>Improving Physician Access to Radiologic Images</h3>
+                    <p>HackensackUMC wanted to bring images to care teams when and where they need them to improve patient care.</p>
+                    <p>After implementing Vitrea View, average daily users grew from 20 to 261 in just nine months.</p>
+                </div>
+                <div class="card-footer">
+                    <a href="#" class="read-more" data-story="hackensack">Read More <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+
+            <!-- Banner Health -->
+            <div class="story-card" data-category="imaging">
+                <div class="card-header">
+                    <h2>Banner Health</h2>
+                </div>
+                <div class="card-body">
+                    <h3>Enterprise Advanced Visualization Solution</h3>
+                    <p>Banner Health wanted to provide access to advanced visualization tools across multiple geographic locations without compromising functionality.</p>
+                    <p>Canon Medical provided a multi-modality, vendor-neutral platform that standardized tools across facilities.</p>
+                </div>
+                <div class="card-footer">
+                    <a href="#" class="read-more" data-story="banner">Read More <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+
+            <!-- Ochsner Health System -->
+            <div class="story-card" data-category="workflow">
+                <div class="card-header">
+                    <h2>Ochsner Health System</h2>
+                </div>
+                <div class="card-body">
+                    <h3>Growing with a Flexible Enterprise Partner</h3>
+                    <p>Ochsner needed an enterprise imaging partner who could grow with them as they expanded services across Louisiana.</p>
+                    <p>They selected Canon Medical for its flexibility and technical infrastructure to support their rapid growth.</p>
+                </div>
+                <div class="card-footer">
+                    <a href="#" class="read-more" data-story="ochsner">Read More <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for detailed success stories -->
+    <div class="modal" id="storyModal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="modal-header">
+                <h2 id="modalTitle">Success Story Title</h2>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Content will be inserted by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>© 2023 Canon Medical Informatics, Inc. | All rights reserved</p>
+            <p>Canon Medical offers a full range of diagnostic medical imaging solutions including CT, X-Ray, Ultrasound, Vascular and MR</p>
+        </div>
+    </footer>
+
+    <script>
+        // Story data
+        const stories = {
+            summit: {
+                title: "Summit Medical Group - Expanding Imaging Outside of Radiology",
+                content: `
+                    <p><strong>The Challenge:</strong> Summit Medical Group decided imaging was a key component in improving healthcare and outcomes. They had to confront challenges with their wide base of practitioners, vast specialties, multiple facilities, dynamic needs and supporting infrastructure.</p>
+                    <p>Their existing PACS viewer presented issues: confusing tools, clunky interfaces, multiple client versions, deployment issues and dataflow constraints. Even with web access, users had to learn different interfaces for each facility and couldn't compare exams from different facilities.</p>
+                    
+                    <p><strong>Why Canon Medical?</strong> After evaluating several universal viewer products, Vitrea® View enterprise viewer rose to the top. It provided the right depth of tools, user-centric experience and design, while enabling Summit Medical Group to view almost any image type, from anywhere, on demand.</p>
+                    
+                    <div class="quote">
+                        "This was our best experience with a product implementation, EVER! From planning, to delivery, to post project review, Canon Medical was on point and helped us every step of the way."
+                        <br><strong>- Kathie Vendemia, Associate Director of Imaging</strong>
+                    </div>
+                    
+                    <p><strong>Success:</strong> The implementation was completed on time and on budget. With over 500 referring providers spread across 60+ locations, training was a concern. However, Vitrea View's ease-of-use made adoption simple with training materials and videos provided through email and intranet.</p>
+                    
+                    <p>Follow-up visits revealed no complaints about confusion using the viewer, and response has been overwhelmingly positive.</p>
+                `
+            },
+            king: {
+                title: "King Edward VII's Hospital - Rapid, Consistent Delivery of Diagnostic Information",
+                content: `
+                    <p><strong>The Challenge:</strong> King Edward VII's Hospital had an aging PACS that was performing poorly. The hospital was challenged to provide uniform access to imaging in all service areas. When an upgrade was proposed by another vendor at high cost with no new functionality, leadership decided to consider other options.</p>
+                    
+                    <p><strong>Why Canon Medical?</strong> Having had a positive business relationship with Canon Medical in the past, the hospital launched a tender process. After careful review, IT, medical and administrative staff all selected Canon Medical.</p>
+                    
+                    <p><strong>Success:</strong> The hospital outlined requirements that included a timeline for project completion within three months. They set up a dedicated team of clinical and IT resources to direct the implementation of the Vitrea® Enterprise Imaging solution.</p>
+                    
+                    <div class="stats">
+                        <div class="stat-box">
+                            <h4>3</h4>
+                            <p>Month Implementation</p>
+                        </div>
+                        <div class="stat-box">
+                            <h4>100%</h4>
+                            <p>Staff Approval</p>
+                        </div>
+                    </div>
+                    
+                    <div class="quote">
+                        "The project went really well. The Canon Medical team are brilliant to work with! It is a pleasure to be involved with a highly motivated, forward-thinking group with a can-do attitude."
+                        <br><strong>- Corey Frazer, Imaging Services Manager</strong>
+                    </div>
+                    
+                    <p><strong>Components Implemented:</strong></p>
+                    <ul>
+                        <li>Vitrea Vision</li>
+                        <li>Vitrea Connection</li>
+                        <li>Vitrea Read Workstations</li>
+                        <li>Vitrea Read Server</li>
+                        <li>Vitrea Advanced Visualization</li>
+                        <li>DOCMweb™</li>
+                    </ul>
+                `
+            },
+            hopkins: {
+                title: "Johns Hopkins Medicine - Direct Access to Full Patient Imaging History",
+                content: `
+                    <p><strong>The Challenge:</strong> Johns Hopkins Medicine (JHM) was interested in providing a consistent view of patient information across the enterprise. They were rolling out a new EMR from Epic and wanted to provide enterprise access to patient imaging history directly from the EMR system.</p>
+                    
+                    <p>Prior to implementation, clinicians had limited access to imaging studies. They could only view images stored in local PACS and had to learn multiple PACS client interfaces. IT was challenged to provide convenient, secure access across all locations.</p>
+                    
+                    <p><strong>Why Canon Medical?</strong> JHM selected and implemented Vitrea® Enterprise Viewer in phase one of their enterprise viewer initiative. Clinicians can view patient images, radiology reports and related documents from within the EMR via a secure link that integrates with JHM's single sign-on mechanism.</p>
+                    
+                    <p><strong>Success:</strong> Phase two extended this capability by implementing Vitrea Data Stream technology to provide direct access to studies stored in PACS at Johns Hopkins Suburban Hospital and Sibley Memorial Hospital facilities without requiring data migration, routing, or caching.</p>
+                    
+                    <div class="quote">
+                        "Quick access to all studies, regardless of their location within the JHM enterprise, was met with enthusiasm as it resolved a long-standing issue of study access across the enterprise."
+                    </div>
+                    
+                    <p><strong>Key Benefits:</strong></p>
+                    <ul>
+                        <li>Rapid access to imaging studies within the patients' records in the EMR</li>
+                        <li>Access to a broad set of imaging studies, regardless of storage location</li>
+                        <li>Easy to deploy, easy to maintain solution supporting IT security needs</li>
+                        <li>Holistic view of patients' medical imaging records enhancing clinical decision support</li>
+                    </ul>
+                `
+            },
+            hackensack: {
+                title: "HackensackUMC - Improving Physician Access to Radiologic Images",
+                content: `
+                    <p><strong>The Challenge:</strong> HackensackUMC wanted to meet physician demand for better access to radiologic images. They wanted to bring images to care teams when and where they need them, helping to garner more value from investments in image acquisition and improving patient care.</p>
+                    
+                    <p><strong>Why Canon Medical?</strong> To stay ahead of competitors, HackensackUMC wanted to provide image access across their medical enterprise. Canon Medical's universal viewer, Vitrea® View, provides fast access to DICOM and non-DICOM images from any archive on browsers and mobile devices.</p>
+                    
+                    <p><strong>Success:</strong> HackensackUMC set up a dedicated team of clinical and IT resources to direct implementation. Canon Medical dedicated software engineers and professional services staff for environmental setup, configuration and workflow integration.</p>
+                    
+                    <div class="stats">
+                        <div class="stat-box">
+                            <h4>20</h4>
+                            <p>Avg Users (Dec 2012)</p>
+                        </div>
+                        <div class="stat-box">
+                            <h4>206</h4>
+                            <p>Avg Users (Apr 2013)</p>
+                        </div>
+                        <div class="stat-box">
+                            <h4>261</h4>
+                            <p>Avg Users (Sep 2013)</p>
+                        </div>
+                    </div>
+                    
+                    <div class="quote">
+                        "We realized that valuable radiologic images were not being fully utilized in patient care... Vitrea View integrates with our EMR and provides fast and convenient access to current images. The viewer, navigation, and tools are intuitive, so we did not need to invest in extensive training."
+                        <br><strong>- Shafiq Rab, M.D., VP and Chief Information Officer</strong>
+                    </div>
+                    
+                    <p><strong>Implementation Components:</strong></p>
+                    <ul>
+                        <li>5 virtual Vitrea View servers</li>
+                        <li>1 VIMS with 6TB storage</li>
+                        <li>5 DICOM archives</li>
+                        <li>1 load balancer</li>
+                        <li>SAN network storage</li>
+                    </ul>
+                `
+            },
+            banner: {
+                title: "Banner Health - Enterprise Advanced Visualization Solution",
+                content: `
+                    <p><strong>The Challenge:</strong> Banner Health wanted to implement an enterprise solution that would provide access to all advanced visualization tools available on their Vitrea Workstations™ and from multiple PACS workstations. Their requirements called for access at sites across seven western states without compromises in functionality or speed.</p>
+                    
+                    <p><strong>Why Canon Medical?</strong> Canon Medical provided a multi-modality, vendor neutral platform that supports a PACS-integrated enterprise deployment for Fuji PACS, as well as CT and MR from Toshiba, GE, Philips and Siemens. The deployment provides a single user interface and standardization across facilities.</p>
+                    
+                    <p><strong>Success:</strong> Prior to implementation, Banner Health had 17 standalone Vitrea Workstations™ and multiple PACS access points dispersed across their IDN. After implementation, they centralized disparate databases and enabled use of Canon Medical's rich toolsets from anywhere in the enterprise.</p>
+                    
+                    <div class="quote">
+                        "At first, the thought of going to an enterprise model 3D system was frightening... After implementation, and with enough time to realize the positive impact, we are completely sold on the enterprise system. Complexity has been taken out of the equation and all of our facilities are standardized."
+                        <br><strong>- Tom Sadler, Digital Imaging / PACS Manager</strong>
+                    </div>
+                    
+                    <p><strong>Banner Health Stats:</strong></p>
+                    <div class="stats">
+                        <div class="stat-box">
+                            <h4>24</h4>
+                            <p>Hospitals</p>
+                        </div>
+                        <div class="stat-box">
+                            <h4>4,391</h4>
+                            <p>Patient Beds</p>
+                        </div>
+                        <div class="stat-box">
+                            <h4>125K</h4>
+                            <p>Monthly Studies</p>
+                        </div>
+                    </div>
+                    
+                    <p>The enterprise approach removed the burden of thick client maintenance and enabled using the system from any regular computer.</p>
+                `
+            },
+            ochsner: {
+                title: "Ochsner Health System - Growing with a Flexible Enterprise Partner",
+                content: `
+                    <p><strong>The Challenge:</strong> Ochsner Health System was looking for an enterprise imaging partner who could grow with them as quickly as they were growing themselves. As they expanded to serve more people in Louisiana, they found themselves migrating data and images two or three times a year.</p>
+                    
+                    <p><strong>Why Canon Medical?</strong> "We really needed someone who could grow with us, who had flexibility, who had the technical infrastructure to help us," said Ashley Clary, Vice President of Imaging Service, "...so that was Canon Medical for us."</p>
+                    
+                    <p>Canon Medical's solutions provided the scalability and flexibility that Ochsner needed to support their rapid expansion without the constant need for data migration.</p>
+                    
+                    <div class="quote">
+                        "We really needed someone who could grow with us, who had flexibility, who had the technical infrastructure to help us... so that was Canon Medical for us."
+                        <br><strong>- Ashley Clary, Vice President of Imaging Service</strong>
+                    </div>
+                    
+                    <p><strong>Success:</strong> With Canon Medical as their enterprise imaging partner, Ochsner was able to:</p>
+                    <ul>
+                        <li>Eliminate frequent data migrations</li>
+                        <li>Scale their imaging capabilities along with their growth</li>
+                        <li>Provide consistent imaging access across all facilities</li>
+                        <li>Reduce IT complexity and maintenance costs</li>
+                    </ul>
+                    
+                    <p>The partnership with Canon Medical has paved the way for Ochsner Health System's continued expansion and ability to serve more patients across Louisiana.</p>
+                `
+            }
+        };
+
+        // DOM elements
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        const storyCards = document.querySelectorAll('.story-card');
+        const modal = document.getElementById('storyModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalBody = document.getElementById('modalBody');
+        const closeModal = document.querySelector('.close-modal');
+        const readMoreLinks = document.querySelectorAll('.read-more');
+
+        // Filter functionality
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Remove active class from all buttons
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                
+                // Add active class to clicked button
+                button.classList.add('active');
+                
+                const filter = button.getAttribute('data-filter');
+                
+                storyCards.forEach(card => {
+                    if (filter === 'all' || card.getAttribute('data-category') === filter) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // Modal functionality
+        readMoreLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const storyKey = link.getAttribute('data-story');
+                
+                if (stories[storyKey]) {
+                    modalTitle.textContent = stories[storyKey].title;
+                    modalBody.innerHTML = stories[storyKey].content;
+                    modal.style.display = 'block';
+                    document.body.style.overflow = 'hidden';
+                }
+            });
+        });
+
+        // Close modal
+        closeModal.addEventListener('click', () => {
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        });
+
+        // Close modal when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }
+        });
+    </script>
+</body>
+</html>
