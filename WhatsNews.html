@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>What's New in Vitrea® Advanced Visualization</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --canon-blue: #0066b3;
+            --canon-light-blue: #d0e5f5;
+            --canon-dark-blue: #004680;
+            --canon-gray: #f5f5f5;
+            --text-dark: #333;
+            --text-light: #666;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f9f9f9;
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--canon-blue), var(--canon-dark-blue));
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo img {
+            height: 50px;
+            margin-right: 15px;
+        }
+        
+        .logo-text {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .version {
+            background-color: white;
+            color: var(--canon-blue);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .hero {
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 800 400"><rect fill="%230066b3" width="800" height="400"/><path fill="%23004680" fill-opacity="0.2" d="M0 192L26.7 202.7C53.3 213 107 235 160 234.7C213.3 235 267 213 320 197.3C373.3 181 427 171 480 186.7C533.3 203 587 245 640 250.7C693.3 256 747 224 773.3 208L800 192L800 401L773.3 401C746.7 401 693 401 640 401C586.7 401 533 401 480 401C426.7 401 373 401 320 401C266.7 401 213 401 160 401C106.7 401 53 401 27 401L0 401Z"></path></svg>') no-repeat bottom;
+            background-size: cover;
+            color: white;
+            text-align: center;
+            padding: 60px 20px;
+            margin-bottom: 40px;
+        }
+        
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 30px;
+        }
+        
+        .tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .tab {
+            background-color: white;
+            padding: 15px 30px;
+            margin: 0 10px 10px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .tab.active {
+            background-color: var(--canon-blue);
+            color: white;
+        }
+        
+        .tab:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .content-section {
+            display: none;
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        .content-section.active {
+            display: block;
+        }
+        
+        .content-section h2 {
+            color: var(--canon-blue);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--canon-light-blue);
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 25px;
+        }
+        
+        .feature-card {
+            background-color: var(--canon-gray);
+            border-radius: 10px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--canon-blue);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .feature-card h3 {
+            color: var(--canon-dark-blue);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .feature-card h3 i {
+            margin-right: 10px;
+            color: var(--canon-blue);
+        }
+        
+        .feature-card p {
+            color: var(--text-light);
+        }
+        
+        .version-badge {
+            background-color: var(--canon-light-blue);
+            color: var(--canon-dark-blue);
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        
+        .partner-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        
+        .partner-table th, .partner-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .partner-table th {
+            background-color: var(--canon-light-blue);
+            color: var(--canon-dark-blue);
+        }
+        
+        .partner-table tr:hover {
+            background-color: rgba(0, 102, 179, 0.05);
+        }
+        
+        footer {
+            background-color: var(--canon-dark-blue);
+            color: white;
+            padding: 40px 0;
+            margin-top: 60px;
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        
+        .footer-section {
+            flex: 1;
+            min-width: 250px;
+            margin-bottom: 20px;
+            padding-right: 20px;
+        }
+        
+        .footer-section h3 {
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+        
+        .footer-section p, .footer-section a {
+            color: #ccc;
+            margin-bottom: 10px;
+            display: block;
+            text-decoration: none;
+        }
+        
+        .footer-section a:hover {
+            color: white;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            margin-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #aaa;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .logo {
+                margin-bottom: 15px;
+            }
+            
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .tabs {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .tab {
+                margin-bottom: 10px;
+                width: 80%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <svg width="50" height="50" viewBox="0 0 50 50">
+                    <circle cx="25" cy="25" r="20" fill="white" />
+                    <path d="M20 15 L35 25 L20 35 Z" fill="var(--canon-blue)" />
+                </svg>
+                <div class="logo-text">Canon Medical Informatics</div>
+            </div>
+            <div class="version">Version 7.16 & 7.16.2</div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>What's New in Vitrea® Advanced Visualization</h1>
+            <p>Discover the latest enhancements and features in our advanced visualization platform designed to improve clinical workflows and patient care.</p>
+        </div>
+    </section>
+
+    <div class="container">
+        <div class="tabs">
+            <div class="tab active" data-tab="ui">UI Updates</div>
+            <div class="tab" data-tab="clinical">Clinical Enhancements</div>
+            <div class="tab" data-tab="integration">Integration & Security</div>
+            <div class="tab" data-tab="partners">Partner Integrations</div>
+            <div class="tab" data-tab="new-apps">New Applications</div>
+        </div>
+
+        <div class="content-section active" id="ui-content">
+            <h2>User Interface Updates</h2>
+            <p>Vitrea Advanced Visualization has a refreshed user interface for the Study List and +Tab with visual changes to align with other Canon Medical products.</p>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3><i class="fas fa-palette"></i> Modern Design</h3>
+                    <p>Study List and +Tab now display with new colors and fonts for improved readability and aesthetics.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h3><i class="fas fa-icons"></i> Enhanced Icons</h3>
+                    <p>Updated status icons and pop-ups for better user experience and clearer visual communication.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h3><i class="fas fa-list"></i> Improved Menus</h3>
+                    <p>Updated dialog and context menus including Edit Patient, Anonymize Patient, Export Dialog, and Study List Settings.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section" id="clinical-content">
+            <h2>Clinical Enhancements</h2>
+            <p>New features and improvements to clinical workflows across multiple modalities.</p>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3><i class="fas fa-lungs"></i> CT Lung Lobe Density Analysis <span class="version-badge">7.16.2</span></h3>
+                    <p>Leverages deep learning to measure HU density and volume in various lung lobes with precise lobular level breakdown.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h3><i class="fas fa-heart"></i> CT TAVR Planning Assist <span class="version-badge">7.16.2</span></h3>
+                    <p>Automatically initializes valve plane, coronary distances, aortic angle and annulus measurements using deep learning.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h3><i class="fas fa-tint"></i> Carotid & Vertebral Vessel Workflow</h3>
+                    <p>Improved segmentation algorithm for better vessel initializations with vertebral arteries extending closer to basilar bifurcation and aortic arch.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h3><i class="fas fa-file-medical"></i> DICOM SR Output</h3>
+                    <p>Generate DICOM SR output from CT VScore application including calcium scoring guidelines, slice thickness, and density threshold.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section" id="integration-content">
+            <h2>Integration & Security Enhancements</h2>
+            <p>Improvements to system integration, workflow, and security features.</p>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3><i class="fas fa-desktop"></i> Multi-Monitor Persistence</h3>
+                    <p>The monitor selection for external integrated launches is now persistent, maintaining multi-monitor layout consistency.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h3><i class="fas fa-user-cog"></i> User Presets Transfer</h3>
+                    <p>Easier transition of modified user presets from previous versions via automation during upgrades.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h3><i class="fas fa-shield-alt"></i> Security Improvements</h3>
+                    <p>Updated TLS configuration, NVIDIA driver security fixes, and architectural improvements for better data security.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h3><i class="fas fa-exchange-alt"></i> DICOM Enhancements</h3>
+                    <p>Support for JPEG-LS transfer syntax and improvements to Retrieved DICOM Lifecycle Management.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section" id="partners-content">
+            <h2>Partner Integration Enhancements</h2>
+            <p>Updated partner applications and their new features integrated into Vitrea Advanced Visualization.</p>
+            
+            <table class="partner-table">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Version</th>
+                        <th>Key Updates</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Medis Suite Cardiovascular MR</td>
+                        <td>4.0.62.4</td>
+                        <td>Windows Server 2022 support, QMass and QStrain enhancements</td>
+                    </tr>
+                    <tr>
+                        <td>Visia CT Lung CAD by MeVis</td>
+                        <td>5.8.2</td>
+                        <td>Removed end-of-life software and PostgreSQL 9.5</td>
+                    </tr>
+                    <tr>
+                        <td>Mirada XD</td>
+                        <td>4.2</td>
+                        <td>PET Hotspot Finder, Thick Slab tool, UI dark theme</td>
+                    </tr>
+                    <tr>
+                        <td>Olea Sphere</td>
+                        <td>3.0 SP37</td>
+                        <td>Cybersecurity updates, Functional MR enhancements</td>
+                    </tr>
+                    <tr>
+                        <td>4DM by INVIA</td>
+                        <td>2018.0.0.180</td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="content-section" id="new-apps-content">
+            <h2>New Applications</h2>
+            <p>Newly added applications and tools in Vitrea Advanced Visualization.</p>
+            
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3><i class="fas fa-columns"></i> Cylinder Tool</h3>
+                    <p>Visualize virtual objects (e.g., stents or valves) in relation to other anatomies across applications and workflows.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h3><i class="fas fa-eye"></i> Multi Modality Viewer</h3>
+                    <p>Preset hanging layouts in protocol and generate data for optimal viewing of multiple series.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h3><i class="fas fa-chart-line"></i> Spectral Analysis</h3>
+                    <p>Enhanced exploration of spectral image data with hanging layouts and automatic image creation/export.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h3><i class="fas fa-minus-circle"></i> Subtraction Viewer</h3>
+                    <p>Dedicated workflow for viewing Subtraction CT (SCT) images from Canon CT.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <h3><i class="fas fa-ribbon"></i> Open Rib Labeling</h3>
+                    <p>Labeling of ribs in the Open Rib application for improved anatomical reference.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Canon Medical Informatics</h3>
+                    <p>Providing advanced visualization solutions for healthcare professionals worldwide.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Contact Information</h3>
+                    <p>5850 Opus Parkway, Suite 300</p>
+                    <p>Minnetonka, MN 55343 USA</p>
+                    <p>+1 866.433.4624</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Resources</h3>
+                    <a href="#">Product Lifecycle</a>
+                    <a href="#">Support & Education</a>
+                    <a href="#">Documentation</a>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>© 2024 Canon Medical Informatics, Inc. | CN073124 | M-06699A</p>
+                <p>Vitrea and all third-party marks designated with a ® are registered in the U.S. and may have protection in other countries.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabs = document.querySelectorAll('.tab');
+            const contentSections = document.querySelectorAll('.content-section');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const target = tab.getAttribute('data-tab');
+                    
+                    // Update active tab
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    
+                    // Show corresponding content
+                    contentSections.forEach(section => {
+                        section.classList.remove('active');
+                        if (section.id === `${target}-content`) {
+                            section.classList.add('active');
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>

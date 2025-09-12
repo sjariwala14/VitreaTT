@@ -1,0 +1,2745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canon Medical - Complete Solutions</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Global Styles */
+        :root {
+            --canon-red: #E30613;
+            --canon-red-dark: #B70510;
+            --canon-blue: #0066cc;
+            --canon-blue-dark: #003366;
+            --canon-gray: #333333;
+            --canon-light-gray: #F5F5F5;
+            --canon-text: #222222;
+            --canon-green: #339933;
+            --highlight: #ffd700;
+            --success: #4caf50;
+            --warning: #ff9800;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f9f9f9;
+            color: var(--canon-text);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Main Navigation */
+        .main-header {
+            background: linear-gradient(135deg, var(--canon-red), var(--canon-red-dark));
+            color: white;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .logo h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+        
+        .logo-icon {
+            font-size: 2rem;
+        }
+        
+        .main-nav ul {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+        }
+        
+        .main-nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: opacity 0.3s;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+        }
+        
+        .main-nav a:hover, .main-nav a.active {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        /* Page Sections */
+        .page-section {
+            display: none;
+            padding: 2rem 0;
+        }
+        
+        .page-section.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* Success Stories Styles */
+        .stories-header {
+            background: linear-gradient(135deg, var(--canon-blue) 0%, var(--canon-blue-dark) 100%);
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 5px solid #d4af37;
+        }
+        
+        .filter-buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .filter-btn {
+            padding: 10px 20px;
+            background-color: #e9ecef;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .filter-btn:hover, .filter-btn.active {
+            background-color: var(--canon-blue);
+            color: white;
+        }
+        
+        .stories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .story-card {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .story-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-header {
+            background-color: var(--canon-blue);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .card-body {
+            padding: 20px;
+        }
+        
+        .card-body h3 {
+            color: var(--canon-blue);
+            margin-bottom: 15px;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 10px;
+        }
+        
+        .card-footer {
+            padding: 15px 20px;
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .read-more {
+            color: var(--canon-blue);
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+        
+        .read-more i {
+            margin-left: 5px;
+            transition: transform 0.3s ease;
+        }
+        
+        .read-more:hover i {
+            transform: translateX(5px);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        
+        .modal-content {
+            background-color: white;
+            max-width: 800px;
+            margin: 40px auto;
+            border-radius: 10px;
+            padding: 30px;
+            position: relative;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5rem;
+            color: #777;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        
+        .close-modal:hover {
+            color: #d32f2f;
+        }
+        
+        .modal-header {
+            background-color: var(--canon-blue);
+            color: white;
+            padding: 20px;
+            margin: -30px -30px 20px -30px;
+            border-radius: 10px 10px 0 0;
+        }
+        
+        .modal-body {
+            padding: 20px 0;
+        }
+        
+        .quote {
+            background-color: #f8f9fa;
+            border-left: 4px solid #d4af37;
+            padding: 20px;
+            margin: 20px 0;
+            font-style: italic;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin: 25px 0;
+            gap: 15px;
+        }
+        
+        .stat-box {
+            background: linear-gradient(135deg, var(--canon-blue) 0%, var(--canon-blue-dark) 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        .stat-box h4 {
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+        
+        /* Case Studies Styles */
+        .case-study-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .case-study {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .case-study:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .case-header {
+            background: linear-gradient(135deg, var(--canon-red), var(--canon-red-dark));
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .case-header h3 {
+            font-size: 1.4rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .case-body {
+            padding: 1.5rem;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .case-body p {
+            margin-bottom: 1rem;
+            color: var(--canon-gray);
+        }
+        
+        .case-stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 1.5rem 0;
+            text-align: center;
+        }
+        
+        .case-stat {
+            padding: 0.5rem;
+        }
+        
+        .case-stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--canon-red);
+        }
+        
+        .case-stat-label {
+            font-size: 0.9rem;
+            color: var(--canon-gray);
+        }
+        
+        .btn {
+            display: inline-block;
+            background: var(--canon-red);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background 0.3s;
+            border: none;
+            cursor: pointer;
+            margin-top: auto;
+            text-align: center;
+        }
+        
+        .btn:hover {
+            background: var(--canon-red-dark);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--canon-red);
+            color: var(--canon-red);
+        }
+        
+        .btn-outline:hover {
+            background: var(--canon-red);
+            color: white;
+        }
+        
+        .details-container {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            display: none;
+        }
+        
+        .details-container.active {
+            display: block;
+        }
+        
+        .tab-container {
+            margin-top: 2rem;
+        }
+        
+        .tabs {
+            display: flex;
+            list-style: none;
+            border-bottom: 2px solid var(--canon-light-gray);
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .tabs li {
+            margin-right: 0.5rem;
+        }
+        
+        .tabs a {
+            display: block;
+            padding: 0.8rem 1.5rem;
+            text-decoration: none;
+            color: var(--canon-gray);
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .tabs a:hover, .tabs a.active {
+            color: var(--canon-red);
+            border-bottom: 3px solid var(--canon-red);
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .architecture-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        
+        .architecture-card {
+            background: var(--canon-light-gray);
+            border-radius: 8px;
+            padding: 1.5rem;
+            border-left: 4px solid var(--canon-red);
+        }
+        
+        .architecture-card h4 {
+            color: var(--canon-red);
+            margin-bottom: 1rem;
+        }
+        
+        .pros-cons {
+            margin: 1rem 0;
+        }
+        
+        .pros-cons ul {
+            list-style: none;
+            margin-left: 1rem;
+        }
+        
+        .pros-cons li {
+            margin-bottom: 0.5rem;
+            position: relative;
+            padding-left: 1.5rem;
+        }
+        
+        .pros-cons li:before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0.5rem;
+            width: 0.5rem;
+            height: 0.5rem;
+            border-radius: 50%;
+        }
+        
+        .pros li:before {
+            background: var(--canon-green);
+        }
+        
+        .cons li:before {
+            background: var(--canon-red);
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+        
+        .comparison-table th, .comparison-table td {
+            padding: 1rem;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        
+        .comparison-table th {
+            background-color: var(--canon-light-gray);
+            font-weight: 600;
+        }
+        
+        .comparison-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .recommended {
+            box-shadow: 0 0 0 2px var(--canon-green);
+        }
+        
+        .not-recommended {
+            opacity: 0.7;
+        }
+        
+        .contact-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .form-group textarea {
+            min-height: 150px;
+        }
+        
+        .full-width {
+            grid-column: 1 / -1;
+        }
+        
+        /* Facts and Statistics Styles */
+        .facts-header {
+            background-color: var(--canon-red);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            margin-bottom: 30px;
+            background-image: linear-gradient(to right, var(--canon-red), var(--canon-red-dark));
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .facts-header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/8/80/World_map_-_low_resolution.svg');
+            background-size: cover;
+            opacity: 0.1;
+            z-index: 0;
+        }
+        
+        .facts-header .container {
+            position: relative;
+            z-index: 1;
+        }
+        
+        .tab-container-facts {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--canon-light-gray);
+            overflow-x: auto;
+        }
+        
+        .tab-facts {
+            padding: 12px 25px;
+            cursor: pointer;
+            background-color: white;
+            border: none;
+            border-radius: 8px 8px 0 0;
+            margin-right: 5px;
+            font-weight: bold;
+            transition: all 0.3s;
+            color: var(--canon-gray);
+            white-space: nowrap;
+            border: 1px solid var(--canon-light-gray);
+            border-bottom: none;
+        }
+        
+        .tab-facts.active {
+            background-color: var(--canon-red);
+            color: white;
+            border-color: var(--canon-red);
+        }
+        
+        .tab-facts:hover:not(.active) {
+            background-color: var(--canon-light-gray);
+            color: var(--canon-red);
+        }
+        
+        .tab-content-facts {
+            display: none;
+            padding: 30px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+            animation: fadeIn 0.5s;
+            margin-bottom: 40px;
+        }
+        
+        .tab-content-facts.active {
+            display: block;
+        }
+        
+        .data-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .data-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border-top: 4px solid var(--canon-red);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .data-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .data-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background-color: var(--canon-red);
+        }
+        
+        .metric {
+            font-size: 2.2em;
+            font-weight: bold;
+            color: var(--canon-red);
+            margin: 10px 0;
+            display: flex;
+            align-items: center;
+        }
+        
+        .metric-icon {
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+        
+        .metric-label {
+            color: var(--canon-gray);
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+        
+        .highlight {
+            background-color: rgba(255, 215, 0, 0.2);
+            padding: 2px 5px;
+            border-radius: 3px;
+            color: var(--canon-red-dark);
+        }
+        
+        .analysis-section {
+            background-color: var(--canon-light-gray);
+            padding: 25px;
+            border-radius: 8px;
+            margin: 30px 0;
+            border-left: 4px solid var(--canon-red);
+        }
+        
+        .strength-card {
+            background-color: rgba(76, 175, 80, 0.1);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid var(--success);
+        }
+        
+        .opportunity-card {
+            background-color: rgba(255, 152, 0, 0.1);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid var(--warning);
+        }
+        
+        .expand-btn {
+            background-color: var(--canon-red);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 15px 0;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+        }
+        
+        .expand-btn:hover {
+            background-color: var(--canon-red-dark);
+        }
+        
+        .expand-btn i {
+            margin-left: 8px;
+            transition: transform 0.3s;
+        }
+        
+        .expand-btn.active i {
+            transform: rotate(180deg);
+        }
+        
+        .expand-content {
+            display: none;
+            padding: 20px;
+            background-color: white;
+            border-radius: 5px;
+            margin-top: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border: 1px solid #eee;
+        }
+        
+        .use-case-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .use-case-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+            transition: transform 0.3s;
+            border-top: 4px solid var(--canon-red);
+        }
+        
+        .use-case-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .use-case-card h3 {
+            color: var(--canon-red);
+            margin-top: 0;
+        }
+        
+        .map-container {
+            height: 500px;
+            width: 100%;
+            margin: 30px 0;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+            position: relative;
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/8/80/World_map_-_low_resolution.svg');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-color: #f5f7f9;
+        }
+        
+        .map-dot {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background-color: var(--canon-red);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 0 0 0 rgba(237, 28, 36, 0.7);
+        }
+        
+        .map-dot:hover {
+            transform: translate(-50%, -50%) scale(1.5);
+            box-shadow: 0 0 0 4px rgba(237, 28, 36, 0.3);
+        }
+        
+        .map-dot::after {
+            content: attr(data-count);
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--canon-red-dark);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 12px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            white-space: nowrap;
+        }
+        
+        .map-dot:hover::after {
+            opacity: 1;
+        }
+        
+        .counter {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: var(--canon-red);
+            transition: all 0.5s ease-out;
+        }
+        
+        .counter-label {
+            font-size: 0.9em;
+            color: var(--canon-gray);
+        }
+        
+        .dynamic-stats {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin: 30px 0;
+            background: var(--canon-light-gray);
+            padding: 20px;
+            border-radius: 8px;
+        }
+        
+        .stat-item {
+            text-align: center;
+            padding: 15px;
+            min-width: 150px;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--canon-blue-dark);
+            color: white;
+            text-align: center;
+            padding: 30px 0;
+            margin-top: 50px;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .main-nav ul {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .stories-grid, .case-study-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats, .case-stats {
+                flex-direction: column;
+            }
+            
+            .contact-form {
+                grid-template-columns: 1fr;
+            }
+            
+            .architecture-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .data-grid, .use-case-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .metric {
+                font-size: 1.8em;
+            }
+            
+            .dynamic-stats {
+                flex-direction: column;
+            }
+            
+            .map-container {
+                height: 350px;
+            }
+            
+            .tabs {
+                flex-direction: column;
+            }
+            
+            .tab-container-facts {
+                flex-direction: column;
+            }
+            
+            .tab-facts {
+                border-radius: 8px;
+                margin-bottom: 5px;
+                border-bottom: 1px solid var(--canon-light-gray);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Main Navigation -->
+    <header class="main-header">
+        <div class="container header-content">
+            <div class="logo">
+                <i class="fas fa-heartbeat logo-icon"></i>
+                <h1>Canon Medical</h1>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="#" class="nav-link active" data-target="success-stories">Success Stories</a></li>
+                    <li><a href="#" class="nav-link" data-target="case-studies">Case Studies</a></li>
+                    <li><a href="#" class="nav-link" data-target="facts-statistics">Facts & Statistics</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Success Stories Section -->
+    <section id="success-stories" class="page-section active">
+        <div class="stories-header">
+            <div class="container">
+                <div class="logo">
+                    <i class="fas fa-hospital logo-icon"></i>
+                    <h1>Canon Medical</h1>
+                </div>
+                <p>Transforming healthcare through innovative imaging solutions</p>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">All Stories</button>
+                <button class="filter-btn" data-filter="viewer">Enterprise Viewer</button>
+                <button class="filter-btn" data-filter="imaging">Medical Imaging</button>
+                <button class="filter-btn" data-filter="workflow">Workflow Solutions</button>
+            </div>
+
+            <div class="stories-grid">
+                <!-- Summit Medical Group -->
+                <div class="story-card" data-category="viewer">
+                    <div class="card-header">
+                        <h2>Summit Medical Group</h2>
+                    </div>
+                    <div class="card-body">
+                        <h3>Expanding Imaging Outside of Radiology</h3>
+                        <p>Summit Medical Group needed to expand imaging access beyond radiology to improve healthcare outcomes across their organization.</p>
+                        <p>They selected Canon Medical's Vitrea View enterprise viewer for its user-centric design and ability to view almost any image type from anywhere.</p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="#" class="read-more" data-story="summit">Read More <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+
+                <!-- King Edward VII's Hospital -->
+                <div class="story-card" data-category="imaging">
+                    <div class="card-header">
+                        <h2>King Edward VII's Hospital</h2>
+                    </div>
+                    <div class="card-body">
+                        <h3>Rapid, Consistent Delivery of Diagnostic Information</h3>
+                        <p>This prestigious private hospital needed to replace their aging PACS and provide uniform access to imaging across all service areas.</p>
+                        <p>Canon Medical implemented a complete enterprise imaging solution within just three months.</p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="#" class="read-more" data-story="king">Read More <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+
+                <!-- Johns Hopkins Medicine -->
+                <div class="story-card" data-category="viewer">
+                    <div class="card-header">
+                        <h2>Johns Hopkins Medicine</h2>
+                    </div>
+                    <div class="card-body">
+                        <h3>Direct Access to Full Patient Imaging History</h3>
+                        <p>JHM needed to provide clinicians with enterprise-wide access to medical images directly through their EMR system.</p>
+                        <p>Canon Medical's solution enabled quick access to all studies regardless of their location within the JHM enterprise.</p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="#" class="read-more" data-story="hopkins">Read More <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+
+                <!-- Hackensack University Medical Center -->
+                <div class="story-card" data-category="workflow">
+                    <div class="card-header">
+                        <h2>HackensackUMC</h2>
+                    </div>
+                    <div class="card-body">
+                        <h3>Improving Physician Access to Radiologic Images</h3>
+                        <p>HackensackUMC wanted to bring images to care teams when and where they need them to improve patient care.</p>
+                        <p>After implementing Vitrea View, average daily users grew from 20 to 261 in just nine months.</p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="#" class="read-more" data-story="hackensack">Read More <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+
+                <!-- Banner Health -->
+                <div class="story-card" data-category="imaging">
+                    <div class="card-header">
+                        <h2>Banner Health</h2>
+                    </div>
+                    <div class="card-body">
+                        <h3>Enterprise Advanced Visualization Solution</h3>
+                        <p>Banner Health wanted to provide access to advanced visualization tools across multiple geographic locations without compromising functionality.</p>
+                        <p>Canon Medical provided a multi-modality, vendor-neutral platform that standardized tools across facilities.</p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="#" class="read-more" data-story="banner">Read More <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+
+                <!-- Ochsner Health System -->
+                <div class="story-card" data-category="workflow">
+                    <div class="card-header">
+                        <h2>Ochsner Health System</h2>
+                    </div>
+                    <div class="card-body">
+                        <h3>Growing with a Flexible Enterprise Partner</h3>
+                        <p>Ochsner needed an enterprise imaging partner who could grow with them as they expanded services across Louisiana.</p>
+                        <p>They selected Canon Medical for its flexibility and technical infrastructure to support their rapid growth.</p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="#" class="read-more" data-story="ochsner">Read More <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal for detailed success stories -->
+        <div class="modal" id="storyModal">
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <div class="modal-header">
+                    <h2 id="modalTitle">Success Story Title</h2>
+                </div>
+                <div class="modal-body" id="modalBody">
+                    <!-- Content will be inserted by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Case Studies Section -->
+    <section id="case-studies" class="page-section">
+        <div class="container">
+            <div class="hero">
+                <h2>Transforming Healthcare Imaging with Secure Advanced Visualization</h2>
+                <p>Canon Medical's cybersecurity modernization solutions help healthcare providers eliminate vulnerabilities, enhance clinician experience, and implement Zero Trust architectures without disrupting clinical workflows.</p>
+                <div style="margin-top: 2rem;">
+                    <a href="#" class="btn nav-link-internal" data-target="case-studies-content">View Case Studies</a>
+                    <a href="#" class="btn btn-outline nav-link-internal" style="margin-left: 1rem;" data-target="contact">Contact Us</a>
+                </div>
+            </div>
+
+            <div id="case-studies-content">
+                <h2 style="color: var(--canon-red); margin-bottom: 1.5rem;">Featured Case Studies</h2>
+                <div class="case-study-container">
+                    <div class="case-study">
+                        <div class="case-header">
+                            <h3>SingHealth</h3>
+                            <p>Singapore Healthcare Network</p>
+                        </div>
+                        <div class="case-body">
+                            <p>Eliminated RDP vulnerabilities with Zero Trust architecture across three hospitals, achieving 100% elimination of RDP exposure and 40% increase in clinician satisfaction.</p>
+                            <div class="case-stats">
+                                <div class="case-stat">
+                                    <div class="case-stat-number">100%</div>
+                                    <div class="case-stat-label">RDP Elimination</div>
+                                </div>
+                                <div class="case-stat">
+                                    <div class="case-stat-number">40%</div>
+                                    <div class="case-stat-label">Satisfaction Increase</div>
+                                </div>
+                            </div>
+                            <a href="#" class="btn view-details" data-target="singhealth-details">View Details</a>
+                        </div>
+                    </div>
+
+                    <div class="case-study">
+                        <div class="case-header">
+                            <h3>IHH Pantai</h3>
+                            <p>Malaysia Healthcare Network</p>
+                        </div>
+                        <div class="case-body">
+                            <p>Deployed advanced visualization across 16 hospitals with flexible hybrid architecture for optimal performance and scalability.</p>
+                            <div class="case-stats">
+                                <div class="case-stat">
+                                    <div class="case-stat-number">16</div>
+                                    <div class="case-stat-label">Hospitals</div>
+                                </div>
+                                <div class="case-stat">
+                                    <div class="case-stat-number">4</div>
+                                    <div class="case-stat-label">Architecture Options</div>
+                                </div>
+                            </div>
+                            <a href="#" class="btn view-details" data-target="pantai-details">View Details</a>
+                        </div>
+                    </div>
+
+                    <div class="case-study">
+                        <div class="case-header">
+                            <h3>Nuevo Hospital Militar</h3>
+                            <p>Managua, Nicaragua</p>
+                        </div>
+                        <div class="case-body">
+                            <p>Implemented high-availability disaster-resistant architecture for business continuity with minimal downtime and data loss.</p>
+                            <div class="case-stats">
+                                <div class="case-stat">
+                                    <div class="case-stat-number">2</div>
+                                    <div class="case-stat-label">Data Centers</div>
+                                </div>
+                                <div class="case-stat">
+                                    <div class="case-stat-number">100%</div>
+                                    <div class="case-stat-label">Redundancy</div>
+                                </div>
+                            </div>
+                            <a href="#" class="btn view-details" data-target="nicaragua-details">View Details</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="case-study-container">
+                    <div class="case-study">
+                        <div class="case-header">
+                            <h3>Apollo Hospitals</h3>
+                            <p>India Healthcare Network</p>
+                        </div>
+                        <div class="case-body">
+                            <p>Consolidated fragmented Vitrea deployment into a unified enterprise solution with seamless PACS integration across multiple sites.</p>
+                            <div class="case-stats">
+                                <div class="case-stat">
+                                    <div class="case-stat-number">4</div>
+                                    <div class="case-stat-label">Sites Unified</div>
+                                </div>
+                                <div class="case-stat">
+                                    <div class="case-stat-number">10TB</div>
+                                    <div class="case-stat-label">Centralized Storage</div>
+                                </div>
+                            </div>
+                            <a href="#" class="btn view-details" data-target="apollo-details">View Details</a>
+                        </div>
+                    </div>
+
+                    <div class="case-study">
+                        <div class="case-header">
+                            <h3>Nawaloka Hospitals</h3>
+                            <p>Sri Lanka</p>
+                        </div>
+                        <div class="case-body">
+                            <p>Upgraded Vitrea Enterprise with phased hardware reuse strategy to modernize platform and support future growth.</p>
+                            <div class="case-stats">
+                                <div class="case-stat">
+                                    <div class="case-stat-number">60</div>
+                                    <div class="case-stat-label">Studies/Day</div>
+                                </div>
+                                <div class="case-stat">
+                                    <div class="case-stat-number">4</div>
+                                    <div class="case-stat-label">Advanced Users</div>
+                                </div>
+                            </div>
+                            <a href="#" class="btn view-details" data-target="nawaloka-details">View Details</a>
+                        </div>
+                    </div>
+                  <div class="case-study">
+                        <div class="case-header">
+                            <h3>KPJ Healthcare</h3>
+                            <p>Malaysia Healthcare Network</p>
+                        </div>
+                        <div class="case-body">
+                            <p>Deployed advanced visualization across 30 hospitals with seamless PACS integration despite bandwidth limitations.</p>
+                            <div class="case-stats">
+                                <div class="case-stat">
+                                    <div class="case-stat-number">30</div>
+                                    <div class="case-stat-label">Hospitals</div>
+                                </div>
+                                <div class="case-stat">
+                                    <div class="case-stat-number">60</div>
+                                    <div class="case-stat-label">Concurrent Users</div>
+                                </div>
+                            </div>
+                            <a href="#" class="btn view-details" data-target="kpj-details">View Details</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="case-study-container">
+                    <div class="case-study">
+                        <div class="case-header">
+                            <h3>Moscow Department of Health</h3>
+                            <p>Russia</p>
+                        </div>
+                        <div class="case-body">
+                            <p>Strategic repurposing of 66 Vitrea Extend workstations into enterprise application servers for cost-effective centralized deployment.</p>
+                            <div class="case-stats">
+                                <div class="case-stat">
+                                    <div class="case-stat-number">66</div>
+                                    <div class="case-stat-label">Workstations</div>
+                                </div>
+                                <div class="case-stat">
+                                    <div class="case-stat-number">9</div>
+                                    <div class="case-stat-label">CCU Enterprise</div>
+                                </div>
+                            </div>
+                            <a href="#" class="btn view-details" data-target="moscow-details">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="details-section">
+                <!-- SingHealth Details -->
+                <div class="details-container" id="singhealth-details">
+                    <h2>SingHealth Cybersecurity Modernization</h2>
+                    <p>SingHealth initiated a strategic project to eliminate critical vulnerabilities in its advanced visualization platform, resulting in a 100% elimination of RDP exposure and 40% increase in clinician satisfaction.</p>
+                    
+                    <div class="tab-container">
+                        <ul class="tabs">
+                            <li><a href="#singhealth-challenge" class="tab-link active">Challenge</a></li>
+                            <li><a href="#singhealth-solution" class="tab-link">Solution</a></li>
+                            <li><a href="#singhealth-results" class="tab-link">Results</a></li>
+                            <li><a href="#singhealth-phases" class="tab-link">Implementation</a></li>
+                        </ul>
+                        
+                        <div id="singhealth-challenge" class="tab-content active">
+                            <h3>Background & Challenge</h3>
+                            <p>In response to a 300% surge in ransomware attacks targeting healthcare imaging systems, SingHealth needed to eliminate reliance on Remote Desktop Protocol (RDP) as the primary entry point for its advanced visualization platform.</p>
+                            <p>The challenge was to architect a solution that adhered to stringent Zero Trust (NIST SP 800-207) and accessibility (WCAG 2.1) standards without disrupting clinical workflows across its three-hospital network.</p>
+                        </div>
+                        
+                        <div id="singhealth-solution" class="tab-content">
+                            <h3>Solution: A Re-architected, Zero-Trust Platform</h3>
+                            <p>The project involved a phased transition from a legacy, RDP-dependent system to a modernized, HTML5 zero-footprint architecture with meticulously segmented infrastructure:</p>
+                            <ul>
+                                <li>Elimination of RDP with all client delivery through encrypted HTTPS/TLS 1.3 sessions</li>
+                                <li>Segmented architecture with core components on separate VLANs</li>
+                                <li>Separation of management functions into dedicated servers</li>
+                                <li>Secure integration with existing systems</li>
+                                <li>Centralized monitoring and logging solution</li>
+                            </ul>
+                        </div>
+                        
+                        <div id="singhealth-results" class="tab-content">
+                            <h3>Measurable Results & Outcomes</h3>
+                            <p>The modernization yielded significant, quantifiable improvements:</p>
+                            <ul>
+                                <li>100% Elimination of RDP Exposure</li>
+                                <li>40% increase in clinician satisfaction scores</li>
+                                <li>60% reduction in resistance to rollout</li>
+                                <li>Zero critical vulnerabilities over 12-month monitoring period</li>
+                            </ul>
+                        </div>
+                        
+                        <div id="singhealth-phases" class="tab-content">
+                            <h3>Phased Implementation</h3>
+                            <p>The deployment was executed in a carefully planned phased manner:</p>
+                            <ol>
+                                <li><strong>Phase 1:</strong> SGH Campus (including the National Heart Centre and National Cancer Centre)</li>
+                                <li><strong>Phase 2:</strong> Changi General Hospital (CGH)</li>
+                                <li><strong>Phase 3:</strong> KK Women's and Children's Hospital (KKH)</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- IHH Pantai Details -->
+                <div class="details-container" id="pantai-details">
+                    <h2>IHH Pantai Advanced Visualization Solution</h2>
+                    <p>Deployment of an advanced visualization and post-processing solution across the IHH Healthcare network in Malaysia (16 hospitals) meeting specific clinical functionality requirements while ensuring optimal performance, scalability, and integration.</p>
+                    
+                    <div class="tab-container">
+                        <ul class="tabs">
+                            <li><a href="#pantai-objective" class="tab-link active">Objective</a></li>
+                            <li><a href="#pantai-requirements" class="tab-link">Requirements</a></li>
+                            <li><a href="#pantai-architecture" class="tab-link">Architecture</a></li>
+                            <li><a href="#pantai-recommendation" class="tab-link">Recommendation</a></li>
+                        </ul>
+                        
+                        <div id="pantai-objective" class="tab-content active">
+                            <h3>Objective</h3>
+                            <p>To deploy an advanced visualization (AV) and post-processing solution across the IHH Healthcare network in Malaysia (16 hospitals) that meets specific clinical functionality requirements while ensuring optimal performance, scalability, and integration within the existing IT infrastructure.</p>
+                        </div>
+                        
+                        <div id="pantai-requirements" class="tab-content">
+                            <h3>Key Functional Requirements</h3>
+                            <p>The solution must provide a PACS Imaging Client/Workstation capable of:</p>
+                            <ul>
+                                <li>Advanced 3D Post-Processing: Including Liver, Vessel, and Lung Analysis, Virtual CT Colonography, Dual Energy, and CT/MR Perfusion</li>
+                                <li>Seamless Integration: Ability to run on standard Windows PCs, support multiple monitors, and integrate with third-party AI and clinical applications</li>
+                                <li>Comprehensive Data Support: Handling complex imaging data such as multi-frame angio, cine Doppler ultrasound, and video fluoroscopy</li>
+                                <li>Efficient Workflow: Compliance with IHE TCE profile, smart pre-fetching of studies based on procedure and user worklists</li>
+                            </ul>
+                        </div>
+                        
+                        <div id="pantai-architecture" class="tab-content">
+                            <h3>Proposed Architectural Options</h3>
+                            <p>Four deployment models were evaluated to balance performance, centralization, and cost for the 16 hospitals:</p>
+                            
+                            <table class="comparison-table">
+                                <thead>
+                                    <tr>
+                                        <th>Option</th>
+                                        <th>Architecture</th>
+                                        <th>Pros</th>
+                                        <th>Cons</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1: Centralized DB & License</td>
+                                        <td>Single Management Server in a central Data Centre</td>
+                                        <td>Centralized database and license management</td>
+                                        <td>High network dependency, potential for image lag</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2: Decentralized (ESS)</td>
+                                        <td>Enterprise Single Server deployed at each local site</td>
+                                        <td>Best performance with data processed locally</td>
+                                        <td>Decentralized database, limited storage per server</td>
+                                    </tr>
+                                    <tr>
+                                        <td>3: Hybrid Decentralized</td>
+                                        <td>Full Management + Application Server stack at each site</td>
+                                        <td>Excellent performance for its group, flexible licensing</td>
+                                        <td>Complex setup, decentralized management</td>
+                                    </tr>
+                                    <tr class="recommended">
+                                        <td>4 (Recommended): Flexible Hybrid</td>
+                                        <td>Management Server + ESS at each local Data Centre</td>
+                                        <td>Ideal balance of performance without central latency</td>
+                                        <td>Decentralized database requires robust PACS integration</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div id="pantai-recommendation" class="tab-content">
+                            <h3>Recommendation</h3>
+                            <p>Option 4 (Flexible Hybrid) is presented as the strongest candidate. It effectively addresses the performance limitations of a fully centralized model and the scalability limitations of a purely per-site model, while offering more manageable complexity than Option 3.</p>
+                            <p>It ensures fast image delivery for radiologists by processing data within their geographic region while maintaining the flexibility for centralized license management or allocation to specific hospital groups.</p>
+                            
+                            <h4>Next Steps:</h4>
+                            <ol>
+                                <li>Gather Technical Specs: Confirm detailed network diagrams, bandwidth metrics, and storage architecture from each site</li>
+                                <li>Define CCU: Finalize the number of concurrent users per hospital group for accurate server sizing</li>
+                                <li>License Model: Decide on a centralized corporate license or a split-license model based on operational preference</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
+            <!-- Nuevo Hospital Militar Details -->
+            <div class="details-container" id="nicaragua-details">
+                <h2>Nuevo Hospital Militar Redundancy Solution</h2>
+                <p>Implementation of a high-availability, disaster-resistant architecture for the Canon Vitrea Enterprise advanced visualization system at Nuevo Hospital Militar Managua to ensure business continuity with minimal downtime and data loss.</p>
+                
+                <div class="tab-container">
+                    <ul class="tabs">
+                        <li><a href="#nicaragua-objective" class="tab-link active">Objective</a></li>
+                        <li><a href="#nicaragua-assessment" class="tab-link">Current State</a></li>
+                        <li><a href="#nicaragua-solution" class="tab-link">Solution</a></li>
+                        <li><a href="#nicaragua-recommendation" class="tab-link">Recommendation</a></li>
+                    </ul>
+                    
+                    <div id="nicaragua-objective" class="tab-content active">
+                        <h3>Objective</h3>
+                        <p>To design a high-availability, disaster-resistant architecture for the Canon Vitrea Enterprise advanced visualization system at Nuevo Hospital Militar Managua. The solution must ensure business continuity in the event of natural disasters or system failures, with minimal downtime and data loss.</p>
+                    </div>
+                    
+                    <div id="nicaragua-assessment" class="tab-content">
+                        <h3>Current State Assessment</h3>
+                        <ul>
+                            <li><strong>System:</strong> Vitrea Enterprise v7.15.6 deployed on an Enterprise Single Server (ESS) supporting 6 Concurrent Users (CCUs)</li>
+                            <li><strong>Storage:</strong> The ESS is not connected to external storage (NAS/SAN), meaning all data is stored locally on the server, creating a single point of failure</li>
+                            <li><strong>Integration:</strong> No integration exists with the existing CMR PACS. Studies are sent directly from modalities to Vitrea</li>
+                            <li><strong>Modalities:</strong> Multiple high-volume Canon CT, MR, and Angio systems are sending studies to Vitrea</li>
+                            <li><strong>Key Limitation:</strong> The current ESS-based architecture is inherently not redundant and cannot be easily made redundant without a fundamental upgrade</li>
+                        </ul>
+                    </div>
+                    
+                    <div id="nicaragua-solution" class="tab-content">
+                        <h3>Recommended Redundancy Solution</h3>
+                        <p>The only viable path to true redundancy is to migrate from the ESS to a full Vitrea Enterprise Suite (VES) architecture. The proposed solution involves creating two identical, synchronized datacenters.</p>
+                        
+                        <h4>Proposed Architecture:</h4>
+                        <ul>
+                            <li><strong>Upgrade Path:</strong> Convert the existing ESS hardware into a 6-User Application Server</li>
+                            <li><strong>Primary & Secondary Datacenters:</strong> Each datacenter will contain:
+                                <ul>
+                                    <li>1x Virtualized Management Server: Hosts the core database and services</li>
+                                    <li>1x 6-User Application Server: Processes the advanced visualization workload</li>
+                                    <li>1x Shared NAS Storage (10 TB+): A centralized storage device accessible by both datacenters</li>
+                                </ul>
+                            </li>
+                            <li><strong>Synchronization:</strong> The SQL database and NAS storage are continuously synchronized between the two datacenters</li>
+                            <li><strong>Failover Mechanism:</strong> A DNS CNAME record points users to the active datacenter. In a disaster, this record is updated to redirect all traffic to the secondary site</li>
+                        </ul>
+                    </div>
+                    
+                    <div id="nicaragua-recommendation" class="tab-content">
+                        <h3>Recommendation & Next Steps</h3>
+                        <p>Approve the upgrade from the ESS-based deployment to a full, redundant VES architecture across two datacenters. This is the only solution that meets the hospital's requirement for resilience against natural disasters.</p>
+                        
+                        <h4>Project Phasing:</h4>
+                        <ol>
+                            <li><strong>Phase 1 (Foundation):</strong> Upgrade the primary site to a full VES with Management Server, Application Server, and connected NAS</li>
+                            <li><strong>Phase 2 (Redundancy):</strong> Deploy the identical secondary site infrastructure and establish continuous synchronization</li>
+                        </ol>
+                        
+                        <h4>Next Steps:</h4>
+                        <ol>
+                            <li>Executive Approval: Seek approval to present this solution and its budget implications to the customer</li>
+                            <li>Gather Final Details: Confirm from the local team:
+                                <ul>
+                                    <li>Formal confirmation on using the existing PACS/VNA for Vitrea storage</li>
+                                    <li>A finalized budget and timeline from the hospital</li>
+                                    <li>The exact annual study volume and growth projections</li>
+                                </ul>
+                            </li>
+                            <li>Formal Quote: Generate a detailed quote for the software upgrade, new hardware, and professional services</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Apollo Hospitals Details -->
+            <div class="details-container" id="apollo-details">
+                <h2>Apollo Hospitals Vitrea Enterprise Integration</h2>
+                <p>Consolidation of fragmented Vitrea deployment into a unified enterprise solution with seamless PACS integration across multiple Apollo Hospitals sites in India.</p>
+                
+                <div class="tab-container">
+                    <ul class="tabs">
+                        <li><a href="#apollo-challenge" class="tab-link active">Challenge</a></li>
+                        <li><a href="#apollo-solution" class="tab-link">Solution</a></li>
+                        <li><a href="#apollo-benefits" class="tab-link">Benefits</a></li>
+                        <li><a href="#apollo-recommendation" class="tab-link">Recommendation</a></li>
+                    </ul>
+                    
+                    <div id="apollo-challenge" class="tab-content active">
+                        <h3>Current Challenges</h3>
+                        <p>Apollo Hospitals is facing significant operational inefficiencies and clinical risks due to a fragmented deployment of Canon's Vitrea advanced visualization solution across its sites:</p>
+                        <ul>
+                            <li><strong>Data Silos:</strong> Four isolated, unsynchronized databases with different Vitrea versions preventing seamless access to patient images</li>
+                            <li><strong>Workflow Disruption:</strong> Radiologists must manually search for the same patient in both the PACS and Vitrea systems</li>
+                            <li><strong>Version Incompatibility:</strong> Post-processed images from older versions cannot be properly restored on newer ones</li>
+                            <li><strong>Inefficient Resource Utilization:</strong> Vitrea Core licenses are trapped at one site, and high-end workstations are underutilized</li>
+                        </ul>
+                    </div>
+                    
+                    <div id="apollo-solution" class="tab-content">
+                        <h3>Recommended Solution</h3>
+                        <p>The proposed solution is to consolidate all existing systems into a single, integrated Vitrea Enterprise Suite (VES) deployment with a centralized database.</p>
+                        
+                        <h4>Key Components:</h4>
+                        <ul>
+                            <li><strong>Centralized Database & Management:</strong> A single Management Server hosting the SQL database</li>
+                            <li><strong>Hardware Reuse & Upgrade:</strong> Strategic repurposing of existing hardware to control costs</li>
+                            <li><strong>PACS Integration:</strong> Strongly recommended and considered mandatory for project success</li>
+                            <li><strong>Centralized Storage:</strong> A new 10 TB scalable NAS to serve as the central repository</li>
+                            <li><strong>Professional Services:</strong> Canon professional services for data migration, deployment, and training</li>
+                        </ul>
+                    </div>
+                    
+                    <div id="apollo-benefits" class="tab-content">
+                        <h3>Benefits of the Proposed Solution</h3>
+                        <ul>
+                            <li><strong>Seamless Clinical Workflow:</strong> Radiologists can access and share patient-specific images from any site</li>
+                            <li><strong>Enhanced Patient Safety:</strong> Eliminates the risk of opening the wrong patient in Vitrea versus PACS</li>
+                            <li><strong>Operational Efficiency:</strong> Reduces reporting time and simplifies the radiologist's workflow</li>
+                            <li><strong>Vendor Neutrality:</strong> The new system can connect to any modality on the network</li>
+                            <li><strong>Scalability & Future-Proofing:</strong> The enterprise architecture can easily scale by adding more Application Servers</li>
+                            <li><strong>Cost Optimization:</strong> Maximizes the return on investment from existing hardware and software licenses</li>
+                        </ul>
+                    </div>
+                    
+                    <div id="apollo-recommendation" class="tab-content">
+                        <h3>Recommendation and Implementation Strategy</h3>
+                        
+                        <h4>Phase 1: Foundation & Consolidation (Priority)</h4>
+                        <ol>
+                            <li>Approve the project to migrate to a single VES deployment</li>
+                            <li>Procure necessary components: NAS storage, GPU upgrades, OS licenses</li>
+                            <li>Deploy the new Management Server, central NAS, and upgraded Application Servers</li>
+                            <li>Implement mandatory PACS integration</li>
+                            <li>Migrate data from old systems to the new central database</li>
+                            <li>Go-Live with the new integrated 6-CCU system</li>
+                        </ol>
+                        
+                        <h4>Phase 2: Expansion & Scaling (Future)</h4>
+                        <ul>
+                            <li>Add additional CCUs based on demand and user growth</li>
+                            <li>Implement a high-availability and disaster recovery solution</li>
+                        </ul>
+                        
+                        <p><strong>Conclusion:</strong> Consolidating into a single, integrated Vitrea Enterprise solution with mandatory PACS integration is the only path to achieving the desired seamless workflow, unlocking clinical efficiency, ensuring patient safety, and building a scalable platform for future growth.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nawaloka Hospitals Details -->
+            <div class="details-container" id="nawaloka-details">
+                <h2>Nawaloka Hospitals Vitrea Enterprise Upgrade</h2>
+                <p>Upgrade of Vitrea Enterprise with phased hardware reuse strategy to modernize platform and support future growth at Nawaloka Hospitals in Sri Lanka.</p>
+                
+                <div class="tab-container">
+                    <ul class="tabs">
+                        <li><a href="#nawaloka-current" class="tab-link active">Current State</a></li>
+                        <li><a href="#nawaloka-strategy" class="tab-link">Upgrade Strategy</a></li>
+                        <li><a href="#nawaloka-advantages" class="tab-link">Advantages</a></li>
+                        <li><a href="#nawaloka-implementation" class="tab-link">Implementation</a></li>
+                    </ul>
+                    
+                    <div id="nawaloka-current" class="tab-content active">
+                        <h3>Current State & Objective</h3>
+                        <p>Nawaloka Hospitals operates a Vitrea Enterprise v6.7 system supporting a limited workflow:</p>
+                        <ul>
+                            <li><strong>Users:</strong> 1 Vitrea Advanced & 1 Vitrea Core user</li>
+                            <li><strong>Modalities:</strong> Connected to a Canon Aquilion ONE CT and a Siemens 3T MRI, with a planned connection to a Philips 1.5T MRI</li>
+                            <li><strong>Volume:</strong> Handles 35-40 CT and 15-20 MRI studies daily</li>
+                            <li><strong>Infrastructure:</strong> Uses a 9 TB NAS for storage (VIMS) on a 1 Gbps internal network</li>
+                        </ul>
+                        <p><strong>Objective:</strong> Upgrade to Vitrea v7.14.x to modernize the platform, improve workflow, and build a scalable foundation for future growth, supporting more concurrent users and advanced applications like cardiac MR with Medis.</p>
+                    </div>
+                    
+                    <div id="nawaloka-strategy" class="tab-content">
+                        <h3>Recommended Upgrade Strategy</h3>
+                        <p>The proposal focuses on cost-effectiveness by maximizing the reuse of existing infrastructure while making strategic new investments.</p>
+                        
+                        <h4>Proposed Solution Components:</h4>
+                        <table class="comparison-table">
+                            <thead>
+                                <tr>
+                                    <th>Component</th>
+                                    <th>Recommendation</th>
+                                    <th>Rationale</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>A. Domain Controller</td>
+                                    <td>Reuse/Upgrade existing or provision a new one (physical/virtual)</td>
+                                    <td>Required for system integration and user management</td>
+                                </tr>
+                                <tr>
+                                    <td>B. Management Server</td>
+                                    <td>Reuse the existing server. Upgrade OS to Windows Server 2019 and SQL to 2019</td>
+                                    <td>Cost-saving. The existing hardware is sufficient for the management layer</td>
+                                </tr>
+                                <tr>
+                                    <td>C. Application Server</td>
+                                    <td>Procure 1 new Four-User Application Server (e.e., from HP/Dell)</td>
+                                    <td>This is the core investment. Provides 4 new Advanced CCUs</td>
+                                </tr>
+                                <tr>
+                                    <td>D. Storage (NAS)</td>
+                                    <td>Upgrade the existing 9 TB NAS to 16-20 TB</td>
+                                    <td>Necessary to accommodate increased study volume</td>
+                                </tr>
+                                <tr>
+                                    <td>E. Software</td>
+                                    <td>Convert existing Vitrea licenses to v7.14.x. New license for Medis software</td>
+                                    <td>Unlocks advanced cardiac MR viewing capabilities</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div id="nawaloka-advantages" class="tab-content">
+                        <h3>Key Advantages of the Proposed Solution</h3>
+                        <ul>
+                            <li><strong>Increased Capacity & Performance:</strong> Boosts concurrent user capacity from 1 to 4 Advanced users</li>
+                            <li><strong>Modernized Platform:</strong> Upgrades from the outdated v6.7 to the current v7.14.x</li>
+                            <li><strong>Vendor-Neutral Scalability:</strong> The new architecture can easily connect to any manufacturer's modality</li>
+                            <li><strong>Improved Workflow:</strong> Mandatory PACS integration will streamline the radiologist's workflow</li>
+                            <li><strong>Future-Proof Foundation:</strong> The scalable architecture allows Nawaloka to easily add more CCUs and storage</li>
+                        </ul>
+                    </div>
+                    
+                    <div id="nawaloka-implementation" class="tab-content">
+                        <h3>Implementation & Services</h3>
+                        <p>The upgrade requires Canon Professional Services for:</p>
+                        <ul>
+                            <li><strong>PACS Integration:</strong> Essential for achieving the desired workflow efficiency</li>
+                            <li><strong>Data Migration:</strong> Transferring historical data from the old V6.7 system to the new v7.14.x database</li>
+                            <li><strong>Deployment & Configuration:</strong> Onsite and remote support to ensure a smooth transition and system setup</li>
+                        </ul>
+                        
+                        <h4>Conclusion and Recommendation</h4>
+                        <p>The recommended phased approach is highly cost-effective, leveraging Nawaloka's existing investment in hardware while strategically upgrading critical components to meet current and future demands.</p>
+                        <p>Approve the project to:</p>
+                        <ol>
+                            <li>Reuse the existing Management Server and Domain Controller (with OS upgrades)</li>
+                            <li>Procure one new Four-User Application Server</li>
+                            <li>Upgrade the NAS storage to 16-20 TB</li>
+                            <li>Secure licenses for Vitrea v7.14.x and Medis software</li>
+                            <li>Engage Canon Professional Services for integration, migration, and deployment</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KPJ Healthcare Details -->
+            <div class="details-container" id="kpj-details">
+                <h2>KPJ Healthcare Advanced Visualization Solution</h2>
+                <p>Deployment of a Vitrea Advanced Visualization (AV) solution across 30 KPJ hospitals with seamless integration to the existing INFINITT PACS-driven workflow.</p>
+                
+                <div class="tab-container">
+                    <ul class="tabs">
+                        <li><a href="#kpj-objective" class="tab-link active">Objective</a></li>
+                        <li><a href="#kpj-requirements" class="tab-link">Requirements</a></li>
+                        <li><a href="#kpj-architecture" class="tab-link">Architecture</a></li>
+                        <li><a href="#kpj-recommendation" class="tab-link">Recommendation</a></li>
+                    </ul>
+                    
+                    <div id="kpj-objective" class="tab-content active">
+                        <h3>Objective</h3>
+                        <p>To deploy a Vitrea Advanced Visualization (AV) solution across 30 KPJ hospitals that integrates seamlessly with the existing INFINITT PACS-driven workflow. The solution must enable radiologists to perform complex 3D post-processing and measurements directly from their PACS worklist without disrupting their clinical routine.</p>
+                    </div>
+                    
+                    <div id="kpj-requirements" class="tab-content">
+                        <h3>Key Functional & Workflow Requirements</h3>
+                        <ul>
+                            <li><strong>Seamless PACS Integration:</strong> Vitrea must launch via a single click (hyperlink or context menu) from within the INFINITT PACS workstation using Single Sign-On (SSO)</li>
+                            <li><strong>Clinical Workflow:</strong> The primary reporting template is PACS. Vitrea is used for advanced processing (measurements, key images) with results sent back to PACS as new DICOM series</li>
+                            <li><strong>Performance:</strong> Must support 60 Concurrent Users (CCUs) across all 30 sites</li>
+                            <li><strong>Infrastructure Constraints:</strong> Hospitals are connected with limited bandwidth (30-100 MBPS), with distances of ~10km between sites. The existing PACS is confirmed as the primary storage for both thick and thin slice data</li>
+                        </ul>
+                    </div>
+                    
+                    <div id="kpj-architecture" class="tab-content">
+                        <h3>Proposed Architectural Options Analysis</h3>
+                        
+                        <table class="comparison-table">
+                            <thead>
+                                <tr>
+                                    <th>Option</th>
+                                    <th>Architecture</th>
+                                    <th>Pros</th>
+                                    <th>Cons</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="recommended">
+                                    <td>A: Decentralized (30x ESS)</td>
+                                    <td>An Enterprise Single Server (ESS) deployed at each individual hospital</td>
+                                    <td>
+                                        <ul class="pros">
+                                            <li>Superior Performance: Processing is local, minimizing latency over low-bandwidth links</li>
+                                            <li>High Reliability: Failure at one site does not impact others</li>
+                                            <li>Meets Workflow: Ideal for the required PACS hyperlink/SSO integration</li>
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        <ul class="cons">
+                                            <li>Higher initial deployment footprint (30 servers to manage)</li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                                <tr class="not-recommended">
+                                    <td>B: Centralized (One Enterprise Instance)</td>
+                                    <td>A single, central server cluster hosting the entire solution for all 30 hospitals</td>
+                                    <td>
+                                        <ul class="pros">
+                                            <li>Centralized management</li>
+                                            <li>Potentially lower hardware costs</li>
+                                        </ul>
+                                    </td>
+                                    <td>
+                                        <ul class="cons">
+                                            <li>Extreme Performance Risk: 30 MBPS WAN links are insufficient for transferring large volumetric datasets</li>
+                                            <li>Single Point of Failure: An outage at the central site halts AV for all 30 hospitals</li>
+                                            <li>Unsuitable for Workflow: Cannot efficiently support the required PACS hyperlink integration</li>
+                                        </ul>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div id="kpj-recommendation" class="tab-content">
+                        <h3>Recommendation and Conclusion</h3>
+                        <p>Option A (30 local ESS instances) is the only viable solution given the low network bandwidth and the requirement for a tightly integrated, PACS-driven workflow.</p>
+                        
+                        <p>The centralized approach (Option B) is critically flawed due to the network limitations, which would result in an unusable system for radiologists. The decentralized model ensures that image processing happens instantly on the local network, providing the speed and reliability required for clinical diagnostics.</p>
+                        
+                        <h4>Critical Considerations & Prerequisites for Option A</h4>
+                        <ul>
+                            <li><strong>Network:</strong> While local performance will be excellent, the 30-100 MBPS links between sites are a critical constraint for syncing processed data (snapshots, reports) to a global PACS. This requires careful planning.</li>
+                            <li><strong>Storage:</strong> Confirmation that the PACS will store all AV-generated data (both thin and thick slices) is crucial and eliminates the need for a separate large storage solution for Vitrea.</li>
+                            <li><strong>Integration:</strong> A Domain Controller at each hospital is required for the seamless PACS-AV integration and to enable Auto Query/Retrieve (Auto Q/R), ensuring patient data is available in Vitrea even if not in its local cache.</li>
+                        </ul>
+                        
+                        <h4>Next Steps:</h4>
+                        <ol>
+                            <li><strong>Finalize Infrastructure Confirmation:</strong> Obtain detailed network diagrams and formal confirmation of PACS storage capabilities for AV data</li>
+                            <li><strong>Plan Deployment:</strong> Coordinate the rollout of 30 ESS servers and their integration with the local PACS at each hospital site</li>
+                            <li><strong>Define Sync Strategy:</strong> Establish a schedule for syncing processed data from local PACS caches to the global PACS that minimizes impact on the limited WAN bandwidth</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Moscow Department of Health Details -->
+            <div class="details-container" id="moscow-details">
+                <h2>Moscow Department of Health Vitrea Enterprise Feasibility</h2>
+                <p>Strategic repurposing of 66 Vitrea Extend workstations into enterprise application servers for cost-effective centralized deployment across the Moscow Department of Health network.</p>
+                
+                <div class="tab-container">
+                    <ul class="tabs">
+                        <li><a href="#moscow-background" class="tab-link active">Background</a></li>
+                        <li><a href="#moscow-objective" class="tab-link">Objective</a></li>
+                        <li><a href="#moscow-solution" class="tab-link">Solution</a></li>
+                        <li><a href="#moscow-considerations" class="tab-link">Considerations</a></li>
+                    </ul>
+                    
+                    <div id="moscow-background" class="tab-content active">
+                        <h3>Project Background & Opportunity</h3>
+                        <p>The Moscow Department of Health (DoH) is a major healthcare provider that has deployed 66 Canon CT scanners (Aquilion One Genesis, Prime SP, Lightning SP) across its network. Each CT was supplied with a Vitrea Extend advanced visualization workstation (HP Z8G4), creating a fragmented deployment with isolated databases at each site.</p>
+                        <p>This presents a significant opportunity to propose a centralized, enterprise-grade Vitrea solution with minimal additional investment by strategically repurposing this existing hardware.</p>
+                    </div>
+                    
+                    <div id="moscow-objective" class="tab-content">
+                        <h3>Customer Need & Strategic Objective</h3>
+                        <p>The DoH's centralized AGFA RIS/PACS lacks robust advanced visualization tools. The current fragmented Vitrea Extend deployment creates data silos, preventing seamless access and collaboration.</p>
+                        <p>The key requirement is to create a single, unified database with smart storage and concurrent user licenses, allowing access to advanced tools from any thin client across the hospital network.</p>
+                    </div>
+                    
+                    <div id="moscow-solution" class="tab-content">
+                        <h3>Proposed Solution: Cost-Effective Enterprise Deployment</h3>
+                        <p>The recommended resolution is an innovative approach to avoid the high cost of new hardware:</p>
+                        <ul>
+                            <li><strong>Repurpose Existing Hardware:</strong> Convert the deployed HP Z8G4 Vitrea Extend workstations into 3-user Application Servers for a Vitrea Enterprise deployment</li>
+                            <li><strong>Centralized Management:</strong> Connect these Application Servers to a central Management Server (which can be virtualized) and a SQL Server</li>
+                            <li><strong>Scalable Architecture:</strong> A single site with 3 CTs could be configured as:
+                                <ul>
+                                    <li>1x Management Server (with dedicated SQL Server)</li>
+                                    <li>1x Domain Controller (preferably provided by the hospital)</li>
+                                    <li>1x Scalable NAS (sized for current volume + 20% 5-year growth)</li>
+                                    <li>3x Repurposed Z8G4s as Application Servers</li>
+                                </ul>
+                                This provides a 9 CCU (Concurrent User) Enterprise solution.
+                            </li>
+                        </ul>
+                        
+                        <h4>Key Advantages</h4>
+                        <ul>
+                            <li><strong>Low Investment:</strong> Maximizes value from already-deployed hardware (Z8G4 workstations)</li>
+                            <li><strong>Unified Workflow:</strong> Replaces isolated databases with a single SQL database, enabling data sharing and collaboration</li>
+                            <li><strong>Scalability:</strong> The architecture can easily grow by adding more repurposed Z8G4s or standard HPE servers</li>
+                            <li><strong>Vendor Neutrality:</strong> The enterprise solution can connect to any modality on the network</li>
+                        </ul>
+                    </div>
+                    
+                    <div id="moscow-considerations" class="tab-content">
+                        <h3>Key Considerations & Open Questions</h3>
+                        <p>The feasibility of this approach depends on resolving several technical questions:</p>
+                        <ul>
+                            <li><strong>Storage:</strong> Determining if the Management Server has sufficient internal storage or if an external NAS is required. RAID configuration must be specified</li>
+                            <li><strong>Hardware Compatibility:</strong> Validating that the Z8G4's existing NVIDIA Quadro P2200 GPU is supported in future Vitrea versions (v7.15.x+)</li>
+                            <li><strong>Infrastructure:</strong> Confirming power supply adequacy for the Z8G4s in a server role and defining who manages DNS</li>
+                            <li><strong>Virtualization:</strong> Exploring the option of virtualizing the Management and SQL servers to reduce physical hardware costs and increase flexibility</li>
+                        </ul>
+                        
+                        <h4>Conclusion and Next Steps</h4>
+                        <p>Repurposing the Vitrea Extend workstations into a centralized Vitrea Enterprise deployment is a highly feasible and strategically advantageous solution for the Moscow DoH. It fulfills their clinical need for a unified workflow at a dramatically lower cost than a traditional new hardware deployment.</p>
+                        <p><strong>Recommended next steps:</strong> Finalize technical specifications for hardware, obtain definitive answers on the open questions regarding storage and compatibility, and develop a detailed project plan for a pilot site implementation.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="details-container" id="solutions">
+                <h2>Architectural Solutions Comparison</h2>
+                <p>Different healthcare networks require different architectural approaches based on their specific needs and constraints.</p>
+                
+                <div class="architecture-grid">
+                    <div class="architecture-card">
+                        <h4>Centralized Architecture</h4>
+                        <div class="pros-cons">
+                            <h5>Pros:</h5>
+                            <ul class="pros">
+                                <li>Centralized database and license management</li>
+                                <li>Studies viewable from any hospital</li>
+                            </ul>
+                            <h5>Cons:</h5>
+                            <ul class="cons">
+                                <li>High network dependency (min. 1GBPS)</li>
+                                <li>Potential for image lag</li>
+                            </ul>
+                        </div>
+                        <p><strong>Best for:</strong> Networks with excellent connectivity and centralized management requirements.</p>
+                    </div>
+                    
+                    <div class="architecture-card">
+                        <h4>Decentralized (ESS) Architecture</h4>
+                        <div class="pros-cons">
+                            <h5>Pros:</h5>
+                            <ul class="pros">
+                                <li>Best performance with data processed locally</li>
+                                <li>Minimizes latency</li>
+                            </ul>
+                            <h5>Cons:</h5>
+                            <ul class="cons">
+                                <li>Decentralized database</li>
+                                <li>Limited storage per server</li>
+                                <li>Less flexible licensing</li>
+                            </ul>
+                        </div>
+                        <p><strong>Best for:</strong> Individual hospitals with limited bandwidth between sites.</p>
+                    </div>
+                    
+                    <div class="architecture-card">
+                        <h4>Hybrid Decentralized Architecture</h4>
+                        <div class="pros-cons">
+                            <h5>Pros:</h5>
+                            <ul class="pros">
+                                <li>Excellent performance for its group</li>
+                                <li>Flexible, scalable licensing</li>
+                            </ul>
+                            <h5>Cons:</h5>
+                            <ul class="cons">
+                                <li>Complex setup</li>
+                                <li>Decentralized management</li>
+                                <li>Higher initial infrastructure cost</li>
+                            </ul>
+                        </div>
+                        <p><strong>Best for:</strong> Hospital groups with good internal connectivity but limited external bandwidth.</p>
+                    </div>
+                    
+                    <div class="architecture-card recommended">
+                        <h4>Flexible Hybrid Architecture (Recommended)</h4>
+                        <div class="pros-cons">
+                            <h5>Pros:</h5>
+                            <ul class="pros">
+                                <li>Ideal balance of performance without central latency</li>
+                                <li>Scalable CCUs</li>
+                                <li>Flexible licensing</li>
+                            </ul>
+                            <h5>Cons:</h5>
+                            <ul class="cons">
+                                <li>Decentralized database requires robust PACS integration</li>
+                            </ul>
+                        </div>
+                        <p><strong>Best for:</strong> Multi-hospital networks with geographical distribution and varying bandwidth capabilities.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="details-container" id="contact">
+                <h2>Contact Us</h2>
+                <p>Interested in learning more about Canon Medical's Advanced Visualization Solutions? Contact our team for more information.</p>
+                
+                <form class="contact-form">
+                    <div class="form-group">
+                        <label for="name">Full Name</label>
+                        <input type="text" id="name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="organization">Organization</label>
+                        <input type="text" id="organization" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone">Phone Number</label>
+                        <input type="tel" id="phone">
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label for="interest">I'm interested in:</label>
+                        <select id="interest">
+                            <option value="">Select an option</option>
+                            <option value="singhealth">SingHealth Cybersecurity Modernization</option>
+                            <option value="pantai">IHH Pantai Advanced Visualization</option>
+                            <option value="architecture">Architectural Consultation</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label for="message">Message</label>
+                        <textarea id="message" required></textarea>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <button type="submit" class="btn">Submit Inquiry</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Facts and Statistics Section -->
+    <section id="facts-statistics" class="page-section">
+        <div class="facts-header">
+            <div class="container">
+                <h1>Facts and Statistics</h1>
+                <p>Performance, Partnership and Value Delivered to Customers Around the World</p>
+                <p><em>From virtually instantaneous time-to-first-image to high rates of peak data migration, our solutions are hard at work helping hospital systems manage change, become more productive and achieve clinical excellence.</em></p>
+            </div>
+        </div>
+
+        <div class="container">
+            <div class="tab-container-facts">
+                <button class="tab-facts active" onclick="openTabFacts(event, 'global')">
+                    <i class="fas fa-globe"></i> Global Reach
+                </button>
+                <button class="tab-facts" onclick="openTabFacts(event, 'scalability')">
+                    <i class="fas fa-chart-line"></i> Scalability
+                </button>
+                <button class="tab-facts" onclick="openTabFacts(event, 'takeaways')">
+                    <i class="fas fa-lightbulb"></i> Key Takeaways
+                </button>
+            </div>
+
+            <div id="global" class="tab-content-facts active">
+                <h2><i class="fas fa-globe"></i> Global Market Penetration & Customer Trust</h2>
+                
+                <div class="map-container" id="worldMap">
+                    <!-- Dots will be added here by JavaScript -->
+                </div>
+                
+                <div class="dynamic-stats">
+                    <div class="stat-item">
+                        <div class="counter" id="customerCounter">0</div>
+                        <div class="counter-label">customers worldwide</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="counter" id="countryCounter">0</div>
+                        <div class="counter-label">countries served</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="counter" id="supportCounter">0</div>
+                        <div class="counter-label">support cases resolved</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="counter" id="resolutionCounter">0%</div>
+                        <div class="counter-label">cases resolved in 30 days</div>
+                    </div>
+                </div>
+                
+                <div class="data-card">
+                    <div class="metric">
+                        <i class="fas fa-users metric-icon"></i> <span id="dynamicCustomerCount">8,456</span>
+                    </div>
+                    <div class="metric-label">customers across <span id="dynamicCountryCount">136</span> countries</div>
+                    <p>Demonstrating Canon Medical's extensive global presence and adaptability to diverse healthcare systems.</p>
+                </div>
+                
+                <h3><i class="fas fa-headset"></i> Customer Support Efficiency (12-month period)</h3>
+                <div class="data-grid">
+                    <div class="data-card">
+                        <div class="metric">
+                            <i class="fas fa-tasks metric-icon"></i> <span id="casesReceived">7,969</span>
+                        </div>
+                        <div class="metric-label">cases received → resolved</div>
+                        <p><span class="highlight"><span id="resolutionRate">99.7</span>% resolution rate</span></p>
+                    </div>
+                    <div class="data-card">
+                        <div class="metric">
+                            <i class="fas fa-clock metric-icon"></i> <span id="oneDayRate">62</span>%
+                        </div>
+                        <div class="metric-label">cases resolved</div>
+                        <p>in <span class="highlight">1 day</span></p>
+                    </div>
+                    <div class="data-card">
+                        <div class="metric">
+                            <i class="fas fa-calendar-week metric-icon"></i> <span id="sevenDayRate">83</span>%
+                        </div>
+                        <div class="metric-label">cases resolved</div>
+                        <p>in <span class="highlight">7 days</span></p>
+                    </div>
+                    <div class="data-card">
+                        <div class="metric">
+                            <i class="fas fa-phone-alt metric-icon"></i> <span id="callAnswerRate">98</span>%
+                        </div>
+                        <div class="metric-label">call answer rate</div>
+                        <p>in <span class="highlight"><30 seconds</span></p>
+                    </div>
+                    <div class="data-card">
+                        <div class="metric">
+                            <i class="fas fa-calendar-check metric-icon"></i> <span id="thirtyDayRate">97</span>%
+                        </div>
+                        <div class="metric-label">cases resolved</div>
+                        <p>in <span class="highlight">30 days</span></p>
+                    </div>
+                </div>
+                
+                <div class="analysis-section">
+                    <h3><i class="fas fa-search"></i> Analysis</h3>
+                    <p><strong>Global Reach:</strong> Presence in 136 countries indicates <span class="highlight">adaptability to diverse regulatory environments</span> (e.g., HIPAA, GDPR) and healthcare infrastructures. Suggests <span class="highlight">strong brand trust</span>, especially in emerging markets where interoperability challenges are common.</p>
+                    
+                    <p><strong>Support Efficiency:</strong> The <span class="highlight"><30-second answer rate</span> exceeds typical IT response times (industry average: ~1–2 minutes). Critical for urgent imaging needs like stroke diagnostics. <span class="highlight">62% same-day resolution</span> minimizes clinical workflow disruptions, reducing potential revenue loss from downtime. The <span class="highlight">99.7% closure rate</span> implies near-total issue accountability, which is rare in healthcare IT.</p>
+                    
+                    <button class="expand-btn" onclick="toggleExpand(this, 'competitive-edge')">
+                        Competitive Edge <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div id="competitive-edge" class="expand-content">
+                        <p>Compared to competitors, Canon's transparency in publishing these metrics <span class="highlight">positions it as a service leader</span> in healthcare IT support. While many vendors focus only on technical specifications, Canon demonstrates its commitment to customer success through measurable service levels.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="scalability" class="tab-content-facts">
+                <h2><i class="fas fa-chart-line"></i> Scalability & Technical Performance</h2>
+                <p><em>Data from a customer that grew from 30→40 hospitals and 80→200+ clinics within four years</em></p>
+                
+                <div class="data-grid">
+                    <div class="data-card">
+                        <div class="metric">
+                            <i class="fas fa-file-medical metric-icon"></i> <span id="studiesInterpreted">71,000</span>
+                        </div>
+                        <div class="metric-label">studies interpreted</div>
+                        <p>in one week (~<span id="studiesPerDay">10,000</span>/day)</p>
+                    </div>
+                    <div class="data-card">
+                        <div class="metric">
+                            <i class="fas fa-rocket metric-icon"></i> <span id="studiesLaunched">45,000</span>
+                        </div>
+                        <div class="metric-label">studies launched</div>
+                        <p>by weekday</p>
+                    </div>
+                    <div class="data-card">
+                        <div class="metric">
+                            <i class="fas fa-database metric-icon"></i> <span id="studiesMigrated">15</span>M
+                        </div>
+                        <div class="metric-label">studies migrated</div>
+                        <p>during system transition</p>
+                    </div>
+                    <div class="data-card">
+                        <div class="metric">
+                            <i class="fas fa-network-wired metric-icon"></i> <span id="pacsSystems">40</span>
+                        </div>
+                        <div class="metric-label">PACS systems</div>
+                        <p>consolidated across <span id="facilitiesCount">30</span> facilities</p>
+                    </div>
+                    <div class="data-card">
+                        <div class="metric">
+                            <i class="fas fa-project-diagram metric-icon"></i> <span id="goLives">25</span>+
+                        </div>
+                        <div class="metric-label">go-lives</div>
+                        <p>with radiology and cardiology</p>
+                    </div>
+                    <div class="data-card">
+                        <div class="metric">
+                            <i class="fas fa-bolt metric-icon"></i> <span id="ttfi">2</span>s
+                        </div>
+                        <div class="metric-label">average TTFI</div>
+                        <p>(Time to First Image)</p>
+                    </div>
+                    <div class="data-card">
+                        <div class="metric">
+                            <i class="fas fa-tachometer-alt metric-icon"></i> <span id="peakMigration">35</span>TB
+                        </div>
+                        <div class="metric-label">peak migration</div>
+                        <p>data transfer rate</p>
+                    </div>
+                    <div class="data-card">
+                        <div class="metric">
+                            <i class="fas fa-user-md metric-icon"></i> <span id="uniqueUsers">1,400</span>
+                        </div>
+                        <div class="metric-label">unique users</div>
+                        <p>per weekday</p>
+                    </div>
+                    <div class="data-card">
+                        <div class="metric">
+                            <i class="fas fa-users metric-icon"></i> <span id="concurrentUsers">1,100</span>
+                        </div>
+                        <div class="metric-label">concurrent users</div>
+                        <p>per weekday</p>
+                    </div>
+                    <div class="data-card">
+                        <div class="metric">
+                            <i class="fas fa-desktop metric-icon"></i> <span id="concurrentSessions">275</span>
+                        </div>
+                        <div class="metric-label">concurrent sessions</div>
+                        <p>active at peak times</p>
+                    </div>
+                </div>
+                
+                <div class="analysis-section">
+                    <h3><i class="fas fa-search"></i> Analysis</h3>
+                    <p><strong>High-Volume Data Handling:</strong> <span class="highlight">71k studies/week</span> demonstrates enterprise-grade PACS/RIS capacity, comparable to Epic's imaging analytics. <span class="highlight">45,000 studies launched by weekday</span> shows robust daily workflow capacity. <span class="highlight">15M studies migrated</span> reflects expertise in large-scale data transitions (e.g., cloud adoption, legacy system upgrades).</p>
+                    
+                    <p><strong>Interoperability & Standardization:</strong> <span class="highlight">40 PACS consolidated</span> suggests seamless integration across merged entities, reducing silos. <span class="highlight">25+ go-lives</span> indicates streamlined deployments—critical for health systems with tight timelines.</p>
+                    
+                    <p><strong>Speed & Efficiency:</strong> <span class="highlight">2-second TTFI</span> is best-in-class for non-AI-enhanced systems (e.g., GE's AI-assisted CTs achieve ~1 second). <span class="highlight>35 TB/day migration</span> supports rapid cloud adoption (e.g., AWS/Azure migrations).</p>
+                    
+                    <p><strong>User Capacity:</strong> <span class="highlight">1,100 concurrent users</span> and <span class="highlight">275 concurrent sessions</span> demonstrate robust system performance under heavy load.</p>
+                    
+                    <button class="expand-btn" onclick="toggleExpand(this, 'comparison')">
+                        View Comparison Table <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div id="comparison" class="expand-content">
+                        <table class="comparison-table">
+                            <tr>
+                                <th>Metric</th>
+                                <th>Canon Medical</th>
+                                <th>Industry Benchmark</th>
+                            </tr>
+                            <tr>
+                                <td>Time to First Image (TTFI)</td>
+                                <td>2 seconds</td>
+                                <td>3-5 seconds (non-AI systems)</td>
+                            </tr>
+                            <tr>
+                                <td>Studies Launched (Weekday)</td>
+                                <td>45,000</td>
+                                <td>30,000-40,000 (large systems)</td>
+                            </tr>
+                            <tr>
+                                <td>Data Migration Rate</td>
+                                <td>35 TB/day</td>
+                                <td>20-30 TB/day (typical cloud vendors)</td>
+                            </tr>
+                            <tr>
+                                <td>PACS Consolidation</td>
+                                <td>40 systems</td>
+                                <td>20-30 systems (large health systems)</td>
+                            </tr>
+                            <tr>
+                                <td>Concurrent Sessions</td>
+                                <td>275</td>
+                                <td>200-300 (comparable PACS systems)</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div id="takeaways" class="tab-content-facts">
+                <h2><i class="fas fa-lightbulb"></i> Strategic Takeaways</h2>
+                
+                <div class="strength-card">
+                    <h3><i class="fas fa-check-circle"></i> Strengths</h3>
+                    <ul>
+                        <li><strong>Unmatched support responsiveness:</strong> <30-second answer rate, 62% same-day fixes</li>
+                        <li><strong>Proven scalability:</strong> 40 PACS consolidated, 15M studies migrated</li>
+                        <li><strong>High-volume performance:</strong> 45,000 daily studies launched with 275 concurrent sessions</li>
+                        <li><strong>Speed-critical applications:</strong> 2-second TTFI ideal for ERs/trauma centers</li>
+                    </ul>
+                </div>
+                
+                <div class="opportunity-card">
+                    <h3><i class="fas fa-search-plus"></i> Opportunities</h3>
+                    <ul>
+                        <li><strong>Publish competitor benchmarks:</strong> E.g., "Our TTFI is 60% faster than industry average"</li>
+                        <li><strong>Highlight AI integrations:</strong> If applicable, link speed to AI tools</li>
+                        <li><strong>Showcase ROI:</strong> Add case studies like "40 PACS consolidation saved $3M/year"</li>
+                    </ul>
+                </div>
+                
+                <h3><i class="fas fa-hospital"></i> Ideal Use Cases</h3>
+                <div class="use-case-grid">
+                    <div class="use-case-card">
+                        <h3><i class="fas fa-building"></i> Large Hospital Networks</h3>
+                        <p>Undergoing mergers/PACS upgrades needing seamless integration across facilities</p>
+                    </div>
+                    <div class="use-case-card">
+                        <h3><i class="fas fa-ambulance"></i> Urgent Care Centers</h3>
+                        <p>Prioritizing imaging speed where 2-second TTFI improves emergency response</p>
+                    </div>
+                    <div class="use-case-card">
+                        <h3><i class="fas fa-cloud-upload-alt"></i> Data-Heavy Institutions</h3>
+                        <p>Migrating to cloud with 35 TB/day peak migration ensuring minimal downtime</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>© 2023 Canon Medical Informatics, Inc. | All rights reserved</p>
+            <p>Canon Medical offers a full range of diagnostic medical imaging solutions including CT, X-Ray, Ultrasound, Vascular and MR</p>
+        </div>
+    </footer>
+
+    <script>
+        // Story data for success stories
+        const stories = {
+            summit: {
+                title: "Summit Medical Group - Expanding Imaging Outside of Radiology",
+                content: `
+                    <p><strong>The Challenge:</strong> Summit Medical Group decided imaging was a key component in improving healthcare and outcomes. They had to confront challenges with their wide base of practitioners, vast specialties, multiple facilities, dynamic needs and supporting infrastructure.</p>
+                    <p>Their existing PACS viewer presented issues: confusing tools, clunky interfaces, multiple client versions, deployment issues and dataflow constraints. Even with web access, users had to learn different interfaces for each facility and couldn't compare exams from different facilities.</p>
+                    
+                    <p><strong>Why Canon Medical?</strong> After evaluating several universal viewer products, Vitrea® View enterprise viewer rose to the top. It provided the right depth of tools, user-centric experience and design, while enabling Summit Medical Group to view almost any image type, from anywhere, on demand.</p>
+                    
+                    <div class="quote">
+                        "This was our best experience with a product implementation, EVER! From planning, to delivery, to post project review, Canon Medical was on point and helped us every step of the way."
+                        <br><strong>- Kathie Vendemia, Associate Director of Imaging</strong>
+                    </div>
+                    
+                    <p><strong>Success:</strong> The implementation was completed on time and on budget. With over 500 referring providers spread across 60+ locations, training was a concern. However, Vitrea View's ease-of-use made adoption simple with training materials and videos provided through email and intranet.</p>
+                    
+                    <p>Follow-up visits revealed no complaints about confusion using the viewer, and response has been overwhelmingly positive.</p>
+                `
+            },
+            king: {
+                title: "King Edward VII's Hospital - Rapid, Consistent Delivery of Diagnostic Information",
+                content: `
+                    <p><strong>The Challenge:</strong> King Edward VII's Hospital had an aging PACS that was performing poorly. The hospital was challenged to provide uniform access to imaging in all service areas. When an upgrade was proposed by another vendor at high cost with no new functionality, leadership decided to consider other options.</p>
+                    
+                    <p><strong>Why Canon Medical?</strong> Having had a positive business relationship with Canon Medical in the past, the hospital launched a tender process. After careful review, IT, medical and administrative staff all selected Canon Medical.</p>
+                    
+                    <p><strong>Success:</strong> The hospital outlined requirements that included a timeline for project completion within three months. They set up a dedicated team of clinical and IT resources to direct the implementation of the Vitrea® Enterprise Imaging solution.</p>
+                    
+                    <div class="stats">
+                        <div class="stat-box">
+                            <h4>3</h4>
+                            <p>Month Implementation</p>
+                        </div>
+                        <div class="stat-box">
+                            <h4>100%</h4>
+                            <p>Staff Approval</p>
+                        </div>
+                    </div>
+                    
+                    <div class="quote">
+                        "The project went really well. The Canon Medical team are brilliant to work with! It is a pleasure to be involved with a highly motivated, forward-thinking group with a can-do attitude."
+                        <br><strong>- Corey Frazer, Imaging Services Manager</strong>
+                    </div>
+                    
+                    <p><strong>Components Implemented:</strong></p>
+                    <ul>
+                        <li>Vitrea Vision</li>
+                        <li>Vitrea Connection</li>
+                        <li>Vitrea Read Workstations</li>
+                        <li>Vitrea Read Server</li>
+                        <li>Vitrea Advanced Visualization</li>
+                        <li>DOCMweb™</li>
+                    </ul>
+                `
+            },
+            hopkins: {
+                title: "Johns Hopkins Medicine - Direct Access to Full Patient Imaging History",
+                content: `
+                    <p><strong>The Challenge:</strong> Johns Hopkins Medicine (JHM) was interested in providing a consistent view of patient information across the enterprise. They were rolling out a new EMR from Epic and wanted to provide enterprise access to patient imaging history directly from the EMR system.</p>
+                    
+                    <p>Prior to implementation, clinicians had limited access to imaging studies. They could only view images stored in local PACS and had to learn multiple PACS client interfaces. IT was challenged to provide convenient, secure access across all locations.</p>
+                    
+                    <p><strong>Why Canon Medical?</strong> JHM selected and implemented Vitrea® Enterprise Viewer in phase one of their enterprise viewer initiative. Clinicians can view patient images, radiology reports and related documents from within the EMR via a secure link that integrates with JHM's single sign-on mechanism.</p>
+                    
+                    <p><strong>Success:</strong> Phase two extended this capability by implementing Vitrea Data Stream technology to provide direct access to studies stored in PACS at Johns Hopkins Suburban Hospital and Sibley Memorial Hospital facilities without requiring data migration, routing, or caching.</p>
+                    
+                    <div class="quote">
+                        "Quick access to all studies, regardless of their location within the JHM enterprise, was met with enthusiasm as it resolved a long-standing issue of study access across the enterprise."
+                    </div>
+                    
+                    <p><strong>Key Benefits:</strong></p>
+                    <ul>
+                        <li>Rapid access to imaging studies within the patients' records in the EMR</li>
+                        <li>Access to a broad set of imaging studies, regardless of storage location</li>
+                        <li>Easy to deploy, easy to maintain solution supporting IT security needs</li>
+                        <li>Holistic view of patients' medical imaging records enhancing clinical decision support</li>
+                    </ul>
+                `
+            },
+            hackensack: {
+                title: "HackensackUMC - Improving Physician Access to Radiologic Images",
+                content: `
+                    <p><strong>The Challenge:</strong> HackensackUMC wanted to meet physician demand for better access to radiologic images. They wanted to bring images to care teams when and where they need them, helping to garner more value from investments in image acquisition and improving patient care.</p>
+                    
+                    <p><strong>Why Canon Medical?</strong> To stay ahead of competitors, HackensackUMC wanted to provide image access across their medical enterprise. Canon Medical's universal viewer, Vitrea® View, provides fast access to DICOM and non-DICOM images from any archive on browsers and mobile devices.</p>
+                    
+                    <p><strong>Success:</strong> HackensackUMC set up a dedicated team of clinical and IT resources to direct implementation. Canon Medical dedicated software engineers and professional services staff for environmental setup, configuration and workflow integration.</p>
+                    
+                    <div class="stats">
+                        <div class="stat-box">
+                            <h4>20</h4>
+                            <p>Avg Users (Dec 2012)</p>
+                        </div>
+                        <div class="stat-box">
+                            <h4>206</h4>
+                            <p>Avg Users (Apr 2013)</p>
+                        </div>
+                        <div class="stat-box">
+                            <h4>261</h4>
+                            <p>Avg Users (Sep 2013)</p>
+                        </div>
+                    </div>
+                    
+                    <div class="quote">
+                        "We realized that valuable radiologic images were not being fully utilized in patient care... Vitrea View integrates with our EMR and provides fast and convenient access to current images. The viewer, navigation, and tools are intuitive, so we did not need to invest in extensive training."
+                        <br><strong>- Shafiq Rab, M.D., VP and Chief Information Officer</strong>
+                    </div>
+                    
+                    <p><strong>Implementation Components:</strong></p>
+                    <ul>
+                        <li>5 virtual Vitrea View servers</li>
+                        <li>1 VIMS with 6TB storage</li>
+                        <li>5 DICOM archives</li>
+                        <li>1 load balancer</li>
+                        <li>SAN network storage</li>
+                    </ul>
+                `
+            },
+            banner: {
+                title: "Banner Health - Enterprise Advanced Visualization Solution",
+                content: `
+                    <p><strong>The Challenge:</strong> Banner Health wanted to implement an enterprise solution that would provide access to all advanced visualization tools available on their Vitrea Workstations™ and from multiple PACS workstations. Their requirements called for access at sites across seven western states without compromises in functionality or speed.</p>
+                    
+                    <p><strong>Why Canon Medical?</strong> Canon Medical provided a multi-modality, vendor neutral platform that supports a PACS-integrated enterprise deployment for Fuji PACS, as well as CT and MR from Toshiba, GE, Philips and Siemens. The deployment provides a single user interface and standardization across facilities.</p>
+                    
+                    <p><strong>Success:</strong> Prior to implementation, Banner Health had 17 standalone Vitrea Workstations™ and multiple PACS access points dispersed across their IDN. After implementation, they centralized disparate databases and enabled use of Canon Medical's rich toolsets from anywhere in the enterprise.</p>
+                    
+                    <div class="quote">
+                        "At first, the thought of going to an enterprise model 3D system was frightening... After implementation, and with enough time to realize the positive impact, we are completely sold on the enterprise system. Complexity has been taken out of the equation and all of our facilities are standardized."
+                        <br><strong>- Tom Sadler, Digital Imaging / PACS Manager</strong>
+                    </div>
+                    
+                    <p><strong>Banner Health Stats:</strong></p>
+                    <div class="stats">
+                        <div class="stat-box">
+                            <h4>24</h4>
+                            <p>Hospitals</p>
+                        </div>
+                        <div class="stat-box">
+                            <h4>4,391</h4>
+                            <p>Patient Beds</p>
+                        </div>
+                        <div class="stat-box">
+                            <h4>125K</h4>
+                            <p>Monthly Studies</p>
+                        </div>
+                    </div>
+                    
+                    <p>The enterprise approach removed the burden of thick client maintenance and enabled using the system from any regular computer.</p>
+                `
+            },
+            ochsner: {
+                title: "Ochsner Health System - Growing with a Flexible Enterprise Partner",
+                content: `
+                    <p><strong>The Challenge:</strong> Ochsner Health System was looking for an enterprise imaging partner who could grow with them as quickly as they were growing themselves. As they expanded to serve more people in Louisiana, they found themselves migrating data and images two or three times a year.</p>
+                    
+                    <p><strong>Why Canon Medical?</strong> "We really needed someone who could grow with us, who had flexibility, who had the technical infrastructure to help us," said Ashley Clary, Vice President of Imaging Service, "...so that was Canon Medical for us."</p>
+                    
+                    <p>Canon Medical's solutions provided the scalability and flexibility that Ochsner needed to support their rapid expansion without the constant need for data migration.</p>
+                    
+                    <div class="quote">
+                        "We really needed someone who could grow with us, who had flexibility, who had the technical infrastructure to help us... so that was Canon Medical for us."
+                        <br><strong>- Ashley Clary, Vice President of Imaging Service</strong>
+                    </div>
+                    
+                    <p><strong>Success:</strong> With Canon Medical as their enterprise imaging partner, Ochsner was able to:</p>
+                    <ul>
+                        <li>Eliminate frequent data migrations</li>
+                        <li>Scale their imaging capabilities along with their growth</li>
+                        <li>Provide consistent imaging access across all facilities</li>
+                        <li>Reduce IT complexity and maintenance costs</li>
+                    </ul>
+                    
+                    <p>The partnership with Canon Medical has paved the way for Ochsner Health System's continued expansion and ability to serve more patients across Louisiana.</p>
+                `
+            }
+        };
+
+        // Main navigation functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Navigation between main sections
+            const navLinks = document.querySelectorAll('.nav-link');
+            const pageSections = document.querySelectorAll('.page-section');
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('data-target');
+                    
+                    // Update active navigation link
+                    navLinks.forEach(navLink => navLink.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Show the target section
+                    pageSections.forEach(section => section.classList.remove('active'));
+                    document.getElementById(targetId).classList.add('active');
+                    
+                    // Scroll to top
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+            });
+            
+            // Success Stories functionality
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const storyCards = document.querySelectorAll('.story-card');
+            const modal = document.getElementById('storyModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalBody = document.getElementById('modalBody');
+            const closeModal = document.querySelector('.close-modal');
+            const readMoreLinks = document.querySelectorAll('.read-more');
+
+            // Filter functionality
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Remove active class from all buttons
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    
+                    // Add active class to clicked button
+                    button.classList.add('active');
+                    
+                    const filter = button.getAttribute('data-filter');
+                    
+                    storyCards.forEach(card => {
+                        if (filter === 'all' || card.getAttribute('data-category') === filter) {
+                            card.style.display = 'block';
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    });
+                });
+            });
+
+            // Modal functionality
+            readMoreLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const storyKey = link.getAttribute('data-story');
+                    
+                    if (stories[storyKey]) {
+                        modalTitle.textContent = stories[storyKey].title;
+                        modalBody.innerHTML = stories[storyKey].content;
+                        modal.style.display = 'block';
+                        document.body.style.overflow = 'hidden';
+                    }
+                });
+            });
+
+            // Close modal
+            closeModal.addEventListener('click', () => {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            });
+
+            // Close modal when clicking outside
+            window.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    modal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }
+            });
+            
+            // Case Studies functionality - FIXED VIEW DETAILS BUTTONS
+            const viewDetailsButtons = document.querySelectorAll('.view-details');
+            const detailsContainers = document.querySelectorAll('.details-container');
+            const tabLinks = document.querySelectorAll('.tab-link');
+            
+            viewDetailsButtons.forEach(button => {
+                button.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('data-target');
+                    
+                    // Hide all details containers
+                    detailsContainers.forEach(container => {
+                        container.style.display = 'none';
+                    });
+                    
+                    // Show the target container
+                    const targetElement = document.getElementById(targetId);
+                    if (targetElement) {
+                        targetElement.style.display = 'block';
+                        
+                        // Scroll to the target element
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 100,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+            
+            // Tab functionality
+            tabLinks.forEach(tab => {
+                tab.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const tabContainer = this.closest('.tab-container');
+                    const targetId = this.getAttribute('href');
+                    
+                    // Remove active class from all tabs in this container
+                    tabContainer.querySelectorAll('.tab-link').forEach(t => {
+                        t.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked tab
+                    this.classList.add('active');
+                    
+                    // Hide all tab content in this container
+                    tabContainer.querySelectorAll('.tab-content').forEach(content => {
+                        content.classList.remove('active');
+                    });
+                    
+                    // Show the corresponding tab content
+                    const targetElement = tabContainer.querySelector(targetId);
+                    if (targetElement) {
+                        targetElement.classList.add('active');
+                    }
+                });
+            });
+            
+            // Form submission
+            const contactForm = document.querySelector('.contact-form');
+            if (contactForm) {
+                contactForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    alert('Thank you for your inquiry. We will contact you shortly.');
+                    contactForm.reset();
+                });
+            }
+            
+            // Facts and Statistics functionality - FIXED GLOBAL REACH NUMBERS
+            initWorldMap();
+            animateCounters();
+        });
+        
+        // Facts and Statistics Tab functionality
+        function openTabFacts(evt, tabName) {
+            var i, tabcontent, tablinks;
+            
+            tabcontent = document.getElementsByClassName("tab-content-facts");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].classList.remove("active");
+            }
+            
+            tablinks = document.getElementsByClassName("tab-facts");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove("active");
+            }
+            
+            document.getElementById(tabName).classList.add("active");
+            evt.currentTarget.classList.add("active");
+        }
+        
+        // Expand functionality
+        function toggleExpand(btn, contentId) {
+            var content = document.getElementById(contentId);
+            
+            if (content.style.display === "block") {
+                content.style.display = "none";
+                btn.classList.remove("active");
+            } else {
+                content.style.display = "block";
+                btn.classList.add("active");
+            }
+        }
+        
+        // Initialize world map with interactive dots - FIXED WITH COMPLETE DATA
+        function initWorldMap() {
+            const mapContainer = document.getElementById('worldMap');
+            if (!mapContainer) return;
+            
+            // Clear any existing dots
+            mapContainer.innerHTML = '';
+            
+            // Coordinates are approximate percentages of map width/height
+            const locations = [
+                { name: 'United States', x: 20, y: 40, count: 1250 },
+                { name: 'Germany', x: 53, y: 33, count: 450 },
+                { name: 'Japan', x: 85, y: 40, count: 750 },
+                { name: 'Australia', x: 88, y: 70, count: 280 },
+                { name: 'Brazil', x: 32, y: 60, count: 320 },
+                { name: 'India', x: 72, y: 48, count: 580 },
+                { name: 'UK', x: 48, y: 30, count: 380 },
+                { name: 'France', x: 50, y: 35, count: 400 },
+                { name: 'Canada', x: 22, y: 30, count: 350 },
+                { name: 'Singapore', x: 78, y: 55, count: 120 },
+                { name: 'South Africa', x: 55, y: 70, count: 180 },
+                { name: 'Mexico', x: 18, y: 48, count: 220 },
+                { name: 'China', x: 78, y: 45, count: 850 },
+                { name: 'Italy', x: 52, y: 38, count: 320 },
+                { name: 'Spain', x: 48, y: 40, count: 290 }
+            ];
+            
+            locations.forEach(location => {
+                const dot = document.createElement('div');
+                dot.className = 'map-dot';
+                dot.style.left = `${location.x}%`;
+                dot.style.top = `${location.y}%`;
+                dot.setAttribute('data-count', location.count);
+                dot.setAttribute('title', `${location.name}: ${location.count} customers`);
+                
+                // Size based on customer count
+                const size = 8 + (location.count / 250);
+                dot.style.width = `${size}px`;
+                dot.style.height = `${size}px`;
+                
+                dot.addEventListener('click', function() {
+                    alert(`${location.name}: ${location.count} Canon Medical customers`);
+                });
+                
+                mapContainer.appendChild(dot);
+            });
+        }
+        
+        // Animate counter values - FIXED WITH COMPLETE NUMBERS
+        function animateCounters() {
+            const counters = document.querySelectorAll('.counter');
+            const speed = 200; // The lower the slower
+            
+            counters.forEach(counter => {
+                let target;
+                
+                // Set target values based on element ID
+                switch(counter.id) {
+                    case 'customerCounter':
+                        target = 8456;
+                        break;
+                    case 'countryCounter':
+                        target = 136;
+                        break;
+                    case 'supportCounter':
+                        target = 7969;
+                        break;
+                    case 'resolutionCounter':
+                        target = 97;
+                        break;
+                    case 'casesReceived':
+                        target = 7969;
+                        break;
+                    case 'oneDayRate':
+                        target = 62;
+                        break;
+                    case 'sevenDayRate':
+                        target = 83;
+                        break;
+                    case 'callAnswerRate':
+                        target = 98;
+                        break;
+                    case 'thirtyDayRate':
+                        target = 97;
+                        break;
+                    case 'studiesInterpreted':
+                        target = 71000;
+                        break;
+                    case 'studiesLaunched':
+                        target = 45000;
+                        break;
+                    case 'studiesMigrated':
+                        target = 15;
+                        break;
+                    case 'pacsSystems':
+                        target = 40;
+                        break;
+                    case 'goLives':
+                        target = 25;
+                        break;
+                    case 'ttfi':
+                        target = 2;
+                        break;
+                    case 'peakMigration':
+                        target = 35;
+                        break;
+                    case 'uniqueUsers':
+                        target = 1400;
+                        break;
+                    case 'concurrentUsers':
+                        target = 1100;
+                        break;
+                    case 'concurrentSessions':
+                        target = 275;
+                        break;
+                    default:
+                        target = parseInt(counter.innerText.replace(/,/g, '')) || 0;
+                }
+                
+                let count = 0;
+                
+                // Determine increment value based on target
+                const increment = target / speed;
+                
+                const updateCount = () => {
+                    if (count < target) {
+                        count += increment;
+                        
+                        // Format numbers with commas for large values
+                        if (target > 1000) {
+                            counter.innerText = Math.ceil(count).toLocaleString();
+                        } else if (counter.id === 'resolutionCounter' || 
+                                  counter.id === 'oneDayRate' || 
+                                  counter.id === 'sevenDayRate' || 
+                                  counter.id === 'callAnswerRate' ||
+                                  counter.id === 'thirtyDayRate') {
+                            counter.innerText = Math.ceil(count) + '%';
+                        } else if (counter.id === 'studiesMigrated') {
+                            counter.innerText = (count / 1000000).toFixed(1) + 'M';
+                        } else if (counter.id === 'ttfi') {
+                            counter.innerText = count.toFixed(1) + 's';
+                        } else if (counter.id === 'peakMigration') {
+                            counter.innerText = count.toFixed(0) + 'TB';
+                        } else {
+                            counter.innerText = Math.ceil(count);
+                        }
+                        
+                        setTimeout(updateCount, 1);
+                    } else {
+                        // Final formatting
+                        if (target > 1000) {
+                            counter.innerText = target.toLocaleString();
+                        } else if (counter.id === 'resolutionCounter' || 
+                                  counter.id === 'oneDayRate' || 
+                                  counter.id === 'sevenDayRate' || 
+                                  counter.id === 'callAnswerRate' ||
+                                  counter.id === 'thirtyDayRate') {
+                            counter.innerText = target + '%';
+                        } else if (counter.id === 'studiesMigrated') {
+                            counter.innerText = (target / 1000000).toFixed(1) + 'M';
+                        } else if (counter.id === 'ttfi') {
+                            counter.innerText = target.toFixed(1) + 's';
+                        } else if (counter.id === 'peakMigration') {
+                            counter.innerText = target.toFixed(0) + 'TB';
+                        } else {
+                            counter.innerText = target;
+                        }
+                    }
+                };
+                
+                updateCount();
+            });
+            
+            // Update the dynamic numbers in the data card
+            document.getElementById('dynamicCustomerCount').textContent = '8,456';
+            document.getElementById('dynamicCountryCount').textContent = '136';
+            document.getElementById('resolutionRate').textContent = '99.7';
+        }
+    </script>
+</body>
+</html>
