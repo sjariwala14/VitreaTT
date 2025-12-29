@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parkway Singapore - Consolidating Canon VitreaAdvanced</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --parkway-green: #007a33;
+            --parkway-green-dark: #005a25;
+            --parkway-green-light: #4caf50;
+            --parkway-teal: #00a3a6;
+            --parkway-gray: #768692;
+            --parkway-gray-light: #e6e8ed;
+            --light-bg: #f0fff4;
+            --text-dark: #333333;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--parkway-green), var(--parkway-green-dark));
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            border-radius: 0 0 10px 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 15px;
+        }
+        
+        .project-tagline {
+            font-size: 1rem;
+            font-style: italic;
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 10px;
+            border-radius: 5px;
+            display: inline-block;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            padding: 25px;
+            margin-bottom: 25px;
+            transition: transform 0.3s ease;
+            border-left: 4px solid var(--parkway-green);
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            cursor: pointer;
+        }
+        
+        .card-title {
+            font-size: 1.4rem;
+            color: var(--parkway-green);
+        }
+        
+        .card-content {
+            display: none;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        
+        .card.active .card-content {
+            display: block;
+        }
+        
+        .card-icon {
+            color: var(--parkway-green);
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .card.active .card-icon {
+            transform: rotate(180deg);
+        }
+        
+        .stats-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .stat-box {
+            flex: 1;
+            min-width: 200px;
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            border-top: 4px solid var(--parkway-teal);
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--parkway-teal);
+            margin: 10px 0;
+        }
+        
+        .stat-label {
+            color: var(--text-dark);
+            font-size: 1rem;
+        }
+        
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .comparison-table th, .comparison-table td {
+            padding: 15px;
+            text-align: left;
+            border: 1px solid var(--parkway-gray-light);
+        }
+        
+        .comparison-table th {
+            background-color: var(--parkway-green);
+            color: white;
+            font-weight: 600;
+        }
+        
+        .comparison-table tr:nth-child(even) {
+            background-color: var(--light-bg);
+        }
+        
+        .comparison-table tr:hover {
+            background-color: var(--parkway-gray-light);
+        }
+        
+        .recommendation {
+            background-color: var(--light-bg);
+            border-left: 4px solid var(--parkway-teal);
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 8px;
+        }
+        
+        .architecture-diagram {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            margin: 30px 0;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .diagram-title {
+            text-align: center;
+            color: var(--parkway-green);
+            margin-bottom: 20px;
+        }
+        
+        .diagram-items {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        .diagram-item {
+            width: 220px;
+            padding: 15px;
+            text-align: center;
+            border: 2px solid var(--parkway-green);
+            border-radius: 8px;
+            background: var(--light-bg);
+        }
+        
+        .diagram-arrow {
+            font-size: 24px;
+            color: var(--parkway-green);
+            display: flex;
+            align-items: center;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+            background: var(--parkway-gray);
+            color: white;
+            border-radius: 10px 10px 0 0;
+        }
+        
+        .highlight {
+            background-color: var(--light-bg);
+            padding: 3px 6px;
+            border-radius: 4px;
+            font-weight: 500;
+            color: var(--parkway-green);
+        }
+        
+        .solution-list {
+            list-style-type: none;
+            padding-left: 20px;
+        }
+        
+        .solution-list li {
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+        }
+        
+        .solution-list li:before {
+            content: "•";
+            color: var(--parkway-green);
+            font-weight: bold;
+            display: inline-block;
+            width: 1em;
+            margin-left: -1em;
+            font-size: 1.2rem;
+        }
+        
+        .option-tag {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        
+        .option-1 { background-color: #ccffcc; color: #006600; }
+        .option-2 { background-color: #ccccff; color: #0000cc; }
+        
+        .network-diagram {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .network-group {
+            flex: 1;
+            min-width: 300px;
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            border-top: 4px solid var(--parkway-teal);
+        }
+        
+        .network-group h3 {
+            color: var(--parkway-green);
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        .hospital-list {
+            list-style-type: none;
+        }
+        
+        .hospital-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 25px 0;
+        }
+        
+        .benefit-box {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+            border-top: 4px solid var(--parkway-teal);
+            text-align: center;
+        }
+        
+        .benefit-icon {
+            font-size: 2.5rem;
+            color: var(--parkway-teal);
+            margin-bottom: 15px;
+        }
+        
+        .advantage-comparison {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin: 30px 0;
+        }
+        
+        .advantage-section {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .advantage-section h3 {
+            color: var(--parkway-green);
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--parkway-gray-light);
+        }
+        
+        .note-box {
+            background-color: #fff8e1;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+            font-style: italic;
+        }
+        
+        @media screen and (max-width: 768px) {
+            .stats-container {
+                flex-direction: column;
+            }
+            
+            .diagram-arrow {
+                display: none;
+            }
+            
+            .comparison-table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .network-diagram {
+                flex-direction: column;
+            }
+            
+            .advantage-comparison {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Parkway Singapore - Canon VitreaAdvanced Consolidation</h1>
+            <p class="subtitle">Strategic Proposal: Consolidating Canon VitreaAdvanced for Parkway Health</p>
+            <p class="project-tagline">Enterprise-wide advanced visualization with centralized deployment at Mount Elizabeth Hospital data center</p>
+        </div>
+    </header>
+    
+    <div class="container">
+        <div class="card">
+            <div class="card-header" onclick="toggleCard(this)">
+                <h2 class="card-title">Current Challenge & Recommended Solution</h2>
+                <span class="card-icon"><i class="fas fa-chevron-down"></i></span>
+            </div>
+            <div class="card-content">
+                <p><strong>Current Challenges:</strong></p>
+                <ul class="solution-list">
+                    <li>Disparate, aging Vitrea workstations at Mount Elizabeth Hospital</li>
+                    <li>Separate VitreaAdvanced system at Mount Elizabeth Novena</li>
+                    <li>Missed opportunity for enterprise workflow despite a high-speed 1Gbps WAN</li>
+                    <li>Obsolete LungCAD server requiring replacement</li>
+                </ul>
+                
+                <div class="recommendation">
+                    <p><strong>Recommended Solution:</strong> Consolidate into a centralized Canon VitreaAdvanced deployment hosted in the Mount Elizabeth Hospital data center, serving both hospitals with enterprise-wide access and improved workflow.</p>
+                </div>
+                
+                <div class="stats-container">
+                    <div class="stat-box">
+                        <div class="stat-number">2</div>
+                        <div class="stat-label">Hospital Sites</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">7</div>
+                        <div class="stat-label">Total Licenses</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">1GBPS</div>
+                        <div class="stat-label">WAN Connection</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-number">100%</div>
+                        <div class="stat-label">Virtualization Ready</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header" onclick="toggleCard(this)">
+                <h2 class="card-title">Key Advantages of Canon VitreaAdvanced</h2>
+                <span class="card-icon"><i class="fas fa-chevron-down"></i></span>
+            </div>
+            <div class="card-content">
+                <div class="benefits-grid">
+                    <div class="benefit-box">
+                        <div class="benefit-icon"><i class="fas fa-expand-arrows-alt"></i></div>
+                        <h3>Proven Scalability</h3>
+                        <p>1Gbps WAN supports seamless performance. Add low-cost servers to grow capacity as needed.</p>
+                    </div>
+                    <div class="benefit-box">
+                        <div class="benefit-icon"><i class="fas fa-cloud"></i></div>
+                        <h3>Full Virtualization</h3>
+                        <p>100% software-based, VMware-ready solution with no proprietary hardware lock-in.</p>
+                    </div>
+                    <div class="benefit-box">
+                        <div class="benefit-icon"><i class="fas fa-shield-alt"></i></div>
+                        <h3>Built-in Redundancy</h3>
+                        <p>Achieve high availability with no single point of failure through load-balanced architecture.</p>
+                    </div>
+                    <div class="benefit-box">
+                        <div class="benefit-icon"><i class="fas fa-rocket"></i></div>
+                        <h3>Future-Proof</h3>
+                        <p>Software-only model allows you to control and upgrade your own environment.</p>
+                    </div>
+                </div>
+                
+                <div class="advantage-comparison">
+                    <div class="advantage-section">
+                        <h3>Vital Approach Advantages</h3>
+                        <ul class="solution-list">
+                            <li>No shared resources - dedicated nodes for consistent performance</li>
+                            <li>Designed for scalability and flexibility</li>
+                            <li>No proprietary hardware - use standard servers</li>
+                            <li>Simplified data traffic with single database</li>
+                            <li>100% CPU rendering in virtual environment</li>
+                            <li>Control your own environment - software only solution</li>
+                        </ul>
+                    </div>
+                    <div class="advantage-section">
+                        <h3>Other Vendor Limitations</h3>
+                        <ul class="solution-list">
+                            <li>Shared servers lead to performance degradation</li>
+                            <li>Difficult to determine when to add hardware</li>
+                            <li>Proprietary hardware creates vendor lock-in</li>
+                            <li>Complex data routing between nodes</li>
+                            <li>GPU dependency limits virtualization</li>
+                            <li>Hardware accelerators become obsolete quickly</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header" onclick="toggleCard(this)">
+                <h2 class="card-title">Deployment Architecture Options</h2>
+                <span class="card-icon"><i class="fas fa-chevron-down"></i></span>
+            </div>
+            <div class="card-content">
+                <p>Two deployment models have been evaluated for consolidating VitreaAdvanced across Mount Elizabeth Hospital and Mount Elizabeth Novena.</p>
+                
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Option</th>
+                            <th>Architecture</th>
+                            <th>Advantages</th>
+                            <th>Considerations</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="option-tag option-1">Option 1 (Recommended)</span></td>
+                            <td>Single Database Centralized</td>
+                            <td>
+                                <ul style="list-style-type: none; padding-left: 0;">
+                                    <li>• One central VIMS server & database</li>
+                                    <li>• Streamlined management & PACS integration</li>
+                                    <li>• Enterprise-wide data access</li>
+                                    <li>• Single point of maintenance</li>
+                                </ul>
+                            </td>
+                            <td>
+                                <ul style="list-style-type: none; padding-left: 0;">
+                                    <li>• Doctors from both sites can access all patient data</li>
+                                    <li>• Requires cross-domain connectivity setup</li>
+                                </ul>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><span class="option-tag option-2">Option 2</span></td>
+                            <td>Separate Databases</td>
+                            <td>
+                                <ul style="list-style-type: none; padding-left: 0;">
+                                    <li>• Two independent VIMS servers</li>
+                                    <li>• Physically segregates patient data by site</li>
+                                    <li>• Each site is self-contained</li>
+                                </ul>
+                            </td>
+                            <td>
+                                <ul style="list-style-type: none; padding-left: 0;">
+                                    <li>• More complex to manage</li>
+                                    <li>• Less efficient resource utilization</li>
+                                    <li>• Limited cross-site access</li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div class="note-box">
+                    <p><strong>Important Note:</strong> VitreaAdvanced can work across multiple domains. Separate domains at each site are not an issue as long as communication between them is permitted by Parkway Radiology's IT department.</p>
+                </div>
+                
+                <div class="architecture-diagram">
+                    <h3 class="diagram-title">Option 1: Single Consolidated VitreaAdvanced Deployment</h3>
+                    <div class="diagram-items">
+                        <div class="diagram-item">
+                            <h4>Mount Elizabeth Hospital Data Center</h4>
+                            <p>Central VIMS Server</p>
+                            <p>Virtualized Environment</p>
+                            <p>Load Balanced Nodes</p>
+                        </div>
+                        <div class="diagram-arrow">
+                            <i class="fas fa-arrows-alt-h"></i>
+                        </div>
+                        <div class="diagram-item">
+                            <h4>Mount Elizabeth Hospital</h4>
+                            <p>4 Floating Licenses</p>
+                            <p>New PCs replacing aging workstations</p>
+                            <p>PACS Integration</p>
+                        </div>
+                        <div class="diagram-arrow">
+                            <i class="fas fa-arrows-alt-h"></i>
+                        </div>
+                        <div class="diagram-item">
+                            <h4>Mount Elizabeth Novena</h4>
+                            <p>2 Powerstation Licenses</p>
+                            <p>1 Floating License</p>
+                            <p>Existing high-end workstations</p>
+                        </div>
+                    </div>
+                    <p style="text-align: center; margin-top: 15px; font-style: italic;">All connected via 1Gbps WAN (equivalent to fast LAN performance)</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header" onclick="toggleCard(this)">
+                <h2 class="card-title">Implementation Requirements</h2>
+                <span class="card-icon"><i class="fas fa-chevron-down"></i></span>
+            </div>
+            <div class="card-content">
+                <ul class="solution-list">
+                    <li><span class="highlight">Hardware Refresh</span>: Replace 4 aging workstation PCs at Mount Elizabeth Hospital (6+ years old) with new low-cost PCs capable of running VitreaAdvanced.</li>
+                    <li><span class="highlight">Server Infrastructure</span>: Rack space required at Mount Elizabeth Hospital data center for new hardware. UPS recommended for deployment.</li>
+                    <li><span class="highlight">LungCAD Migration</span>: Obsolete LungCAD server can be scrapped. LungCAD functionality is integrated within VitreaAdvanced without separate server requirement.</li>
+                    <li><span class="highlight">Network Configuration</span>: Ensure cross-domain connectivity between hospital sites. VitreaAdvanced supports multiple domains.</li>
+                    <li><span class="highlight">PACS Integration</span>: Integration with Infinitt PACS using 'external link icon' for seamless launch from PACS worklist.</li>
+                </ul>
+                
+                <div class="network-diagram">
+                    <div class="network-group">
+                        <h3>Mount Elizabeth Hospital</h3>
+                        <ul class="hospital-list">
+                            <li>Central Data Center Location</li>
+                            <li>4 New Floating Licenses</li>
+                            <li>PACS Integration Point</li>
+                            <li>Hardware Refresh Required</li>
+                        </ul>
+                    </div>
+                    <div class="network-group">
+                        <h3>Mount Elizabeth Novena</h3>
+                        <ul class="hospital-list">
+                            <li>2 Powerstation Licenses</li>
+                            <li>1 Floating License</li>
+                            <li>Existing Workstations (retained)</li>
+                            <li>High-end Hardware</li>
+                        </ul>
+                    </div>
+                    <div class="network-group">
+                        <h3>Connectivity</h3>
+                        <ul class="hospital-list">
+                            <li>1Gbps WAN Connection</li>
+                            <li>Equivalent to Fast LAN</li>
+                            <li>Supports Real-time Access</li>
+                            <li>Enables Enterprise Workflow</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="note-box">
+                    <p><strong>Scalability Note:</strong> With 1Gbps WAN connection, there is capacity for extraordinary scalability. Vital has reference sites with 14 modalities connected to a single VIMS, over 200 desktops accessing VitreaAdvanced with 21 licenses (13 Advanced, 8 Core).</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header" onclick="toggleCard(this)">
+                <h2 class="card-title">Recommendation & Benefits</h2>
+                <span class="card-icon"><i class="fas fa-chevron-down"></i></span>
+            </div>
+            <div class="card-content">
+                <div class="recommendation">
+                    <p><strong>Option 1 (Single Database Centralized)</strong> is strongly recommended for Parkway Singapore. This approach maximizes the benefits of consolidation while leveraging the high-speed WAN between sites.</p>
+                    <p>Moving the existing VitreaAdvanced instance from Novena to the Mount Elizabeth Hospital data center creates a unified enterprise platform with centralized management, simplified PACS integration, and ready access to patient data from any site.</p>
+                </div>
+                
+                <div class="architecture-diagram">
+                    <h3 class="diagram-title">Consolidation Benefits</h3>
+                    <div class="diagram-items">
+                        <div class="diagram-item">
+                            <h4><i class="fas fa-clipboard-check" style="color: var(--parkway-teal); margin-right: 10px;"></i>Improved Workflow</h4>
+                            <p>Seamless PACS integration with single launch point</p>
+                            <p>Enterprise access from any site</p>
+                        </div>
+                        <div class="diagram-item">
+                            <h4><i class="fas fa-money-bill-wave" style="color: var(--parkway-teal); margin-right: 10px;"></i>Reduced TCO</h4>
+                            <p>Hardware modernization</p>
+                            <p>Elimination of redundant systems</p>
+                        </div>
+                        <div class="diagram-item">
+                            <h4><i class="fas fa-expand" style="color: var(--parkway-teal); margin-right: 10px;"></i>Scalable Platform</h4>
+                            <p>Add low-cost servers to grow</p>
+                            <p>Future-proof architecture</p>
+                        </div>
+                        <div class="diagram-item">
+                            <h4><i class="fas fa-database" style="color: var(--parkway-teal); margin-right: 10px;"></i>Centralized Management</h4>
+                            <p>Single database & license management</p>
+                            <p>Version control consistency</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="benefits-grid">
+                    <div class="benefit-box">
+                        <h3>Redundancy & High Availability</h3>
+                        <p>VitreaAdvanced supports fully redundant deployments through load balancing and VMware High Availability capabilities. No license charge for additional VIMS nodes in existing deployment.</p>
+                    </div>
+                    <div class="benefit-box">
+                        <h3>Virtualization Ready</h3>
+                        <p>100% virtualized solution certified "VMware Ready". All components including VitreaCore and Advanced 3D rendering servers can be virtualized with 100% CPU rendering (no GPU required).</p>
+                    </div>
+                    <div class="benefit-box">
+                        <h3>System Longevity</h3>
+                        <p>Software-only solution allows you to maintain control of your environment. Upgrade through purchase of standard servers with off-the-shelf hardware or in virtualized environment.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <div class="container">
+            <p>Parkway Singapore - Strategic Proposal: Consolidating Canon VitreaAdvanced</p>
+            <p>© 2023 Parkway Health. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        function toggleCard(element) {
+            const card = element.parentElement;
+            card.classList.toggle('active');
+        }
+        
+        // Open the first card by default
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelector('.card').classList.add('active');
+        });
+    </script>
+</body>
+</html>
