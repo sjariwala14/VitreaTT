@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Vitrea® Advanced Visualization 7.16 – Official Technical Specifications</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: #f1f5f9;
+            color: #0a2540;
+            line-height: 1.5;
+            padding: 2rem 1rem;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 32px;
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.1);
+            overflow: hidden;
+            padding: 2rem;
+        }
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #0047AB, #2c7da0);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+            border-left: 5px solid #0047AB;
+            padding-left: 1.2rem;
+        }
+        .subhead {
+            color: #2c3e66;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 1rem;
+            margin-top: 0.25rem;
+            padding-left: 1.7rem;
+        }
+        .eol-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .eol-card {
+            background: #fff9f0;
+            border-left: 6px solid #e67e22;
+            border-radius: 20px;
+            padding: 1rem 1.5rem;
+            flex: 1;
+            min-width: 240px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .eol-card h4 {
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #c2410c;
+        }
+        .countdown {
+            font-weight: 700;
+            font-size: 1.2rem;
+            font-family: monospace;
+            color: #1e466e;
+            margin-top: 0.5rem;
+        }
+        .note-eol {
+            background: #fef3e8;
+            padding: 0.8rem;
+            border-radius: 16px;
+            font-size: 0.85rem;
+            margin-top: 0.8rem;
+        }
+        h2 {
+            font-size: 1.7rem;
+            margin: 1.8rem 0 1rem 0;
+            font-weight: 600;
+            border-bottom: 3px solid #cbd5e1;
+            padding-bottom: 0.5rem;
+            color: #0f3b5c;
+        }
+        h3 {
+            font-size: 1.3rem;
+            margin: 1.5rem 0 0.75rem 0;
+            color: #1e5a7d;
+            font-weight: 600;
+        }
+        .spec-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #ffffff;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            margin: 1rem 0 1.5rem 0;
+        }
+        .spec-table th, .spec-table td {
+            border: 1px solid #e2edf2;
+            padding: 12px 16px;
+            vertical-align: top;
+            text-align: left;
+        }
+        .spec-table th {
+            background-color: #eef4ff;
+            font-weight: 600;
+            width: 28%;
+            color: #0b3b5f;
+        }
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #ffffff;
+            border-radius: 20px;
+            overflow-x: auto;
+            display: block;
+            margin: 1rem 0 1.5rem 0;
+        }
+        .comparison-table th, .comparison-table td {
+            border: 1px solid #e2edf2;
+            padding: 12px 16px;
+            vertical-align: top;
+            text-align: left;
+        }
+        .comparison-table th {
+            background-color: #eef4ff;
+            font-weight: 600;
+            color: #0b3b5f;
+        }
+        .note {
+            background: #f0f9ff;
+            border-left: 4px solid #2c7da0;
+            padding: 0.8rem 1.2rem;
+            border-radius: 14px;
+            margin: 1rem 0;
+            font-size: 0.9rem;
+        }
+        .calc-section {
+            background: #f8fafc;
+            border-radius: 28px;
+            padding: 1.2rem 1.5rem;
+            margin: 1.5rem 0;
+            border: 1px solid #e0e9f0;
+        }
+        .calc-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: flex-end;
+            margin-top: 1rem;
+        }
+        .calc-field {
+            flex: 1;
+            min-width: 140px;
+        }
+        .calc-field label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+            font-size: 0.85rem;
+        }
+        input, select {
+            padding: 0.5rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 12px;
+            width: 100%;
+            font-size: 0.9rem;
+        }
+        button {
+            background: #1f6392;
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        button:hover {
+            background: #0f4a6e;
+        }
+        .result {
+            background: #e6f0fa;
+            padding: 0.8rem;
+            border-radius: 16px;
+            margin-top: 1rem;
+            font-weight: 500;
+        }
+        .important-box {
+            background: #fef9e6;
+            border: 1px solid #f1d38b;
+            border-radius: 24px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+        .contact-card {
+            background: #eef4ff;
+            border-radius: 20px;
+            padding: 1rem 1.5rem;
+            margin: 1rem 0;
+        }
+        footer {
+            margin-top: 2.5rem;
+            font-size: 0.8rem;
+            text-align: center;
+            border-top: 1px solid #dce5ef;
+            padding-top: 1.8rem;
+            color: #3a5a78;
+        }
+        a {
+            color: #1e6f9f;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        @media (max-width: 760px) {
+            .container { padding: 1rem; }
+            .spec-table th, .spec-table td { padding: 8px 10px; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Vitrea® Advanced Visualization 7.16</h1>
+    <div class="subhead">Recommended Hardware Technical Specifications – Based on Canon Medical Documentation (Rev. F aligned with M-06637 J)</div>
+
+    <!-- ========== ENHANCED END OF LIFE NOTIFICATIONS ========== -->
+    <h2>📅 End of Life Notifications – Microsoft OS, SQL & GPU Lifecycle</h2>
+    <div class="eol-grid">
+        <div class="eol-card"><h4>🪟 Windows 10 Workstation</h4><p>Mainstream support ends <strong>October 14, 2025</strong>. Upgrade to Windows 11 Pro 64-bit.</p><div class="countdown" id="win10Countdown">--</div><div class="note-eol">Vitrea 7.16 continues to operate, but security updates cease.</div></div>
+        <div class="eol-card"><h4>🗄️ SQL Server 2016</h4><p>Extended support ends <strong>July 14, 2026</strong>. Migrate to SQL 2019/2022 Standard.</p><div class="countdown" id="sql2016Countdown">--</div><div class="note-eol">Canon recommends upgrading for future compatibility and security.</div></div>
+        <div class="eol-card"><h4>🎛️ NVIDIA vGPU & Data Center GPUs</h4><p>NVIDIA ends support for older architectures. Turing+ required. vWS perpetual licenses recommended.</p></div>
+    </div>
+
+    <!-- ========== WORKSTATION DEPLOYMENTS (existing, but keep) ========== -->
+    <h2>🏥 Workstation Deployments</h2>
+    <h3>Single‑User System (1K support)</h3>
+    <table class="spec-table">
+
+
+
+<th>Model / SKU</th>
+<td>HP Z2 G1i Workstation (SKU# CJ5C9UC)</td>
+</tr>
+<tr>
+<th>Processor</th>
+<td>Intel® Core™ Ultra 7 265K (3.3 GHz base up to 5.4 GHz Turbo, 20 Cores)</td>
+</tr>
+<tr>
+<th>Memory</th>
+<td>64GB (2x32GB) DDR5 5600 DIMM NECC</td>
+</tr>
+<tr>
+<th>Storage</th>
+<td>Two (2) SSD 2TB 2280 PCIe M.2 RAID 1 (~2TB usable)</td>
+</tr>
+<tr>
+<th>GPU</th>
+<td>NVIDIA RTX™ PRO 2000 Blackwell 16GB</td>
+</tr>
+<tr>
+<th>OS</th>
+<td>Windows® 11 Professional 64-bit 22H2+</td>
+</tr>
+<tr>
+<th>Matrix Support</th>
+<td>1024×1024 CT images</td>
+</tr>
+</table>
+    <h3>Precision Workstation (1K & 2K support)</h3>
+    <table class="spec-table">
+
+
+
+<th>Model / SKU</th>
+<td>HP Z8 Fury G5 Workstation (SKU# 9DSU8UC)</td>
+</tr>
+<tr>
+<th>Processor</th>
+<td>Intel® Xeon® W5-3423 (3.20 GHz base / 4.60 GHz Turbo, 12C)</td>
+</tr>
+<tr>
+<th>Memory</th>
+<td>128GB (8x16GB) DDR5 4800 DIMM ECC Registered</td>
+</tr>
+<tr>
+<th>Storage</th>
+<td>Two (2) 4TB SSD 2280 PCIe M.2 with VROC RAID 1 (~4TB usable)</td>
+</tr>
+<tr>
+<th>GPU</th>
+<td>NVIDIA RTX™ PRO 2000 Blackwell 16GB</td>
+</tr>
+<tr>
+<th>OS</th>
+<td>Windows® 11 Professional 64-bit</td>
+</tr>
+<tr>
+<th>Matrix Support</th>
+<td>1024x1024 and 2048x2048 resolution CT images</td>
+</tr>
+</table>
+    <h3>Extend Deployment – Three‑User (3) System</h3>
+    <table class="spec-table">
+
+
+
+<th>Model / SKU</th>
+<td>HP® Z8 G5 Workstation (SKU# B3WP1UC)</td>
+</tr>
+<tr>
+<th>Processors</th>
+<td>Two (2) Intel® Xeon® Silver 4514y16+ (2.0 GHz base / 4.0 GHz Turbo, 16C each)</td>
+</tr>
+<tr>
+<th>Memory</th>
+<td>192GB (12x16GB) DDR5-4800 ECC RAM</td>
+</tr>
+<tr>
+<th>Storage</th>
+<td>Two (2) 2TB SSD 2280 PCIe TLC M.2 with VROC RAID 1</td>
+</tr>
+<tr>
+<th>GPU</th>
+<td>Two (2) NVIDIA RTX™ PRO 2000 Blackwell 16GB</td>
+</tr>
+<tr>
+<th>OS</th>
+<td>Windows Server® 2025 Standard with Desktop Experience (16‑core base + additional license)</td>
+</tr>
+<tr>
+<th>Network</th>
+<td>1.0 Gbps</td>
+</tr>
+<tr>
+<th>Resolution Support</th>
+<td>1024×1024 CT images fully supported</td>
+</tr>
+</table>
+
+    <!-- ========== MANAGEMENT SERVER (NEW) ========== -->
+    <h2>📌 Management Server (Dedicated)</h2>
+    <table class="spec-table">
+        <tr>
+            <th>Model / SKU</th>
+            <td>HPE® ProLiant DL360 Gen11 8SFF (SKU #S2H36A)</td>
+        </tr>
+        <tr>
+            <th>Processor</th>
+            <td>One (1) 8-Core Intel® Xeon® Gold 5415+ (2.9 GHz Base / 4.1 GHz Turbo, 4400 MHz)</td>
+        </tr>
+        <tr>
+            <th>Memory</th>
+            <td>64GB of RAM (4x16GB) DDR5-4400</td>
+        </tr>
+        <tr>
+            <th>Storage</th>
+            <td>Four (4) 960GB SATA 6Gb mixed‑use SFF SSDs in RAID‑1 (250GB C:\ OS, remainder E:\ for DB, DICOM® receive, patient data)</td>
+        </tr>
+        <tr>
+            <th>RAID Controller</th>
+            <td>Smart Array MR416i-o Gen11</td>
+        </tr>
+        <tr>
+            <th>Optical</th>
+            <td>DVD-RW</td>
+        </tr>
+        <tr>
+            <th>Power</th>
+            <td>Two (2) 800‑watt power supplies</td>
+        </tr>
+        <tr>
+            <th>Operating System</th>
+            <td>Microsoft® Windows Server® 2022 Standard with Desktop Experience (Installed) + 1x (16 Core) additional license; Windows Server 2025 entitlement included</td>
+        </tr>
+        <tr>
+            <th>Network</th>
+            <td>1.0 Gbps connection</td>
+        </tr>
+        <tr>
+            <th>SQL Server®</th>
+            <td>SQL Server 2022/2019/2017 Standard with latest CUs/GDR (License & CALs customer responsibility)</td>
+        </tr>
+        <tr>
+            <th>Heat Dissipation</th>
+            <td>Typical 3067 BTU/hour</td>
+        </tr>
+        <tr>
+            <th>Form Factor</th>
+            <td>1U Height, iLO Advanced License</td>
+        </tr>
+        <tr>
+            <th>Resolution Support</th>
+            <td>1024×1024 CT images</td>
+        </tr>
+    </table>
+    <div class="note">✔ Dell® equivalent hardware with same CPU/RAM may be used. Visit dell.com/GPU for supported GPUs.</div>
+
+    <!-- ========== MULTI-USER & ENTERPRISE SERVERS (existing) ========== -->
+    <h2>🖥️ Multi‑User & Enterprise Server Deployments</h2>
+    <h3>Enterprise Single Server – Six‑User (6) 1K support</h3>
+    <table class="spec-table">
+
+
+
+<th>Model / SKU</th>
+<td>HPE DL380 Gen11 85FF (SKU# S5F09A)</td>
+</tr>
+<tr>
+<th>Processors</th>
+<td>Two (2) Intel® Xeon® Gold 6426Y</td>
+</tr>
+<tr>
+<th>Memory</th>
+<td>256GB (16x16GB) DDR5-4800 ECC</td>
+</tr>
+<tr>
+<th>Storage</th>
+<td>Four (4) 960GB SATA mixed‑use SFF SSDs RAID‑10</td>
+</tr>
+<tr>
+<th>GPU</th>
+<td>Three (3) NVIDIA RTX™ 4000 Ada 20GB</td>
+</tr>
+<tr>
+<th>OS</th>
+<td>Windows Server 2022 Standard + 2025 entitlement</td>
+</tr>
+<tr>
+<th>Networking</th>
+<td>Broadcom 10GB 2‑port NIC, Dual 1600W 220V</td>
+</tr>
+</table>
+    <h3>Multi‑User Application Server (Rack) – Four‑User (4) 1K</h3>
+    <table class="spec-table">
+
+
+
+<th>Model / SKU</th>
+<td>HPE DL380 Gen11 8SFF (SKU# SSF08A)</td>
+</tr>
+<tr>
+<th>Processors</th>
+<td>Two (2) Intel® Xeon® Gold 6426Y</td>
+</tr>
+<tr>
+<th>Memory</th>
+<td>192GB (12x16GB) DDR5-4800</td>
+</tr>
+<tr>
+<th>Storage</th>
+<td>Four (4) 960GB SATA SSDs RAID 1</td>
+</tr>
+<tr>
+<th>GPU</th>
+<td>Two (2) NVIDIA RTX™ 4000 Ada 20GB or vGPU equivalent</td>
+</tr>
+</table>
+    <h3>Multi‑User Application Server (Tower) – Four‑User (4) 1K</h3>
+    <table class="spec-table">
+
+
+
+<th>Model / SKU</th>
+<td>HPE ML350 Gen11 SFF (SKU# S5F07A)</td>
+</tr>
+<tr>
+<th>Processors</th>
+<td>Two (2) Intel® Xeon® Gold 6426Y</td>
+</tr>
+<tr>
+<th>Memory</th>
+<td>192GB (12x16GB) DDR5-4800 ECC</td>
+</tr>
+<tr>
+<th>Storage</th>
+<td>Four (4) 960GB SATA mixed‑use SFF SSDs RAID‑10</td>
+</tr>
+<tr>
+<th>GPU</th>
+<td>Two (2) NVIDIA RTX™ 4000 Ada 20GB</td>
+</tr>
+</table>
+
+    <!-- ========== UPDATED HPE PROLIANT SERVER COMPARISON ========== -->
+    <h2>🖧 HPE ProLiant Server Comparison</h2>
+    <div class="note">Technical specifications and configuration comparison for DL380 Gen11, ML350 Gen11, and DL360 Gen11 servers validated for Vitrea 7.16 deployments.</div>
+
+    <div style="overflow-x: auto;">
+        <table class="comparison-table">
+            <thead>
+                <tr>
+                    <th>Feature</th>
+                    <th>DL380 Gen11 (8SFF)</th>
+                    <th>ML350 Gen11 (SFF)</th>
+                    <th>DL360 Gen11 (8SFF)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Form Factor</strong></td>
+                    <td>2U Rack</td>
+                    <td>Tower / Rack Convertible</td>
+                    <td>1U Rack</td>
+                </tr>
+                <tr>
+                    <td><strong>Max Drive Bays</strong></td>
+                    <td>8 x 2.5" SFF</td>
+                    <td>Up to 16 x 2.5" SFF</td>
+                    <td>8 x 2.5" SFF</td>
+                </tr>
+                <tr>
+                    <td><strong>Max Processors</strong></td>
+                    <td>2</td>
+                    <td>2</td>
+                    <td>2</td>
+                </tr>
+                <tr>
+                    <td><strong>Max Memory</strong></td>
+                    <td>8TB (32 DIMMs)</td>
+                    <td>8TB (32 DIMMs)</td>
+                    <td>8TB (32 DIMMs)</td>
+                </tr>
+                <tr>
+                    <td><strong>Max Storage Capacity</strong></td>
+                    <td>122.88TB (8x15.36TB)</td>
+                    <td>245.76TB (16x15.36TB)</td>
+                    <td>122.88TB (8x15.36TB)</td>
+                </tr>
+                <tr>
+                    <td><strong>Power Supply Options</strong></td>
+                    <td>800W – 2000W</td>
+                    <td>800W – 2000W</td>
+                    <td>800W – 1600W</td>
+                </tr>
+                <tr>
+                    <td><strong>Network Options</strong></td>
+                    <td>Flexible LOM, OCP 3.0</td>
+                    <td>Flexible LOM, OCP 3.0</td>
+                    <td>Flexible LOM, OCP 3.0</td>
+                </tr>
+                <tr>
+                    <td><strong>Best For</strong></td>
+                    <td>General purpose workloads, storage density, Enterprise Single Server (6‑user)</td>
+                    <td>Versatile deployments, expandability, Multi‑User App Server (4‑user tower)</td>
+                    <td>High-density computing, management server, virtualization nodes</td>
+                </tr>
+                <tr>
+                    <td><strong>Vitrea Validated Configurations</strong></td>
+                    <td>Enterprise Single Server (S5F09A) · Multi‑User App Server (SSF08A)</td>
+                    <td>Multi‑User App Server Tower (S5F07A) · Rack conversion kit optional</td>
+                    <td>Management Server, SQL Server, virtualization hosts</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ========== VIRTUALIZATION SPECIFICATIONS (DETAILED) ========== -->
+    <h2>🧩 Virtualization Specifications (VMware vSphere®)</h2>
+    <div class="note"><strong>Hypervisor:</strong> VMware vSphere® 8.0+ with VMware Tools™ 11.3+, VMXNET3 drivers. Storage must meet IOPS/throughput criteria.</div>
+    
+    <h3>📐 512x512 Matrix Support</h3>
+    <table class="spec-table">
+        <tr>
+            <th>Vitrea Management Server</th>
+            <td>18,000 MHz (up to 30 users) · 24GB RAM · 250GB OS VMDK + 50GB DICOM receive VMDK · Storage ≥1500 IOPS, 80 MB/sec throughput &lt;15ms latency · Network 1 Gb/s</td>
+        </tr>
+        <tr>
+            <th>SQL Server</th>
+            <td>5900 MHz (multi-core vCPUs) · 4GB RAM · 250GB OS VMDK + 40GB SQL VMDK · SQL Server 2022/2019 Standard recommended</td>
+        </tr>
+        <tr>
+            <th>Vitrea Application Server (GPU)</th>
+            <td>19,000 MHz per user · 24GB RAM · 128MB video memory · vGPU “Q” profile with ≥4GB framebuffer (e.g., T4-4Q) · ≥900 CUDA cores per user</td>
+        </tr>
+    </table>
+    
+    <h3>📐 1024x1024 Matrix Support (“1K”)</h3>
+    <table class="spec-table">
+        <tr>
+            <th>Vitrea Management Server</th>
+            <td>25,000 MHz (up to 30 users) · 48GB RAM · 250GB OS VMDK + 100GB DICOM receive VMDK · Storage ≥1500 IOPS, 175 MB/sec throughput &lt;15ms latency · Network 10 Gb/s · NAS must provide ≥300 MB/sec R/W</td>
+        </tr>
+        <tr>
+            <th>SQL Server</th>
+            <td>5900 MHz (minimum 4 cores) · 4GB RAM · 250GB OS VMDK + 40GB SQL VMDK · SQL 2022/2019 Standard · Network 10 Gb/s</td>
+        </tr>
+        <tr>
+            <th>Vitrea Application Server (vGPU)</th>
+            <td>25,000 MHz per user · 28GB RAM + 16GB page file · 256MB video memory · vGPU “Q” profile with ≥8GB (12GB recommended) framebuffer · ≥1280 CUDA cores per user</td>
+        </tr>
+    </table>
+    
+    <div class="note"><strong>CPU Calculation:</strong> Required MHz ÷ CPU speed (MHz) = vCPUs (round up). Example: 18,000 MHz ÷ 2400 MHz = 7.5 → 8 vCPUs. Assign all vCPUs to one processor in VMware.</div>
+
+    <h3>Multi‑Modality Server</h3>
+    <table class="spec-table">
+        <tr>
+            <th>512x512 Matrix</th>
+            <td>Up to 4 concurrent users, 8000 slices · 19,000 MHz · 24GB RAM · 16MB video memory · 1 Gb/s network</td>
+        </tr>
+        <tr>
+            <th>1024x1024 Matrix (GPU Rendering)</th>
+            <td>Up to 4 users, 8000 slices · 25,000 MHz · 28GB RAM + 16GB page file · 256MB video memory · 10 Gb network · vGPU acceleration options</td>
+        </tr>
+    </table>
+    <div class="note">Caution: Canon considers these virtualization specs as minimum for up to 22 Vitrea Application Servers with two Multi‑Modality Servers. Varied workloads may require adjustments. Consult Canon technical contact.</div>
+
+    <!-- ========== NVIDIA GPU DETAILS (expanded) ========== -->
+    <h2>🎛️ NVIDIA® Data Center Products & vGPU Requirements</h2>
+    <div class="note"><strong>Important:</strong> Custom hardware or virtualized deployments require NVIDIA GPU appropriate for environment. vDGA or vGPU integration required. Review vendor documentation. Canon provides only Vitrea AV‑specific requirements.</div>
+    <p><strong>GPU Selection Guidance:</strong> Choose GPU supported by hardware, OS, and virtualization vendors. Must support WDDM driver mode. Data center GPUs (L4, L40S) require NVIDIA RTX Virtual Workstation (vWS) licenses. vGPU Manager should be set to “Fixed share” (recommended) or “Equal share”.</p>
+    <table class="spec-table">
+        <tr>
+            <th>Matrix Size</th>
+            <th>Framebuffer / Profile</th>
+            <th>CUDA Cores per Session</th>
+        </tr>
+        <tr>
+            <td>512x512</td>
+            <td>4GB / XXX-4Q (e.g., T4-4Q)</td>
+            <td>900</td>
+        </tr>
+        <tr>
+            <td>1024x1024 (“1K”)</td>
+            <td>8GB minimum (XXX-8Q) · 12GB recommended (XXX-12Q)</td>
+            <td>1280</td>
+        </tr>
+    </table>
+    <div class="note"><strong>Examples:</strong> 4 concurrent 1K sessions → 48GB framebuffer (4×12GB) & 5120 CUDA cores → single L40S GPU or dual L4 GPUs. Each VM assigned “L40S-12Q” profile. RTX Virtual Workstation licenses required.</div>
+
+    <!-- ========== CALCULATORS (existing) ========== -->
+    <h2>📊 Interactive Configuration Calculators</h2>
+    <div class="calc-section">
+        <h3>💾 Storage Capacity Calculator – HPE DL380 Gen11 8SFF</h3>
+        <div class="calc-group">
+            <div class="calc-field"><label>Drive Type:</label><select id="driveType"><option>SAS HDD</option><option>SATA SSD</option><option>NVMe SSD</option></select></div>
+            <div class="calc-field"><label>Capacity (TB/GB):</label><select id="capacityUnit"><option>GB</option><option>TB</option></select><input type="number" id="driveCapacity" value="960" step="any"></div>
+            <div class="calc-field"><label># Drives (1-8):</label><input type="number" id="driveCount" value="4" min="1" max="8"></div>
+            <div class="calc-field"><label>RAID Level:</label><select id="raidLevel"><option value="0">RAID 0</option><option value="1">RAID 1</option><option value="5">RAID 5</option><option value="6">RAID 6</option><option value="10" selected>RAID 10</option></select></div>
+            <div><button id="calcStorageBtn">Calculate</button></div>
+        </div>
+        <div id="storageResult" class="result">Click to calculate</div>
+    </div>
+    <div class="calc-section">
+        <h3>🧠 Memory Configuration Calculator</h3>
+        <div class="calc-group">
+            <div class="calc-field"><label>DIMM Size (GB):</label><select id="dimmSize"><option value="16">16GB</option><option value="32" selected>32GB</option><option value="64">64GB</option><option value="128">128GB</option></select></div>
+            <div class="calc-field"><label>Number of DIMMs (1-32):</label><input type="number" id="dimmCount" value="16" min="1" max="32"></div>
+            <div><button id="calcMemoryBtn">Calculate</button></div>
+        </div>
+        <div id="memoryResult" class="result">Total RAM will appear</div>
+    </div>
+
+    <!-- ========== HARDWARE UPGRADES ========== -->
+    <h2>🔄 Hardware Upgrades to 1024x1024 Matrix Support</h2>
+    <table class="spec-table">
+        <tr>
+            <th>DL380 Gen11 Server 8SFF</th>
+            <td>Memory: P43322-B21 (4×16GB DDR5-4800) · Power: P38997-B21 dual 1600W · Network: P26253-B21 10Gb adapter · GPU: <strong>NVIDIA RTX™ 4000 Ada 20GB (S3T54C)</strong> – no GIR limitation</td>
+        </tr>
+        <tr>
+            <th>DL380 Gen10 / Gen10 Plus</th>
+            <td>Add 64GB DDR4 kit, Broadcom 10Gb adapter, upgrade to RTX 4000 Ada for full 1K compatibility</td>
+        </tr>
+    </table>
+    <div class="note">TOMTEC® application on multiuser system requires VMware ESXi validation. Contact Vitrea Solution Architect for licensing.</div>
+
+    <!-- ========== REMOTE ACCESS CLIENT ========== -->
+    <h2>💻 Remote Access Client Specification</h2>
+    <table class="spec-table">
+
+
+
+<th>Processor</th>
+<td>1 GHz 64-bit (x64) with 2+ cores</td>
+</tr>
+<tr>
+<th>RAM</th>
+<td>4GB minimum</td>
+</tr>
+<tr>
+<th>Display</th>
+<td>1280x1024 min / 1920x1200 rec / 3840x2160 max</td>
+</tr>
+<tr>
+<th>OS Support</th>
+<td>Windows 11 Pro 64-bit (recommended), Mac via Remote Desktop 8.0.32+</td>
+</tr>
+<tr>
+<th>Network</th>
+<td>1.0 Gbps, min 5 Mbps, &lt;100ms latency. VDI / double RDP not supported. RDS CALs customer responsibility.</td>
+</tr>
+</table>
+
+    <!-- ========== IMPORTANT CONSIDERATIONS & CONTACT ========== -->
+    <h2>⚠️ Important Considerations</h2>
+    <div class="important-box">
+        <ul style="margin-left:1.2rem">
+            <li>The specific CPU, RAM, and GPU models are configured to ensure optimal system performance. Use of alternate components may result in performance issues.</li>
+            <li>If hardware is sourced from a vendor other than HP or Dell, the end user is responsible for validating that it meets the required specifications with their supplier.</li>
+            <li>For Virtualization Specification please refer PI/PD-Technical specification and for any other technical architecture or customize requirement please reach out to us.</li>
+        </ul>
+    </div>
+    <h2>📞 Vendor Approval & Support Contact</h2>
+    <div class="contact-card">
+        <p>If your reseller cannot see HP or HPE SKUs, contact us with Business Name, Contact, Address, Country, Phone, Email. Approval takes 48‑72 hours.</p>
+        <p><strong>Jason Warner:</strong> <a href="mailto:Jason.Warner@mi.medical.canon">Jason.Warner@mi.medical.canon</a><br>
+        <strong>Shailendrakumar Jariwala:</strong> <a href="mailto:Shailendrakumar.Jariwala@mi.medical.canon">Shailendrakumar.Jariwala@mi.medical.canon</a></p>
+    </div>
+    <h2>📝 Your Feedback Matters</h2>
+    <div class="note" style="background:#e8f0fe"><p>Please share your input: <strong><a href="https://forms.office.com/r/CjBDaSzn5k" target="_blank">Click here to access the survey</a></strong></p></div>
+
+    <footer>
+        <p>Microsoft Server/SQL licenses, RDS CALs, NVIDIA vWS licenses are customer responsibility. Vitrea 7.16 continues to run on SQL 2016 but upgrade before July 2026. Hardware final validation resides with hardware provider. For sales: 952.487.9505 | <a href="https://mi.medical.canon" target="_blank">mi.medical.canon</a></p>
+    </footer>
+</div>
+
+<script>
+    function updateStorage() {
+        let drives = parseInt(document.getElementById('driveCount').value) || 1;
+        let cap = parseFloat(document.getElementById('driveCapacity').value) || 960;
+        let unit = document.getElementById('capacityUnit').value;
+        let raid = document.getElementById('raidLevel').value;
+        let capGB = (unit === 'TB') ? cap * 1024 : cap;
+        let raw = drives * capGB;
+        let usable = 0;
+        if (raid === '0') usable = raw;
+        else if (raid === '1') usable = capGB;
+        else if (raid === '5') usable = (drives - 1) * capGB;
+        else if (raid === '6') usable = (drives - 2) * capGB;
+        else if (raid === '10') usable = (drives / 2) * capGB;
+        if (usable < 0) usable = 0;
+        document.getElementById('storageResult').innerHTML = `Raw: ${raw.toFixed(0)} GB (${(raw/1024).toFixed(2)} TB) | RAID ${raid} → Usable: ${usable.toFixed(0)} GB (${(usable/1024).toFixed(2)} TB)`;
+    }
+    function updateMemory() {
+        let size = parseInt(document.getElementById('dimmSize').value);
+        let cnt = parseInt(document.getElementById('dimmCount').value) || 1;
+        let total = size * cnt;
+        document.getElementById('memoryResult').innerHTML = `Total RAM = ${total} GB (${cnt} × ${size} GB)`;
+    }
+    document.getElementById('calcStorageBtn').addEventListener('click', updateStorage);
+    document.getElementById('calcMemoryBtn').addEventListener('click', updateMemory);
+    function updateCountdowns() {
+        const now = new Date();
+        const win10 = new Date(2025, 9, 14);
+        const diffWin = win10 - now;
+        const winSpan = document.getElementById('win10Countdown');
+        winSpan.innerHTML = diffWin > 0 ? Math.floor(diffWin / 86400000) + " days remaining" : "Support ended";
+        const sql = new Date(2026, 6, 14);
+        const diffSql = sql - now;
+        const sqlSpan = document.getElementById('sql2016Countdown');
+        sqlSpan.innerHTML = diffSql > 0 ? Math.floor(diffSql / 86400000) + " days remaining" : "Support ended";
+    }
+    updateCountdowns();
+    setInterval(updateCountdowns, 3600000);
+    window.addEventListener('load', () => { updateStorage(); updateMemory(); });
+</script>
+</body>
+</html>
