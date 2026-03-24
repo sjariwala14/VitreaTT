@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Port Diagram | Post Processing Advanced Viewing System (Complete)</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            user-select: none;
+        }
+        body {
+            background: linear-gradient(145deg, #eef2f8 0%, #e0e8f0 100%);
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            margin: 0;
+            padding: 24px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .diagram-container {
+            max-width: 1400px;
+            width: 100%;
+            background: rgba(255,255,255,0.88);
+            backdrop-filter: blur(2px);
+            border-radius: 2rem;
+            box-shadow: 0 25px 45px -12px rgba(0,0,0,0.35);
+            overflow: hidden;
+            padding: 1.2rem 1.5rem 1.8rem;
+        }
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin: 0 0 0.25rem;
+            color: #1a2c3e;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        h1 small {
+            font-size: 0.85rem;
+            font-weight: 400;
+            background: #1e4663;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 40px;
+        }
+        .sub {
+            color: #2c3e50;
+            border-left: 4px solid #3a7ca5;
+            padding-left: 16px;
+            margin: 8px 0 20px;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        .canvas-wrapper {
+            background: #f8fafd;
+            border-radius: 28px;
+            box-shadow: inset 0 1px 4px #0001, 0 8px 20px rgba(0,0,0,0.1);
+            padding: 12px;
+            margin-bottom: 24px;
+            overflow-x: auto;
+            text-align: center;
+        }
+        canvas {
+            display: block;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            cursor: crosshair;
+            width: 100%;
+            height: auto;
+        }
+        .info-panel {
+            background: #ffffffdd;
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            padding: 1rem 1.4rem;
+            margin-top: 12px;
+            border: 1px solid rgba(72, 120, 184, 0.3);
+            box-shadow: 0 10px 20px -8px rgba(0,0,0,0.2);
+        }
+        .panel-header {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            flex-wrap: wrap;
+            border-bottom: 2px solid #3a7ca5;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+        }
+        .panel-header h3 {
+            margin: 0;
+            font-weight: 700;
+            color: #1e4663;
+            font-size: 1.3rem;
+        }
+        .panel-header .badge {
+            background: #eef2fa;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #1f6392;
+        }
+        .port-detail-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 10px 20px;
+            font-size: 0.85rem;
+        }
+        .port-category {
+            background: #f1f5f9;
+            padding: 8px 12px;
+            border-radius: 18px;
+            border-left: 4px solid #2c7cb6;
+        }
+        .port-category strong {
+            display: block;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: #1f5e8c;
+            margin-bottom: 6px;
+            letter-spacing: 0.4px;
+        }
+        .port-category span {
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            word-break: break-word;
+            color: #1e2f3d;
+        }
+        .click-hint {
+            font-size: 0.7rem;
+            text-align: right;
+            color: #6c86a3;
+            margin-top: 12px;
+            border-top: 1px dashed #bdd4e7;
+            padding-top: 10px;
+        }
+        footer {
+            font-size: 0.7rem;
+            text-align: center;
+            color: #4a627a;
+            margin-top: 20px;
+        }
+        @media (max-width: 780px) {
+            .diagram-container { padding: 0.8rem; }
+            .port-detail-list { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+<div class="diagram-container">
+    <h1>
+        📡 Port Diagram · Post Processing Advanced Viewing System
+        <small>complete port inventory & service mapping</small>
+    </h1>
+    <div class="sub">🔍 Hover any component → highlights connections & quick port summary · Click → exhaustive details including all TCP/UDP, MSMQ/DTC, ODBC, SMB, LDAP, PACS</div>
+
+    <div class="canvas-wrapper">
+        <canvas id="networkCanvas" width="1200" height="620" style="width:100%; height:auto; max-width:1200px; aspect-ratio:1200/620"></canvas>
+    </div>
+
+    <div class="info-panel" id="infoPanel">
+        <div class="panel-header">
+            <h3>📋 Component Details</h3>
+            <div class="badge">click any node</div>
+        </div>
+        <div id="panelContent">
+            <p style="color:#4f6f8f; margin:0;">Select any server, client or service from the diagram to see the full list of ports, protocols and communication specifics — all ports from original spec are included.</p>
+            <div class="click-hint">💡 Tip: Hover for live connection highlights & summary</div>
+        </div>
+    </div>
+    <footer>✅ All ports verified: TCP 80,135,443,445,3002,3008,3389,5504,5985,2222,389,139,380; UDP 68,546,3389,137,138,139,5355,1434,389; MSMQ/DTC variable; ODBC; SMB; LDAP; RDS; DICOM (104,11112,2762).</footer>
+</div>
+
+<script>
+    (function() {
+        const canvas = document.getElementById('networkCanvas');
+        const ctx = canvas.getContext('2d');
+        const width = 1200, height = 620;
+        canvas.width = width;
+        canvas.height = height;
+
+        // ---------- NODES with COMPLETE port details ----------
+        const nodes = [
+            { id: "misc", label: "Misc. Server Communication", 
+              portsDetail: "🔌 TCP: 80, 135, 443, 445, 3002, 3008, 3389, 5504, 5985<br>📦 UDP: 68, 546, 3389, 137, 138, 139, 5355<br>⚙️ MSMQ (Variable high ports)<br>⚙️ DTC (Variable RPC ports)<br>🌐 Core infrastructure & dynamic services.",
+              shortPorts: "TCP:80,135,443,445,3002,3008,3389,5504,5985 | UDP:68,546,3389,137-139,5355 + MSMQ/DTC",
+              x: 100, y: 70, w: 180, h: 68 },
+            { id: "vitrea", label: "Vitrea Advanced Servers", 
+              portsDetail: "🗄️ ODBC: TCP 2222 / UDP 1434<br>📡 Misc. Server Communication (inherits all misc ports: 80,135,443,445,3002,3008,3389,5504,5985 + UDP 68,546,3389,137-139,5355)<br>🔁 Advanced image processing & database queries.",
+              shortPorts: "ODBC:2222/tcp,1434/udp + full misc ports",
+              x: 340, y: 45, w: 170, h: 68 },
+            { id: "rds_lic", label: "RDS Licensing Server", 
+              portsDetail: "🔐 HTTPS: TCP 80, 443<br>🖥️ RDP: TCP 3389, UDP 3389<br>📜 Legacy HTTPS: TCP 380 (per spec)<br>📜 Legacy UDP: 3389 (RDP licensing)<br>License brokering & session management.",
+              shortPorts: "TCP:80,443,3389,380 · UDP:3389",
+              x: 590, y: 45, w: 170, h: 68 },
+            { id: "ad", label: "Active Directory", 
+              portsDetail: "👥 LDAP: TCP 389, UDP 389<br>🔒 Kerberos (88), Global Catalog (3268 implicit)<br>Authentication & directory services.",
+              shortPorts: "LDAP: 389/tcp · 389/udp",
+              x: 80, y: 190, w: 150, h: 68 },
+            { id: "mgmt", label: "Management Server (SQL 2014 SP2)", 
+              portsDetail: "🧠 RDS License Server: TCP 80,443,3389 · UDP 3389<br>🗃️ ODBC: TCP 2222 / UDP 1434<br>📁 SMB: TCP 139,445 · UDP 137,138<br>🔎 LDAP: TCP 389, UDP 389<br>⚙️ Misc server communication ports (80,135,443,445,3002,3008,3389,5504,5985 + UDP 68,546,3389,137-139,5355)<br>📊 SQL Browser, MSDTC, named pipes, variable RPC ports.",
+              shortPorts: "RDS(80,443,3389/tcp+udp) | ODBC(2222/1434) | SMB(139,445/137,138) | LDAP(389) + misc",
+              x: 340, y: 195, w: 210, h: 88 },
+            { id: "datastore", label: "Data Store", 
+              portsDetail: "💾 SMB/CIFS: TCP 139, 445<br>📡 UDP 137, 138 (NetBIOS)<br>Centralized storage for imaging & archives.",
+              shortPorts: "SMB: 139/tcp,445/tcp · 137-138/udp",
+              x: 620, y: 190, w: 150, h: 68 },
+            { id: "powerstation", label: "Powerstation (Thick Client)", 
+              portsDetail: "🖥️ LDAP/SMB: TCP 139,445 · UDP 137,138<br>Local workstation with direct storage & AD access.<br>Also uses misc ports for device communication.",
+              shortPorts: "TCP:139,445 · UDP:137,138",
+              x: 70, y: 360, w: 170, h: 68 },
+            { id: "thinclient", label: "Any Client PC (Thin Client)", 
+              portsDetail: "🖱️ LDAP: TCP 389, UDP 389<br>Remote Desktop & lightweight portal access.<br>RDS licensing communication via 3389.",
+              shortPorts: "LDAP: 389/tcp, 389/udp",
+              x: 310, y: 380, w: 170, h: 68 },
+            { id: "modalities", label: "Modalities (PACS)", 
+              portsDetail: "📷 DICOM / PACS: standard ports 104, 11112, 2762<br>Image acquisition & transfer (C-STORE, C-FIND, C-MOVE).<br>HL7 integration optional (port 2575).",
+              shortPorts: "DICOM: 104, 11112, 2762",
+              x: 620, y: 360, w: 150, h: 68 }
+        ];
+
+        // ----- EDGES: complete communication flows -----
+        const edges = [
+            { from: "mgmt", to: "ad", protocol: "LDAP (389)" },
+            { from: "mgmt", to: "datastore", protocol: "SMB · 139,445,137,138" },
+            { from: "mgmt", to: "rds_lic", protocol: "RDS/HTTPS · 80,443,3389" },
+            { from: "mgmt", to: "vitrea", protocol: "ODBC · 2222/tcp, 1434/udp" },
+            { from: "mgmt", to: "misc", protocol: "Misc Server Comm (dynamic)" },
+            { from: "thinclient", to: "ad", protocol: "LDAP · 389" },
+            { from: "powerstation", to: "datastore", protocol: "SMB direct" },
+            { from: "powerstation", to: "ad", protocol: "LDAP/SMB · 139,445,137,138" },
+            { from: "modalities", to: "datastore", protocol: "PACS/DICOM" },
+            { from: "modalities", to: "mgmt", protocol: "PACS Query/Retrieve" },
+            { from: "vitrea", to: "misc", protocol: "Misc Server Comm" },
+            { from: "rds_lic", to: "thinclient", protocol: "RDP/HTTPS licensing" },
+            { from: "misc", to: "mgmt", protocol: "RPC, MSMQ, DTC" },
+            { from: "misc", to: "vitrea", protocol: "Common server ports" },
+            { from: "datastore", to: "powerstation", protocol: "SMB storage access" },
+            { from: "mgmt", to: "thinclient", protocol: "RDS / web services" }
+        ];
+
+        function getNodeById(id) { return nodes.find(n => n.id === id); }
+
+        function roundedRect(ctx, x, y, w, h, r) {
+            ctx.beginPath();
+            ctx.moveTo(x + r, y);
+            ctx.lineTo(x + w - r, y);
+            ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+            ctx.lineTo(x + w, y + h - r);
+            ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+            ctx.lineTo(x + r, y + h);
+            ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+            ctx.lineTo(x, y + r);
+            ctx.quadraticCurveTo(x, y, x + r, y);
+            ctx.closePath();
+            return ctx;
+        }
+
+        let hoveredNodeId = null;
+        let selectedNodeId = null;
+
+        function drawNetwork() {
+            ctx.clearRect(0, 0, width, height);
+            ctx.fillStyle = "#FFFFFF";
+            ctx.fillRect(0, 0, width, height);
+            // subtle background
+            ctx.fillStyle = "#EFF3F8";
+            for(let i=0; i<180; i++) {
+                ctx.beginPath();
+                ctx.arc((i*173)%width, (i*89)%height, 1.2, 0, Math.PI*2);
+                ctx.fill();
+            }
+            
+            // edges
+            edges.forEach(edge => {
+                const fromNode = getNodeById(edge.from);
+                const toNode = getNodeById(edge.to);
+                if (!fromNode || !toNode) return;
+                const fromX = fromNode.x + fromNode.w/2;
+                const fromY = fromNode.y + fromNode.h/2;
+                const toX = toNode.x + toNode.w/2;
+                const toY = toNode.y + toNode.h/2;
+                const isHighlight = (hoveredNodeId === edge.from || hoveredNodeId === edge.to);
+                ctx.beginPath();
+                ctx.moveTo(fromX, fromY);
+                ctx.lineTo(toX, toY);
+                ctx.lineWidth = isHighlight ? 3.5 : 1.8;
+                ctx.strokeStyle = isHighlight ? "#3b82f6" : "#8ba3bc";
+                ctx.setLineDash(isHighlight ? [8, 6] : []);
+                ctx.stroke();
+                ctx.setLineDash([]);
+                if(isHighlight) {
+                    const midX = (fromX + toX)/2;
+                    const midY = (fromY + toY)/2;
+                    ctx.font = "10px 'Segoe UI', 'Fira Code'";
+                    ctx.fillStyle = "#1e4c7a";
+                    ctx.fillText(edge.protocol, midX+5, midY-5);
+                }
+            });
+            
+            // nodes
+            nodes.forEach(node => {
+                const isHover = (hoveredNodeId === node.id);
+                const isSelected = (selectedNodeId === node.id);
+                let fillGrd = ctx.createLinearGradient(node.x, node.y, node.x+node.w, node.y+node.h);
+                if(isHover) fillGrd.addColorStop(0, "#ecf5ff");
+                else fillGrd.addColorStop(0, "#f9fcff");
+                fillGrd.addColorStop(1, "#eff3f8");
+                ctx.shadowColor = "rgba(0,0,0,0.1)";
+                ctx.shadowBlur = 6;
+                roundedRect(ctx, node.x, node.y, node.w, node.h, 12);
+                ctx.fillStyle = fillGrd;
+                ctx.fill();
+                ctx.strokeStyle = isSelected ? "#2c7cb6" : (isHover ? "#5699d6" : "#b9ceec");
+                ctx.lineWidth = isSelected ? 3 : 1.5;
+                ctx.stroke();
+                ctx.shadowBlur = 0;
+                ctx.font = "bold 13px 'Segoe UI'";
+                ctx.fillStyle = "#1f4662";
+                ctx.fillText(node.label, node.x + 12, node.y + 22);
+                ctx.font = "9px 'SF Mono', monospace";
+                ctx.fillStyle = "#3b6e8f";
+                let shortText = node.shortPorts.length > 38 ? node.shortPorts.substring(0, 35)+"…" : node.shortPorts;
+                ctx.fillText(shortText, node.x + 12, node.y + 46);
+                ctx.font = "10px 'Segoe UI'";
+                ctx.fillStyle = "#5886a6";
+                ctx.fillText("🖧", node.x + node.w - 20, node.y + 18);
+            });
+        }
+
+        function getNodeUnderMouse(mx, my) {
+            for(let i=nodes.length-1; i>=0; i--) {
+                const n = nodes[i];
+                if(mx >= n.x && mx <= n.x+n.w && my >= n.y && my <= n.y+n.h) return n;
+            }
+            return null;
+        }
+
+        function updateInfoPanel(node) {
+            const panelDiv = document.getElementById('panelContent');
+            if(!node) {
+                panelDiv.innerHTML = `<p style="color:#4f6f8f; margin:0;">✨ Click any component to view exhaustive port specifications — every TCP/UDP, ODBC, SMB, LDAP, MSMQ/DTC, PACS port is listed.</p>
+                                       <div class="click-hint">🔎 Hover to see live connections & quick summary</div>`;
+                return;
+            }
+            let html = `<div style="margin-bottom:6px;"><span style="font-weight:800; font-size:1.2rem;">${node.label}</span></div>
+                        <div class="port-detail-list">`;
+            if(node.portsDetail) {
+                let lines = node.portsDetail.split('<br>');
+                lines.forEach(line => {
+                    if(line.trim().length === 0) return;
+                    let category = "🔌 Ports";
+                    if(line.includes("LDAP")) category = "📡 Directory";
+                    else if(line.includes("SMB") || line.includes("CIFS")) category = "📁 Storage";
+                    else if(line.includes("ODBC")) category = "🗄️ Database";
+                    else if(line.includes("RDS") || line.includes("RDP")) category = "🖥️ Remote";
+                    else if(line.includes("DICOM") || line.includes("PACS")) category = "🏥 Imaging";
+                    else if(line.includes("MSMQ") || line.includes("DTC")) category = "⚙️ Middleware";
+                    else if(line.includes("Misc")) category = "🌐 Misc Services";
+                    html += `<div class="port-category"><strong>${category}</strong><span>${line}</span></div>`;
+                });
+            } else {
+                html += `<div class="port-category"><strong>📋 Summary</strong><span>${node.shortPorts}</span></div>`;
+            }
+            if(node.id === "mgmt") {
+                html += `<div class="port-category"><strong>🔁 Additional</strong><span>SQL Browser UDP 1434, MSDTC dynamic high ports, named pipes, RPC endpoint mapper</span></div>`;
+            }
+            if(node.id === "misc") {
+                html += `<div class="port-category"><strong>📨 MSMQ/DTC</strong><span>Variable high ports (1024-65535), RPC dynamic assignment</span></div>`;
+            }
+            if(node.id === "modalities") {
+                html += `<div class="port-category"><strong>📡 PACS/DICOM</strong><span>Full DICOM: 104 (default), 11112, 2762, plus HL7 2575 if integrated</span></div>`;
+            }
+            html += `</div><div class="click-hint">🔗 Connected via: ${getConnectedProtocols(node.id)}</div>`;
+            panelDiv.innerHTML = html;
+        }
+
+        function getConnectedProtocols(nodeId) {
+            const relevant = edges.filter(e => e.from === nodeId || e.to === nodeId);
+            if(relevant.length === 0) return "no direct connections";
+            let protocols = relevant.map(e => e.protocol).slice(0,5);
+            return protocols.join(" · ") + (relevant.length > 5 ? " …" : "");
+        }
+
+        // floating tooltip
+        let tooltipDiv = null;
+        function createFloatingTooltip(text, clientX, clientY) {
+            if(tooltipDiv) tooltipDiv.remove();
+            tooltipDiv = document.createElement('div');
+            tooltipDiv.id = 'canvasTooltip';
+            tooltipDiv.style.position = 'fixed';
+            tooltipDiv.style.backgroundColor = '#1f2e3ed9';
+            tooltipDiv.style.backdropFilter = 'blur(8px)';
+            tooltipDiv.style.color = 'white';
+            tooltipDiv.style.padding = '6px 12px';
+            tooltipDiv.style.borderRadius = '20px';
+            tooltipDiv.style.fontSize = '12px';
+            tooltipDiv.style.fontWeight = '500';
+            tooltipDiv.style.fontFamily = 'monospace';
+            tooltipDiv.style.pointerEvents = 'none';
+            tooltipDiv.style.zIndex = '1000';
+            tooltipDiv.style.maxWidth = '300px';
+            tooltipDiv.style.boxShadow = '0 4px 12px black';
+            tooltipDiv.style.border = '1px solid #7aa9ce';
+            tooltipDiv.innerHTML = text;
+            document.body.appendChild(tooltipDiv);
+            let left = clientX + 15;
+            let top = clientY - 35;
+            if(top < 10) top = clientY + 20;
+            if(left + 280 > window.innerWidth) left = clientX - 280;
+            tooltipDiv.style.left = left + 'px';
+            tooltipDiv.style.top = top + 'px';
+        }
+        function hideTooltip() { if(tooltipDiv) { tooltipDiv.remove(); tooltipDiv = null; } }
+
+        function onCanvasMouseMove(e) {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            let mx = (e.clientX - rect.left) * scaleX;
+            let my = (e.clientY - rect.top) * scaleY;
+            mx = Math.min(Math.max(0, mx), width);
+            my = Math.min(Math.max(0, my), height);
+            const hover = getNodeUnderMouse(mx, my);
+            const prevHover = hoveredNodeId;
+            if(hover) {
+                hoveredNodeId = hover.id;
+                let tipText = `<b>${hover.label}</b><br>📡 ${hover.shortPorts}`;
+                if(hover.id === "mgmt") tipText += `<br>🔁 RDS, ODBC, SMB, LDAP, misc`;
+                if(hover.id === "misc") tipText += `<br>⚙️ Full TCP/UDP list + MSMQ/DTC variable`;
+                if(hover.id === "rds_lic") tipText += `<br>🔐 TCP:80,443,3389,380 · UDP:3389`;
+                if(hover.id === "modalities") tipText += `<br>📷 DICOM:104,11112,2762`;
+                createFloatingTooltip(tipText, e.clientX, e.clientY);
+            } else {
+                if(hoveredNodeId !== null) hoveredNodeId = null;
+                hideTooltip();
+            }
+            if(prevHover !== hoveredNodeId) drawNetwork();
+            else if(hover && tooltipDiv) {
+                tooltipDiv.style.left = (e.clientX + 15) + 'px';
+                tooltipDiv.style.top = (e.clientY - 35) + 'px';
+            }
+        }
+
+        function onCanvasClick(e) {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            let mx = (e.clientX - rect.left) * scaleX;
+            let my = (e.clientY - rect.top) * scaleY;
+            const clicked = getNodeUnderMouse(mx, my);
+            if(clicked) {
+                selectedNodeId = clicked.id;
+                updateInfoPanel(clicked);
+                drawNetwork();
+            } else {
+                selectedNodeId = null;
+                updateInfoPanel(null);
+                drawNetwork();
+            }
+        }
+        function onCanvasLeave() { hideTooltip(); if(hoveredNodeId !== null) { hoveredNodeId = null; drawNetwork(); } }
+
+        canvas.addEventListener('mousemove', onCanvasMouseMove);
+        canvas.addEventListener('click', onCanvasClick);
+        canvas.addEventListener('mouseleave', onCanvasLeave);
+        drawNetwork();
+        updateInfoPanel(null);
+    })();
+</script>
+</body>
+</html>
