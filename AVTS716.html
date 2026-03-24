@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Vitrea AV Troubleshooting – Complete Scenario Reference</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: #f0f4f8;
+            margin: 0;
+            padding: 20px;
+            color: #1e2a3a;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+        .header {
+            background: #003057;
+            color: white;
+            padding: 20px 24px;
+        }
+        .header h1 {
+            margin: 0 0 6px 0;
+            font-weight: 600;
+            font-size: 1.8rem;
+        }
+        .header p {
+            margin: 0;
+            opacity: 0.85;
+            font-size: 0.95rem;
+        }
+        .toolbar {
+            padding: 16px 24px;
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .search-box {
+            flex: 2;
+            min-width: 200px;
+        }
+        .search-box input {
+            width: 100%;
+            padding: 10px 14px;
+            font-size: 0.95rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 40px;
+            background: white;
+            transition: 0.2s;
+            outline: none;
+        }
+        .search-box input:focus {
+            border-color: #2c7da0;
+            box-shadow: 0 0 0 2px rgba(44,125,160,0.2);
+        }
+        .stats {
+            font-size: 0.85rem;
+            background: #eef2ff;
+            padding: 6px 12px;
+            border-radius: 40px;
+            color: #1e40af;
+        }
+        .reset-btn {
+            background: #e2e8f0;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 40px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+            color: #1e2a3a;
+        }
+        .reset-btn:hover {
+            background: #cbd5e1;
+        }
+        .table-wrapper {
+            overflow-x: auto;
+            max-height: 70vh;
+            overflow-y: auto;
+            border-top: 1px solid #e2e8f0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            min-width: 900px;
+        }
+        th {
+            background: #f1f5f9;
+            position: sticky;
+            top: 0;
+            padding: 14px 12px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 2px solid #cbd5e1;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.1s;
+        }
+        th:hover {
+            background: #e2e8f0;
+        }
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #e9edf2;
+            vertical-align: top;
+        }
+        tr:hover td {
+            background-color: #fefce8;
+        }
+        .role-badge {
+            display: inline-block;
+            background: #e6f0fa;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #0c4a6e;
+        }
+        .action-list {
+            margin: 0;
+            padding-left: 1.2rem;
+        }
+        .action-list li {
+            margin-bottom: 4px;
+        }
+        .ref {
+            font-family: monospace;
+            font-size: 0.8rem;
+            background: #f1f5f9;
+            padding: 2px 6px;
+            border-radius: 12px;
+            white-space: normal;
+            word-break: break-word;
+        }
+        .new-badge {
+            background-color: #f97316;
+            color: white;
+            font-size: 0.7rem;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 20px;
+            margin-left: 6px;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        .sort-indicator {
+            font-size: 0.7rem;
+            margin-left: 6px;
+            opacity: 0.6;
+        }
+        footer {
+            padding: 16px 24px;
+            background: #f8fafc;
+            border-top: 1px solid #e2e8f0;
+            font-size: 0.75rem;
+            color: #475569;
+            text-align: center;
+        }
+        @media (max-width: 700px) {
+            body { padding: 12px; }
+            .toolbar { flex-direction: column; align-items: stretch; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>📋 Vitrea AV Troubleshooting Reference</h1>
+        <p>Complete scenario guide · Canon VPMC-17428 F (v7.16.3.SU02) · Interactive table</p>
+    </div>
+    <div class="toolbar">
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="🔍 Search by symptom, cause, role, action, ID..." autocomplete="off">
+        </div>
+        <div class="stats" id="rowCount">Loading scenarios...</div>
+        <button class="reset-btn" id="resetBtn">⟳ Reset filters</button>
+    </div>
+    <div class="table-wrapper">
+        <table id="troubleshootTable">
+            <thead>
+                <tr>
+                    <th data-column="id">ID <span class="sort-indicator">↕️</span></th>
+                    <th data-column="symptom">Symptom / Issue <span class="sort-indicator">↕️</span></th>
+                    <th data-column="cause">Likely Cause <span class="sort-indicator">↕️</span></th>
+                    <th data-column="action">Correct Action <span class="sort-indicator">↕️</span></th>
+                    <th data-column="role">Assigned Role <span class="sort-indicator">↕️</span></th>
+                    <th data-column="ref">Traceability Reference <span class="sort-indicator">↕️</span></th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <!-- dynamic rows -->
+            </tbody>
+        </table>
+    </div>
+    <footer>
+        Based on Vitrea Administration and Troubleshooting Guide (VPMC-17428 F) + additional legacy content. 🆕 denotes newly added or significantly expanded.
+    </footer>
+</div>
+
+<script>
+    // ----- DATA: All scenarios as per final table (49 entries) -----
+    const scenarios = [
+        { id: "HF‑1", symptom: "All Sessions Are In Use", cause: "Hardware capacity limits or stale user sessions.", action: "1. Confirm RDS licensing mode (Per User / Per Device).\n2. Check active sessions via Windows tools; disconnect stale sessions.\n3. Verify configured user limits against hardware capacity.\n4. Validate overall license availability.", role: "L2/L3 Support", ref: "p. 236 – “All Sessions are in use” error screen displays", isNew: false },
+        { id: "HF‑2", symptom: "Applications Not Launching / Grey Screen", cause: "VSP services not running, license issues, or application errors.", action: "1. Verify VSP services are “Running”.\n2. Check license status via http://localhost:8700/management/api/license/usage.\n3. Review Core App and Service logs.\n4. For “terminated abnormally”: collect application log and exception info.\n5. For GSB error: collect AppShell and SessionHelper logs.\n6. For “Unable to acquire system resources”: ensure correct NVIDIA driver; close desktop apps in other sessions.\n7. For Cedars licensing error: verify separate Cedars license installation.\n8. If grey screen: validate TLS and certificate bindings.\n9. Perform a controlled service restart.", role: "L2/L3 Support", ref: "p. 237 – Applications are not launching / p. 305 – Vitrea does not start and shows blank gray screen…", isNew: false },
+        { id: "HF‑3", symptom: "Studies Not Appearing", cause: "AE Title mismatch, listening port configuration, or VIMS receive queue bottlenecks.", action: "1. Validate AE Titles and listening ports match configuration.\n2. Check the VIMS receive queue for bottlenecks.\n3. Confirm active PACS routing rules.", role: "Field Engineer / L2", ref: "p. 254 – Delay to accept association… / p. 285 – StudyList displays but no data is shown", isNew: false },
+        { id: "HF‑4", symptom: "Studies Stuck Processing", cause: "JIT intensive task backlog, license missing, or WorkItem timeout.", action: "1. Review active/failed WorkItems via VIMS Monitor.\n2. Check the JIT backlog state.\n3. Validate algorithm‑specific licenses.\n4. Execute formal stuck‑study recovery SOP.", role: "L2/L3 Support", ref: "p. 229–230 – Resolve Stuck Studies / p. 230 – Use VIMS Monitor / p. 231 – Use Work Items", isNew: false },
+        { id: "HF‑5", symptom: "HTTP 403 / SSO Lockout", cause: "AD group mapping issue, IIS authentication misconfiguration, or failed audits.", action: "1. Validate AD group mappings.\n2. Check IIS authentication mode.\n3. Review Windows Security Event logs for failed audits.\n4. Unlock local/AD account if required.", role: "IT Admin", ref: "p. 263 – HTTP 403 error occurs during launch after new install / p. 280 – SSO enabled but account is locked out…", isNew: false },
+        { id: "HF‑6", symptom: "Evidence Cannot Be Saved", cause: "Target Archive integrity failure, file system permissions, or Evidence service write‑failures. Large batch/movie size.", action: "1. Verify integrity of the target Archive.\n2. Check file system permissions on archive directory.\n3. Review Evidence service logs for write‑failures.\n4. For large batch/movie: reduce number of images, adjust output size, or use “Good” quality to reduce file size.", role: "IT Admin / L2", ref: "p. 258 – Evidence could not be saved error displays / p. 261 – Fails to create evidence", isNew: false },
+        { id: "HF‑7", symptom: "Cedars‑Sinai Licensing Error", cause: "Network unreachability to License Server or missing specific license key.", action: "1. Verify network reachability to License Server.\n2. Validate presence of Cedars‑Sinai license key.\n3. Restart Vitrea Licensing service.", role: "L2/L3 Support", ref: "p. 266 – Licensing error displays when you launch Cedars… / p. 48–58 – Configure the CSMC Floating License Server", isNew: false },
+        { id: "HF‑8", symptom: "Slow RDP Performance", cause: "GPU driver mismatch, RDP GPU acceleration disabled, or hardware saturation.", action: "1. Validate GPU driver installation and version.\n2. Ensure RDP GPU acceleration is enabled.\n3. Check System Health for CPU/RAM saturation.\n4. Address VMware Tools conflicts.", role: "L2/L3 Support", ref: "p. 279 – Slow Remote Desktop connections / p. 307 – Vitrea deployment using Vmware Tools 11.2.6 may cause resolution issues", isNew: false },
+        { id: "HF‑9", symptom: "Database Deployment Tool Failure", cause: "SQL Server permission issues or database connectivity failures during deployment.", action: "1. Review DB deployment install logs.\n2. Validate SQL Server permissions and connectivity via SSMS.\n3. Critical: Restore from known‑good DB backup (requires approval).", role: "L2/L3 Support", ref: "p. 247 – Database Deployment Tool displays errors… / p. 249 – Database Deployment Tool failed during installation", isNew: false },
+        { id: "HF‑10", symptom: "VSP Services Do Not Start", cause: "Windows service dependency failures or invalid service account permissions.", action: "1. Check Windows service dependencies (services.msc).\n2. Review VSP service startup logs.\n3. Validate service account permissions and certificate validity.", role: "L2/L3 Support", ref: "p. 308 – VSP Services do not start / p. 234 – VSP Services do not start", isNew: false },
+        { id: "1", symptom: "Applications unable to load data", cause: "Incorrect NASROOT permissions.", action: "Verify and correct NASROOT permissions (Management Server must be shared with R/W).", role: "IT Admin / L2", ref: "p. 238 – Applications are unable to load data", isNew: false },
+        { id: "2", symptom: "AppShell Timeout error", cause: "Incorrect group policies for Vitrea Kiosk launch.", action: "Check group policies for Vitrea Kiosk launch on connection; apply policy and re‑login.", role: "IT Admin", ref: "p. 239 – AppShell Timeout error displays", isNew: false },
+        { id: "3", symptom: "Archive CD/DVD IMAPI Error 🆕", cause: "DVD hardware failure or virtual DVD drive installed.", action: "1. If hardware failed, contact Canon Medical Customer Support.\n2. If virtual DVD drive present, uninstall virtual DVD software and reboot.", role: "IT Admin", ref: "Not present in VPMC‑17428 F (legacy)", isNew: true },
+        { id: "4", symptom: "Cannot import study using Media Manager", cause: "AE Title or port misconfiguration in Media Manager.", action: "Check AE Title and port in Media Manager Config.", role: "Field Engineer / L2", ref: "p. 239 – Cannot import study using Media Manager", isNew: false },
+        { id: "5", symptom: "Cannot launch Vitrea on client with non‑admin user", cause: "MSLicensing registry keys blocking standard user.", action: "Delete MSLicensing registry keys, reboot, connect as admin first, then as standard user.", role: "IT Admin", ref: "p. 239 – Cannot launch Vitrea on a client system using a non‑administrator user", isNew: false },
+        { id: "6", symptom: "Collect Performance Logs (procedure)", cause: "—", action: "From Applications Home → gear icon → Collect Performance Logs. Describe issue, optionally screenshot, save. Logs saved to C:\\NAS\\logCollection\\current\\...", role: "All roles", ref: "p. 240–244 – Collect Performance Logs", isNew: false },
+        { id: "7", symptom: "“CONFIG REQUIRED” button during install", cause: "System Setup Script not run.", action: "Run the System Setup Script from Vitrea media Utilities folder before continuing.", role: "Field Engineer", ref: "p. 245 – CONFIG REQUIRED button displays…", isNew: false },
+        { id: "8", symptom: "“Connection credentials already in use” message", cause: "Multiple logins by same user not supported.", action: "Log off other session; for Enterprise try different collection; wait for timeout; admin may force logoff.", role: "IT Admin / L2", ref: "p. 246 – “Connection credentials already in use” message displays", isNew: false },
+        { id: "9", symptom: "Correct a corrupted VitreaConfiguration.xml file 🆕", cause: "XML file corruption.", action: "1. Close all Vitrea sessions.\n2. Backup and delete VitreaConfiguration.xml from C:\\Program Files\\Vital Images\\Vitrea64\\Config and E:\\VitreaData\\CentralizedPresets\\Modified.\n3. Repair or reinstall Vitrea.", role: "IT Admin / L2", ref: "Not present in VPMC‑17428 F (legacy)", isNew: true },
+        { id: "10", symptom: "Credentials screen always displays / broken thumbnails", cause: "Local Intranet Settings misconfiguration.", action: "Complete “Configure Site to Zone Assignment List” in Enterprise Deployment AD Planning Guide. If first time, cancel and relaunch.", role: "IT Admin", ref: "p. 247 – Credentials screen always displays", isNew: false },
+        { id: "11", symptom: "Database Deployment Tool errors during Management Server install", cause: "Errors in VSP or Dicom Services schemas.", action: "For each error: click Rescan, then Deploy.", role: "L2/L3 Support", ref: "p. 247–248 – Database Deployment Tool displays errors…", isNew: false },
+        { id: "12", symptom: "Delay to accept association and start data transfer", cause: "DNS name resolution issue.", action: "Use ping, tracert, nslookup; ensure DNS Forward/Reverse zones; or add PACS host to hosts file.", role: "IT Admin / L2", ref: "p. 254 – Delay to accept association…", isNew: false },
+        { id: "13", symptom: "“Download and View” option unavailable", cause: "File extension not associated with viewer software.", action: "Use assoc and ftype commands to associate extension (e.g., .stl) with desired viewer.", role: "IT Admin", ref: "p. 255 – “Download and View” option unavailable…", isNew: false },
+        { id: "14", symptom: "Enable/Disable Windows Firewall logging", cause: "—", action: "Use netsh advfirewall commands to set logging parameters.", role: "IT Admin", ref: "p. 256 – Enable/Disable Logging for Windows Firewall", isNew: false },
+        { id: "15", symptom: "“ERR_DNS_FAIL” on Report page after install/upgrade 🆕", cause: "Proxy server blocking or missing bypass.", action: "1. In Internet Explorer, go to Internet Options > Connections > LAN settings.\n2. Enable proxy and add IP addresses to Exceptions to bypass proxy for local addresses.", role: "IT Admin", ref: "Not present in VPMC‑17428 F (legacy)", isNew: true },
+        { id: "16", symptom: "“Error creating FMS Artifact for report page”", cause: "Automatic Root Certificates Update blocking.", action: "Group Policy: Turn off Automatic Root Certificates Update → Enabled.", role: "IT Admin", ref: "p. 257 – “Error creating FMS Artifact…”", isNew: false },
+        { id: "17", symptom: "Error after deleting default archive", cause: "Deleting default archive causes system unusable.", action: "Uninstall Vitrea, delete VIDicom database, reinstall. Do not delete default archive; add as additional instead.", role: "L2/L3 Support", ref: "p. 258 – Error occurs if you delete the configured default archive / p. 265 – If you delete the configured default archive, a 500 error…", isNew: false },
+        { id: "18", symptom: "“Expect connectivity issues…” error in DDT", cause: "Database in single‑user mode.", action: "Close DDT, stop Vitrea services; in SSMS set VIDicom to MULTI_USER; reopen DDT.", role: "L2/L3 Support", ref: "p. 261 – “Expect connectivity issues due to current database state” error…", isNew: false },
+        { id: "19", symptom: "List of Required Ports", cause: "—", action: "Ensure TCP 443, 3002, 3003, 3389 are open with correct executables.", role: "IT Admin", ref: "p. 267–268 – List of Required Ports", isNew: false },
+        { id: "20", symptom: "Logout screen displays due to inactivity 🆕", cause: "Session timeout exceeded.", action: "For direct access: “Session Ended” screen duration configurable (default 4h).\nFor remote access: Idle Session Timeout (default 30min) configured during installation. Contact site admin to modify.", role: "IT Admin", ref: "p. 273 – Logout screen displays due to inactivity", isNew: true },
+        { id: "21", symptom: "Manage List Services (service status)", cause: "Services not started or misconfigured.", action: "Use Computer Management > Services; ensure listed services are Automatic and Logon As appropriate.", role: "IT Admin", ref: "p. 274 – Manage List Services", isNew: false },
+        { id: "22", symptom: "RD License Server is not allocating licenses 🆕", cause: "License server not set or registry misconfigured.", action: "1. In PowerShell: `$obj = gwmi -namespace \"Root/CIMV2/TerminalServices\" Win32_TerminalServiceSetting`\n2. `$obj.SetSpecifiedLicenseServerList(\"hostname\")`\n3. Set registry key `HKLM\\SYSTEM\\CurrentControlSet\\Control\\Terminal Server\\RCM\\Licensing Core\\LicensingMode` to 2 (Per Device) or 4 (Per User).", role: "IT Admin", ref: "p. 266–267 – Licensing mode for the Remote Desktop Session Host is not configured", isNew: true },
+        { id: "23", symptom: "Reporting does not launch", cause: "Service user permissions missing.", action: "Add the service user to the local Administrators group.", role: "IT Admin", ref: "p. 277 – Reporting does not launch", isNew: false },
+        { id: "24", symptom: "Results not found after patient edit", cause: "archiveBlockRetentionPeriod too high.", action: "Set archiveBlockRetentionPeriod to 1000 in FMSGeneral system settings.", role: "L2/L3 Support", ref: "p. 278 – Results not found after patient edit…", isNew: false },
+        { id: "25", symptom: "Start Vitrea does not connect", cause: "VSP Application service not started, database connection issue, or IIS/SQL problem.", action: "Check VSP Application service; verify database connection in logs; test home page login; check IIS and SQL.", role: "L2/L3 Support", ref: "p. 281–283 – Start Vitrea does not connect", isNew: false },
+        { id: "26", symptom: "Start Vitrea does not start (crash)", cause: "AppShell error, crash, or missing/corrupted component.", action: "1. Check Windows Event Viewer.\n2. Review AppShell logs in C:\\ProgramData\\Vitrea\\Logs\\AppShell\\S#_P##### and exception dump files.\n3. If needed, repair or reinstall Vitrea.", role: "L2/L3 Support", ref: "p. 283 – Start Vitrea does not start", isNew: false },
+        { id: "27", symptom: "StudyList displays but no data", cause: "Filters set to “Today” or VAT directory issues.", action: "Set filter to “Any”, search; verify VAT directory and AutoDelete settings; check logs.", role: "All roles", ref: "p. 285 – StudyList displays but no data is shown", isNew: false },
+        { id: "28", symptom: "System Health Performance numbers missing", cause: "Performance counters corrupted.", action: "Run lodctr /r to rebuild counters; restart Vitrea.SystemProvisionAllocator; reboot.", role: "L2/L3 Support", ref: "p. 285–286 – System Health Performance numbers do not display", isNew: false },
+        { id: "29", symptom: "“User Profile Service failed the sign‑in”", cause: "Low disk space or corrupted profile.", action: "Sign in with Vitrea‑Admin; verify free space on C: drive.", role: "IT Admin", ref: "p. 286 – “The User Profile Service service failed the sign‑in” error displays", isNew: false },
+        { id: "30", symptom: "Adjust number of users based on machine resources", cause: "Incorrect maxSlots_user value or automatic profile.", action: "Edit Vitrea.SystemProvisionAllocator.config.dict; add “maxSlots_user”: X under OverrideConfigs; restart service.", role: "L2/L3 Support", ref: "p. 287–289 – To fix or adjust the number of users…", isNew: false },
+        { id: "31", symptom: "Cedars‑Sinai Cardiac Suite – Invalid Key File", cause: "License key does not match system.", action: "Contact Canon Medical Customer Support for correct license.", role: "IT Admin / L2", ref: "p. 289 – Troubleshoot Cedars‑Sinai Cardiac Suite – Invalid Key File", isNew: false },
+        { id: "32", symptom: "Troubleshoot Group Policy Objects", cause: "GPOs blocking IIS, active scripting, clipboard.", action: "Ensure GPOs allow IIS installation; enable active scripting and clipboard operations in Internet Explorer zones.", role: "IT Admin", ref: "p. 290–291 – Troubleshooting Group Policy Objects", isNew: false },
+        { id: "33", symptom: "Oncology Fusion – AE Title change not reflected", cause: "Configuration files not updated.", action: "Manually edit scp.xml under Program Files\\Mirada XD\\3.6\\config or Mirada RT\\1.6\\config.", role: "IT Admin / L2", ref: "p. 291 – Changing AE Title for Oncology Fusion", isNew: false },
+        { id: "34", symptom: "Oncology Fusion – Sessions not restorable", cause: "Corrupted configuration file.", action: "Delete user‑specific xd.cfg or rt.cfg files to restore factory defaults.", role: "IT Admin / L2", ref: "p. 291 – Oncology Fusion sessions are not restorable", isNew: false },
+        { id: "35", symptom: "Oncology Fusion – Hotkey configuration missing", cause: "Hotkey setting disabled in config.", action: "Edit scp.xml and set com.mirada.fusionxd.hotkey.configuration.ui to true.", role: "IT Admin / L2", ref: "p. 292 – Enable the Hot Key Configuration Setting…", isNew: false },
+        { id: "36", symptom: "Troubleshoot Services (PowerShell script)", cause: "—", action: "Use Manage‑VitreaServices.ps1 with actions disable, enable, stop, start, status.", role: "IT Admin / L2", ref: "p. 292–294 – Troubleshoot Services", isNew: false },
+        { id: "37", symptom: "Ultrasound Clinical Package application error", cause: "Post‑install script not run.", action: "Run C:\\TOSHIBA US\\TMSC\\TMSCWSClinicalApp_US\\bin\\SetupBuildStartWS.js as administrator.", role: "IT Admin", ref: "p. 295 – Ultrasound Clinical Package application error displays", isNew: false },
+        { id: "38", symptom: "“Unable to configure the RD Session Host server” when adding Application Server", cause: "RD Session Host configuration issue.", action: "Follow the resolution steps in the referenced Microsoft article (Windows Server 2012).", role: "IT Admin", ref: "p. 295–296 – “Unable to configure the RD Session Host server” error…", isNew: false },
+        { id: "39", symptom: "Unable to connect after Windows Updates", cause: "Remote Desktop Service locked.", action: "Stop and restart Vitrea.RemoteDesktopServices service; if stuck, kill RemoteDesktopInfo.Service.exe.", role: "IT Admin / L2", ref: "p. 296–297 – Unable to connect to Vitrea after running Windows Updates", isNew: false },
+        { id: "40", symptom: "Unable to launch Appshell or StudyList (Page failed to load)", cause: "User profile corruption or LAN settings.", action: "Method One: Login as admin and delete user's profile on the server.\nMethod Two: As user, open inetcpl.cpl > Connections > LAN settings, clear all checkboxes, click OK, then re‑enable them.", role: "IT Admin", ref: "p. 297 – Unable to launch the Appshell or the StudyList", isNew: false },
+        { id: "41", symptom: "Using VIMS Monitor", cause: "—", action: "Start > Programs > Vital Images > VIMS Monitor; view real‑time processing status.", role: "L2/L3 Support", ref: "p. 300 – Using VIMS Monitor", isNew: false },
+        { id: "42", symptom: "USCF and WRWMT applications fail to export movie", cause: "Robocopy arguments too aggressive.", action: "Edit VitreaCourierService.exe.config; change /R:0 to /R:4 and /W:0 to /W:2.", role: "L2/L3 Support", ref: "p. 301 – USCF and WRWMT applications fail to export movie on an Application Server", isNew: false },
+        { id: "43", symptom: "Validate Remote Desktop Broker Registry Entries", cause: "Missing or incorrect registry values.", action: "Verify registry keys under HKLM\\SYSTEM\\CurrentControlSet\\services\\Tssdis\\Parameters and plugin keys. If missing, run RegisterPlugin.reg.", role: "IT Admin", ref: "p. 301–302 – Validate Remote Desktop Broker Registry Entries", isNew: false },
+        { id: "44", symptom: "Verify Name Resolution (PowerScribe integration)", cause: "DNS issues or missing certificate.", action: "Ping hostname; add to hosts if no DNS; import SSL certificate; update web.config.", role: "IT Admin / L2", ref: "p. 302–303 – Verify Name Resolution", isNew: false },
+        { id: "45", symptom: "VIMS Install Fails", cause: "NASROOT permissions incorrect.", action: "Check and correct NASROOT permissions (include Management Server object).", role: "L2/L3 Support", ref: "p. 304 – VIMS Install Fails", isNew: false },
+        { id: "46", symptom: "Vitrea Client connection error after adding server", cause: "Configuration propagation delay.", action: "Wait five minutes and reconnect.", role: "IT Admin / L2", ref: "p. 304–305 – Vitrea Client connection error may display…", isNew: false },
+        { id: "47", symptom: "VitreaInstaller.exe bootstrapper failed", cause: "Lack of admin rights, missing prerequisites, or SQL Express conflict.", action: "Install with local admin; run OS Setup Script; ensure no pre‑existing SQL Express; check logs.", role: "Field Engineer", ref: "p. 306–307 – VitreaInstaller.exe bootstrapper failed during installation", isNew: false },
+        { id: "48", symptom: "Vitrea software does not start automatically via Thin Client", cause: "Missing “Startup program” GPO.", action: "Set group policy “Startup program” to launch Kiosk application on login.", role: "IT Admin", ref: "p. 307 – Vitrea software does not start automatically via Vitrea Thin Client", isNew: false },
+        { id: "49", symptom: "“VSP Application Service does not have access to PowerScribe Keystore”", cause: "Insufficient permissions to read key container.", action: "Click Save in the PowerScribe Credentials dialog to grant access.", role: "IT Admin", ref: "p. 308 – “VSP Application Service does not have access…”", isNew: false }
+    ];
+
+    // Helper: format action steps into HTML list
+    function formatAction(text) {
+        if (!text || text === "—") return "—";
+        const steps = text.split(/\n/).filter(s => s.trim().length > 0);
+        if (steps.length === 1) return steps[0];
+        let html = '<ul class="action-list">';
+        steps.forEach(step => {
+            let cleaned = step.replace(/^\d+\.\s*/, '');
+            html += `<li>${escapeHtml(cleaned)}</li>`;
+        });
+        html += '</ul>';
+        return html;
+    }
+
+    function escapeHtml(str) {
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        }).replace(/[\u2018\u2019]/g, "'").replace(/[\u201C\u201D]/g, '"');
+    }
+
+    let currentData = [...scenarios];
+    let currentSort = { column: 'id', direction: 'asc' };
+    let filterText = '';
+
+    function filterData() {
+        const term = filterText.trim().toLowerCase();
+        if (!term) {
+            currentData = [...scenarios];
+        } else {
+            currentData = scenarios.filter(item => {
+                return item.id.toLowerCase().includes(term) ||
+                       item.symptom.toLowerCase().includes(term) ||
+                       item.cause.toLowerCase().includes(term) ||
+                       item.action.toLowerCase().includes(term) ||
+                       item.role.toLowerCase().includes(term) ||
+                       item.ref.toLowerCase().includes(term);
+            });
+        }
+        applySort();
+    }
+
+    function applySort() {
+        const col = currentSort.column;
+        const dir = currentSort.direction;
+        currentData.sort((a, b) => {
+            let valA = a[col];
+            let valB = b[col];
+            if (col === 'id') {
+                // handle HF-1 vs numeric
+                const aNum = valA.startsWith('HF') ? parseInt(valA.substring(3)) : parseInt(valA);
+                const bNum = valB.startsWith('HF') ? parseInt(valB.substring(3)) : parseInt(valB);
+                if (!isNaN(aNum) && !isNaN(bNum)) return dir === 'asc' ? aNum - bNum : bNum - aNum;
+            }
+            if (typeof valA === 'string') valA = valA.toLowerCase();
+            if (typeof valB === 'string') valB = valB.toLowerCase();
+            if (valA < valB) return dir === 'asc' ? -1 : 1;
+            if (valA > valB) return dir === 'asc' ? 1 : -1;
+            return 0;
+        });
+        renderTable();
+    }
+
+    function renderTable() {
+        const tbody = document.getElementById('tableBody');
+        tbody.innerHTML = '';
+        for (let row of currentData) {
+            const tr = document.createElement('tr');
+            // Add 🆕 badge to symptom if isNew
+            let symptomHtml = escapeHtml(row.symptom);
+            if (row.isNew) {
+                symptomHtml = symptomHtml.replace('🆕', ''); // clean if already present
+                symptomHtml += ' <span class="new-badge">🆕</span>';
+            }
+            tr.innerHTML = `
+                <td>${escapeHtml(row.id)}</td>
+                <td>${symptomHtml}</td>
+                <td>${escapeHtml(row.cause)}</td>
+                <td>${formatAction(row.action)}</td>
+                <td><span class="role-badge">${escapeHtml(row.role)}</span></td>
+                <td><span class="ref">${escapeHtml(row.ref)}</span></td>
+            `;
+            tbody.appendChild(tr);
+        }
+        document.getElementById('rowCount').innerText = `📌 ${currentData.length} of ${scenarios.length} scenarios`;
+    }
+
+    function setSort(column) {
+        if (currentSort.column === column) {
+            currentSort.direction = currentSort.direction === 'asc' ? 'desc' : 'asc';
+        } else {
+            currentSort.column = column;
+            currentSort.direction = 'asc';
+        }
+        applySort();
+        updateSortIndicators();
+    }
+
+    function updateSortIndicators() {
+        document.querySelectorAll('th').forEach(th => {
+            const col = th.getAttribute('data-column');
+            const indicator = th.querySelector('.sort-indicator');
+            if (col === currentSort.column) {
+                indicator.textContent = currentSort.direction === 'asc' ? ' ▲' : ' ▼';
+            } else {
+                indicator.textContent = ' ↕️';
+            }
+        });
+    }
+
+    // event listeners
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+        filterText = e.target.value;
+        filterData();
+    });
+    document.getElementById('resetBtn').addEventListener('click', () => {
+        document.getElementById('searchInput').value = '';
+        filterText = '';
+        currentSort = { column: 'id', direction: 'asc' };
+        filterData();
+        updateSortIndicators();
+    });
+    document.querySelectorAll('th').forEach(th => {
+        th.addEventListener('click', () => {
+            const col = th.getAttribute('data-column');
+            if (col) setSort(col);
+        });
+    });
+
+    // initial render
+    filterData();
+    updateSortIndicators();
+</script>
+</body>
+</html>
