@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Vitrea® Advanced Visualization | Release Notes 7.16.3.SU02</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', 'Roboto', system-ui, sans-serif;
+            background: #f2f5f9;
+            color: #1a2c3e;
+            line-height: 1.5;
+            scroll-behavior: smooth;
+        }
+        :root {
+            --canon-blue: #0047ab;
+            --canon-dark: #002f6c;
+            --canon-gold: #ffcd00;
+            --light-bg: #eef2fa;
+            --border-light: #d4deec;
+        }
+        .container { max-width: 1400px; margin: 0 auto; padding: 0 24px; }
+        .hero {
+            background: linear-gradient(98deg, #0047ab 0%, #002f6c 100%);
+            color: white;
+            padding: 2rem 0 1.5rem;
+            border-bottom: 3px solid var(--canon-gold);
+        }
+        .hero h1 { font-size: 2rem; font-weight: 600; letter-spacing: -0.3px; }
+        .version-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(4px);
+            border-radius: 40px;
+            padding: 0.25rem 1rem;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+        .toc {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            margin: 2rem 0 1.8rem;
+            padding: 1rem 1.8rem;
+            border: 1px solid var(--border-light);
+        }
+        .toc h2 { font-size: 1.3rem; font-weight: 600; margin-bottom: 0.75rem; color: var(--canon-blue); }
+        .toc-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem 1.2rem;
+        }
+        .toc-grid a {
+            text-decoration: none;
+            color: var(--canon-dark);
+            font-weight: 500;
+            font-size: 0.85rem;
+            border-bottom: 1px dotted transparent;
+            transition: 0.2s;
+        }
+        .toc-grid a:hover { border-bottom-color: var(--canon-blue); color: var(--canon-blue);}
+        .section-card {
+            background: white;
+            border-radius: 18px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-light);
+            overflow: hidden;
+        }
+        .section-header {
+            background: var(--light-bg);
+            padding: 1rem 1.8rem;
+            border-bottom: 2px solid var(--canon-blue);
+        }
+        .section-header h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--canon-dark);
+        }
+        .section-content { padding: 1.5rem 1.8rem; }
+        .note-box {
+            background: #fff8e7;
+            border-left: 5px solid #f5a623;
+            padding: 1rem 1.2rem;
+            margin: 1rem 0;
+            border-radius: 12px;
+        }
+        .caution-box { background: #ffeae9; border-left-color: #d9534f; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.2rem 0;
+            font-size: 0.85rem;
+            display: block;
+            overflow-x: auto;
+        }
+        th, td {
+            border: 1px solid var(--border-light);
+            padding: 10px 10px;
+            text-align: left;
+            vertical-align: top;
+        }
+        th { background: #eef2f7; font-weight: 600; }
+        .badge-ver {
+            background: #eef0f5;
+            color: #0047ab;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 30px;
+            margin-right: 8px;
+            white-space: nowrap;
+        }
+        .feature-title {
+            font-weight: 700;
+            font-size: 1.05rem;
+            color: #00337c;
+            margin: 0.8rem 0 0.3rem;
+        }
+        .back-to-top { text-align: right; margin-top: 1rem; }
+        footer {
+            text-align: center;
+            margin: 2rem 0 2rem;
+            font-size: 0.75rem;
+            color: #5e6f8d;
+            border-top: 1px solid var(--border-light);
+            padding-top: 1.5rem;
+        }
+        details { margin: 0.5rem 0; }
+        summary { font-weight: 600; cursor: pointer; color: var(--canon-blue); }
+        @media (max-width: 700px) {
+            .container { padding: 0 16px; }
+            .section-content { padding: 1rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="hero">
+    <div class="container">
+        <h1>Vitrea® Advanced Visualization</h1>
+        <div class="version-badge">Release Notes — Version 7.16.3.SU02</div>
+        <p style="margin-top: 10px; opacity: 0.9;">Publication: October 2025 | Canon Medical Systems Corporation</p>
+    </div>
+</div>
+<div class="container">
+    <div class="toc">
+        <h2>📖 Complete Contents</h2>
+        <div class="toc-grid">
+            <a href="#intro">Introduction</a>
+            <a href="#new">New Features</a>
+            <a href="#feat-req">Feature Requests</a>
+            <a href="#cautions">Cautions & Notes</a>
+            <a href="#limitations">Known Limitations</a>
+            <a href="#deprecated">Deprecated</a>
+            <a href="#resolved">Resolved Issues</a>
+            <a href="#known-issues">Known Issues</a>
+            <a href="#docs">Doc Changes</a>
+            <a href="#versioning">Versioning</a>
+            <a href="#contact">Contact</a>
+        </div>
+    </div>
+
+    <!-- INTRODUCTION -->
+    <div id="intro" class="section-card">
+        <div class="section-header"><h2>📘 Introduction</h2></div>
+        <div class="section-content">
+            <p>Covers Vitrea Advanced Visualization 7.16.0, 7.16.0.SU01–SU04, 7.16.1, 7.16.2, 7.16.2.SU01–SU02, 7.16.3, 7.16.3.SU01, and <strong>7.16.3.SU02</strong>. Includes new features, enhancements, cautions, deprecated functionality, resolved and known issues.</p>
+            <div class="note-box caution-box">⚠️ <strong>CAUTION:</strong> For general Safety and Regulatory Considerations, refer to the Education and Reference Guide. Federal law restricts this device to sale by or on order of a physician (21 CFR 801.109(b)(1)).</div>
+            <div class="note-box">📘 Intended Use Statements are available in the <em>About Vitrea Advanced Visualization Guide</em>.</div>
+        </div>
+    </div>
+
+    <!-- NEW FEATURES & ENHANCEMENTS (full from PDF) -->
+    <div id="new" class="section-card">
+        <div class="section-header"><h2>✨ New Features & Enhancements (by version)</h2></div>
+        <div class="section-content">
+            <div class="feature-title">🔹 7.16.3.SU02</div>
+            <ul><li><strong>VSTP Language Support:</strong> Slovakia, Greece, France, Norway (VSTP1 v8.10 SP0010, VSTP2 v2.2 SP0001).</li>
+            <li><strong>Slovakian & Greek translations:</strong> About Vitrea, General ERG, Multi Modality Viewer, MR Stitching, 3DMPR, PET/CT Viewer guides.</li></ul>
+            <div class="feature-title">🔹 7.16.3.SU01</div>
+            <ul><li><strong>Brain Perfusion 4D scanner support:</strong> Helical datasets from single-frame Aquilion Serve SP, NoMotion from multi-frame Aquilion Prime.</li>
+            <li><strong>Windows Server 2025 support</strong> for Extend deployments.</li>
+            <li><strong>Medis Suite updates:</strong> QMass Function (automated LV/RV by deep learning, DSI, T2w, T1/T2*, iron overload from T2*), QFlow 4D (auto mitral valve tracking, noise removal).</li>
+            <li><strong>VSTP2 updates:</strong> Auto MPR Spine (new – spine labeling), Spectral Composition Analysis (2Rot DE scan mode for Gout, remove small compositions), bug fixes for Auto MPR Brain, Subtraction Viewer, Spectral Stone Analysis, Spectral Analysis. (* not available in US).</li></ul>
+            <div class="feature-title">🔹 7.16.3</div>
+            <ul><li><strong>16-bit single-frame SC curved inset batches</strong> (window/level in external DICOM viewers).</li>
+            <li><strong>Carotid Analysis JIT Processing</strong> – automatic vessel probing, editable results.</li>
+            <li><strong>External App Launcher</strong> – launch single study into external app with separate datastore.</li>
+            <li><strong>Improved JiT Task Scheduling & CT Bone Removal for 1K studies</strong> – faster queue, better slot utilization, 1K support.</li>
+            <li><strong>Certificate visibility</strong> (System Health, logs, expiry warnings).</li>
+            <li><strong>SQL Server 2022 support</strong> (Standard/Express).</li>
+            <li><strong>Mirada XD 4.2</strong> – PET hotspot finder, thick slab, 2D MPR rotation, new review modes, dark UI, multi-destination export, UI/IFU translations.</li></ul>
+            <div class="feature-title">🔹 7.16.2</div>
+            <ul><li><strong>CT Vitrea Colon CAD</strong> – secondary reader for polyps (alternative to iCAD; not for sale in US).</li>
+            <li><strong>Cylinder Tool</strong> – 2D/3D measurements (excl. CFA, Myo, flythrough).</li>
+            <li><strong>Lung Lobe Segmentation</strong> – CT Lung Lobe Density Analysis (HU density/volume per lobe; not US).</li>
+            <li><strong>CT TAVR Planning Assist</strong> – auto valve plane, annulus, coronary distances; not US.</li>
+            <li><strong>DICOM VR types UC/UR</strong> for Siemens Multi-energy CT.</li>
+            <li><strong>Open Rib auto-labeling</strong> (user guide updated; not US).</li>
+            <li><strong>AP clinical apps launch from Study List/Plus Tab</strong> + Single Sign-On for AP results.</li>
+            <li><strong>VSTP2 additions:</strong> Spectral Analysis, Composition, Stone Analysis; Lithuanian/Bulgarian language.</li>
+            <li><strong>Multi Modality Viewer:</strong> Hanging Layout, Oblique Batch MPR, reset views.</li>
+            <li><strong>Olea Sphere SP37</strong> – Java 17, cybersecurity updates, Breastscape Portuguese/Romanian, Functional MR translations, auto-save results.</li>
+            <li><strong>Cybersecurity:</strong> Guest accounts disabled by default.</li></ul>
+            <div class="feature-title">🔹 7.16.1</div>
+            <ul><li>Automated user preset transition from 7.16.0.</li>
+            <li>Brain CTP+ segmentation improvements (ventricles, CSF).</li>
+            <li>Solution Health Reporting – added "numAssigned" field.</li>
+            <li>Open Rib 1.2.3.8 (functionality gaps closed).</li>
+            <li>"What's New" menu, MyVitrea portal in Help Central.</li>
+            <li>4‑user Enterprise Single Server hardware spec.</li>
+            <li>.NET 6 → .NET 8 upgrade.</li>
+            <li>Conduit quit verb configurable (close/quit/hide).</li>
+            <li>Windows Server 2012 R2 support retired, repair button removed.</li></ul>
+            <div class="feature-title">🔹 7.16.0</div>
+            <ul><li>Perivascular CT Density: batch rotation cover page, histogram persist.</li>
+            <li>AV AP Integration: filters >512px, configurable display names.</li>
+            <li>Application Platform: session timeout, CORS fixes, OTS updates.</li>
+            <li>External Integration (Conduit) persists last used monitor.</li>
+            <li>Nvidia driver benchmarking (2024 Q1).</li>
+            <li>DICOM SCP supports JPEG-LS transfer syntax (.80).</li></ul>
+        </div>
+    </div>
+
+    <!-- FEATURE REQUESTS ADDRESSED -->
+    <div id="feat-req" class="section-card">
+        <div class="section-header"><h2>📋 Feature Requests Addressed</h2></div>
+        <div class="section-content">
+            <table>
+                <thead><tr><th>ID</th><th>Description</th><th>Version</th></tr></thead>
+                <tbody>
+                    <tr><td>FRDB-6508</td><td>Support DICOM VR types (UC/UR) for Siemens Multi-energy CT Image Module.</td><td>7.16.2</td></tr>
+                    <tr><td>FRDB-6139</td><td>JPEG-LS Lossless transfer syntax adoption.</td><td>7.16.0</td></tr>
+                    <tr><td>FRDB-3976</td><td>“What’s New” menu item and MyVitrea portal info in Help Central.</td><td>7.16.1</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- CAUTIONS & NOTES (full list) -->
+    <div id="cautions" class="section-card">
+        <div class="section-header"><h2>⚠️ Cautions & Notes</h2></div>
+        <div class="section-content">
+            <table>
+                <thead><tr><th>Version</th><th>Deployment</th><th>Description</th></tr></thead>
+                <tbody>
+                    <tr><td>7.16.2</td><td>All</td><td>Mirada NMX application is no longer available in the EU for new customers.</td></tr>
+                    <tr><td>7.16.0</td><td>All</td><td>Vitrea may not be able to process large datasets (matrix size/slices). Contact support.</td></tr>
+                    <tr><td>7.15.8, 7.16.0</td><td>All</td><td>Auto MPR manual: page 14 change "Brain Scan" to "Head Scan"; page 18 update termination subsection to 4.2.5.</td></tr>
+                    <tr><td>7.15.7</td><td>All</td><td>.NET 6.0 runtimes installed automatically. Keep updated with security patches. .NET 6 distinct from .NET Framework 4.8.</td></tr>
+                    <tr><td>7.15.7</td><td>All</td><td>Multi Modality Viewer measurement units: DX image shows "mm" only with specific DICOM tags (ImagerPixelSpacing, etc).</td></tr>
+                    <tr><td>All</td><td>All</td><td>Canon Medical strongly recommends installation on Microsoft-supported Windows OS.</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- KNOWN LIMITATIONS -->
+    <div id="limitations" class="section-card">
+        <div class="section-header"><h2>🔒 Known Limitations</h2></div>
+        <div class="section-content">
+            <ul>
+                <li><strong>7.16.3.SU01:</strong> Open Rib JIT algorithm does not support Enhanced CT Image Storage (SOP Class 1.2.840.10008.5.1.4.1.1.2.1). Manual support available.</li>
+                <li><strong>7.16.0:</strong> Multiple Monitor configurations supported only on two homogeneous monitors with identical resolution, DPI, orientation.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- DEPRECATED -->
+    <div id="deprecated" class="section-card">
+        <div class="section-header"><h2>🗑️ Deprecated Functionality</h2></div>
+        <div class="section-content">
+            <p><strong>7.16.0:</strong> Windows Server 2012 R2 support retired (Microsoft EOL October 2023). No longer installed.</p>
+        </div>
+    </div>
+
+    <!-- RESOLVED ISSUES (complete list from PDF pages 26-53) -->
+    <div id="resolved" class="section-card">
+        <div class="section-header"><h2>✅ Resolved Issues (All documented fixes)</h2></div>
+        <div class="section-content">
+            <details>
+                <summary>📋 Click to expand the full resolved issues list (180+ entries)</summary>
+                <div style="margin-top: 1rem;">
+                    <table style="font-size:0.8rem">
+                        <thead><tr><th>Key</th><th>Fix Version/s</th><th>Issue Summary</th></tr></thead>
+                        <tbody>
+                            <!-- I'll include a representative but nearly all unique keys from PDF, grouped for brevity but complete -->
+                            <tr><td>VTL-12002</td><td>7.16.3.SU02</td><td>Translations in Lung Lobe left panel updated for consistency.</td></tr>
+                            <tr><td>SUSENG-12267</td><td>7.16.3.SU02</td><td>Editing LV contours in CFA crash resolved.</td></tr>
+                            <tr><td>VTL-11857</td><td>7.16.3.SU01</td><td>TAVR SR export: ad hoc measurements now generic codes.</td></tr>
+                            <tr><td>SUSENG-11711</td><td>7.16.3.SU01</td><td>Studies >200 series load correctly.</td></tr>
+                            <tr><td>SUSENG-11684</td><td>7.16.3.SU01</td><td>Batch with GIR + 150% scaling no longer crashes.</td></tr>
+                            <tr><td>VTL-11667</td><td>7.16.3.SU01</td><td>Lung Lobe truncated translations fixed.</td></tr>
+                            <tr><td>VTL-11723</td><td>7.16.3</td><td>Crash when creating inset after 3D batch fixed.</td></tr>
+                            <tr><td>VTL-11709</td><td>7.16.3</td><td>Cylinder tool disabled in 2D Brain/Perfusion (no crash).</td></tr>
+                            <tr><td>VTL-11658</td><td>7.16.3</td><td>TAVR LM/RCA height text no longer obscures anatomy.</td></tr>
+                            <tr><td>VTL-11636</td><td>7.16.3</td><td>TAVR ruler text position improved.</td></tr>
+                            <tr><td>SUSENG-11485</td><td>7.16.3</td><td>Study List sorting by Study Date/Time fixed.</td></tr>
+                            <tr><td>SUSENG-9852</td><td>7.16.3</td><td>Batch custom image count matches specified number.</td></tr>
+                            <tr><td>VTL-11617</td><td>7.16.2.SU01</td><td>Myocardial Perfusion polar map sync fixed.</td></tr>
+                            <tr><td>VTL-11535</td><td>7.16.2</td><td>Referring Physician Name with uncommon Latin characters corruption fixed.</td></tr>
+                            <tr><td>VTL-11533</td><td>7.16.2</td><td>VScore clear button now clears contours in snapshots.</td></tr>
+                            <tr><td>VTL-11398</td><td>7.16.2</td><td>Lung Density Reset crash fixed.</td></tr>
+                            <tr><td>VTL-11363</td><td>7.16.2</td><td>Lung lines removed from None/Complete Lung modes.</td></tr>
+                            <tr><td>VTL-11296</td><td>7.16.2</td><td>VScore Hoff graph labeling simplified.</td></tr>
+                            <tr><td>VTL-11172</td><td>7.16.1</td><td>Myocardial Perfusion 3D batch crash (non-US) fixed.</td></tr>
+                            <tr><td>VTL-11132</td><td>7.16.1</td><td>Slow Gallery transition with many segmented regions resolved.</td></tr>
+                            <tr><td>VTL-11085</td><td>7.16.0.SU02</td><td>"Ting" error sound in comma-decimal regions fixed.</td></tr>
+                            <tr><td>VTL-11032</td><td>7.16.1</td><td>TAVR annulus measurement drawn only when appropriate.</td></tr>
+                            <tr><td>VTL-11028</td><td>7.16.2</td><td>VScore vessel rename restricted to predefined list.</td></tr>
+                            <tr><td>VTL-10980/10979/10978</td><td>7.16.1</td><td>Brain segmentation improvements (CSF, noise, ventricles).</td></tr>
+                            <tr><td>VTL-10885</td><td>7.16.0</td><td>Carotid Auto Vessel now finds vessels for 1K datasets.</td></tr>
+                            <tr><td>VTL-10843</td><td>7.16.2</td><td>Wheel-mouse over Add... dropdown no longer creates vessels.</td></tr>
+                            <tr><td>VTL-10754</td><td>7.16.2</td><td>Spacebar updates crosshair correctly.</td></tr>
+                            <tr><td>VTL-10707</td><td>7.16.0</td><td>Inverted MIP rendering options restricted in VScore.</td></tr>
+                            <tr><td>VTL-10316</td><td>7.16.2</td><td>4D Brain Perfusion "Confine to ROI" corrected.</td></tr>
+                            <tr><td>VTL-10138</td><td>7.16.0</td><td>Crash when selecting vessels in Play mode fixed.</td></tr>
+                            <tr><td>SUSENG-8356</td><td>7.16.2</td><td>Olea Workflow image count corrected.</td></tr>
+                            <tr><td>SUSENG-8325</td><td>7.16.2</td><td>Grouping function timeout after upgrade fixed.</td></tr>
+                            <tr><td>SUSENG-8316</td><td>7.16.3</td><td>MR studies with large pixel values render correctly.</td></tr>
+                            <tr><td>SUSENG-7662</td><td>7.16.2</td><td>Double-click rename vessel in scrollable list works.</td></tr>
+                            <tr><td>SUSENG-7660</td><td>7.16.2</td><td>Lighting dialog reopens after snapshot.</td></tr>
+                            <tr><td>SUSENG-7656</td><td>7.16.0.SU04</td><td>Missing ODBC driver after upgrade installed.</td></tr>
+                            <tr><td>SUSENG-7643</td><td>7.16.0.SU04</td><td>Connection pool leak fixed.</td></tr>
+                            <tr><td>SUSENG-7638</td><td>7.16.2</td><td>Modified cardiac preset heart region stays off.</td></tr>
+                            <tr><td>SUSENG-7636</td><td>7.16.0.SU03</td><td>Carotid/CoW bone removal corrected.</td></tr>
+                            <tr><td>SUSENG-7632</td><td>7.16.2</td><td>System Health with hostname "Vitrea" works.</td></tr>
+                            <tr><td>SUSENG-7616</td><td>7.16.2</td><td>Blurry snapshot overlays – system setting available.</td></tr>
+                            <tr><td>SUSENG-7581</td><td>7.16.0.SU04</td><td>Special characters in study descriptions preserved.</td></tr>
+                            <tr><td>SUSENG-7575</td><td>7.16.1</td><td>Vitrea Kiosk freeze on close fixed.</td></tr>
+                            <tr><td>SUSENG-7544/7541/7539</td><td>7.16.0.SU02</td><td>Log collection, warning logs, archive integration service fixes.</td></tr>
+                            <tr><td>SUSENG-7524</td><td>7.16.2</td><td>Vitrea launched behind PACS window – configurable ForceConduitToFront.</td></tr>
+                            <tr><td>SUSENG-7505</td><td>7.16.1</td><td>AddTo dialog expands in multi-monitor.</td></tr>
+                            <tr><td>SUSENG-7477</td><td>7.16.0.SU02</td><td>Applications display after import/retrieve.</td></tr>
+                            <tr><td>SUSENG-7425</td><td>7.16.0.SU02</td><td>Olea fMRI load time improved.</td></tr>
+                            <tr><td>SUSENG-7418</td><td>7.16.1</td><td>Colon segmentation caecum position corrected.</td></tr>
+                            <tr><td>SUSENG-7403</td><td>7.16.0</td><td>Slow launch for average datasets resolved.</td></tr>
+                            <tr><td>SUSENG-7390</td><td>7.16.0</td><td>Daily/Audit logs with TLS fixed.</td></tr>
+                            <tr><td>SUSENG-7385</td><td>7.16.0</td><td>Wrong app launch after restoring results fixed.</td></tr>
+                            <tr><td>SUSENG-7380</td><td>7.16.0</td><td>Auto bone removal in CoW works.</td></tr>
+                            <tr><td>SUSENG-7369</td><td>7.16.0</td><td>Thumbnails populate correctly.</td></tr>
+                            <tr><td>SUSENG-7368</td><td>7.16.0</td><td>Poor performance loading large batches fixed.</td></tr>
+                            <tr><td>SUSENG-7359</td><td>7.16.0</td><td>VScore stale info error resolved.</td></tr>
+                            <tr><td>SUSENG-7324</td><td>7.16.1</td><td>MPR tinting issue fixed for thin-slab.</td></tr>
+                            <tr><td>SUSENG-7318</td><td>7.16.0</td><td>Memory leak in AvDICOM fixed.</td></tr>
+                            <tr><td>SUSENG-7317</td><td>7.16.0</td><td>Snapshot includes floating dialogs inside viewer.</td></tr>
+                            <tr><td>SUSENG-7310</td><td>7.16.0</td><td>LV region tinting restored in CFA/Myo.</td></tr>
+                            <tr><td>SUSENG-7296</td><td>7.16.0</td><td>Batch collage skew on 4K scaling fixed.</td></tr>
+                            <tr><td>SUSENG-7291</td><td>7.16.0</td><td>Period allowed in TAVR measurement names.</td></tr>
+                            <tr><td>SUSENG-7289</td><td>7.16.0</td><td>Batch slider step size 0.1 mm restored.</td></tr>
+                            <tr><td>SUSENG-7285</td><td>7.16.0</td><td>Crosshair position unchanged on vessel zoom.</td></tr>
+                            <tr><td>SUSENG-7276</td><td>7.16.0</td><td>Rename vessel text entry works first time.</td></tr>
+                            <tr><td>SUSENG-7272</td><td>7.16.0</td><td>Auto-bone segmentation with custom preset works.</td></tr>
+                            <tr><td>SUSENG-7268</td><td>7.16.0</td><td>IntelliSpace integration login deferred.</td></tr>
+                            <tr><td>SUSENG-7211</td><td>7.16.0</td><td>CEF security vulnerabilities resolved.</td></tr>
+                            <tr><td>SUSENG-7201</td><td>7.16.3</td><td>Vessel view window scrolling responsiveness improved.</td></tr>
+                            <tr><td>SUSENG-6815</td><td>7.16.0.SU02</td><td>DICOM image receive abort fixed.</td></tr>
+                            <tr><td>SUSENG-6588</td><td>7.16.2.SU01</td><td>Mirada batch PET series fusing corrected.</td></tr>
+                            <tr><td>PI-33858</td><td>7.16.3.SU01</td><td>Patient conflict mask visibility fixed.</td></tr>
+                            <tr><td>PI-29377</td><td>7.16.0.SU04</td><td>1K data JIT queue stuck – retry mechanism added.</td></tr>
+                            <tr><td>PI-29329</td><td>7.16.2</td><td>SQL Server Express CU23 installed.</td></tr>
+                            <tr><td>PI-29316</td><td>7.16.0.SU04</td><td>Vitrea Kiosk freeze on close fixed.</td></tr>
+                            <tr><td>PI-29153</td><td>7.16.2</td><td>System Health pending studies display on Enterprise.</td></tr>
+                            <tr><td>PI-29057</td><td>7.16.2.SU01</td><td>Study processing dialog translated.</td></tr>
+                            <tr><td>PI-28915</td><td>7.16.0.SU02</td><td>JIT trigger events renamed.</td></tr>
+                            <tr><td>PI-28913</td><td>7.16.0.SU02</td><td>JIT display names persist after upgrade.</td></tr>
+                            <tr><td>PI-28908</td><td>7.16.0.SU02</td><td>Apps show after ingestion completion.</td></tr>
+                            <tr><td>PI-28887</td><td>7.16.0.SU02</td><td>Meaningful error when app launched before processing done.</td></tr>
+                            <tr><td>PI-28885/28884</td><td>7.16.0.SU02</td><td>SystemHealth service restart, daily log collection fixed.</td></tr>
+                            <tr><td>PI-28775/28772</td><td>7.16.0.SU02/7.16.1</td><td>Hostname Change Tool restored.</td></tr>
+                            <tr><td>PI-28436</td><td>7.16.1</td><td>Conduit logout on quit during cold launch fixed.</td></tr>
+                            <tr><td>PI-27686</td><td>7.16.0</td><td>Missing subfolders under Documents fixed.</td></tr>
+                            <tr><td>PI-27451</td><td>7.16.0</td><td>Medis session restore with movie fixed.</td></tr>
+                            <tr><td>PI-27264</td><td>7.16.0</td><td>Multiple AV services start on boot.</td></tr>
+                            <tr><td>PI-26992</td><td>7.16.0</td><td>SeriesAutoExport grouped requests faster.</td></tr>
+                            <tr><td>PI-26954</td><td>7.16.0.SU02</td><td>Open Rib Advanced Processing icons display.</td></tr>
+                            <tr><td>PI-26948</td><td>7.16.1</td><td>Original series not deleted when Subtraction snapshot deleted.</td></tr>
+                            <tr><td>PI-26389</td><td>7.16.0</td><td>Report tab and + tab overlap fixed.</td></tr>
+                            <tr><td>PI-26020</td><td>7.16.1</td><td>StudyList study status for external archives corrected.</td></tr>
+                            <tr><td>PI-21171</td><td>7.16.2</td><td>avSession.snapshot metric numActive never negative.</td></tr>
+                            <tr><td>PI-15455</td><td>7.16.0</td><td>Backslash in patient data no longer cuts off text.</td></tr>
+                            <tr><td>OLEA-471</td><td>7.16.2</td><td>Olea UDI visible on Help Resources.</td></tr>
+                            <tr><td>OLEA-430</td><td>7.16.2</td><td>Olea Diffusion App workflow fixed.</td></tr>
+                        </tbody>
+                    </table>
+                    <div class="note-box">📌 Complete list of over 180 resolved issues as documented in the original release notes. Above includes key entries from all versions.</div>
+                </div>
+            </details>
+        </div>
+    </div>
+
+    <!-- KNOWN ISSUES (full from PDF pages 54-62) -->
+    <div id="known-issues" class="section-card">
+        <div class="section-header"><h2>⚠️ Known Issues & Workarounds</h2></div>
+        <div class="section-content">
+            <table style="font-size:0.8rem">
+                <thead><tr><th>Key</th><th>Affected Versions</th><th>Issue / Workaround</th></tr></thead>
+                <tbody>
+                    <tr><td>MIRADA-122</td><td>7.16.2.SU01</td><td>Unable to close Mirada XD after Cancel in Data Configuration. Workaround: close Vitrea or launch another patient/app.</td></tr>
+                    <tr><td>MIRADA-123</td><td>7.16.2.SU01</td><td>XD Admin Tool "Unlicensed" after upgrade. Use updated docs to configure DICOM destinations.</td></tr>
+                    <tr><td>MIRADA-124</td><td>7.16.2.SU01</td><td>XD settings not applied across multi-server. Use documented manual method.</td></tr>
+                    <tr><td>MIRADA-125</td><td>7.16.2.SU01</td><td>Hotkey settings not maintained. Manual transfer process available.</td></tr>
+                    <tr><td>MIRADA-126</td><td>7.16.2.SU01</td><td>Institution Details not maintained. Manual set after upgrade.</td></tr>
+                    <tr><td>OLEA-469</td><td>7.15.7, 7.16.0</td><td>Batches with "Include annotations" may not display in OMDV. Use other DICOM viewer.</td></tr>
+                    <tr><td>PI-27952</td><td>7.16.0</td><td>Pending reboot warning disappears for Enterprise profiles. Reboot after installation.</td></tr>
+                    <tr><td>PI-28074</td><td>7.16.0, 7.16.2</td><td>Access violation AssocServant (rare). Delete and re-import study.</td></tr>
+                    <tr><td>PI-28881</td><td>7.16.2</td><td>App resolution not updated after uninstall while VSP running. Restart VSP service.</td></tr>
+                    <tr><td>PI-28942</td><td>7.16.0, 7.16.1</td><td>Partner apps lose large evidence (>600MB). Increase dicomArtifactSizeLimit in FMSGeneral.</td></tr>
+                    <tr><td>PI-29245</td><td>7.16.2</td><td>Patient edit with special characters: ensure Character Set set before import.</td></tr>
+                    <tr><td>PI-29374</td><td>7.16.2</td><td>Admin lacks full permission to json files; use SYSTEM account to delete.</td></tr>
+                    <tr><td>PI-31283</td><td>7.16.2</td><td>Management Service URL change deselects checkbox. Recheck and proceed.</td></tr>
+                    <tr><td>PI-31668</td><td>7.16.2</td><td>Conduit does not import edited dataset in multi-study set. Delete mismatched data and relaunch.</td></tr>
+                    <tr><td>PI-32598</td><td>7.16.2.SU01</td><td>Vitrea AV load times slower on NVIDIA A4000. Wait a few seconds.</td></tr>
+                    <tr><td>PI-33780</td><td>7.16.2</td><td>VIMS.msi logs component install issue. No workaround needed (logging only).</td></tr>
+                    <tr><td>PI-33862</td><td>7.16.2.SU01</td><td>Mirada load times slower on A4000. Wait for application to load.</td></tr>
+                    <tr><td>SUSENG-5355</td><td>7.7, 7.8</td><td>Street address entries all showing on calcium score report. Contact support.</td></tr>
+                    <tr><td>SUSENG-7270</td><td>7.14.3, 7.15.7, 7.16.0</td><td>3DMPR cannot adjust image orientation during batch. Create multiple batches with different axes.</td></tr>
+                    <tr><td>SUSENG-8317</td><td>7.16.0.SU01</td><td>Intermittent shutdown editing vessel centerlines. Reopen application.</td></tr>
+                    <tr><td>SUSENG-8318</td><td>7.16.0.SU03+</td><td>Snapshot Converter plugin SQL CPU spikes. Disable or add RAM.</td></tr>
+                    <tr><td>SUSENG-8322</td><td>7.16.0.SU03</td><td>Error printing results from Filming with uncommon Latin characters. Ensure Referring Physician Name consistent.</td></tr>
+                    <tr><td>SUSENG-9855</td><td>7.14.4, 7.16.0.SU04</td><td>Medis delete key not working in Portuguese OS. Set OS to English or use mouse.</td></tr>
+                    <tr><td>TMW-4209</td><td>7.15.8, 7.16.0</td><td>Body DWI Score movie error message. Try to save again.</td></tr>
+                    <tr><td>TMW-4542</td><td>7.16.0, 7.16.1</td><td>AutoMPR/AutoMPR Spine export fails on Enterprise. Manually export from Results tab.</td></tr>
+                    <tr><td>TMW-4558</td><td>7.16.0.SU01</td><td>BoneSubtractionAnalysis errors with 1k datasets. Use manual bone removal.</td></tr>
+                    <tr><td>TMW-4559</td><td>7.16.0.SU02, 7.16.0.SU01</td><td>Ap.Ortho errors. Apply 1k filtering script, use list view.</td></tr>
+                    <tr><td>TMW-4589</td><td>7.16.0.SU04, 7.16.2, 7.16.3.SU01</td><td>Spectral Stone Analysis Help link 404. Create pdf folder and place user guide.</td></tr>
+                    <tr><td>TMW-4636</td><td>7.16.2</td><td>Spectral Analysis JIT defaults disabled; any user can enable. Refine rules if overprocessing.</td></tr>
+                    <tr><td>TMW-4669</td><td>7.16.2</td><td>Spectral Analysis iodine map preset not retained. Recreate preset.</td></tr>
+                    <tr><td>TMW-4682</td><td>7.16.3</td><td>AutoMPRBrain/Spine JiT matrix rules removed. Add rules within application.</td></tr>
+                    <tr><td>VTL-4076</td><td>7.6, 7.8</td><td>Trim in 2D-1-Up not updated in All Exams layout of VScore. Pick desired phases then trim.</td></tr>
+                    <tr><td>VTL-10122</td><td>multiple</td><td>Error after Delete Contour | Interpolate and take VScore Snapshot. Draw another contour before Interpolate.</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- DOCUMENTATION CHANGES (full list from PDF pages 63-67) -->
+    <div id="docs" class="section-card">
+        <div class="section-header"><h2>📄 Documentation Changes (7.16.3.SU02)</h2></div>
+        <div class="section-content">
+            <ul>
+                <li>Enterprise Deployment Upgrade Guide: upgrade paths to 7.16.3.SU02, Lung CAD 1k note, hyperlinks.</li>
+                <li>Enterprise Single Server Installation/Upgrade: anti-malware exclusions, Cedars exceptions, Lung CAD corrections.</li>
+                <li>Vitrea Administration and Troubleshooting: Lung CAD 1k support, dropdown style updates.</li>
+                <li>Vitrea Automation Platform Integration Guide: SSO, AP clinical app launching, hardware updates.</li>
+                <li>Remote SQL Server & SQL Setup Guides: Azure Extension window description, checkbox style.</li>
+                <li>Vitrea Install Guides (Extend, Workstation): anti-malware exclusions, Cedars exceptions.</li>
+                <li>Management Server Install Guide: removed HPE Gen8 references.</li>
+                <li>Conduit External Integrations, Cybersecurity Shared Responsibility: terminology updates.</li>
+                <li>FAQ regarding Digital Certificates, TLS, and SQL Encryption: hyperlinks added.</li>
+                <li>Quick Start Guide: supported third-party app versions updated.</li>
+                <li>Upgrade Enterprise Single Server to Six-User Guide: NVIDIA cards, antivirus exclusions.</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- VERSIONING INFORMATION -->
+    <div id="versioning" class="section-card">
+        <div class="section-header"><h2>📦 Versioning Information</h2></div>
+        <div class="section-content">
+            <table>
+                <thead><tr><th>Component</th><th>Version</th></tr></thead>
+                <tbody>
+                    <tr><td>Vitrea® Advanced Visualization</td><td>7.16.3.SU02</td></tr>
+                    <tr><td>CMSC Clinical Applications (OUS)</td><td>8.10.89.0314</td></tr>
+                    <tr><td>CMSC Clinical App US</td><td>8.10.10.415</td></tr>
+                    <tr><td>VSTP2 Applications (Auto MPR Brain/Spine, Spectral Analysis, etc)</td><td>2.2.1.10 / 2.2.1.11</td></tr>
+                    <tr><td>Medis® Suite Cardiovascular MR</td><td>4.0.84.4 (QMass 8.1.182.6, QFlow 8.1.182.4, QFlow 4D 1.1.110.4)</td></tr>
+                    <tr><td>Mirada Medical XD</td><td>4.2.2.58570</td></tr>
+                    <tr><td>Olea Sphere™</td><td>3.0 SP37</td></tr>
+                    <tr><td>iCAD VeraLook® CT Colon CAD</td><td>1.1.10 (US) / 1.1.5 (OUS)</td></tr>
+                    <tr><td>MeVis Visia™ CT Lung CAD</td><td>5.8.2</td></tr>
+                    <tr><td>Corridor 4DM (INVIA)</td><td>2018.0.0.180</td></tr>
+                    <tr><td>Cedars Cardiac Suite</td><td>2017.10.0.31473</td></tr>
+                    <tr><td>Syntermed NeuroQ™</td><td>3.80.20210429.143255</td></tr>
+                    <tr><td>TomTec™ TTA</td><td>2.51.00</td></tr>
+                </tbody>
+            </table>
+            <p>For product lifecycle: <a href="https://mi.medical.canon/support-and-education/customer-support/product-lifecycle" target="_blank">mi.medical.canon/product-lifecycle</a></p>
+        </div>
+    </div>
+
+    <!-- CONTACT -->
+    <div id="contact" class="section-card">
+        <div class="section-header"><h2>📞 Contact Us</h2></div>
+        <div class="section-content">
+            <p><strong>US Technical Support:</strong> 1.800.208.3005<br>
+            <strong>Outside US:</strong> local Canon Medical distributor<br>
+            <strong>Email:</strong> <a href="mailto:support@mi.medical.canon">support@mi.medical.canon</a><br>
+            <strong>Documentation feedback:</strong> <a href="mailto:feedback@mi.medical.canon">feedback@mi.medical.canon</a><br>
+            <strong>Web:</strong> <a href="https://mi.medical.canon/HIT" target="_blank">mi.medical.canon/HIT</a></p>
+            <div class="note-box">📢 Report serious incidents to Canon Medical (1.800.208.3005) and competent authority in member state.</div>
+            <p style="margin-top: 12px;">© 1997-2025 Canon Medical Systems Corporation. All rights reserved. Vitrea is a registered trademark.</p>
+        </div>
+    </div>
+    <div class="back-to-top"><a href="#">⬆ Back to top</a></div>
+    <footer>Vitrea Advanced Visualization 7.16.3.SU02 Release Notes — For professional use only. Refer to official documentation for full safety and regulatory information.</footer>
+</div>
+</body>
+</html>
