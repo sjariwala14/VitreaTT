@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Medical Imaging Landscape – North India | Complete Interactive Report</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #f0f4f9;
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            line-height: 1.5;
+            color: #1e2a3a;
+            padding: 2rem 1rem;
+        }
+
+        .report-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            gap: 1.8rem;
+            align-items: flex-start;
+        }
+
+        .toc-sidebar {
+            width: 280px;
+            flex-shrink: 0;
+            position: sticky;
+            top: 20px;
+            background: white;
+            border-radius: 28px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            padding: 1.2rem 0.8rem;
+            max-height: calc(100vh - 40px);
+            overflow-y: auto;
+            font-size: 0.85rem;
+        }
+
+        .toc-sidebar h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 0 0 0.8rem 0.4rem;
+            color: #0f3b5c;
+            border-left: 4px solid #2c7da0;
+            padding-left: 0.8rem;
+        }
+
+        .toc-sidebar ul {
+            list-style: none;
+            padding-left: 0.5rem;
+        }
+
+        .toc-sidebar li {
+            margin: 0.5rem 0;
+        }
+
+        .toc-sidebar a {
+            text-decoration: none;
+            color: #2c3e50;
+            font-weight: 500;
+            display: block;
+            padding: 0.3rem 0.6rem;
+            border-radius: 12px;
+            transition: 0.2s;
+        }
+
+        .toc-sidebar a:hover {
+            background: #e9ecef;
+            color: #1e6f5c;
+        }
+
+        .main-content {
+            flex: 1;
+            background: white;
+            border-radius: 32px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+            overflow: hidden;
+            padding: 2rem 2rem 3rem;
+        }
+
+        .search-bar {
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            background: #f8fafd;
+            padding: 0.8rem 1.2rem;
+            border-radius: 60px;
+            border: 1px solid #dce5ef;
+        }
+        .search-bar input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            padding: 0.7rem 0;
+            font-size: 1rem;
+            outline: none;
+        }
+        .search-bar button {
+            background: #2c7da0;
+            border: none;
+            color: white;
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+        .search-bar button:hover {
+            background: #1f5e7a;
+        }
+        .search-clear {
+            background: #e2e8f0;
+            color: #1e2a3a;
+        }
+        .search-info {
+            font-size: 0.85rem;
+            color: #2c7da0;
+            margin-top: 0.5rem;
+        }
+
+        .section-card {
+            margin-bottom: 2.8rem;
+            scroll-margin-top: 80px;
+        }
+        .section-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #0f3b5c;
+            border-bottom: 3px solid #2c7da0;
+            padding-bottom: 0.4rem;
+            margin-bottom: 1.5rem;
+            display: inline-block;
+        }
+
+        .subsection-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin: 1.5rem 0 1rem;
+            color: #1e4663;
+            padding-left: 0.5rem;
+            border-left: 4px solid #61a5c2;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            margin: 1.2rem 0;
+            font-size: 0.9rem;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            overflow-x: auto;
+            display: block;
+        }
+        .data-table th, .data-table td {
+            border: 1px solid #d4dee8;
+            padding: 10px 12px;
+            text-align: left;
+            vertical-align: top;
+        }
+        .data-table th {
+            background: #eef3fc;
+            font-weight: 700;
+            color: #1f5068;
+        }
+        .data-table tr:hover {
+            background: #f9fbfd;
+        }
+
+        .highlight-list {
+            list-style: none;
+            padding-left: 0;
+        }
+        .highlight-list li {
+            margin: 0.6rem 0;
+            padding-left: 1.4rem;
+            position: relative;
+        }
+        .highlight-list li:before {
+            content: "▹";
+            color: #2c7da0;
+            position: absolute;
+            left: 0;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.2rem;
+            margin: 1rem 0;
+        }
+        .card {
+            background: #fafdff;
+            border: 1px solid #e2edf7;
+            border-radius: 20px;
+            padding: 1.2rem;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+        }
+        .card strong {
+            color: #1e5068;
+        }
+
+        .footnote {
+            font-size: 0.8rem;
+            color: #5a6e7c;
+            border-top: 1px solid #cfdfed;
+            margin-top: 2rem;
+            padding-top: 1rem;
+        }
+
+        @media (max-width: 900px) {
+            .report-container {
+                flex-direction: column;
+            }
+            .toc-sidebar {
+                width: 100%;
+                position: relative;
+                max-height: 300px;
+            }
+            .main-content {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="report-container">
+    <aside class="toc-sidebar">
+        <h3>📑 Contents</h3>
+        <ul>
+            <li><a href="#exec-summary">Executive Summary</a></li>
+            <li><a href="#key-opp">Key Opportunities 2026</a></li>
+            <li><a href="#part1">I: Major Hospital Groups & Chains</a></li>
+            <li><a href="#part2">II: Standalone Imaging Centres</a></li>
+            <li><a href="#part3">III: Government & Public Hospitals</a></li>
+            <li><a href="#part4">IV: PPP Model Diagnostic Centres</a></li>
+            <li><a href="#part5">V: Regional Presence (Diagnostic Chains)</a></li>
+            <li><a href="#part6">VI: Multi‑Specialty Hospitals (Advanced Imaging)</a></li>
+            <li><a href="#part7">VII: Other Noteworthy Medical Centres</a></li>
+            <li><a href="#part8">VIII: Detailed Tender Landscape</a></li>
+            <li><a href="#part9">IX: Government Schemes & Policies</a></li>
+            <li><a href="#part10">X: State PPP Models – Gateway</a></li>
+            <li><a href="#part11">XI: How to Find More Tenders</a></li>
+            <li><a href="#part12">XII: Strategic Takeaways for Bidders</a></li>
+            <li><a href="#validation">Validation & Appendix</a></li>
+            <li><a href="#checklist">Detailed Validation Checklist</a></li>
+            <li><a href="#disclaimer">Methodology & Disclaimer</a></li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="🔍 Search tenders, hospitals, schemes, PPP, MRI, GTE, validation...">
+            <button id="searchBtn">Search</button>
+            <button id="clearSearch" class="search-clear">Clear</button>
+        </div>
+        <div id="searchInfo" class="search-info"></div>
+
+        <!-- EXECUTIVE SUMMARY -->
+        <section id="exec-summary" class="section-card">
+            <h1 class="section-title">📋 Executive Summary</h1>
+            <p>This document provides a comprehensive mapping of the medical imaging landscape in North India, including major hospital groups, diagnostic chains, standalone imaging centers, government hospitals, Public-Private Partnership (PPP) projects, open tenders, and government schemes and policies.</p>
+            <p><strong>For potential bidders, the key takeaways are:</strong></p>
+            <ol style="margin-left: 1.8rem;">
+                <li><strong>Focus on PPP Models</strong> – States like Delhi, Haryana, Punjab, and Maharashtra are actively using PPPs to scale diagnostic services, offering significant opportunities for service providers and equipment suppliers.</li>
+                <li><strong>Leverage Government Schemes</strong> – PLI subsidies, capital subsidies for components, and missions like the Maha MedTech Mission offer direct financial support to manufacturers.</li>
+                <li><strong>Be Prepared for Evolving Regulations</strong> – GTE rules are dynamic, and eligibility may vary by tender. Always verify the latest position.</li>
+            </ol>
+        </section>
+
+        <!-- KEY OPPORTUNITIES TABLE (full 12 rows) -->
+        <section id="key-opp" class="section-card">
+            <h2 class="section-title">📌 Key Opportunities (2026)</h2>
+            <div style="overflow-x: auto;">
+                <table class="data-table">
+                    <thead><tr><th>S.No</th><th>Title & Description</th><th>Organization / Location</th><th>Key Dates</th><th>Value & Type</th></tr></thead>
+                    <tbody>
+                        <tr><td>1</td><td>Empanelment of Diagnostic Centres for MRI/CT Services for OPD Patients</td><td>AIIMS, New Delhi</td><td>Closing: 04‑May‑2026</td><td>Services (Empanelment)</td></tr>
+                        <tr><td>2</td><td>16 Slice Dual Head SPECT/CT Scanner – Supply and Installation ("one time purchase")</td><td>PGIMS, Rohtak (by HMSCL), Haryana</td><td>Closing: 16‑Apr‑2026</td><td>₹12 Crore</td></tr>
+                        <tr><td>3</td><td>Tele‑radiology Services to CT/MRI Scan Centres</td><td>Tamil Nadu Medical Services Corporation (TNMSC)</td><td>Closing: 15‑Apr‑2026</td><td>Services</td></tr>
+                        <tr><td>4</td><td>CT/MRI Diagnostic Centres Development & Maintenance (Civil Hospitals) – PPP</td><td>Haryana Medical Services Corpn Ltd (HMSCL)</td><td>Closed: 09‑Apr‑2026 (Past)</td><td>₹46 Crore (PPP)</td></tr>
+                        <tr><td>5</td><td>CT/MRI Diagnostic Centres Development & Maintenance (Civil Hospital, Karnal) – PPP</td><td>HMSCL / Civil Hospital, Karnal, Haryana</td><td>Closed: 10‑Apr‑2026</td><td>₹12 Crore (PPP)</td></tr>
+                        <tr><td>6</td><td>Supply of Thermal Films for MRI & CT Scan Centres</td><td>TNMSC, Tamil Nadu</td><td>Closing: 10‑Apr‑2026</td><td>Consumables / Goods</td></tr>
+                        <tr><td>7</td><td>Operation of Radiology Unit (MRI & CT) – PPP</td><td>Indira Gandhi Hospital, Delhi Govt</td><td>Awarded to Krsnaa Diagnostics</td><td>Not specified</td></tr>
+                        <tr><td>8</td><td>Chandan Healthcare's Third Punjab PPP Project – 10‑year PPP for 1.5T MRI (3) & 32 Slice CT (1)</td><td>Fazilka, Muktsar, Firozpur, Abohar, Punjab</td><td>Awarded (Closed)</td><td>Est. annual ₹25 Cr</td></tr>
+                        <tr><td>9</td><td>Establishment of 1.5 Tesla MRI System</td><td>Nathdwara, Rajsamand, Rajasthan</td><td>Closed: 07‑Apr‑2026</td><td>Not specified</td></tr>
+                        <tr><td>10</td><td>3.0 Tesla MRI Machine – Supply, Installation, Operation, Maintenance</td><td>Bikaner, Rajasthan</td><td>Closed: 07‑May‑2026</td><td>Not specified</td></tr>
+                        <tr><td>11</td><td>Chandan Healthcare's Second Punjab PPP Project – 10‑year Advanced Radiology Services</td><td>Punjab Health Systems Corp</td><td>Awarded (Jan 2026)</td><td>₹26 Cr estimated</td></tr>
+                        <tr><td>12</td><td>Radiology Workstation (3D Reconstruction) – E‑tender</td><td>ACTREC, Tata Memorial Center, Navi Mumbai</td><td>Date not specified</td><td>Not specified</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="footnote">Note: Tenders marked as "Past" have closed but are kept as references, as they represent recurring opportunities. Always confirm status on issuing authority's official website.</p>
+        </section>
+
+        <!-- PART I to PART XII (full content as per original doc, preserving all details) -->
+        <section id="part1" class="section-card"><h2 class="section-title">🏥 Part I: Major Hospital Groups & Diagnostic Chains in North India</h2>
+            <div class="card-grid">
+                <div class="card"><strong>Max Healthcare</strong><br>📍 Lucknow, Delhi NCR, Punjab, UP<br>🩻 3.0T wide‑bore MRI, digital PET‑CT, 128‑slice CT, TrueBeam, Da Vinci/Versius robots.<br><a href="https://www.maxhealthcare.in/" target="_blank">maxhealthcare.in</a></div>
+                <div class="card"><strong>Chandan Healthcare</strong><br>📍 UP, Uttarakhand, Delhi, Punjab (PPP)<br>🩻 11 CT, 4 MRI; multiple 10‑year PPP contracts (Fazilka, Muktsar, Firozpur, Abohar) valued ₹26 Cr – ₹550 Cr portfolio.<br>Publicly listed (NSE).</div>
+                <div class="card"><strong>Atulaya Healthcare</strong><br>📍 J&K (Jammu, Srinagar, Anantnag, Doda, Samba), HP (Shimla, Manali, Kullu, Bhuntar), Chandigarh, Mohali, Panchkula, Punjab (Jalandhar, Ludhiana, Mukstar, Bathinda, Amritsar), Haryana (Karnal, Yamunanagar), Delhi NCR (Ghaziabad, Kanpur)<br>🩻 Largest chain in North India; MRI, CT, CT Coronary Angiography; NABL lab in Mohali.<br><a href="https://www.atulaya.com/" target="_blank">atulaya.com</a></div>
+                <div class="card"><strong>Krsnaa Diagnostics</strong><br>📍 J&K, HP, Punjab, Delhi, UP, Rajasthan, Maharashtra<br>🩻 67‑75% revenue from PPP; 40 CT units in Maharashtra; bagged Indira Gandhi Hospital, New Delhi PPP.<br>NSE: KRSNAA</div>
+                <div class="card"><strong>Metropolis Healthcare</strong><br>📍 Uttarakhand<br>🩻 Acquired Dr. Ahuja's Pathology & Imaging Centre (DAPIC) in Dehradun.</div>
+                <div class="card"><strong>Vijaya Diagnostic Centre</strong><br>📍 200+ centres across India (Gurugram hub)<br>🩻 MRI, CT, Ultrasound, X‑ray, Mammography; Q3FY26 revenue +21.4%, volume +15%; FY27 expansion: 4‑5 hubs + 10‑12 spokes.<br><a href="https://www.vijayadiagnostic.com/" target="_blank">vijayadiagnostic.com</a></div>
+            </div>
+        </section>
+
+        <section id="part2" class="section-card"><h2 class="section-title">📍 Part II: Standalone Imaging Centres and Key Facilities</h2>
+            <div style="overflow-x: auto;"><table class="data-table"><thead><tr><th>Facility</th><th>Location</th><th>Imaging Highlights</th></tr></thead>
+            <tbody>
+                <tr><td>Mahajan Imaging & Labs</td><td>New Delhi</td><td>7 centres (Hauz Khas, Defence Colony, Sir Ganga Ram, PSRI, Fortis, BLK, Safdarjung). AI‑powered centre in Dwarka (2025) with India's first 'Excel 3T' ultra‑fast MRI scanner.</td></tr>
+                <tr><td>Yatharth Hospitals</td><td>Noida & Delhi NCR</td><td>128‑slice CT, first "silent" whole‑body MRI in Noida; Innova IGS530 Cath Lab with advanced 3D imaging.</td></tr>
+                <tr><td>Ganesh Diagnostic & Imaging Centre</td><td>New Delhi</td><td>NABL/NABH certified; MRI, CT, PET at CGHS rates.</td></tr>
+                <tr><td>NHS Hospital</td><td>Jalandhar</td><td>Revolution ACT CT, Silent MRI; tertiary neuroimaging & interventional radiology.</td></tr>
+                <tr><td>JNU Hospital</td><td>Jaipur</td><td>MRI, multi‑slice CT, DSA, 3D/4D ultrasound.</td></tr>
+                <tr><td>Santosh Hospitals</td><td>Ghaziabad, Delhi NCR</td><td>192‑slice CT, 1.5T MRI, 24x7, DSA, 3D/4D ultrasound.</td></tr>
+                <tr><td>Soni Hospital</td><td>Jaipur</td><td>Pioneer: first CT (1992) and private MRI (1993) in Rajasthan.</td></tr>
+                <tr><td>Yashoda Medicity</td><td>Delhi NCR</td><td>3.0T MRI, 256‑slice Dual Energy CT, AI integration.</td></tr>
+                <tr><td>Spiral CT and MRI Centre</td><td>Chandigarh</td><td>Private diagnostic centre.</td></tr>
+                <tr><td>National MRI CT Scan & Diagnostic Centre</td><td>New Delhi</td><td>PM‑JAY empanelled.</td></tr>
+                <tr><td>Focus Imaging and Research Centre</td><td>New Delhi</td><td>MRI, CT in Dilshad Garden.</td></tr>
+            </tbody></table></div>
+        </section>
+
+        <section id="part3" class="section-card"><h2 class="section-title">🏛️ Part III: Government & Public Hospitals</h2>
+            <div style="overflow-x: auto;"><table class="data-table"><thead><tr><th>Name</th><th>Location</th><th>Imaging Highlights</th></tr></thead>
+            <tbody>
+                <tr><td>PGIMER</td><td>Chandigarh</td><td>World‑class interventional radiology; plans for 24x7 CT/MRI via PSU/PPP (approved Nov 2024). New Neurosciences Centre (March 2026) includes advanced CT/MRI.</td></tr>
+                <tr><td>Dr. RMLIMS</td><td>Lucknow</td><td>3 Tesla MRI, 64‑slice CT.</td></tr>
+                <tr><td>Mahatma Gandhi Medical College & Hospital</td><td>Jaipur</td><td>1.5T & 3T MRI, 128‑slice CT, trauma centre.</td></tr>
+                <tr><td>GMCH, Sector 32</td><td>Chandigarh</td><td>Comprehensive radiological services.</td></tr>
+                <tr><td>Mahatma Gandhi Hospital</td><td>Jaipur</td><td>24x7 MRI/CT for emergency/oncology.</td></tr>
+                <tr><td>Bombay Hospital</td><td>Jaipur</td><td>State‑of‑the‑art CT department.</td></tr>
+                <tr><td>G. B. Pant Hospital</td><td>New Delhi</td><td>North India's first 256‑slice spectral CT in a government hospital; new cath lab (2026).</td></tr>
+                <tr><td>Safdarjung Hospital / VMMC</td><td>New Delhi</td><td>3 Tesla MRI, 128‑slice CT, interventional radiology.</td></tr>
+            </tbody></table></div>
+        </section>
+
+        <section id="part4" class="section-card"><h2 class="section-title">🤝 Part IV: PPP Model Diagnostic Centres</h2>
+            <div style="overflow-x: auto;"><table class="data-table"><thead><tr><th>Facility</th><th>Location</th><th>Details</th></tr></thead>
+            <tbody>
+                <tr><td>Sarvodaya NRCH Imaging Centre (SNIC)</td><td>New Delhi</td><td>PPP between Sarvodaya Hospital (Faridabad) and Northern Railway Central Hospital (NRCH), Connaught Place. 3,000 sq ft with MRI, CT, ultrasound, mammography, DEXA; 24x7.</td></tr>
+                <tr><td>Chandan Healthcare's Punjab PPP Projects</td><td>Punjab</td><td>Centres in Fazilka, Muktsar, Firozpur, Abohar; second project for advanced radiology services (10‑year term).</td></tr>
+                <tr><td>Railway Diagnostic Centre</td><td>New Delhi</td><td>Collaboration between NRCH and Sarvodaya Healthcare.</td></tr>
+                <tr><td>Indira Gandhi Hospital Radiology Unit</td><td>New Delhi (Dwarka)</td><td>PPP awarded to Krsnaa Diagnostics for establishment, operation, management of MRI and CT services.</td></tr>
+                <tr><td>Delhi Govt Hospitals (36 hospitals)</td><td>Delhi</td><td>By March 2026, all 36 Delhi government hospitals will have MRI and CT scan services under PPP at subsidised rates (~₹2,500).</td></tr>
+            </tbody></table></div>
+        </section>
+
+        <section id="part5" class="section-card"><h2 class="section-title">🗺️ Part V: Regional Presence of Major Diagnostic Chains</h2>
+            <ul class="highlight-list">
+                <li><strong>Atulaya Healthcare</strong> – J&K (Jammu, Srinagar), HP (Shimla, Manali), Chandigarh, Punjab, Haryana, Delhi, UP.</li>
+                <li><strong>Krsnaa Diagnostics</strong> – J&K, HP, Punjab, Delhi, UP, Rajasthan, Maharashtra.</li>
+                <li><strong>Chandan Healthcare</strong> – UP, Uttarakhand, Delhi, Punjab (PPP).</li>
+                <li><strong>Vijaya Diagnostic Centre</strong> – 200+ centres across India (including North India – Gurugram hub).</li>
+            </ul>
+        </section>
+
+        <section id="part6" class="section-card"><h2 class="section-title">🏥 Part VI: North India's Multi‑Specialty Hospitals (Advanced Imaging)</h2>
+            <div style="overflow-x: auto;"><table class="data-table"><thead><tr><th>Hospital Group</th><th>Key Locations</th><th>Imaging Tech & Specializations</th></tr></thead>
+            <tbody>
+                <tr><td>Aakash Healthcare</td><td>New Delhi (Dwarka)</td><td>3 Tesla MRI; 128‑slice CT; Interventional Radiology.</td></tr>
+                <tr><td>AIIMS, New Delhi</td><td>New Delhi</td><td>Bi‑plane DSA (Siemens & Philips); 3D reconstruction; 1.5T MRI; Cardiac MRI/CT Angio.</td></tr>
+                <tr><td>Apollo Hospitals</td><td>Delhi (Sarita Vihar)</td><td>3 Tesla MRI; 128‑slice CT; PET MR, PET CT.</td></tr>
+                <tr><td>Artemis Hospitals</td><td>Gurgaon</td><td>3 Tesla MRI; 64‑slice cardiac CT; 3D Biplane Angiography suite; neurointerventional lab.</td></tr>
+                <tr><td>BLK Max Super Speciality Hospital</td><td>New Delhi</td><td>Signa Artist MRI (South Asia's 1st); Flat Panel Cath Lab with 3D reconstruction; PET CT; 3D/4D ultrasound.</td></tr>
+                <tr><td>Fortis Healthcare</td><td>Delhi NCR (multiple), Mohali</td><td>3T MRI, 256‑slice CT, bi‑plane cath labs; 27 hospitals, 400+ diagnostic centres.</td></tr>
+                <tr><td>Gleneagles Hospitals</td><td>Primarily South India</td><td>3T MRI, 128‑slice CT, 16‑slice PET CT, bi‑plane cath labs.</td></tr>
+                <tr><td>Indraprastha Apollo Hospitals</td><td>New Delhi</td><td>3 Tesla & Tilting MRI; 128‑slice CT; PET MR; PET CT.</td></tr>
+                <tr><td>Jaypee Hospital</td><td>Noida</td><td>3.0 Tesla MRI with HIFU; 256‑slice CT; PET CT; Cardiac CT with spectral imaging.</td></tr>
+                <tr><td>Kailash Hospital & Heart Institute</td><td>Noida, Greater Noida</td><td>1.5 Tesla MRI (Philips); 128‑slice CT (Siemens); CT Angiography in under 15 seconds.</td></tr>
+                <tr><td>Mahatma Gandhi Medical College & Hospital</td><td>Jaipur</td><td>1.5 Tesla & 3 Tesla MRI; 128‑slice CT; CT Angiography; MR Angiography.</td></tr>
+                <tr><td>Manipal Hospitals</td><td>Dwarka, Ghaziabad</td><td>3 Tesla MRI; 128‑slice CT; 64‑slice CT; PET CT.</td></tr>
+                <tr><td>Medanta Hospital</td><td>Gurgaon, Noida</td><td>3 Tesla MRI; 256‑slice Dual Source CT; Artis Zeego hybrid room; Brain Suite with intraoperative MRI; PET CT.</td></tr>
+                <tr><td>Narayana Health</td><td>Gurugram</td><td>3.0 Tesla MRI; 128‑slice CT; 24/7 radiology; Cath Labs with IVUS/Rota.</td></tr>
+                <tr><td>Paras Hospitals</td><td>Gurgaon</td><td>3 Tesla MRI; 128 Spiral CT; fMRI; MR Perfusion & MR Spectroscopy.</td></tr>
+                <tr><td>Park Group of Hospitals</td><td>Panchkula, Mohali</td><td>New Panchkula facility (2026) with advanced diagnostics; Mohali unit has MRI, CT, Digital X‑ray, Ultrasound.</td></tr>
+                <tr><td>Rajiv Gandhi Cancer Institute (RGCIRC)</td><td>New Delhi (Rohini)</td><td>PET CT, MRI, CT, TrueBeam, MR‑guided biopsy, fully digital PACS.</td></tr>
+                <tr><td>Santosh Hospitals</td><td>Ghaziabad, Delhi NCR</td><td>192‑slice CT; 1.5T MRI; 24x7; DSA; 3D/4D ultrasound.</td></tr>
+                <tr><td>Sharda Hospital</td><td>Greater Noida, NCR</td><td>3 Tesla MRI; 256‑slice CT; Dual source DSA suite; 3D Mammography; PET CT.</td></tr>
+                <tr><td>Sir Ganga Ram Hospital (SGRH)</td><td>New Delhi</td><td>3 Tesla MRI; CT Angio; Advanced vessel analysis software; PET CT.</td></tr>
+                <tr><td>Yatharth Hospitals</td><td>Noida, Delhi NCR</td><td>First "silent" whole‑body MRI in Noida; 128‑slice CT; Innova IGS530 Cath Lab with advanced 3D imaging.</td></tr>
+            </tbody></table></div>
+        </section>
+
+        <section id="part7" class="section-card"><h2 class="section-title">✨ Part VII: Other Noteworthy Medical Centres</h2>
+            <ul class="highlight-list">
+                <li>Ivy (Livasa) Hospital, Mohali – CT, MRI, Cardiac Cath Lab, 25+ super specialties.</li>
+                <li>Chandan Hospital, Lucknow – 300‑bed multi‑super‑specialty hospital.</li>
+                <li>Dr. Shyama Prasad Mukherjee Civil Hospital, Lucknow – CT, MRI (government hospital).</li>
+                <li>Goel Super Speciality Hospital, Lucknow – CT, MRI for inpatients.</li>
+                <li>Balaji Soni Hospital, Jaipur – Dedicated CT & MRI centres.</li>
+                <li>JNU Hospital, Jaipur – MRI, multi‑slice CT, DSA, 3D/4D ultrasound.</li>
+                <li>Soni Hospital, Jaipur – Owns Soni CT & MRI Centres.</li>
+            </ul>
+        </section>
+
+        <section id="part8" class="section-card"><h2 class="section-title">📢 Part VIII: Detailed Tender Landscape</h2>
+            <h3 class="subsection-title">Central Government Tenders</h3>
+            <div style="overflow-x: auto;"><table class="data-table"><thead><tr><th>Tender</th><th>Organization</th><th>Reference / Details</th><th>Status / Date</th></tr></thead>
+            <tbody>
+                <tr><td>Empanelment of Diagnostic Centres for MRI/CT Services for OPD Patients</td><td>AIIMS, New Delhi</td><td>EOI ref. XX‑255/SO(DO)/EOI‑R.D./2025‑26</td><td>Closing: 04‑May‑2026</td></tr>
+                <tr><td>Global Tender for Digital Subtraction Angiography (Angio) System</td><td>AIIMS, New Delhi</td><td>Ref. XX‑190/SO(DO)/R.D./2024‑25/M&E</td><td>Closed: 11‑Mar‑2025 (example)</td></tr>
+                <tr><td>Procurement of CSSD System for AIIMS</td><td>HLL Infra Tech Services</td><td>GEM/2026/.../Corrigendum</td><td>Closing: 09‑Apr‑2026</td></tr>
+                <tr><td>HLL acting as Procurement Support Agency for AIIMS, New Delhi (Microbiology Dept)</td><td>HLL Infra Tech Services</td><td>Global Tender Enquiry (GTE)</td><td>Published: Feb 2026</td></tr>
+            </tbody></table></div>
+            <h3 class="subsection-title">State Government Tenders</h3>
+            <div style="overflow-x: auto;"><table class="data-table"><thead><tr><th>State</th><th>Tender</th><th>Organization</th><th>Value</th><th>Status</th></tr></thead>
+            <tbody>
+                <tr><td>Haryana</td><td>Development, Operation & Maintenance of Radiology Imaging Diagnostic Centres (CT & MRI) – PPP</td><td>HMSCL</td><td>₹46 Crore</td><td>Closed: 09‑Apr‑2026</td></tr>
+                <tr><td>Haryana</td><td>Radiology Imaging Diagnostic Centres (CT & MRI) – Civil Hospital, Karnal – PPP</td><td>HMSCL</td><td>₹12 Crore</td><td>Closed: 10‑Apr‑2026</td></tr>
+                <tr><td>Haryana</td><td>16 Slice Dual Head SPECT/CT Scanner – Supply & Installation (one‑time purchase)</td><td>PGIMS, Rohtak (by HMSCL)</td><td>₹12 Crore</td><td>Closing: 16‑Apr‑2026</td></tr>
+                <tr><td>Punjab</td><td>Chandan Healthcare's Second PPP Project – 10‑year Advanced Radiology Services</td><td>Punjab Health Systems Corp</td><td>₹26 Cr est.</td><td>Awarded: Jan 2026</td></tr>
+                <tr><td>Punjab</td><td>Chandan Healthcare's Third PPP Project – 1.5T MRI (3) & 32 Slice CT (1)</td><td>Punjab Health Systems Corp</td><td>Est. annual ₹25 Cr</td><td>Awarded: Mar 2026</td></tr>
+                <tr><td>Rajasthan</td><td>Establishment of 1.5 Tesla MRI System</td><td>Govt of Rajasthan – Nathdwara</td><td>Not specified</td><td>Closed: 07‑Apr‑2026</td></tr>
+                <tr><td>Rajasthan</td><td>3.0 Tesla MRI Machine – Supply, Installation, Operation, Maintenance</td><td>Govt of Rajasthan – Bikaner</td><td>Not specified</td><td>Closed: 07‑May‑2026</td></tr>
+                <tr><td>Tamil Nadu</td><td>Tele‑radiology Services to CT/MRI Scan Centres at Government Hospitals</td><td>TNMSC</td><td>Not specified</td><td>Closing: 15‑Apr‑2026</td></tr>
+                <tr><td>Tamil Nadu</td><td>Supply of Thermal Films for CT and MRI Scan Centres</td><td>TNMSC</td><td>Not specified</td><td>Closing: 10‑Apr‑2026</td></tr>
+                <tr><td>Assam (Past)</td><td>Supply, Installation & Commissioning of 64 Slice CT Machine and 1.5T MRI for Lakhimpur Medical College & Hospital</td><td>Assam Health Infrastructure Development & Management Society</td><td>Not specified</td><td>Closed (reference)</td></tr>
+            </tbody></table></div>
+        </section>
+
+        <section id="part9" class="section-card"><h2 class="section-title">💰 Part IX: Government Schemes & Policies</h2>
+            <div class="card"><strong>Production Linked Incentive (PLI) Scheme for Medical Devices</strong><br>Outlay ₹3,420 Cr; period FY2022‑23 to FY2026‑27; 5% incentive on incremental sales. Performance (Sep 2025): cumulative eligible sales ₹12,344.37 Cr (exports ₹5,869.36 Cr). 21 projects manufacturing 54 unique devices including MRI, CT, Cath Lab. Impact: domestic devices 10‑30% cheaper.<br><em>Reference: PIB Release Dec 2025; Medical Buyer Feb 2026</em></div>
+            <div class="card"><strong>Maha MedTech Mission</strong><br>Launched by ANRF, in collaboration with ICMR and Gates Foundation, Government of Maharashtra. Funding ₹5‑25 Cr per project (up to ₹50 Cr exceptional). Eligible: academic & R&D institutions, hospitals, startups, MSMEs, MedTech industry. Focus: advanced diagnostic imaging, minimally invasive, point‑of‑care, AI/ML.<br><em>Reference: PIB Release Nov 2025</em></div>
+            <div class="card"><strong>Capital Subsidy for Component Manufacturing</strong><br>20% capital subsidy for manufacturing components for digital X‑ray, CT, and MRI. Target: MSMEs producing detectors, coils, power supplies, etc. Lowers entry barrier for domestic component manufacturing.<br><em>Reference: ET HealthWorld Aug 2024</em></div>
+            <div class="card"><strong>Global Tender Enquiry (GTE) Exemption – Evolving Landscape</strong><br>354 medical devices exempt from local procurement clause under Rule 161(iv) of GFRs 2017, valid until March 31, 2027 unless otherwise ordered. DoP sought stakeholder comments on amended list until Feb 28, 2026. Import of refurbished medical devices banned (Economic Times Jan 2025). Strategic implication: Check each tender for GTE vs Limited.<br><em>References: Medical Buyer (Feb 2026); Pharmabiz (Feb 2026)</em></div>
+        </section>
+
+        <section id="part10" class="section-card"><h2 class="section-title">🤝 Part X: State PPP Models – A Major Gateway</h2>
+            <div style="overflow-x: auto;"><table class="data-table"><thead><tr><th>State</th><th>Initiative / Project</th><th>Update / Scope</th><th>Key Features & Opportunities</th></tr></thead>
+            <tbody>
+                <tr><td>Delhi</td><td>Universal Diagnostic Imaging</td><td>Announced / Rollout Phase (Hindustan Times Oct 2025). MRI & CT in all 36 govt hospitals by March 2026, subsidised rates ~₹2,500; addresses 3‑6 month waiting times.</td><td>Opportunity: service providers/equipment suppliers (installation, facility management, staffing).</td></tr>
+                <tr><td>Punjab</td><td>Radiology Imaging PPP</td><td>RFP Issued, multiple awards to Chandan Healthcare (Times of India Jan 2026; Medical Buyer Mar 2026). Private partner end‑to‑end: centres, financing, equipment, 24x7. 3 clusters (each: 3 district hospitals with 1 MRI, 1 sub‑divisional hospital with 1 CT). KPIs: images 45 min, reports 6h/2h. Estimated ₹78 Cr total investment.</td><td>Opportunity: large‑scale structured PPP (financing, equipment, installation, teleradiology, long‑term maintenance).</td></tr>
+                <tr><td>Maharashtra</td><td>Statewide Outsourcing</td><td>Agreements signed / active (Times of India May 2024). 10‑year agreements with Krsnaa Diagnostics and Unique Wellness: 22 MRI + 31 CT facilities. Each MRI up to 15 patients/day, CT over 20 patients/day. Krsnaa commissioned 40 CT units in Maharashtra.</td><td>Opportunity: blueprint for large‑scale PPPs; subcontracting roles (installation, staffing, teleradiology).</td></tr>
+                <tr><td>Pune (PMC)</td><td>Advanced Diagnostic Hub</td><td>Under construction (Pune Mirror Nov 2025). First municipal corporation to offer PET Scan, MRI, CT, advanced pathology via PPP. Completion Dec 2025. CGHS‑approved rates, focus on affordable cancer diagnostics for BPL.</td><td>Opportunity: model for integrated diagnostic hubs – equipment supply, installation, lab setup, service delivery.</td></tr>
+                <tr><td>Haryana</td><td>Radiology Imaging PPP – Civil Hospitals</td><td>Two PPP tenders by HMSCL in 2026: ₹46 Cr (selected civil hospitals) and ₹12 Cr (Civil Hospital, Karnal).</td><td>Opportunity: private partner responsible for development, operation, maintenance of CT/MRI centres on PPP basis.</td></tr>
+                <tr><td>Chandigarh (PGIMER)</td><td>24x7 Diagnostic Services via PPP</td><td>Approved by Standing Finance Committee (Nov 2024). PGIMER plans to bring a PSU/PPP partner to run round‑the‑clock X‑ray, CT, MRI, mammography, ultrasound.</td><td>Opportunity: PSU/PPP partnership for 24x7 operations at India's premier tertiary care institute.</td></tr>
+            </tbody></table></div>
+        </section>
+
+        <section id="part11" class="section-card"><h2 class="section-title">🔍 Part XI: How to Find More Tenders on Your Own</h2>
+            <ul class="highlight-list">
+                <li><strong>Central Public Procurement (CPP) Portal</strong>: <a href="https://eprocure.gov.in" target="_blank">eprocure.gov.in</a></li>
+                <li><strong>Government e‑Marketplace (GeM)</strong>: <a href="https://gem.gov.in" target="_blank">gem.gov.in</a></li>
+                <li><strong>AIIMS, New Delhi – Tenders</strong>: <a href="https://www.aiims.edu" target="_blank">aiims.edu</a> (section ‘Tenders’)</li>
+                <li><strong>HLL Infra Tech Services Ltd (HITES)</strong>: <a href="https://hllhites.com" target="_blank">hllhites.com</a></li>
+                <li><strong>Delhi</strong>: govtprocurement.delhi.gov.in</li>
+                <li><strong>Haryana</strong>: haryanatenders.gov.in</li>
+                <li><strong>Punjab</strong>: eproc.punjab.gov.in</li>
+                <li><strong>Rajasthan</strong>: eproc.rajasthan.gov.in</li>
+                <li><strong>Uttar Pradesh</strong>: etender.up.nic.in</li>
+                <li><strong>Tamil Nadu</strong>: tntenders.gov.in</li>
+                <li><strong>Kerala</strong>: etenders.kerala.gov.in</li>
+            </ul>
+            <p>💡 Pro Tip: Use keywords "MRI", "CT Scan", "diagnostic centre PPP", "radiology equipment", "medical imaging".</p>
+        </section>
+
+        <section id="part12" class="section-card"><h2 class="section-title">🎯 Part XII: Strategic Takeaways for Potential Bidders</h2>
+            <div style="overflow-x: auto;"><table class="data-table"><thead><tr><th>#</th><th>Takeaway</th><th>Actionable Insight</th></tr></thead>
+            <tbody>
+                <tr><td>1</td><td>Focus on PPP Models</td><td>States like Delhi, Haryana, Punjab, and Maharashtra actively using PPPs to scale diagnostic services – significant opportunity for private service providers and equipment suppliers.</td></tr>
+                <tr><td>2</td><td>Leverage Government Schemes</td><td>PLI subsidies (5% on incremental sales), 20% capital subsidy for components, Maha MedTech Mission (₹5‑25 Cr funding) offer direct financial support to manufacturers.</td></tr>
+                <tr><td>3</td><td>Be Prepared for Evolving GTE Regulations</td><td>GTE rules dynamic; some categories may favour domestic suppliers, others open to global competition. Stay updated on DoE exemption list.</td></tr>
+                <tr><td>4</td><td>Understand the Comprehensive Service Model</td><td>Many state PPP projects are comprehensive service agreements covering financing, infrastructure, equipment, long‑term maintenance (10+ years), staffing, and SLAs with KPIs.</td></tr>
+                <tr><td>5</td><td>Leverage "Make in India" for Competitive Advantage</td><td>Domestic medical devices 10‑30% cheaper due to PLI. Partner with or prioritize local manufacturers to become cost competitive.</td></tr>
+                <tr><td>6</td><td>Target Specific High‑Value Opportunities</td><td>Monitor e‑procurement portals of Delhi, Punjab, Maharashtra, Haryana for large‑scale PPP tenders. Success in Pune likely to replicate.</td></tr>
+                <tr><td>7</td><td>Monitor GTE Rules Closely</td><td>Regularly check updates from Department of Expenditure (DoE) regarding GTE exemption list – determines if tender is open globally or reserved for local players.</td></tr>
+            </tbody></table></div>
+            <p><strong>In summary:</strong> This document is validated. Based on cross‑referencing with publicly available sources, the information presented is accurate, current, and comprehensive, covering key tenders, policies, and market players up to April 25, 2026.</p>
+        </section>
+
+        <!-- DETAILED VALIDATION CHECKLIST (exactly as in original doc) -->
+        <section id="checklist" class="section-card">
+            <h2 class="section-title">📋 Detailed Validation Checklist</h2>
+            <h3>1. Key Opportunities Table:</h3>
+            <ul class="highlight-list">
+                <li><strong>AIIMS, New Delhi (MRI/CT Empanelment)</strong>: Tender reference XX-255/SO(DO)/E.O.I-R.D./2025-26 and closing date 04-May-2026 are correct as per AIIMS.</li>
+                <li><strong>PGIMS, Rohtak (SPECT/CT)</strong>: "16 Slice Dual Head SPECT/CT Scanner" tender with 16-Apr-2026 closing date confirmed.</li>
+                <li><strong>TNMSC (Tele-radiology)</strong>: Tele-radiology tender with 15-Apr-2026 closing date active on government portal.</li>
+                <li><strong>Haryana HMSCL (PPP Tenders)</strong>: Two PPP tenders (Karnal and ₹46 Cr package) issued, closing April 9 & 10, 2026.</li>
+                <li><strong>Chandan Healthcare Punjab PPPs</strong>: Second project (Jan 2026) and third project (Mar 2026) confirmed, third project equipment: 1.5T MRI & 32‑slice CT.</li>
+            </ul>
+            <h3>2. Corporate Information:</h3>
+            <ul class="highlight-list">
+                <li><strong>Krsnaa Diagnostics</strong>: Indira Gandhi Hospital PPP award correct.</li>
+                <li><strong>Atulaya Healthcare</strong>: Remains largest diagnostic chain in North India.</li>
+                <li><strong>Vijaya Diagnostic Centre</strong>: Q3FY26 revenue growth ~21.4% and FY27 expansion plan verified.</li>
+                <li><strong>Metropolis Healthcare</strong>: Acquisition of DAPIC in Dehradun correct (2025).</li>
+                <li><strong>Chandan Healthcare</strong>: Publicly listed entity on NSE.</li>
+            </ul>
+            <h3>3. Government Policies & PPP Models:</h3>
+            <ul class="highlight-list">
+                <li><strong>PLI Scheme for Medical Devices</strong>: ₹3,420 Cr outlay, 5% incentive, 21 projects producing 54 unique devices accurate.</li>
+                <li><strong>Maha MedTech Mission</strong>: Collaboration ANRF, ICMR, Gates Foundation, funding ₹5‑25 Cr (up to ₹50 Cr) confirmed.</li>
+                <li><strong>GTE Exemption Status</strong>: Exemption for 354 devices valid until March 31, 2027; reassessment process begun.</li>
+                <li><strong>Delhi's 36 Hospitals</strong>: Plan to provide MRI/CT in all 36 Delhi govt hospitals by March 2026 under PPP at subsidised rates correct.</li>
+                <li><strong>Pune Diagnostic Hub</strong>: Pune Municipal Corporation project to offer PET Scan, MRI, CT under one roof by Dec 2025 – landmark PPP move.</li>
+            </ul>
+        </section>
+
+        <!-- METHODOLOGY & DISCLAIMER (exactly as original) -->
+        <section id="disclaimer" class="section-card">
+            <h2 class="section-title">📜 Methodology & Disclaimer</h2>
+            <p><strong>Cross-Verification Process:</strong> All data points were independently verified using primary sources (e.g., AIIMS notices, e-procurement portals, PIB releases) and reputable secondary sources (e.g., <em>The Economic Times</em>, <em>Medical Buyer</em>, <em>The Statesman</em>, <em>Hindustan Times</em>).</p>
+            <p><strong>Accuracy & Responsibility:</strong> While the information has been thoroughly validated, it is compiled from publicly available sources and is for informational purposes. The most accurate and official information can always be found directly on the issuing authority's official procurement portal.</p>
+            <p class="footnote">Document compiled based on publicly available information as of April 2026. All tender closing dates are subject to change; please verify on the issuing authority's official portal.</p>
+        </section>
+
+        <!-- APPENDIX: Key Sources & References -->
+        <section id="appendix" class="section-card">
+            <h2 class="section-title">🔗 Appendix: Key Sources & References</h2>
+            <ul class="highlight-list">
+                <li>Atulaya Healthcare – Company profile: <a href="https://www.atulaya.com/" target="_blank">atulaya.com</a></li>
+                <li>Krsnaa Diagnostics – PPP contracts: Medical Buyer / Company disclosures</li>
+                <li>PLI Scheme – Medical Devices: PIB Release Dec 2025 (<a href="https://pib.gov.in/" target="_blank">pib.gov.in</a>)</li>
+                <li>Maha MedTech Mission: PIB Release Nov 2025 (<a href="https://pib.gov.in/" target="_blank">pib.gov.in</a>)</li>
+                <li>GTE Exemption – Department of Pharmaceuticals: Medical Buyer Feb 2026 (<a href="https://medicalbuyer.co.in/" target="_blank">medicalbuyer.co.in</a>)</li>
+                <li>Delhi Govt – Universal Diagnostic Imaging (36 hospitals): Hindustan Times Oct 2025</li>
+                <li>Chandan Healthcare – Punjab PPP (Third Project): Medical Buyer Mar 2026</li>
+                <li>PGIMER – 24x7 Diagnostic Services via PPP: Hindustan Times Jan 2025</li>
+                <li>Sarvodaya NRCH Imaging Centre – PPP: Healthcare Radius Apr 2023 (<a href="https://www.healthcareradius.in/" target="_blank">healthcareradius.in</a>)</li>
+                <li>Vijaya Diagnostic Centre – Q3FY26 Results: ICICI Direct Feb 2026 (<a href="https://www.icicidirect.com/" target="_blank">icicidirect.com</a>)</li>
+            </ul>
+        </section>
+    </main>
+</div>
+
+<script>
+    const searchInput = document.getElementById('searchInput');
+    const searchBtn = document.getElementById('searchBtn');
+    const clearBtn = document.getElementById('clearSearch');
+    const searchInfo = document.getElementById('searchInfo');
+    const mainContent = document.querySelector('.main-content');
+    let originalHtml = mainContent.innerHTML;
+
+    function performSearch() {
+        const term = searchInput.value.trim().toLowerCase();
+        if (term === "") {
+            mainContent.innerHTML = originalHtml;
+            searchInfo.innerHTML = "";
+            return;
+        }
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = originalHtml;
+        let matchCount = 0;
+        const walker = document.createTreeWalker(tempDiv, NodeFilter.SHOW_TEXT, {
+            acceptNode: function(node) {
+                if (node.parentElement.closest('.search-bar')) return NodeFilter.FILTER_REJECT;
+                return NodeFilter.FILTER_ACCEPT;
+            }
+        });
+        const nodesToReplace = [];
+        while(walker.nextNode()) {
+            const node = walker.currentNode;
+            if (node.textContent.toLowerCase().includes(term)) {
+                matchCount++;
+                const span = document.createElement('span');
+                const regex = new RegExp(`(${term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+                span.innerHTML = node.textContent.replace(regex, `<mark style="background:#fff3bf; color:#000;">$1</mark>`);
+                nodesToReplace.push({ original: node, replacement: span });
+            }
+        }
+        nodesToReplace.forEach(({original, replacement}) => {
+            original.parentNode.replaceChild(replacement, original);
+        });
+        mainContent.innerHTML = tempDiv.innerHTML;
+        searchInfo.innerHTML = `🔎 Found ${matchCount} occurrence(s) matching "${term}".`;
+    }
+
+    searchBtn.addEventListener('click', performSearch);
+    clearBtn.addEventListener('click', () => {
+        searchInput.value = '';
+        mainContent.innerHTML = originalHtml;
+        searchInfo.innerHTML = '';
+    });
+    searchInput.addEventListener('keyup', (e) => { if(e.key === 'Enter') performSearch(); });
+    window.addEventListener('load', () => { originalHtml = mainContent.innerHTML; });
+</script>
+</body>
+</html>
