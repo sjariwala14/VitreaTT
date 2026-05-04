@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Business Case Study | Canon Medical – RDP Alternative Architecture</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
+      background: #f5f7fc;
+      color: #1e2f3e;
+      line-height: 1.5;
+      scroll-behavior: smooth;
+    }
+    .app {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    /* header */
+    .doc-header {
+      background: linear-gradient(135deg, #0f2c3b 0%, #1e5a74 100%);
+      color: white;
+      padding: 2rem 2rem 1.8rem;
+      border-radius: 0 0 1.5rem 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .doc-header h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+    .doc-header p {
+      color: #d4eaf3;
+      margin-top: 0.5rem;
+      font-size: 0.9rem;
+    }
+    /* layout */
+    .main-grid {
+      display: flex;
+      gap: 2rem;
+      padding: 0 1.5rem 2rem 1.5rem;
+    }
+    /* TOC sidebar */
+    .toc-sidebar {
+      flex: 0 0 280px;
+      position: sticky;
+      top: 1rem;
+      align-self: start;
+      background: white;
+      border-radius: 1rem;
+      padding: 1.2rem;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+      border: 1px solid #e2e8f0;
+      max-height: calc(100vh - 2rem);
+      overflow-y: auto;
+    }
+    .toc-sidebar h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: #0f4b63;
+      border-left: 3px solid #2c7da0;
+      padding-left: 0.7rem;
+    }
+    .toc-list {
+      list-style: none;
+    }
+    .toc-list li {
+      margin: 0.6rem 0;
+    }
+    .toc-list a {
+      text-decoration: none;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: #2c4c6c;
+      display: block;
+      padding: 0.3rem 0.5rem;
+      border-radius: 0.5rem;
+      transition: all 0.2s;
+    }
+    .toc-list a:hover {
+      background: #e6f0f5;
+      color: #0d5c7e;
+    }
+    .toc-list a.active {
+      background: #1e5a74;
+      color: white;
+    }
+    .action-buttons {
+      margin-top: 1.2rem;
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+    .btn-sm {
+      background: transparent;
+      border: 1px solid #bdd4e4;
+      padding: 0.3rem 0.8rem;
+      border-radius: 2rem;
+      font-size: 0.7rem;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .btn-sm:hover {
+      background: #e6f0f5;
+    }
+    /* content cards */
+    .content-area {
+      flex: 1;
+      min-width: 0;
+    }
+    .section-card {
+      background: white;
+      border-radius: 1rem;
+      margin-bottom: 1.2rem;
+      border: 1px solid #eef2f6;
+      overflow: hidden;
+      transition: box-shadow 0.2s;
+    }
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.5rem;
+      background: #ffffff;
+      cursor: pointer;
+      border-bottom: 1px solid #eef2f8;
+    }
+    .section-header:hover {
+      background: #fafcff;
+    }
+    .section-header h2, .section-header h3 {
+      margin: 0;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #124e6b;
+    }
+    .toggle-icon {
+      font-size: 1.2rem;
+      color: #2c7da0;
+      transition: transform 0.2s;
+    }
+    .section-content {
+      padding: 1.2rem 1.5rem;
+      display: block;
+    }
+    .section-card.collapsed .section-content {
+      display: none;
+    }
+    .section-card.collapsed .toggle-icon {
+      transform: rotate(-90deg);
+    }
+    /* tables */
+    .table-wrapper {
+      overflow-x: auto;
+      margin: 1rem 0;
+      border-radius: 0.75rem;
+      border: 1px solid #e9edf2;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+      background: white;
+    }
+    th {
+      background: #eef4fa;
+      padding: 10px 12px;
+      text-align: left;
+      font-weight: 600;
+      color: #1a5a78;
+    }
+    td {
+      padding: 8px 12px;
+      border-bottom: 1px solid #e2e8f0;
+      vertical-align: top;
+    }
+    .key-insight, .critical-point {
+      background: #fef7e0;
+      border-left: 4px solid #e6a817;
+      padding: 0.8rem 1.2rem;
+      border-radius: 0.75rem;
+      margin: 1rem 0;
+    }
+    .key-takeaway {
+      background: #e6f3f8;
+      border-left: 4px solid #2c7da0;
+      padding: 0.8rem 1.2rem;
+      border-radius: 0.75rem;
+    }
+    .ref-list {
+      font-size: 0.8rem;
+      margin: 0.5rem 0 1rem 1.2rem;
+    }
+    .ref-list li {
+      margin: 0.4rem 0;
+    }
+    a {
+      color: #1e6f8c;
+      text-decoration: none;
+      word-break: break-all;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      font-size: 0.7rem;
+      color: #5f6c7a;
+      border-top: 1px solid #e2e8f0;
+    }
+    @media (max-width: 800px) {
+      .main-grid {
+        flex-direction: column;
+      }
+      .toc-sidebar {
+        position: relative;
+        width: 100%;
+        max-height: 300px;
+        margin-bottom: 1rem;
+      }
+      .section-header h2 {
+        font-size: 1.1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <div class="doc-header">
+    <h1>📘 Business Case Study<br>Alternative architecture to replace RDP</h1>
+    <p>Canon Medical Systems – Southeast Asia strategic analysis | April 2026</p>
+  </div>
+
+  <div class="main-grid">
+    <!-- sticky TOC navigation -->
+    <aside class="toc-sidebar">
+      <h3>📑 On this page</h3>
+      <ul class="toc-list" id="dynamicToc">
+        <li><a href="#exec-brief" data-section="exec-brief">Executive Brief (Summary)</a></li>
+        <li><a href="#detailed-exec" data-section="detailed-exec">Detailed Executive Summary</a></li>
+        <li><a href="#problem" data-section="problem">The Problem: RDP & Zero Trust</a></li>
+        <li><a href="#vuln" data-section="vuln">a. RDP protocol vulnerabilities</a></li>
+        <li><a href="#regulatory" data-section="regulatory">b. Regulatory framework</a></li>
+        <li><a href="#attacks" data-section="attacks">c. Real‑world attack evidence</a></li>
+        <li><a href="#vendor-exposed" data-section="vendor-exposed">d. Canon only vendor exposed</a></li>
+        <li><a href="#vendor-owned" data-section="vendor-owned">e. Vendor‑owned architecture fix</a></li>
+        <li><a href="#validation" data-section="validation">f. Existing validation (Citrix/AWS/Zscaler)</a></li>
+        <li><a href="#business-impact" data-section="business-impact">Business Impact & Liability</a></li>
+        <li><a href="#gaps" data-section="gaps">Core Competitive Gaps</a></li>
+        <li><a href="#alt-arch" data-section="alt-arch">Required Alternative Architectures</a></li>
+        <li><a href="#questions" data-section="questions">Questions for Global PM</a></li>
+        <li><a href="#path-forward" data-section="path-forward">Strategic choices & recommendation</a></li>
+        <li><a href="#conclusion" data-section="conclusion">Conclusion</a></li>
+        <li><a href="#references" data-section="references">Full references & links</a></li>
+      </ul>
+      <div class="action-buttons">
+        <button id="expandAllBtn" class="btn-sm">📂 Expand all</button>
+        <button id="collapseAllBtn" class="btn-sm">📁 Collapse all</button>
+      </div>
+    </aside>
+
+    <!-- main collapsible sections -->
+    <div class="content-area" id="mainContent">
+      <!-- EXECUTIVE BRIEF (one-pager) -->
+      <div class="section-card" id="exec-brief">
+        <div class="section-header"><h2>📌 Executive Brief (One‑page summary)</h2><span class="toggle-icon">▼</span></div>
+        <div class="section-content">
+          <p><strong>a. The Problem:</strong> A Legacy RDP Protocol is creating a compliance gap — Our RDP‑based delivery architecture has become the primary reason for tender disqualifications in Southeast Asia. RDP is inherently incompatible with mandatory "Zero Trust" standards, resulting in protocol‑level vulnerabilities.</p>
+          <p><strong>b. Market/Financial Impact:</strong> $XM at risk (WIP). Failure to act will immediately lose all advanced visualization tenders in Singapore. SingHealth withholds milestone payments and threatens legal action for non‑compliance.</p>
+          <p><strong>c. Options Considered:</strong><br>• Improve Current Architecture: low impact, does not solve Zero Trust gap.<br>• <strong>ZTNA / VDI Architecture (Recommended):</strong> replaces RDP with managed zero‑trust platform, closes compliance gaps.</p>
+          <p><strong>d. Risk Analysis:</strong><br>• Status Quo (Do Nothing): High risk — continued disqualification, loss of regional share.<br>• Adopt New Architecture: medium investment, high return, aligns with market requirements.</p>
+          <p><strong>e. Recommendation:</strong> Review and prioritize the development of a reference architecture based on current market requirements, with the goal of replacing RDP with a modern, vendor‑managed delivery platform.</p>
+        </div>
+      </div>
+
+      <!-- DETAILED EXECUTIVE SUMMARY -->
+      <div class="section-card" id="detailed-exec">
+        <div class="section-header"><h2>📄 Detailed Executive Summary</h2><span class="toggle-icon">▼</span></div>
+        <div class="section-content">
+          <p>Canon is losing competitive ground in Southeast Asia, particularly in Singapore, because our advanced visualization solution continues to rely on <strong>RDP (port 3389)</strong> for thin‑client communication.</p>
+          <p><strong>The current foundational technology we rely upon to deliver application access has been widely deprecated for healthcare use.</strong></p>
+          <p>Healthcare security standards now mandate <strong>Zero Trust architecture</strong> – a model that RDP is fundamentally incompatible with. Competitors (Siemens, GE, Philips, AGFA) have moved to web‑native, cloud‑native, or zero‑trust architectures that do not use RDP. Canon remains one of the few vendors still exposing customers to the risks of a legacy protocol.</p>
+          <p>Competitors with modern, secure delivery models are exploiting this gap, resulting in disqualification from tenders (Parkway, NUH) and legal liability on the SingHealth accounts. The sole issue is that <strong>RDP is no longer an acceptable delivery protocol for healthcare</strong> due to protocol‑level insecurity and Zero Trust incompatibility.</p>
+          <p>This case study outlines RDP's technical vulnerabilities, compliance gap, regulatory non‑alignment, quantifies business impact, and requests Global PM to adopt an alternative delivery architecture.</p>
+        </div>
+      </div>
+
+      <!-- Problem block -->
+      <div class="section-card" id="problem">
+        <div class="section-header"><h2>⚠️ The Problem: RDP Cannot Meet Modern Healthcare Security Mandates</h2><span class="toggle-icon">▼</span></div>
+        <div class="section-content">
+          <!-- a. vulnerabilities -->
+          <div id="vuln"><h3>a. RDP's Protocol-level vulnerabilities</h3>
+            <div class="table-wrapper">\n<table><thead><tr><th>Proven RDP Vulnerability</th><th>Year</th><th>Impact</th><th>Source</th></tr></thead><tbody>
+            <tr><td>BlueKeep (CVE‑2019‑0708)</td><td>2019</td><td>Wormable RCE → 19,000 RDP servers still vulnerable in 2026</td><td>SecurityWeek</td></tr>
+            <tr><td>Channel Hopping Vulnerability</td><td>2026</td><td>Any RDP user can access other connected users' client machines; MITM; identity impersonation via smart card</td><td>CyberArk Labs / Global Security Mag</td></tr>
+            <tr><td>RD Gateway vulnerability (CVE‑2023‑35332)</td><td>2026</td><td>Uses deprecated DTLS 1.0 protocol – protocol‑level weakness, not configuration</td><td>Microsoft / Global Security Mag</td></tr>
+            <tr><td>Multiple CVEs (2025)</td><td>2025</td><td>CVE‑2025‑48817, CVE‑2025‑29966, CVE‑2025‑29967, CVE‑2025‑27487 – critical vulnerabilities</td><td>FieldEffect</td></tr>
+            </tbody></table></div>
+            <div class="key-insight"><strong>🔍 Key insight:</strong> These are not “configuration issues” – they are protocol‑level design flaws. April 2026 disclosure: any RDP session participant can access other users' connected client machines → fundamental architectural weakness.</div>
+          </div>
+
+          <div id="regulatory"><h3>b. Regulatory and Compliance framework</h3>
+            <div class="table-wrapper"><table><thead><tr><th>Requirement</th><th>Regulatory Body</th><th>RDP Compliance Status</th></tr></thead><tbody>
+            <tr><td>Vendors may need cybersecurity certifications (Cyber Essentials/Cyber Trust marks) to bid for government contracts</td><td>Singapore Government – May 2025</td><td>RDP‑based architecture would likely fail certification requirements</td></tr>
+            <tr><td>Healthcare Cybersecurity Essentials (HCSE)</td><td>Singapore MOH – effective Nov 2025</td><td>RDP does not meet zero‑trust requirements</td></tr>
+            <tr><td>Health Information Bill (2025)</td><td>Singapore Parliament – introduced Nov 2025</td><td>Mandates cybersecurity measures for systems processing health information</td></tr>
+            </tbody></table></div>
+          </div>
+
+          <div id="attacks"><h3>c. Real‑World attack evidence (2025‑2026)</h3>
+            <div class="table-wrapper"><table><thead><tr><th>Attack</th><th>Date</th><th>Method</th><th>Impact</th></tr></thead><tbody>
+            <tr><td>KillSec ransomware</td><td>Sep 2025</td><td>Exploited legacy RDP vulnerabilities</td><td>Breach of Brazilian healthcare provider – patient data compromised, encryption of operational data (Rescana)</td></tr>
+            <tr><td>Medusa, BianLian, Scattered Spider</td><td>Throughout 2025</td><td>RDP initial access</td><td>Used RDP to gain access before ransomware execution (FieldEffect)</td></tr>
+            <tr><td>LockBit 3.0</td><td>Active 2025</td><td>Targets hospitals through vulnerable RDP setups</td><td>Over 1,700 U.S. attacks, extorted over $91 million (Otava)</td></tr>
+            <tr><td>Hacker advertisement (dark web)</td><td>2025‑2026</td><td>Gained entry via Windows computers with exposed RDP (port 3389)</td><td>Advertising hundreds of thousands of healthcare records (Global Security Mag)</td></tr>
+            </tbody></table></div>
+            <div class="critical-point"><strong>⚠️ Critical point:</strong> RDP port 3389 should never be exposed to the internet – “nothing more than bad security, and borderline negligence” per security experts.</div>
+          </div>
+
+          <div id="vendor-exposed"><h3>d. Canon is the only vendor still exposed</h3>
+            <div class="table-wrapper"><table><thead><tr><th>Competitor</th><th>Architecture</th><th>RDP Status</th></tr></thead><tbody>
+            <tr><td>Siemens syngo.via</td><td>Client-server with Web Viewer via HTTPS</td><td>No RDP required – direct web browser access</td></tr>
+            <tr><td>Philips IntelliSpace Portal</td><td>Zero‑footprint web viewer – migrated away from RDP</td><td>Historical vulnerabilities (CVE‑2018‑5458 etc.) patched – now zero‑trust web</td></tr>
+            <tr><td>GE HealthCloud</td><td>Cloud‑native SaaS on AWS with built‑in security controls</td><td>Abstracted away legacy remote access vulnerabilities</td></tr>
+            <tr><td>AGFA / TeraRecon</td><td>Zero‑trust security architecture with RBAC</td><td>Built on modern architecture, not legacy RDP</td></tr>
+            <tr><td><strong>Canon Vitrea</strong></td><td>Thin client via RDP (port 3389)</td><td><strong>Fully exposed</strong> – CVE‑2022‑37461 (XSS), CVE‑2022‑38765 (access control bypass)</td></tr>
+            </tbody></table></div>
+            <p><strong>In summary:</strong> Siemens, GE, Philips, AGFA moved away from RDP or abstracted it. Canon remains fully exposed to native RDP vulnerabilities – the exception in the market.</p>
+            <p>Canon's use of RDP has exposed it to CVEs that competitors avoided by migrating to modern architectures. These vulnerabilities relate directly to the underlying Microsoft RDP protocol. Competitors either moved away from RDP entirely or invested heavily in mitigation.</p>
+          </div>
+
+          <div id="vendor-owned"><h3>e. How a Vendor‑Owned architecture fixes this</h3>
+            <div class="table-wrapper"><table><thead><tr><th>Core Requirement</th><th>Built‑In Capability of ZTNA / VDI Platform</th><th>Resolves Compliance Gap</th></tr></thead><tbody>
+            <tr><td>Network cloaking / no open inbound ports</td><td>Zero Trust platforms expose no inbound ports; outbound/encrypted traffic</td><td>Eliminates RDP‑on‑port‑3389 exposure – primary disqualification reason</td></tr>
+            <tr><td>Least‑privilege access</td><td>Granular policies restrict users to specific application, time‑bound sessions</td><td>Removes lateral movement risk that RDP allows</td></tr>
+            <tr><td>DICOM / high‑performance graphics</td><td>Citrix HDX 3D lossless codec, AWS WorkSpaces for syngo.via</td><td>Vendor‑supported reference architecture, no RDP required</td></tr>
+            </tbody></table></div>
+            <p><strong>The shift is fundamental:</strong> Instead of delivering RDP and hoping the hospital hardens it, Canon would deliver a full stack – managed ZTNA or VDI platform – with network cloaking, least‑privilege, and medical graphics without RDP.</p>
+          </div>
+
+          <div id="validation"><h3>f. Validation – This approach already exists</h3>
+            <div class="table-wrapper"><table><thead><tr><th>Vendor / Platform</th><th>How They Deliver Vendor‑Owned Security</th></tr></thead><tbody>
+            <tr><td>Citrix HDX (Philips)</td><td>Built for medical imaging – HDX 3D Pro lossless codec, PACS workloads, virtualised servers.</td></tr>
+            <tr><td>AWS WorkSpaces / AppStream (Siemens)</td><td>Full DaaS, IAM, VPC, logging – used by syngo.via implementations.</td></tr>
+            <tr><td>Zscaler Private Access</td><td>Zero Trust platform replacing legacy VPN/RDP gateways in major hospitals, full compliance reporting.</td></tr>
+            </tbody></table></div>
+            <p>The current architecture does not include a zero‑trust or full VDI layer in the standard offering. Hospitals <em>can</em> deploy these layers themselves, but Singapore/SEA tenders increasingly require a vendor‑delivered turnkey architecture. Providing such architecture means Canon selects, licenses, deploys and supports the entire remote access stack.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Business Impact -->
+      <div class="section-card" id="business-impact">
+        <div class="section-header"><h2>📉 Business Impact: Lost Revenue, Legal Liability & Competitive Displacement</h2><span class="toggle-icon">▼</span></div>
+        <div class="section-content">
+          <h3>Immediate Impact – SingHealth & future upgrades</h3>
+          <div class="table-wrapper"><table><thead><tr><th>Consequence</th><th>Detail</th></tr></thead><tbody>
+            <tr><td>Tender disqualification</td><td>RDP‑based solution fails first technical screening (Parkway, NUH)</td></tr>
+            <tr><td>Legal action risk</td><td>SingHealth‑Synapxe has right to file legal action for non‑compliance</td></tr>
+            <tr><td>Milestone 6 payment withheld</td><td>Payment blocked, loss of milestone revenue</td></tr>
+            <tr><td>Loss of future M&S revenue</td><td>Entire account & ongoing maintenance fees at risk</td></tr>
+            <tr><td>Self‑management signal</td><td>SingHealth requested admin training – intends to replace Canon M&S role</td></tr>
+            <tr><td>Open tender threat</td><td>Re‑tender would favour competitors with modern non‑RDP architectures</td></tr>
+          </tbody></table></div>
+          <h3>Deeper SEA consequences</h3>
+          <ul>
+            <li>Our bids for CT tenders in Singapore/SEA are disqualified at first technical screen due to RDP architecture.</li>
+            <li>Even when clinical demand exists, security checklists block deals.</li>
+            <li>Hospitals interpret RDP reliance as outdated security posture, eroding trust.</li>
+            <li>Competitive displacement: Siemens, GE, Philips, AGFA win tenders where Canon is eliminated.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Core Competitive Gaps -->
+      <div class="section-card" id="gaps">
+        <div class="section-header"><h2>⚔️ Core Competitive Gaps</h2><span class="toggle-icon">▼</span></div>
+        <div class="section-content">
+          <div class="table-wrapper"><table><thead><tr><th>Competitive Dimension</th><th>Canon (Vitrea Current)</th><th>Competitors (Siemens, GE, Philips, AGFA)</th></tr></thead><tbody>
+            <tr><td>Application Delivery Architecture</td><td>Thin‑client via RDP (port 3389) – legacy protocol with design flaws</td><td>Modern alternatives: zero‑footprint web, cloud‑native SaaS, zero‑trust; no RDP dependency</td></tr>
+            <tr><td>RDP Vulnerability Posture</td><td><strong>Fully exposed</strong> – customers bear risk of BlueKeep, channel hopping, etc.</td><td>Abstracted or eliminated – competitors removed RDP or abstract behind secure layers</td></tr>
+            <tr><td>Network Exposure</td><td>Open inbound port 3389 or VPN, large attack surface</td><td>No open inbound ports, outbound‑only or cloaked connections</td></tr>
+            <tr><td>Lateral Movement Risk</td><td>RDP grants full desktop access → potential movement across hospital systems</td><td>Least‑privilege restricts user to specific application only</td></tr>
+          </tbody></table></div>
+          <div class="key-takeaway"><strong>Key takeaway:</strong> Canon remains the only major vendor delivering advanced visualization primarily through native RDP, exposing customers to protocol vulnerabilities the industry has moved away from.</div>
+        </div>
+      </div>
+
+      <!-- Required alternative architectures -->
+      <div class="section-card" id="alt-arch">
+        <div class="section-header"><h2>🔄 Required Alternative Architectures</h2><span class="toggle-icon">▼</span></div>
+        <div class="section-content">
+          <div class="table-wrapper"><table><thead><tr><th>Technology Category</th><th>Platforms to Assess</th><th>Compliance Advantages</th></tr></thead><tbody>
+            <tr><td>Zero Trust Network Access (ZTNA)</td><td>Zscaler Private Access, Netskope, Cloudflare Zero Trust</td><td>Identity/device verification, MFA, least‑privilege, immutable logs</td></tr>
+            <tr><td>VDI / Virtual App Solutions</td><td>Citrix HDX, VMware Horizon Blast, Azure Virtual Desktop, Amazon WorkSpaces</td><td>Native SSO, session recording, SIEM integration, strong encryption</td></tr>
+            <tr><td>Cloud‑native / web‑native</td><td>Direct web client (WebAssembly) + server‑side rendering</td><td>Zero‑footprint, no RDP underlying</td></tr>
+          </tbody></table></div>
+          <p><strong>Detailed evaluations:</strong> ZTNA (strong zero‑trust alignment, API integration possible), Citrix HDX (lossless medical imaging), VMware Horizon (event logging, Blast gateway), Azure Virtual Desktop (Entra ID integration, Azure Monitor audits).</p>
+        </div>
+      </div>
+
+      <!-- Questions for Global PM -->
+      <div class="section-card" id="questions">
+        <div class="section-header"><h2>❓ Specific Questions & Requests for Global PM</h2><span class="toggle-icon">▼</span></div>
+        <div class="section-content">
+          <ol>
+            <li>Which alternative platform (ZTNA, VDI, or web‑native) is most feasible for the Vitrea client? Any prior healthcare experience?</li>
+            <li>What is the estimated effort, timeline, and resources to evaluate, POC, and build a reference architecture for SEA?</li>
+            <li>Do we have a competitive analysis comparing our RDP architecture vs. Siemens, GE, Philips, AGFA? Sales urgently need this.</li>
+            <li>Can we prioritise this initiative given the immediate revenue risk in SEA?</li>
+          </ol>
+        </div>
+      </div>
+
+      <!-- Path forward & strategic choices -->
+      <div class="section-card" id="path-forward">
+        <div class="section-header"><h2>🧭 The Path Forward: Two Strategic Choices for Global PM</h2><span class="toggle-icon">▼</span></div>
+        <div class="section-content">
+          <ol>
+            <li><strong>Acknowledge that RDP is the fundamental bottleneck in SEA.</strong></li>
+            <li><strong>Adopt at least one alternative delivery architecture</strong> for SEA markets where RDP is unacceptable:
+              <ul><li>Zero‑Trust Network Access (ZTNA) – like Siemens.</li><li>Web/Native client – like Philips.</li><li>Cloud‑native SaaS – like GE.</li></ul>
+              RDP cannot provide any of these out of the box.
+            </li>
+            <li><strong>Request formal competitive architecture analysis</strong> comparing RDP vs. web‑native/zero‑trust for customer discussions.</li>
+          </ol>
+          <div class="key-takeaway">We need a clear commitment from Global PM to develop and validate an alternative delivery architecture within a specific timeline, or acknowledge that we will not be able to compete in SEA for advanced visualization tenders.</div>
+        </div>
+      </div>
+
+      <!-- Conclusion -->
+      <div class="section-card" id="conclusion">
+        <div class="section-header"><h2>✅ Conclusion</h2><span class="toggle-icon">▼</span></div>
+        <div class="section-content">
+          <p>The RDP architecture is no longer sustainable for healthcare advanced visualization in Singapore and broader SEA. Without a modern compliant alternative, we will continue to be disqualified from tenders and lose existing accounts to competitors who have already transitioned. The risk is immediate and the market gap widening.</p>
+          <p>This case study establishes that the proposed path forward is not incremental but a <strong>competitive necessity</strong>. Global Product Management is requested to provide clarity, resources, and a timeline for transitioning to an architecture that can compete in today's compliance‑driven healthcare environment.</p>
+        </div>
+      </div>
+
+      <!-- References -->
+      <div class="section-card" id="references">
+        <div class="section-header"><h2>📚 References & live sources</h2><span class="toggle-icon">▼</span></div>
+        <div class="section-content">
+          <ul class="ref-list">
+            <li><strong>1. RDP Protocol Vulnerabilities:</strong> <a href="https://www.globalsecuritymag.com/CyberArk-publishes-high-risk-Windows-RDP-vuln-Patch-Tuesday.html" target="_blank">Channel Hopping (CyberArk)</a> | <a href="https://www.globalsecuritymag.com/MSFT-security-researcher-s-insights-on-July-Patch-Tuesday.html" target="_blank">RD Gateway DTLS (Global Security Mag)</a> | <a href="https://www.tenable.com/plugins/nessus/122214" target="_blank">BlueKeep Tenable</a> | <a href="https://nvd.nist.gov/vuln/detail/CVE-2025-48817" target="_blank">CVE-2025-48817 (NVD)</a></li>
+            <li><strong>2. Real-World Attacks:</strong> <a href="https://www.rescana.com/post/killsec-ransomware-exploits-legacy-rdp-vulnerabilities-at-brazilian-healthcare-software-provider" target="_blank">KillSec ransomware</a> | <a href="https://www.otava.com/blog/the-most-aggressive-types-of-ransomware-targeting-healthcare-in-2025" target="_blank">LockBit 3.0 stats</a></li>
+            <li><strong>3. Regulatory Singapore:</strong> <a href="https://sso.agc.gov.sg/Bills-Supp/20-2025/Published/20251105?DocDate=20251105" target="_blank">Health Information Act 2025</a> | <a href="https://insightplus.bakermckenzie.com/bm/technology-digital/singapore-vendors-may-need-to-obtain-cybersecurity-certifications-before-they-can-be-licensed-or-bid-for-certain-government-contracts" target="_blank">Cyber Essentials for vendors</a> | <a href="https://securityboulevard.com/2023/01/law-by-law-your-guide-to-cybersecurity-compliance-in-singapore/" target="_blank">HCSE reference</a></li>
+            <li><strong>4. Competitive Landscape:</strong> <a href="https://apps.apple.com/us/app/syngo-via-webviewer/id1484099928" target="_blank">Siemens syngo.via WebViewer</a> | <a href="https://nvd.nist.gov/vuln/detail/CVE-2018-5458" target="_blank">Philips CVE-2018-5458</a> | <a href="https://landing1.gehealthcare.com/Total_Economic_Impact_of_Edison_True_PACS.html" target="_blank">GE Forrester TEI</a></li>
+            <li><strong>5. Alternative Architectures:</strong> <a href="https://docs.citrix.com/en-us/hdx-3d-pro/current-release.html" target="_blank">Citrix HDX 3D Pro (lossless medical)</a> | <a href="https://aws.amazon.com/solutions/case-studies/siemens-healthineers-syngo-via/" target="_blank">AWS WorkSpaces syngo.via</a> | <a href="https://www.networkcomputing.com/network-security/keck-medicine-replaced-its-vpn-infrastructure-with-zscaler-private-access-to-simplify-the-user-experience" target="_blank">Zscaler Keck Medicine</a></li>
+            <li><strong>6. Standards:</strong> <a href="https://csrc.nist.gov/pubs/sp/800/207/final" target="_blank">NIST Zero Trust (SP 800-207)</a> | <a href="https://www.ecfr.gov/current/title-45/section-164.312" target="_blank">HIPAA Audit Controls (45 CFR §164.312)</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer>© Canon Medical Systems – Healthcare IT Division | Confidential case study for Global PM & HIT leadership<br>All claims and references verified as of May 2026.</footer>
+</div>
+
+<script>
+  // collapsible sections
+  const cards = document.querySelectorAll('.section-card');
+  function toggleSection(card) { card.classList.toggle('collapsed'); }
+  cards.forEach(card => {
+    const header = card.querySelector('.section-header');
+    if(header) header.addEventListener('click', (e) => { if(e.target.tagName === 'BUTTON') return; toggleSection(card); });
+  });
+  document.getElementById('expandAllBtn')?.addEventListener('click', () => cards.forEach(c => c.classList.remove('collapsed')));
+  document.getElementById('collapseAllBtn')?.addEventListener('click', () => cards.forEach(c => c.classList.add('collapsed')));
+
+  // active TOC highlight
+  const sections = [...document.querySelectorAll('.section-card')].map(s => ({ id: s.id, el: s }));
+  const links = document.querySelectorAll('.toc-list a');
+  function setActive() {
+    let currentId = '';
+    const scrollPos = window.scrollY + 120;
+    for (let s of sections) {
+      if (s.el && s.el.offsetTop <= scrollPos && s.el.offsetTop + s.el.offsetHeight > scrollPos) {
+        currentId = s.id; break;
+      }
+    }
+    links.forEach(link => {
+      const href = link.getAttribute('href')?.substring(1);
+      link.classList.remove('active');
+      if (href === currentId) link.classList.add('active');
+    });
+  }
+  window.addEventListener('scroll', setActive);
+  window.addEventListener('resize', setActive);
+  setActive();
+  // smooth scroll
+  links.forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const targetId = link.getAttribute('href')?.substring(1);
+      const target = document.getElementById(targetId);
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+</script>
+</body>
+</html>
